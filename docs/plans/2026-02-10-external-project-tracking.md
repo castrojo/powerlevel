@@ -213,15 +213,29 @@ async function syncExternalProject(owner, repo, epicNumber, projectBoard) {
 }
 ```
 
-### Task 2: Powerlevel Calculator
+### Task 2: Powerlevel Calculator & Destiny Ranks
 
 **File:** `lib/powerlevel-calculator.js`
 
 **Functions:**
 - `calculatePowerlevel(cache)` - Count active tracking epics
 - `generatePowerlevelBadge(powerlevel)` - Generate shields.io badge JSON
-- `displayPowerlevelMessage(powerlevel)` - Format session start message
+- `displayPowerlevelMessage(powerlevel)` - Format session start message with rank
 - `updatePowerlevelBadge(powerlevel, outputPath)` - Write badge JSON to file
+- `updateProjectBoardTitle(powerlevel, projectNumber, owner)` - Update board title with rank
+
+**Destiny Rank System:**
+- Every 5 projects = new rank tier
+- Ranks: Guardian (1-5), Iron Lord (6-10), Vanguard (11-15), Awoken Paladin (16-20), Ascendant (21-25), Disciple (26-30), Dredgen (31-35), The Lucent (36-40), Witness (41-45), Paracausal (46-50)
+- Board title format: "Powerlevel 5 ~ Guardian"
+- Board description shows rank description
+
+**File:** `lib/destiny-ranks.js`
+
+**Functions:**
+- `getRankForPowerlevel(powerlevel)` - Get rank object for current score
+- `formatBoardTitle(powerlevel)` - Format board title with rank suffix
+- `getBoardDescription(powerlevel)` - Get rank description text
 
 **Key Logic:**
 ```javascript
@@ -233,17 +247,24 @@ function calculatePowerlevel(cache) {
 }
 
 function generatePowerlevelBadge(powerlevel) {
+  const { title } = getRankForPowerlevel(powerlevel);
   return {
     schemaVersion: 1,
     label: "Powerlevel",
-    message: powerlevel.toString(),
-    color: powerlevel >= 5 ? "brightgreen" : powerlevel >= 3 ? "green" : "blue"
+    message: `${powerlevel} ~ ${title}`,
+    color: powerlevel >= 40 ? "purple" : powerlevel >= 25 ? "red" : powerlevel >= 10 ? "brightgreen" : "blue"
   };
 }
 
 function displayPowerlevelMessage(powerlevel) {
-  const emoji = powerlevel >= 5 ? "🔥" : powerlevel >= 3 ? "🚀" : "⚡";
-  return `${emoji} Powerlevel: ${powerlevel} active project${powerlevel !== 1 ? 's' : ''}`;
+  const { title, description } = getRankForPowerlevel(powerlevel);
+  return `⚡ Powerlevel: ${powerlevel} ~ ${title}\n   ${description}`;
+}
+
+async function updateProjectBoardTitle(powerlevel, projectNumber, owner) {
+  const title = formatBoardTitle(powerlevel);
+  const description = getBoardDescription(powerlevel);
+  // Update via gh CLI: gh project edit <number> --owner <owner> --title "<title>" --description "<description>"
 }
 ```
 

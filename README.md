@@ -12,6 +12,25 @@ Track all your projects in one central place. Each project you manage contribute
 
 **Powerlevel is tracking-only.** All epics track work happening in other repositories. Powerlevel never manages the actual work—it only displays a unified status snapshot across all your projects. Your Powerlevel score = the number of active projects you're currently managing.
 
+### Destiny Ranks
+
+As you take on more projects, you ascend through Destiny-inspired ranks. Every 5 projects unlocks a new tier:
+
+| Powerlevel | Rank | Description |
+|------------|------|-------------|
+| 1-5 | **Guardian** | You've taken your first steps into a larger world |
+| 6-10 | **Iron Lord** | Forged in fire, tempered by challenge |
+| 11-15 | **Vanguard** | Leading the charge against entropy |
+| 16-20 | **Awoken Paladin** | Dancing between Light and Dark |
+| 21-25 | **Ascendant** | Your will shapes reality itself |
+| 26-30 | **Disciple** | The architecture of creation bends to you |
+| 31-35 | **Dredgen** | Master of the space between triumph and ruin |
+| 36-40 | **The Lucent** | Even death is but a tool in your arsenal |
+| 41-45 | **Witness** | You perceive the Final Shape |
+| 46-50 | **Paracausal** | Beyond Light and Darkness, beyond fate itself |
+
+Your project board title automatically updates to show your current rank: "Powerlevel 5 ~ Guardian"
+
 ## What It Does
 
 Powerlevel provides a central command center for managing multiple projects with Superpowers:
