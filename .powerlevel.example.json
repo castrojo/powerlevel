@@ -1,0 +1,30 @@
+{
+  "superpowers": {
+    "enabled": false,
+    "remote": "origin",
+    "repoUrl": "https://github.com/castrojo/superpowers.git",
+    "autoOnboard": true,
+    "wikiSync": false
+  },
+  "wiki": {
+    "autoSync": false,
+    "syncOnCommit": false,
+    "includeSkills": true,
+    "includeDocs": true
+  },
+  "tracking": {
+    "autoUpdateEpics": true,
+    "updateOnTaskComplete": true,
+    "commentOnProgress": false
+  },
+  "projectBoard": {
+    "enabled": true,
+    "number": null,
+    "autoCreate": true
+  },
+  "superpowersIntegration": {
+    "enabled": true,
+    "trackSkillUsage": true,
+    "updateEpicOnSkillInvocation": true
+  }
+}
