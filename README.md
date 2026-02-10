@@ -1,6 +1,6 @@
 # Powerlevel
 
-![Powerlevel](https://img.shields.io/badge/Powerlevel-5-brightgreen)
+![Powerlevel](https://img.shields.io/badge/Powerlevel-6%20~%20Iron%20Lord-brightgreen)
 
 **Your personal project management dashboard for OpenCode + Superpowers**
 
