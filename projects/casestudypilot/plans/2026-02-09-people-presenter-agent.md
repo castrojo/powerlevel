@@ -1,0 +1,1 @@
+/var/home/jorge/src/casestudypilot/docs/plans/2026-02-09-people-presenter-agent.md

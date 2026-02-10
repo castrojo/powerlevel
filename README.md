@@ -96,6 +96,33 @@ You can also manually sync:
 # Available via session.idle event
 ```
 
+### Epic Context Detection
+
+When working in a project with plan files, Powerlevel automatically detects and displays the current epic:
+
+**At OpenCode startup:**
+```
+📌 Current Epic: #21 - OpenCode Epic Header Display
+   Plan: docs/plans/2026-02-10-opencode-epic-header-display.md
+   URL: https://github.com/castrojo/casestudypilot/issues/21
+```
+
+**Programmatic access:**
+```javascript
+// In OpenCode JavaScript console or other plugins
+const epic = session.context.getEpic();
+console.log(epic.display);  // "Epic #21: OpenCode Epic Header Display"
+console.log(epic.url);       // "https://github.com/..."
+console.log(epic.raw);       // Full context object
+```
+
+**How it works:**
+- Scans `docs/plans/*.md` for `**Epic Issue:** #N` references
+- Uses most recent plan file (by filename)
+- Falls back to git branch name (patterns: `epic-123`, `epic/123`, `feature/epic-123`)
+- Caches results for performance
+- Cache invalidates when plan files change
+
 ## Labels
 
 The plugin creates these labels automatically:
