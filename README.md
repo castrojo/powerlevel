@@ -27,6 +27,9 @@ Your **Powerlevel** = the number of active projects you're managing. Simple as t
 - **Sub-task tracking** with epic references  
 - **Journey updates** when tasks complete
 - **Cache-based sync** for offline work with batch GitHub updates
+- **Skill invocation tracking** - Detects when Superpowers skills are used
+- **Auto status updates** - Epics transition from planning → in-progress → review automatically
+- **Epic references in plans** - Quick links inserted at top of plan files
 
 ### Wiki Sync
 - **Sync skills and documentation** to project wikis
@@ -41,6 +44,15 @@ Your **Powerlevel** = the number of active projects you're managing. Simple as t
 - **Automatic context refresh** on session start
 - **Multiple context sources**: superpowers wiki, project wiki, local docs, implementation plans
 - 🤖 See [Agent Context Documentation](docs/AGENT-CONTEXT.md)
+
+### Superpowers Integration
+- **Event-driven skill tracking** - Automatically detects when Superpowers skills are invoked
+- **Epic status automation** - Transitions epics through workflow states based on skill usage
+- **Journey tracking** - Records skill invocations and milestones in epic metadata
+- **Smart plan linking** - Associates skill usage with relevant epics via plan file references
+- **Project board integration** - Automatically populates GitHub Project Boards with epics and tasks
+- **Field mapping** - Maps label values (priority, status) to project board fields
+- 🚀 See [Superpowers Integration](docs/SUPERPOWERS-INTEGRATION.md) (coming soon)
 
 ## Installation
 
@@ -199,6 +211,16 @@ Configuration is stored in `.opencode/config.json`:
     "autoOnboard": false,
     "wikiSync": true
   },
+  "projectBoard": {
+    "enabled": true,
+    "number": null,
+    "autoCreate": true
+  },
+  "superpowersIntegration": {
+    "enabled": true,
+    "trackSkillUsage": true,
+    "updateEpicOnSkillInvocation": true
+  },
   "wiki": {
     "autoSync": false,
     "syncOnCommit": false,
@@ -211,6 +233,30 @@ Configuration is stored in `.opencode/config.json`:
     "commentOnProgress": false
   }
 }
+```
+
+### Configuration Options
+
+**`projectBoard`** - GitHub Project Board integration
+- `enabled` (boolean) - Enable/disable project board integration
+- `number` (number|null) - Specific project board number (null = auto-detect first board)
+- `autoCreate` (boolean) - Auto-create project board if none exists
+
+**`superpowersIntegration`** - Skill tracking and epic updates
+- `enabled` (boolean) - Enable/disable session hook integration
+- `trackSkillUsage` (boolean) - Record skill invocations in epic journey
+- `updateEpicOnSkillInvocation` (boolean) - Auto-update epic status when skills are invoked
+
+**`tracking`** - Progress tracking behavior
+- `autoUpdateEpics` (boolean) - Enable automatic epic updates
+- `updateOnTaskComplete` (boolean) - Update epics when tasks are completed via commits
+- `commentOnProgress` (boolean) - Post GitHub comments on progress milestones
+
+**Environment variable overrides:**
+```bash
+export GITHUB_TRACKER_PROJECT_ENABLED=false
+export GITHUB_TRACKER_PROJECT_NUMBER=2
+export GITHUB_TRACKER_PROJECT_AUTO_CREATE=true
 ```
 
 See [Wiki Sync docs](docs/WIKI-SYNC.md) and [Agent Context docs](docs/AGENT-CONTEXT.md) for detailed configuration options.

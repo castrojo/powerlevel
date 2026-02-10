@@ -22,7 +22,10 @@ Main OpenCode plugin that:
 
 **Hook Points:**
 - `session.idle` → triggers `landThePlane()` function
-- Future: `session.compacted` → re-inject epic context
+- `session.created` → sets session title from epic details
+- `assistant.message` → detects Superpowers skill invocations
+- `file.created` → detects plan file creation
+- `experimental.session.compacting` → re-injects epic context after compaction
 
 ### 2. Core Libraries (`lib/`)
 
@@ -81,19 +84,301 @@ Main OpenCode plugin that:
 - Parses implementation plan markdown files
 - Extracts: title (from `# Header`), goal (from `**Goal:**`), tasks (from `## Task N:`)
 - Formats epic body for GitHub
+- **New:** `insertEpicReference()` - Inserts epic reference at top of plan (after title, before Claude instruction)
+- **New:** `extractPlanFromMessage()` - Extracts plan file path from assistant messages for skill tracking
 
-### 3. Skills (`skills/`)
+#### `session-hooks.js`
+- Event-driven system for detecting Superpowers skill invocations
+- Hooks into OpenCode session events (`assistant.message`, `file.created`)
+- Detects skill patterns: `executing-plans`, `finishing-a-development-branch`, `subagent-driven-development`
+- Automatically updates epic status and journey when skills are invoked
+- Links skill invocations to epics via plan file references
 
-#### `epic-creation` 
-**Trigger:** Called by `writing-plans` after plan saved
+**Key functions:**
+- `detectSkillInvocation()` - Pattern-matches skill announcements in messages
+- `registerSessionHooks()` - Registers event listeners on session object
+- `handleExecutingPlans()` - Sets epic to `status/in-progress`, records journey event
+- `handleFinishingBranch()` - Sets epic to `status/review`, records journey event
+- `findEpicByPlanFile()` - Maps plan file to epic in cache
+- `findActiveEpic()` - Finds most recently updated in-progress epic
 
-**Process:**
-1. Load plan file
-2. Parse metadata (title, goal, tasks)
-3. Create epic on GitHub with `type/epic` label
-4. Create sub-task issues with `type/task` and `epic/<N>` labels
-5. Update plan file with epic reference
-6. Commit plan file
+#### `config-loader.js`
+- Loads configuration from `.opencode/config.json` or `.github-tracker.json`
+- Validates configuration structure and values
+- Provides configuration sections:
+  - **`projectBoard`** - Project board integration settings
+  - **`superpowersIntegration`** - Skill tracking and epic update behavior
+  - **`tracking`** - Auto-update and comment behavior
+  - **`wiki`** - Wiki sync settings
+- Supports environment variable overrides for project board config
+
+#### `project-board-detector.js`
+- Auto-detects GitHub Project Boards for a user/org
+- Caches project board metadata (id, number, title, url)
+- Functions: `detectProjectBoard()`, `getProjectBoard()`
+
+#### `project-item-manager.js`
+- Adds issues to GitHub Project Boards via GraphQL API
+- Sets project field values (Priority, Status)
+- Handles rate limiting and retries
+
+#### `project-field-manager.js`
+- Reads project field metadata from GitHub
+- Maps label values to project field values
+- Caches field schemas for efficient updates
+
+## Superpowers Integration
+
+### Event-Driven Tracking
+
+Powerlevel integrates with the Superpowers workflow through OpenCode session event hooks. When skills are invoked, the system automatically:
+
+1. **Detects skill invocations** - Pattern-matches skill announcements in assistant messages
+2. **Links to epics** - Associates skill usage with relevant epic issues via plan file references
+3. **Updates epic status** - Transitions epics through workflow states (planning → in-progress → review → done)
+4. **Records journey events** - Tracks skill invocations and progress milestones in epic metadata
+5. **Batches GitHub updates** - Marks epics as "dirty" and syncs changes when session ends
+
+### Skill Detection Patterns
+
+The following skills are automatically detected and tracked:
+
+| Skill | Pattern | Epic Update | Status Transition |
+|-------|---------|-------------|-------------------|
+| `executing-plans` | "using the executing-plans skill" | Finds epic by plan file reference | planning → in-progress |
+| `finishing-a-development-branch` | "using the finishing-a-development-branch skill" | Finds most recently active epic | in-progress → review |
+| `subagent-driven-development` | "using the subagent-driven-development skill" | Finds epic by plan file reference | (no status change) |
+| `writing-plans` | "using the writing-plans skill" | Triggers epic-creation skill | → planning |
+
+### Epic Reference Format
+
+When epics are created, a reference block is inserted at the top of the plan file (after the title, before Claude instructions):
+
+```markdown
+# Feature Implementation Plan
+
+> **Epic Issue:** #123
+> **Sub-Tasks:** #124, #125, #126
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+
+**Goal:** Build something cool
+```
+
+This format:
+- Makes epic references immediately visible
+- Doesn't interfere with Claude instructions
+- Provides quick links to GitHub issues
+- Follows markdown blockquote convention
+
+### Journey Events
+
+Each epic tracks a "journey" of events in its cache metadata:
+
+```javascript
+{
+  "journey": [
+    {
+      "timestamp": "2026-02-10T14:30:00Z",
+      "event": "epic_created",
+      "message": "Epic created from implementation plan"
+    },
+    {
+      "timestamp": "2026-02-10T15:00:00Z",
+      "event": "skill_invocation",
+      "skill": "executing-plans",
+      "message": "Started executing implementation plan"
+    },
+    {
+      "timestamp": "2026-02-10T16:45:00Z",
+      "event": "task_completed",
+      "task_number": 1,
+      "agent": "subagent-task-1"
+    },
+    {
+      "timestamp": "2026-02-10T18:00:00Z",
+      "event": "skill_invocation",
+      "skill": "finishing-a-development-branch",
+      "message": "Started finishing development branch"
+    }
+  ]
+}
+```
+
+These events are synced to GitHub as epic comments during `landThePlane()`.
+
+### Configuration
+
+Configuration is loaded from `.opencode/config.json` or `.github-tracker.json`:
+
+```json
+{
+  "projectBoard": {
+    "enabled": true,
+    "number": null,
+    "autoCreate": true
+  },
+  "superpowersIntegration": {
+    "enabled": true,
+    "trackSkillUsage": true,
+    "updateEpicOnSkillInvocation": true
+  },
+  "tracking": {
+    "autoUpdateEpics": true,
+    "updateOnTaskComplete": true,
+    "commentOnProgress": false
+  },
+  "wiki": {
+    "autoSync": false,
+    "syncOnCommit": false,
+    "includeSkills": true,
+    "includeDocs": true
+  }
+}
+```
+
+**Configuration sections:**
+
+- **`projectBoard`** - GitHub Project Board integration
+  - `enabled` - Enable/disable project board integration
+  - `number` - Specific project board number (null = auto-detect first board)
+  - `autoCreate` - Auto-create project board if none exists
+
+- **`superpowersIntegration`** - Skill tracking and epic updates
+  - `enabled` - Enable/disable session hook integration
+  - `trackSkillUsage` - Record skill invocations in epic journey
+  - `updateEpicOnSkillInvocation` - Auto-update epic status when skills are invoked
+
+- **`tracking`** - Progress tracking behavior
+  - `autoUpdateEpics` - Enable automatic epic updates
+  - `updateOnTaskComplete` - Update epics when tasks are completed via commits
+  - `commentOnProgress` - Post GitHub comments on progress milestones
+
+- **`wiki`** - Wiki sync settings
+  - `autoSync` - Automatically sync skills/docs to wiki
+  - `syncOnCommit` - Sync on every commit
+  - `includeSkills` - Include skill documentation in sync
+  - `includeDocs` - Include other documentation in sync
+
+**Environment variable overrides:**
+
+```bash
+export GITHUB_TRACKER_PROJECT_ENABLED=false
+export GITHUB_TRACKER_PROJECT_NUMBER=2
+export GITHUB_TRACKER_PROJECT_AUTO_CREATE=true
+```
+
+### Integration Examples
+
+**Example 1: executing-plans triggers epic status update**
+
+```
+User: Implement the feature using the plan
+Assistant: I'm using the executing-plans skill to implement docs/plans/2026-02-10-feature.md
+          ↓
+session-hooks detects "using the executing-plans skill"
+          ↓
+Extracts plan file: docs/plans/2026-02-10-feature.md
+          ↓
+Finds epic #123 in cache (plan_file matches)
+          ↓
+Updates epic.labels: status/planning → status/in-progress
+          ↓
+Adds journey event: { event: 'skill_invocation', skill: 'executing-plans' }
+          ↓
+Marks epic.dirty = true
+          ↓
+(Synced to GitHub when session ends)
+```
+
+**Example 2: Project board population**
+
+```
+Epic created #123
+          ↓
+Sub-tasks created #124, #125, #126
+          ↓
+Project board detector finds board #1
+          ↓
+Add epic #123 to project board
+  - Set Priority field: P1 - High (from priority/p1 label)
+  - Set Status field: Todo (from status/planning label)
+          ↓
+Add sub-tasks #124, #125, #126 to project board
+  - Each gets Priority and Status fields set
+          ↓
+All items visible in GitHub Projects board
+```
+
+**Example 3: finishing-a-development-branch triggers review status**
+
+```
+User: I'm done, let's wrap this up
+Assistant: I'm using the finishing-a-development-branch skill to complete this work
+          ↓
+session-hooks detects "using the finishing-a-development-branch skill"
+          ↓
+Finds active epic (most recently updated in-progress epic)
+          ↓
+Updates epic.labels: status/in-progress → status/review
+          ↓
+Adds journey event: { event: 'skill_invocation', skill: 'finishing-a-development-branch' }
+          ↓
+Marks epic.dirty = true
+          ↓
+(Synced to GitHub when session ends)
+```
+
+### Session Hook Registration
+
+The plugin registers session hooks during initialization (plugin.js:485):
+
+```javascript
+registerSessionHooks(session, owner, repo, cwd);
+```
+
+This sets up listeners for:
+- `assistant.message` - Detect skill invocations
+- `file.created` - Detect plan file creation
+
+The hooks run in the background without blocking the session or requiring user interaction.
+
+### Project Board Integration
+
+When project board integration is enabled:
+
+1. **Detection** - First available project board is auto-detected (or specific number from config)
+2. **Caching** - Board metadata (id, number, title, url) is cached locally
+3. **Field mapping** - Label values are mapped to project field values:
+   - `priority/p0` → Priority: P0 - Critical
+   - `status/in-progress` → Status: In Progress
+4. **Adding items** - Epics and sub-issues are added to the board via GraphQL API
+5. **Updating fields** - Field values are set based on issue labels
+6. **Rate limiting** - Requests are batched and retried with exponential backoff
+
+**GraphQL mutations used:**
+- `addProjectV2ItemById` - Add issue to project board
+- `updateProjectV2ItemFieldValue` - Set field values (Priority, Status)
+
+### Error Handling
+
+**Session hook errors:**
+- Skill pattern doesn't match → Silent (no action taken)
+- Epic not found for plan file → Log warning, continue
+- Cache write fails → Log error, don't crash session
+
+**Project board errors:**
+- Board not found → Log warning, skip project board integration
+- GraphQL API error → Log error, retry with backoff (3 attempts)
+- Rate limit exceeded → Wait and retry, fail gracefully after 3 attempts
+- Field not found → Log warning, skip field update (add item without field)
+
+**Configuration errors:**
+- Config file not found → Use defaults
+- Invalid JSON → Throw error, fail plugin initialization
+- Invalid values → Throw validation error with descriptive message
+
+## 3. Skills (`skills/`)
 
 **Integration:** Modifies `writing-plans` skill at line 101 (epic-creation reference)
 
@@ -132,13 +417,33 @@ Parse plan → Create epic → Create sub-tasks
      ↓
 Update cache (dirty=false)
      ↓
-Append epic reference to plan
+Insert epic reference at top of plan (after title, before Claude instruction)
      ↓
 Commit plan file
+     ↓
+Add epic and sub-issues to project board (if configured)
 
 ... later during development ...
 
+User invokes executing-plans skill
+     ↓
+session-hooks detects skill pattern in assistant.message event
+     ↓
+Finds epic by plan file reference
+     ↓
+Updates epic status to in-progress
+     ↓
+Records journey event
+     ↓
+Marks epic dirty=true in cache
+     ↓
+(no GitHub API call yet)
+
+... work continues ...
+
 subagent completes task
+     ↓
+Task completion detected from commits
      ↓
 Update cache (mark epic dirty=true)
      ↓
@@ -148,7 +453,7 @@ Update cache (mark epic dirty=true)
 
 session.idle event
      ↓
-land-the-plane skill
+land-the-plane function
      ↓
 Batch sync all dirty epics to GitHub
      ↓
@@ -237,12 +542,12 @@ node bin/create-epic.js test-plan.md
 
 ## Future Enhancements (Post-MVP)
 
-1. **Journey Updates** - Track commits → update epic body
-2. **Project Board** - Visual tracking
-3. **Task State Transitions** - Auto-update labels during work
-4. **PR Integration** - Link PRs to epics
-5. **Bidirectional Sync** - GitHub → Cache
-6. **Real-time Updates** - Webhooks for live sync
+1. **Bidirectional Sync** - GitHub → Cache (sync changes made directly on GitHub back to local cache)
+2. **Real-time Updates** - Webhooks for live sync
+3. **PR Integration** - Auto-link PRs to epics when branch names match
+4. **Auto-assign** - Assign epic to plan author automatically
+5. **Milestone linking** - Link epics to GitHub milestones
+6. **Epic templates** - Custom epic body formats per repo
 
 ## Testing Strategy
 
