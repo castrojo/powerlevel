@@ -13,6 +13,7 @@ import { wikiExists, cloneWiki, getWikiCacheDir } from './lib/wiki-manager.js';
 import { getOnboardingStatus, promptOnboarding } from './lib/onboarding-check.js';
 import { detectEpicFromBranch, getEpicDetails, formatEpicTitle } from './lib/epic-detector.js';
 import { updateSessionTitle } from './lib/session-title-updater.js';
+import { registerSessionHooks } from './lib/session-hooks.js';
 
 /**
  * Verifies gh CLI is installed and authenticated
@@ -479,6 +480,9 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
     });
     console.log('✓ Registered /wiki-sync command');
   }
+  
+  // Register session hooks for Superpowers integration
+  registerSessionHooks(session, owner, repo, cwd);
   
   // Hook into session.idle event (legacy session API)
   if (session && session.on) {
