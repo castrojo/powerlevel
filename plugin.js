@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { detectRepo } from './lib/repo-detector.js';
-import { loadCache, saveCache, getDirtyEpics, clearDirtyFlags, getEpic } from './lib/cache-manager.js';
+import { loadCache, saveCache, getDirtyEpics, clearDirtyFlags } from './lib/cache-manager.js';
 import { ensureLabelsExist } from './lib/label-manager.js';
 import { execGh } from './lib/github-cli.js';
 import { findCompletedTasks } from './lib/task-completion-detector.js';
