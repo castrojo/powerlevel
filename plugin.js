@@ -193,6 +193,58 @@ async function landThePlane(owner, repo, cwd) {
 }
 
 /**
+ * Syncs external tracking epics with their external repositories
+ * @param {string} owner - Repository owner
+ * @param {string} repo - Repository name
+ * @param {string} cwd - Current working directory
+ */
+async function syncExternalProjects(owner, repo, cwd) {
+  try {
+    const cache = loadCache(owner, repo);
+    const projects = listProjects(cwd);
+    const repoPath = `${owner}/${repo}`;
+    
+    console.log('Syncing external project tracking epics...');
+    
+    for (const epic of cache.epics) {
+      if (isExternalTrackingEpic(epic)) {
+        // Find project config by matching label
+        const projectLabel = epic.labels.find(l => l.startsWith('project/'));
+        if (!projectLabel) continue;
+        
+        const projectName = projectLabel.replace('project/', '');
+        const project = projects.find(p => p.name === projectName);
+        
+        if (!project || !project.repo) {
+          console.warn(`⚠ Skip Epic #${epic.number}: No project config found for ${projectName}`);
+          continue;
+        }
+        
+        // Sync epic with external repo
+        const result = await syncExternalEpic(
+          repoPath,
+          epic.number,
+          project.repo,
+          project.description || 'No description',
+          null
+        );
+        
+        if (result.synced) {
+          // Update cache with tracked items
+          updateTrackedItems(cache, epic.number, result.issueCount);
+        }
+      }
+    }
+    
+    // Save updated cache
+    saveCache(owner, repo, cache);
+    console.log('✓ External project sync complete');
+  } catch (error) {
+    console.error(`Error syncing external projects: ${error.message}`);
+  }
+}
+
+/**
  * Plugin initialization
  */
 export async function PowerlevelPlugin({ session }) {
@@ -226,6 +278,9 @@ export async function PowerlevelPlugin({ session }) {
   } catch (error) {
     console.error(`Warning: Failed to verify labels: ${error.message}`);
   }
+  
+  // Sync external tracking epics (Option B: Session start sync)
+  await syncExternalProjects(owner, repo, cwd);
   
   // Initialize context provider for epic detection
   const contextProvider = new ContextProvider();

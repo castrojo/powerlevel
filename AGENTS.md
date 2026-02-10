@@ -18,13 +18,14 @@ Powerlevel is a central project management dashboard for OpenCode + Superpowers.
 1. **Self-tracking epics** (e.g., Epic #4, #5)
    - Track development work on Powerlevel itself
    - Work happens in the Powerlevel repo (castrojo/opencode-superpower-github)
-   - Sub-issues represent implementation phases
+   - Sub-issues represent implementation phases (traditional GitHub sub-issues)
 
-2. **External tracking epics** (e.g., Epic #111, #112)
+2. **External tracking epics** (e.g., Epic #155)
    - Track work happening in external repositories
-   - Work happens in the external repo (e.g., projectbluefin/common)
-   - Sub-issues mirror open epics from the external project's board
+   - Work happens in the external repo (e.g., castrojo/casestudypilot)
+   - Use **GitHub tasklists** (not sub-issues) to show tracked issues
    - Auto-synced on session start to keep status current
+   - Format: `- [ ] [Issue Title](https://github.com/owner/repo/issues/123)`
 
 **Powerlevel Score:**
 - Calculated as: `COUNT(epics WHERE status != done)`
@@ -42,24 +43,41 @@ Powerlevel is a central project management dashboard for OpenCode + Superpowers.
   - Epics represent major initiatives spanning multiple tasks
   - Max 3-5 epics in progress at any time
 
-- **Subissues** → **ALL SUB-ISSUES**
+- **Subissues** → **ALL SUB-ISSUES** (Self-tracking epics only)
   - All issues with a parent relationship MUST be in Subissues column
   - Sub-issues track detailed work items under an epic
   - Max 10-15 sub-issues per epic (create another epic if more needed)
+  - **NOTE:** External tracking epics use tasklists, not sub-issues
 
 ### Issue Granularity Guidelines
 - **Epics:** Major features or initiatives (e.g., "Project Board Integration")
 - **Sub-issues:** Consolidated phases or milestones (e.g., "Phase: Core Infrastructure")
+- **Tasklist items:** External repo issues (external tracking only)
 - **NOT individual functions or files** - group related work into meaningful phases
 
 ### Enforcement
 When creating or updating issues:
 1. Check if issue has `type/epic` label
-2. Check if issue has a parent relationship (`.parent` field)
+2. Check if issue has a parent relationship (`.parent` field) OR is external tracking
 3. Set status accordingly:
-   - Epic + No parent → Todo/In Progress/Done
+   - Epic + No parent + Not external → Todo/In Progress/Done
    - Has parent → Subissues
+   - External tracking epic → Todo/In Progress/Done (no sub-issues)
    - Neither → Add appropriate label/parent first
+
+### External Tracking Architecture
+
+**Tasklist Format (not sub-issues):**
+- External tracking epics use GitHub's tasklist markdown syntax
+- Each tracked issue appears as: `- [ ] [Issue Title](url)`
+- Automatically synced on session start
+- Closed external issues show as: `- [x] [Issue Title](url)`
+
+**Sync Behavior:**
+- **Frequency:** Once per OpenCode session start (Option B)
+- **Fallback:** Manual sync via `/sync-projects` command (future)
+- **Label detection:** Tries `type/epic`, then `epic`, then all open issues
+- **No mutation:** Never modifies external repositories
 
 ## Components
 
