@@ -142,6 +142,29 @@ async function main() {
   console.log('');
   console.log('✓ Cache updated');
   
+  // Add epic to project board
+  console.log('');
+  console.log('Adding epic to project board...');
+  try {
+    // Get the first project board for the owner
+    const projectsJson = execGh(`project list --owner ${owner} --format json`);
+    const projects = JSON.parse(projectsJson);
+    
+    if (projects.projects && projects.projects.length > 0) {
+      const projectNumber = projects.projects[0].number;
+      const projectTitle = projects.projects[0].title;
+      
+      // Add the epic to the project board
+      execGh(`project item-add ${projectNumber} --owner ${owner} --url https://github.com/${repoPath}/issues/${epicNumber}`);
+      console.log(`  ✓ Added epic to project board: ${projectTitle}`);
+    } else {
+      console.log(`  ⚠ No project board found, skipping`);
+    }
+  } catch (error) {
+    console.error(`  ✗ Failed to add to project board: ${error.message}`);
+    console.log(`  You can manually add it with: gh project item-add 1 --owner ${owner} --url https://github.com/${repoPath}/issues/${epicNumber}`);
+  }
+  
   // Append epic reference to plan file
   console.log('');
   console.log('Updating plan file...');
