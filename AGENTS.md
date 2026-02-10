@@ -599,10 +599,15 @@ export function someFunction(requiredParam, optionalParam, client = null) {
 - `console.debug()` → `level: 'debug'`
 
 **Exceptions (console still used):**
-- Early initialization errors (before plugin fully loads) - `plugin.js` lines 32, 551, 558
+- Early initialization errors (before plugin fully loads) - `plugin.js` lines 57, 576, 583
 - User-facing prompts (onboarding instructions) - `lib/onboarding-check.js` `promptOnboarding()`
 
 All logs use service name **"powerlevel"** for filtering in OpenCode's log viewer.
+
+**Display Format:**
+The Powerlevel score is displayed as: `Powerlevel 🔶 N - Managing <word> active projects`
+
+Example: `Powerlevel 🔶 11 - Managing eleven active projects`
 
 ## Extension Points
 
