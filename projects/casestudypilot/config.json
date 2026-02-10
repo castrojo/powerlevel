@@ -1,0 +1,19 @@
+{
+  "repo": "castrojo/casestudypilot",
+  "active": true,
+  "labels": {
+    "project": "project/casestudypilot"
+  },
+  "description": "CNCF case study generation framework with fail-fast validation architecture",
+  "tech_stack": ["Python 3.11+", "MCP", "Jinja2", "Docker", "yt-dlp"],
+  "framework_version": "2.3.0",
+  "agents": ["case-study-agent", "people-agent"],
+  "skills": [
+    "transcript-correction",
+    "transcript-analysis",
+    "case-study-generation",
+    "biography-extraction",
+    "talk-aggregation",
+    "presenter-profile-generation"
+  ]
+}
