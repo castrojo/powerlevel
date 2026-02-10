@@ -1,0 +1,10 @@
+{
+  "repo": "castrojo/tap",
+  "active": true,
+  "labels": {
+    "project": "project/tap"
+  },
+  "description": "Homebrew tap for Linux desktop packages",
+  "tech_stack": ["Ruby", "Homebrew"],
+  "framework_version": "1.0.0"
+}

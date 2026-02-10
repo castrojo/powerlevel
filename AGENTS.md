@@ -65,6 +65,25 @@ When creating or updating issues:
    - External tracking epic → Todo/In Progress/Done (no sub-issues)
    - Neither → Add appropriate label/parent first
 
+### Label Conventions
+
+**IMPORTANT:** Powerlevel distinguishes between self-tracking and external-tracking work using label prefixes:
+
+- **`project/*`** → External tracking epics only
+  - Examples: `project/casestudypilot`, `project/bluefin`, `project/cncf-staff`
+  - Work happens in external repositories
+  - Epic uses GitHub tasklists (not sub-issues)
+  - Auto-synced on session start via `lib/external-tracker.js`
+
+- **`area/*`** → Self-tracking work on Powerlevel itself
+  - Example: `area/powerlevel`
+  - Work happens in the Powerlevel repository
+  - Epic may use traditional sub-issues OR tasklists
+  - Manual tracking (not auto-synced)
+
+**Detection Logic:**
+The `isExternalTrackingEpic()` function in `lib/external-tracker.js` checks for `project/*` labels to determine which epics to auto-sync. Self-tracking epics with `area/*` labels are never auto-synced.
+
 ### External Tracking Architecture
 
 **Tasklist Format (not sub-issues):**
@@ -78,6 +97,21 @@ When creating or updating issues:
 - **Fallback:** Manual sync via `/sync-projects` command (future)
 - **Label detection:** Tries `type/epic`, then `epic`, then all open issues
 - **No mutation:** Never modifies external repositories
+
+**Project Config Files:**
+Each tracked external project has a config file in `projects/<project-name>/config.json`:
+```json
+{
+  "repo": "owner/repo",
+  "active": true,
+  "labels": {
+    "project": "project/project-name"
+  },
+  "description": "Project description",
+  "tech_stack": ["Technology", "Stack"],
+  "framework_version": "1.0.0"
+}
+```
 
 ## Components
 

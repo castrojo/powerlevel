@@ -1,0 +1,9 @@
+{
+  "repo": "cncf/staff",
+  "active": true,
+  "labels": {
+    "project": "project/cncf-staff"
+  },
+  "description": "CNCF staff tasks and project management",
+  "framework_version": "1.0.0"
+}

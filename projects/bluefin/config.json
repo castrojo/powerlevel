@@ -1,0 +1,10 @@
+{
+  "repo": "projectbluefin/common",
+  "active": true,
+  "labels": {
+    "project": "project/bluefin"
+  },
+  "description": "Universal Blue / Bluefin common components and infrastructure",
+  "tech_stack": ["Containerfiles", "GitHub Actions", "OCI", "RPM-OSTree"],
+  "framework_version": "1.0.0"
+}

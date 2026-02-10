@@ -1,0 +1,9 @@
+{
+  "repo": "cncf/tab",
+  "active": true,
+  "labels": {
+    "project": "project/cncf-tab"
+  },
+  "description": "CNCF Technical Advisory Board (TAB) and End User Community",
+  "framework_version": "1.0.0"
+}
