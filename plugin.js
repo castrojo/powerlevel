@@ -19,10 +19,14 @@ import { registerSessionHooks } from './lib/session-hooks.js';
  * Verifies gh CLI is installed and authenticated
  * @returns {boolean} True if gh is ready
  */
-function verifyGhCli() {
+function verifyGhCli(client = null) {
   try {
     execGh('auth status');
-    console.log('✓ GitHub CLI authenticated');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: '✓ GitHub CLI authenticated' }
+      });
+    }
     return true;
   } catch (error) {
     console.error('✗ GitHub CLI not authenticated. Run: gh auth login');
@@ -69,7 +73,7 @@ function shouldRefreshWiki(owner, repo, ttlHours = 1) {
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
  */
-function updateWikiTimestamp(owner, repo) {
+function updateWikiTimestamp(owner, repo, client = null) {
   try {
     const cacheDir = getWikiCacheDir(owner, repo);
     
@@ -83,7 +87,11 @@ function updateWikiTimestamp(owner, repo) {
     writeFileSync(lastFetchFile, now, 'utf8');
   } catch (error) {
     // Non-critical - log but don't throw
-    console.debug(`Could not update wiki timestamp: ${error.message}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'debug', message: `Could not update wiki timestamp: ${error.message}` }
+      });
+    }
   }
 }
 
@@ -93,18 +101,26 @@ function updateWikiTimestamp(owner, repo) {
  * @param {string} repo - Repository name
  * @param {Object} config - Configuration object
  */
-async function fetchSuperpowersWiki(owner, repo, config) {
+async function fetchSuperpowersWiki(owner, repo, config, client = null) {
   try {
     // Check if we should fetch the wiki
     if (!config.superpowers.wikiSync) {
-      console.debug('Wiki sync disabled in config (superpowers.wikiSync = false)');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: 'Wiki sync disabled in config (superpowers.wikiSync = false)' }
+        });
+      }
       return;
     }
     
     // Extract superpowers owner/repo from config URL
     const superpowersRepoUrl = config.superpowers.repoUrl;
     if (!superpowersRepoUrl) {
-      console.debug('No superpowers repo URL configured, skipping wiki fetch');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: 'No superpowers repo URL configured, skipping wiki fetch' }
+        });
+      }
       return;
     }
     
@@ -120,21 +136,37 @@ async function fetchSuperpowersWiki(owner, repo, config) {
       superpowersOwner = sshMatch[1];
       superpowersRepo = sshMatch[2];
     } else {
-      console.debug('Could not parse superpowers repo URL, skipping wiki fetch');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: 'Could not parse superpowers repo URL, skipping wiki fetch' }
+        });
+      }
       return;
     }
     
     // Check cache TTL
     if (!shouldRefreshWiki(superpowersOwner, superpowersRepo)) {
-      console.debug('Wiki cache is still fresh, skipping fetch');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: 'Wiki cache is still fresh, skipping fetch' }
+        });
+      }
       return;
     }
     
-    console.log('📚 Fetching superpowers wiki documentation...');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: '📚 Fetching superpowers wiki documentation...' }
+      });
+    }
     
     // Check if wiki exists
     if (!wikiExists(superpowersOwner, superpowersRepo)) {
-      console.warn('⚠️  Superpowers wiki not found or not accessible');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'warn', message: '⚠️  Superpowers wiki not found or not accessible' }
+        });
+      }
       return;
     }
     
@@ -142,13 +174,23 @@ async function fetchSuperpowersWiki(owner, repo, config) {
     await cloneWiki(superpowersOwner, superpowersRepo);
     
     // Update timestamp
-    updateWikiTimestamp(superpowersOwner, superpowersRepo);
+    updateWikiTimestamp(superpowersOwner, superpowersRepo, client);
     
-    console.log('✓ Wiki documentation available locally');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: '✓ Wiki documentation available locally' }
+      });
+    }
   } catch (error) {
     // Non-fatal - log warning but don't crash plugin
-    console.warn(`⚠️  Failed to fetch wiki: ${error.message}`);
-    console.debug('Plugin will continue without wiki cache');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'warn', message: `⚠️  Failed to fetch wiki: ${error.message}` }
+      });
+      client.app.log({
+        body: { service: 'powerlevel', level: 'debug', message: 'Plugin will continue without wiki cache' }
+      });
+    }
   }
 }
 
@@ -158,21 +200,33 @@ async function fetchSuperpowersWiki(owner, repo, config) {
  * @param {string} repo - Repository name
  * @param {Object} cache - Cache object
  */
-async function syncDirtyEpics(owner, repo, cache) {
+async function syncDirtyEpics(owner, repo, cache, client = null) {
   const dirtyEpics = getDirtyEpics(cache);
   
   if (dirtyEpics.length === 0) {
-    console.log('No epics need syncing.');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: 'No epics need syncing.' }
+      });
+    }
     return;
   }
   
-  console.log(`Syncing ${dirtyEpics.length} epic(s) to GitHub...`);
+  if (client) {
+    client.app.log({
+      body: { service: 'powerlevel', level: 'info', message: `Syncing ${dirtyEpics.length} epic(s) to GitHub...` }
+    });
+  }
   
   const repoPath = `${owner}/${repo}`;
   
   for (const epic of dirtyEpics) {
     try {
-      console.log(`  Syncing epic #${epic.number}...`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: `  Syncing epic #${epic.number}...` }
+        });
+      }
       
       // Build task checklist
       let body = epic.goal ? `## Goal\n\n${epic.goal}\n\n` : '';
@@ -188,9 +242,17 @@ async function syncDirtyEpics(owner, repo, cache) {
       // Update the epic issue
       execGh(`issue edit ${epic.number} --repo ${repoPath} --body "${body.replace(/"/g, '\\"')}"`);
       
-      console.log(`  ✓ Synced epic #${epic.number}`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: `  ✓ Synced epic #${epic.number}` }
+        });
+      }
     } catch (error) {
-      console.error(`  ✗ Failed to sync epic #${epic.number}: ${error.message}`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'error', message: `  ✗ Failed to sync epic #${epic.number}: ${error.message}` }
+        });
+      }
     }
   }
 }
@@ -201,7 +263,7 @@ async function syncDirtyEpics(owner, repo, cache) {
  * @param {string} repo - Repository name
  * @param {string} cwd - Current working directory
  */
-async function checkForCompletedTasks(owner, repo, cwd) {
+async function checkForCompletedTasks(owner, repo, cwd, client = null) {
   try {
     // Load config to check if task completion tracking is enabled
     const config = loadConfig(cwd);
@@ -215,31 +277,51 @@ async function checkForCompletedTasks(owner, repo, cwd) {
     // Get last check time from cache (default to 1 hour ago if first run)
     const lastCheck = cache.last_task_check || new Date(Date.now() - 3600000).toISOString();
     
-    console.log(`Checking for completed tasks since ${lastCheck}...`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: `Checking for completed tasks since ${lastCheck}...` }
+      });
+    }
     
     // Find completed tasks from commits
     const completedTasks = findCompletedTasks(lastCheck, cwd);
     
     if (completedTasks.length === 0) {
-      console.log('No completed tasks found.');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: 'No completed tasks found.' }
+        });
+      }
       cache.last_task_check = new Date().toISOString();
       saveCache(owner, repo, cache);
       return;
     }
     
-    console.log(`Found ${completedTasks.length} completed task(s):`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: `Found ${completedTasks.length} completed task(s):` }
+      });
+    }
     
     // For each completed task, try to map to epic and record completion
     for (const task of completedTasks) {
       const { issueNumber, keyword, commit } = task;
       
-      console.log(`  - Issue #${issueNumber} (${keyword}) in commit ${commit.hash.substring(0, 7)}`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: `  - Issue #${issueNumber} (${keyword}) in commit ${commit.hash.substring(0, 7)}` }
+        });
+      }
       
       // Find the issue in cache
       const issue = cache.issues?.find(i => i.number === issueNumber);
       
       if (!issue) {
-        console.log(`    ⚠️  Issue #${issueNumber} not found in cache (may not be a task from an epic)`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'info', message: `    ⚠️  Issue #${issueNumber} not found in cache (may not be a task from an epic)` }
+          });
+        }
         continue;
       }
       
@@ -249,14 +331,22 @@ async function checkForCompletedTasks(owner, repo, cwd) {
       );
       
       if (!epic) {
-        console.log(`    ⚠️  Could not find epic for issue #${issueNumber}`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'info', message: `    ⚠️  Could not find epic for issue #${issueNumber}` }
+          });
+        }
         continue;
       }
       
       // Extract task number from issue title (assumes format "Task N: Title")
       const taskMatch = issue.title?.match(/Task\s+(\d+):/i);
       if (!taskMatch) {
-        console.log(`    ⚠️  Could not extract task number from issue title: ${issue.title}`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'info', message: `    ⚠️  Could not extract task number from issue title: ${issue.title}` }
+          });
+        }
         continue;
       }
       
@@ -271,9 +361,17 @@ async function checkForCompletedTasks(owner, repo, cwd) {
       
       try {
         recordTaskCompletion(epic.number, taskNumber, taskTitle, agentInfo, cwd);
-        console.log(`    ✅ Recorded task ${taskNumber} completion for epic #${epic.number}`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'info', message: `    ✅ Recorded task ${taskNumber} completion for epic #${epic.number}` }
+          });
+        }
       } catch (error) {
-        console.error(`    ✗ Failed to record completion: ${error.message}`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'error', message: `    ✗ Failed to record completion: ${error.message}` }
+          });
+        }
       }
     }
     
@@ -282,7 +380,11 @@ async function checkForCompletedTasks(owner, repo, cwd) {
     saveCache(owner, repo, cache);
     
   } catch (error) {
-    console.error(`Error checking for completed tasks: ${error.message}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'error', message: `Error checking for completed tasks: ${error.message}` }
+      });
+    }
   }
 }
 
@@ -292,16 +394,20 @@ async function checkForCompletedTasks(owner, repo, cwd) {
  * @param {string} repo - Repository name
  * @param {string} cwd - Current working directory
  */
-async function landThePlane(owner, repo, cwd) {
+async function landThePlane(owner, repo, cwd, client = null) {
   try {
-    console.log('🛬 Landing the plane - syncing epics to GitHub...');
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: '🛬 Landing the plane - syncing epics to GitHub...' }
+      });
+    }
     
     // First, check for completed tasks from commits
-    await checkForCompletedTasks(owner, repo, cwd);
+    await checkForCompletedTasks(owner, repo, cwd, client);
     
     // Then sync dirty epics
     const cache = loadCache(owner, repo);
-    await syncDirtyEpics(owner, repo, cache);
+    await syncDirtyEpics(owner, repo, cache, client);
     
     // Clear dirty flags after successful sync
     clearDirtyFlags(cache);
@@ -311,12 +417,22 @@ async function landThePlane(owner, repo, cwd) {
     const projects = listProjects(cwd);
     const powerlevel = calculatePowerlevel(projects);
     
-    console.log('✓ All epics synced and flags cleared.');
-    if (powerlevel > 0) {
-      console.log(`✨ Powerlevel ${powerlevel} - Managing ${powerlevel} active ${powerlevel === 1 ? 'project' : 'projects'}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'info', message: '✓ All epics synced and flags cleared.' }
+      });
+      if (powerlevel > 0) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: `✨ Powerlevel ${powerlevel} - Managing ${powerlevel} active ${powerlevel === 1 ? 'project' : 'projects'}` }
+        });
+      }
     }
   } catch (error) {
-    console.error(`Error during landing: ${error.message}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'error', message: `Error during landing: ${error.message}` }
+      });
+    }
   }
 }
 
@@ -332,13 +448,21 @@ async function handleSessionCreated(sessionInfo, client, cwd, owner, repo) {
   try {
     const epicNumber = detectEpicFromBranch(cwd);
     if (!epicNumber) {
-      console.debug('No epic detected from branch name');
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: 'No epic detected from branch name' }
+        });
+      }
       return;
     }
     
     const epic = getEpicDetails(epicNumber, owner, repo);
     if (!epic) {
-      console.warn(`Epic #${epicNumber} not found in cache`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'warn', message: `Epic #${epicNumber} not found in cache` }
+        });
+      }
       return;
     }
     
@@ -351,11 +475,21 @@ async function handleSessionCreated(sessionInfo, client, cwd, owner, repo) {
     
     const success = await updateSessionTitle(client, sessionInfo.id, title);
     if (success) {
-      console.log(`✓ Session title set for Epic #${epicNumber}`);
-      console.debug(`Title:\n${title}`);
+      if (client) {
+        client.app.log({
+          body: { service: 'powerlevel', level: 'info', message: `✓ Session title set for Epic #${epicNumber}` }
+        });
+        client.app.log({
+          body: { service: 'powerlevel', level: 'debug', message: `Title:\n${title}` }
+        });
+      }
     }
   } catch (error) {
-    console.debug(`Could not set session title: ${error.message}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'debug', message: `Could not set session title: ${error.message}` }
+      });
+    }
   }
 }
 
@@ -370,7 +504,7 @@ async function handleSessionCreated(sessionInfo, client, cwd, owner, repo) {
 async function handleSessionIdle(sessionID, client, cwd, owner, repo) {
   try {
     // First run existing "land the plane" logic
-    await landThePlane(owner, repo, cwd);
+    await landThePlane(owner, repo, cwd, client);
     
     // Then update session title with refreshed epic data
     const epicNumber = detectEpicFromBranch(cwd);
@@ -387,9 +521,17 @@ async function handleSessionIdle(sessionID, client, cwd, owner, repo) {
     });
     
     await updateSessionTitle(client, sessionID, title);
-    console.debug(`✓ Session title refreshed for Epic #${epicNumber}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'debug', message: `✓ Session title refreshed for Epic #${epicNumber}` }
+      });
+    }
   } catch (error) {
-    console.debug(`Could not update session title: ${error.message}`);
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'debug', message: `Could not update session title: ${error.message}` }
+      });
+    }
   }
 }
 
@@ -397,13 +539,15 @@ async function handleSessionIdle(sessionID, client, cwd, owner, repo) {
  * Plugin initialization
  */
 export async function PowerlevelPlugin({ client, session, directory, worktree }) {
-  console.log('Initializing Powerlevel plugin...');
+  client.app.log({
+    body: { service: 'powerlevel', level: 'info', message: 'Initializing Powerlevel plugin...' }
+  });
   
   // Get current working directory
   const cwd = directory || process.cwd();
   
   // Verify gh CLI
-  if (!verifyGhCli()) {
+  if (!verifyGhCli(client)) {
     console.error('Powerlevel plugin disabled - gh CLI not available');
     return;
   }
@@ -418,15 +562,21 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   const { owner, repo } = repoInfo;
   const repoPath = `${owner}/${repo}`;
   
-  console.log(`✓ Detected repository: ${repoPath}`);
+  client.app.log({
+    body: { service: 'powerlevel', level: 'info', message: `✓ Detected repository: ${repoPath}` }
+  });
   
   // Load configuration
   let config;
   try {
     config = loadConfig(cwd);
   } catch (error) {
-    console.warn(`Warning: Could not load config: ${error.message}`);
-    console.warn('Using default configuration');
+    client.app.log({
+      body: { service: 'powerlevel', level: 'warn', message: `Warning: Could not load config: ${error.message}` }
+    });
+    client.app.log({
+      body: { service: 'powerlevel', level: 'warn', message: 'Using default configuration' }
+    });
     // Use minimal default config
     config = {
       superpowers: { wikiSync: false, repoUrl: '', autoOnboard: true },
@@ -447,54 +597,80 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   
   // Ensure labels exist
   try {
-    await ensureLabelsExist(repoPath);
-    console.log('✓ Labels verified');
+    await ensureLabelsExist(repoPath, client);
+    client.app.log({
+      body: { service: 'powerlevel', level: 'info', message: '✓ Labels verified' }
+    });
   } catch (error) {
-    console.error(`Warning: Failed to verify labels: ${error.message}`);
+    client.app.log({
+      body: { service: 'powerlevel', level: 'error', message: `Warning: Failed to verify labels: ${error.message}` }
+    });
   }
   
   // Fetch superpowers wiki (non-blocking)
-  await fetchSuperpowersWiki(owner, repo, config);
+  await fetchSuperpowersWiki(owner, repo, config, client);
   
   // Register /wiki-sync slash command
   if (session && typeof session.registerCommand === 'function') {
     session.registerCommand({
       name: 'wiki-sync',
       description: 'Sync skills and docs to GitHub wiki',
-      async handler(args) {
-        console.log('Running wiki sync...');
-        try {
-          const scriptPath = join(dirname(new URL(import.meta.url).pathname), 'bin', 'sync-wiki.js');
-          const output = execFileSync(
-            'node',
-            [scriptPath, ...args],
-            { cwd, encoding: 'utf8', stdio: 'pipe' }
-          );
-          console.log(output);
-        } catch (error) {
-          console.error('Wiki sync failed:', error.message);
-          if (error.stdout) console.log(error.stdout);
-          if (error.stderr) console.error(error.stderr);
+        async handler(args) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'info', message: 'Running wiki sync...' }
+          });
+          try {
+            const scriptPath = join(dirname(new URL(import.meta.url).pathname), 'bin', 'sync-wiki.js');
+            const output = execFileSync(
+              'node',
+              [scriptPath, ...args],
+              { cwd, encoding: 'utf8', stdio: 'pipe' }
+            );
+            client.app.log({
+              body: { service: 'powerlevel', level: 'info', message: output }
+            });
+          } catch (error) {
+            client.app.log({
+              body: { service: 'powerlevel', level: 'error', message: `Wiki sync failed: ${error.message}` }
+            });
+            if (error.stdout) {
+              client.app.log({
+                body: { service: 'powerlevel', level: 'info', message: error.stdout }
+              });
+            }
+            if (error.stderr) {
+              client.app.log({
+                body: { service: 'powerlevel', level: 'error', message: error.stderr }
+              });
+            }
+          }
         }
-      }
     });
-    console.log('✓ Registered /wiki-sync command');
+    client.app.log({
+      body: { service: 'powerlevel', level: 'info', message: '✓ Registered /wiki-sync command' }
+    });
   }
   
   // Register session hooks for Superpowers integration
-  registerSessionHooks(session, owner, repo, cwd);
+  registerSessionHooks(session, owner, repo, cwd, client);
   
   // Hook into session.idle event (legacy session API)
   if (session && session.on) {
     session.on('idle', async () => {
-      await landThePlane(owner, repo, cwd);
+      await landThePlane(owner, repo, cwd, client);
     });
-    console.log('✓ Hooked into session.idle event');
+    client.app.log({
+      body: { service: 'powerlevel', level: 'info', message: '✓ Hooked into session.idle event' }
+    });
   } else {
-    console.warn('Warning: Session does not support event hooks');
+    client.app.log({
+      body: { service: 'powerlevel', level: 'warn', message: 'Warning: Session does not support event hooks' }
+    });
   }
   
-  console.log('✓ Powerlevel plugin initialized successfully');
+  client.app.log({
+    body: { service: 'powerlevel', level: 'info', message: '✓ Powerlevel plugin initialized successfully' }
+  });
   
   // Return plugin hooks for OpenCode plugin API
   return {
@@ -527,7 +703,11 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
           }
         }
       } catch (error) {
-        console.debug(`Could not inject epic context: ${error.message}`);
+        if (client) {
+          client.app.log({
+            body: { service: 'powerlevel', level: 'debug', message: `Could not inject epic context: ${error.message}` }
+          });
+        }
       }
     }
   };
