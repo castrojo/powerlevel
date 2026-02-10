@@ -726,3 +726,151 @@ gh repo view
 - Cache out of sync → Delete cache, recreate from GitHub
 - Duplicate epics → Check plan file for existing epic reference
 - Labels missing → Re-run `ensureLabelsExist()`
+
+---
+
+## Best Practices System
+
+### Overview
+
+Powerlevel maintains a centralized set of best practices that apply to ALL tracked projects. These practices ensure consistency, quality, and maintainability across the ecosystem.
+
+**Philosophy:** Best practices are stored as markdown documents in this repository and distributed via stable GitHub raw URLs. Tracked projects reference these practices in their `AGENTS.md` files, creating a chain of discovery.
+
+### For AI Agents: Onboarding to Powerlevel
+
+**If you are working on a project managed by Powerlevel:**
+
+1. **Check the project's `AGENTS.md`** - It will have a "Managed by Powerlevel" section
+2. **Follow the link** to the best practices index: https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/README.md
+3. **Review all applicable best practices** - Each practice specifies what types of projects it applies to
+4. **Apply MUST requirements strictly** - These are lint-enforced and non-negotiable
+5. **Follow SHOULD recommendations** - Use judgment based on project context
+
+### Available Best Practices
+
+#### BP-001: GitHub Issue Form Validation
+
+**URL:** https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/github-issue-form-validation.md
+
+**Applies to:** Any project using GitHub issue forms (`.github/ISSUE_TEMPLATE/*.yml`)
+
+**Summary:** YAML syntax rules and GitHub-specific validation requirements for issue form templates. Covers string quoting, ID constraints, uniqueness requirements, and required keys.
+
+**Enforcement:** Lint check via `yq` (YAML parser)
+
+**Key Rules:**
+- All values must be quoted strings (even `"yes"` and `"no"`)
+- IDs must be alphanumeric with hyphens/underscores only
+- Labels and IDs must be unique within a form
+- Required keys: `name`, `description`, `body`
+- No empty strings where values required
+
+### URL Pattern
+
+All best practices use this stable URL pattern:
+
+```
+https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/{topic}.md
+```
+
+**Benefits:**
+- No git clone required (just HTTP fetch)
+- Cached by GitHub CDN
+- Works from any environment
+- No authentication needed (public repo)
+
+### Adding New Best Practices
+
+See `docs/best-practices/README.md` for instructions on adding new best practices.
+
+**Process:**
+1. Create markdown file in `docs/best-practices/{topic}.md`
+2. Assign next BP number (BP-002, BP-003, etc.)
+3. Update `docs/best-practices/README.md` index
+4. Update this section with new practice summary
+5. Commit: `docs: add BP-XXX {topic}`
+
+### Tracked Projects Distribution
+
+When a project is onboarded to Powerlevel (via `bin/onboard-project.js`), it receives an `AGENTS.md` file with:
+
+1. **Powerlevel Managed Section** (HTML-commented to prevent accidental edits)
+   - Link to best practices index
+   - Quick links to individual practices
+   - Project tracking information
+
+2. **Project-Specific Context** (customizable by project team)
+   - Architecture notes
+   - Development workflow
+   - Testing instructions
+   - Deployment process
+
+This creates a discovery chain:
+```
+Agent starts in tracked project
+     ↓
+Reads project's AGENTS.md
+     ↓
+Follows link to Powerlevel best practices
+     ↓
+Fetches applicable best practice docs via raw URLs
+     ↓
+Applies standards to project work
+```
+
+### No Wiki Sync Complexity
+
+**Design Decision:** Best practices are NOT synced to project wikis. The wiki sync system (`lib/wiki-manager.js`) remains for Superpowers skills, but best practices use simpler GitHub raw URL distribution.
+
+**Rationale:**
+- Best practices are compact reference docs (not large interactive skills)
+- Raw URLs are simpler than git clone/sync
+- No cache management needed
+- Immediate HTTP fetch from GitHub CDN
+- Easier to maintain and update
+
+### Enforcement Levels
+
+Best practices use three enforcement levels:
+
+1. **MUST** - Strict requirement, lint-enforced, non-negotiable
+   - Example: "Values MUST be quoted strings in YAML"
+   - Enforced via automated lint checks
+
+2. **SHOULD** - Strong recommendation, use judgment
+   - Example: "Dropdown options SHOULD have descriptive labels"
+   - Apply based on project context
+
+3. **MAY** - Optional suggestion, team preference
+   - Example: "Issue forms MAY include markdown informational sections"
+   - Purely advisory
+
+**For agents:** Focus on MUST requirements first, then SHOULD recommendations. MAY suggestions are optional.
+
+### Configuration Integration
+
+Best practices respect project configuration in `.opencode/config.json`:
+
+```json
+{
+  "bestPractices": {
+    "enabled": true,
+    "enforce": "strict",  // "strict" | "warn" | "off"
+    "exclude": []  // BP numbers to skip (e.g., ["BP-001"])
+  }
+}
+```
+
+**Default behavior:** All best practices enabled in strict mode unless project opts out.
+
+### Future Enhancements
+
+Planned improvements (post-MVP):
+
+1. **BP-002: Commit Message Conventions** - Consistent commit style across projects
+2. **BP-003: PR Template Standards** - Required sections for pull requests
+3. **BP-004: Documentation Structure** - Standard docs/ layout
+4. **CI Validation** - GitHub Actions to enforce MUST requirements automatically
+5. **VS Code Extension** - Inline hints for best practice violations
+6. **Dashboard Compliance View** - Show which tracked projects follow which practices
