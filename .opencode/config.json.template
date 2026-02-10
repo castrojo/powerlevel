@@ -1,0 +1,20 @@
+{
+  "superpowers": {
+    "enabled": false,
+    "remote": "origin",
+    "repoUrl": "",
+    "autoOnboard": false,
+    "wikiSync": true
+  },
+  "wiki": {
+    "autoSync": false,
+    "syncOnCommit": false,
+    "includeSkills": true,
+    "includeDocs": true
+  },
+  "tracking": {
+    "autoUpdateEpics": true,
+    "updateOnTaskComplete": true,
+    "commentOnProgress": false
+  }
+}
