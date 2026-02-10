@@ -5,7 +5,7 @@
  * Tests plan file parsing and message parsing
  */
 
-import { extractPlanFromMessage } from '../lib/parser.js';
+import { extractPlanFromMessage, insertEpicReference } from '../lib/parser.js';
 
 let testsPassed = 0;
 let testsFailed = 0;
@@ -84,6 +84,55 @@ test('should extract plan with numbers in filename', () => {
   const result = extractPlanFromMessage(message);
   
   assertEqual(result, 'docs/plans/2026-02-10-123.md', 'Should extract plan with numbers');
+});
+
+// Test 8: Insert epic reference at top of plan file
+test('should insert epic reference at top of plan file', () => {
+  const planContent = `# Feature Name Implementation Plan
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+
+**Goal:** Build something cool
+
+## Task 1: First Task`;
+
+  const result = insertEpicReference(planContent, 123, [124, 125]);
+  
+  // Check that epic reference is present
+  if (!result.includes('> **Epic Issue:** #123')) {
+    throw new Error('Epic reference should include epic issue number');
+  }
+  if (!result.includes('> **Sub-Tasks:** #124, #125')) {
+    throw new Error('Epic reference should include sub-task numbers');
+  }
+  
+  // Check that it's inserted after title but before Claude instruction
+  const lines = result.split('\n');
+  const epicLineIndex = lines.findIndex(l => l.includes('Epic Issue:'));
+  const claudeLineIndex = lines.findIndex(l => l.includes('For Claude:'));
+  
+  if (epicLineIndex <= 0) {
+    throw new Error('Epic reference should be after title (index > 0)');
+  }
+  if (epicLineIndex >= claudeLineIndex) {
+    throw new Error('Epic reference should be before Claude instruction');
+  }
+});
+
+// Test 9: Insert epic reference without sub-tasks
+test('should insert epic reference without sub-tasks', () => {
+  const planContent = `# Simple Plan
+
+Some content here.`;
+
+  const result = insertEpicReference(planContent, 456);
+  
+  if (!result.includes('> **Epic Issue:** #456')) {
+    throw new Error('Epic reference should include epic issue number');
+  }
+  if (result.includes('Sub-Tasks:')) {
+    throw new Error('Epic reference should not include sub-tasks line when empty');
+  }
 });
 
 // Summary
