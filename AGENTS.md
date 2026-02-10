@@ -550,6 +550,60 @@ Session ends → dirty=false (after sync)
 - **No tasks found:** Create epic anyway with warning comment
 - **Missing goal:** Use filename as goal
 
+## Logging
+
+The plugin uses OpenCode SDK logging instead of console output to prevent spillover into the user's console:
+
+```javascript
+await client.app.log({
+  body: { 
+    service: 'powerlevel', 
+    level: 'info',  // or 'error', 'warn', 'debug'
+    message: 'Your message here' 
+  }
+});
+```
+
+**Library Function Pattern:**
+
+All library functions accept an optional `client` parameter:
+
+```javascript
+export function someFunction(requiredParam, optionalParam, client = null) {
+  // If client provided, log via SDK
+  if (client) {
+    client.app.log({
+      body: { service: 'powerlevel', level: 'info', message: 'Operation started' }
+    });
+  }
+  
+  // ... function logic ...
+  
+  try {
+    // ... operations ...
+  } catch (error) {
+    if (client) {
+      client.app.log({
+        body: { service: 'powerlevel', level: 'error', message: `Error: ${error.message}` }
+      });
+    }
+    throw error;
+  }
+}
+```
+
+**Log Level Mapping:**
+- `console.log()` → `level: 'info'`
+- `console.error()` → `level: 'error'`
+- `console.warn()` → `level: 'warn'`
+- `console.debug()` → `level: 'debug'`
+
+**Exceptions (console still used):**
+- Early initialization errors (before plugin fully loads) - `plugin.js` lines 32, 551, 558
+- User-facing prompts (onboarding instructions) - `lib/onboarding-check.js` `promptOnboarding()`
+
+All logs use service name **"powerlevel"** for filtering in OpenCode's log viewer.
+
 ## Extension Points
 
 ### Adding New Skills
