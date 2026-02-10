@@ -219,6 +219,62 @@ async function main() {
           }
         }
       }
+      
+      // Add sub-issues to project board
+      if (cache.epics && plan.tasks.length > 0) {
+        console.log('');
+        console.log('Adding sub-issues to project board...');
+        
+        const projectFields = getProjectFields(owner, projectBoard.number);
+        
+        // Find the epic in cache
+        const cachedEpic = cache.epics.find(e => e.number === epicNumber);
+        
+        if (cachedEpic && cachedEpic.sub_issues) {
+          for (const subIssue of cachedEpic.sub_issues) {
+            try {
+              const subIssueNodeId = getIssueNodeId(repoPath, subIssue.number);
+              if (!subIssueNodeId) {
+                console.log(`  ⚠ Could not get node ID for #${subIssue.number}`);
+                continue;
+              }
+              
+              const subItemId = addIssueToProject(projectBoard.id, subIssueNodeId);
+              
+              if (subItemId && projectFields) {
+                // Set priority field
+                const priorityLabel = `priority/${plan.priority}`;
+                const priorityMapping = mapLabelToField(priorityLabel, projectFields);
+                
+                if (priorityMapping) {
+                  updateProjectItemField(
+                    projectBoard.id,
+                    subItemId,
+                    priorityMapping.fieldId,
+                    priorityMapping.optionId
+                  );
+                }
+                
+                // Set status field
+                const statusMapping = mapLabelToField('status/planning', projectFields);
+                
+                if (statusMapping) {
+                  updateProjectItemField(
+                    projectBoard.id,
+                    subItemId,
+                    statusMapping.fieldId,
+                    statusMapping.optionId
+                  );
+                }
+                
+                console.log(`  ✓ Added #${subIssue.number} to project`);
+              }
+            } catch (error) {
+              console.log(`  ⚠ Failed to add #${subIssue.number}: ${error.message}`);
+            }
+          }
+        }
+      }
     }
   } catch (error) {
     console.error(`  ✗ Failed to add to project board: ${error.message}`);
