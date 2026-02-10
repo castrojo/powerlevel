@@ -54,6 +54,7 @@ function verifyGhCli(client = null) {
     }
     return true;
   } catch (error) {
+    // Early error - client not available yet
     console.error('✗ GitHub CLI not authenticated. Run: gh auth login');
     return false;
   }
@@ -573,6 +574,7 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   
   // Verify gh CLI
   if (!verifyGhCli(client)) {
+    // Early error - plugin initialization failed
     console.error('Powerlevel plugin disabled - gh CLI not available');
     return;
   }
@@ -580,6 +582,7 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   // Detect repository
   const repoInfo = detectRepo(cwd, client);
   if (!repoInfo) {
+    // Early error - plugin initialization failed
     console.error('Powerlevel plugin disabled - not in a GitHub repository');
     return;
   }
