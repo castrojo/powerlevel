@@ -15,8 +15,32 @@ Powerlevel provides a central command center for managing multiple projects with
 - **Automatic Epic Creation**: Plans become GitHub issues automatically
 - **Progress Sync**: Updates flow from projects to your central board
 - **Powerlevel Score**: See total active projects and completion metrics
+- **Wiki Sync**: Share skills and docs across projects via GitHub wikis
+- **Context Discovery**: AI agents automatically access skills and patterns
 
 Your **Powerlevel** = the number of active projects you're managing. Simple as that.
+
+## Features
+
+### Epic Tracking
+- **Automatic GitHub epic creation** from implementation plans
+- **Sub-task tracking** with epic references  
+- **Journey updates** when tasks complete
+- **Cache-based sync** for offline work with batch GitHub updates
+
+### Wiki Sync
+- **Sync skills and documentation** to project wikis
+- **Automatic wiki fetch** on session start (when enabled)
+- **Manual sync** via command line or `/wiki-sync` command
+- **Centralized knowledge base** accessible to agents and humans
+- 📖 See [Wiki Sync Documentation](docs/WIKI-SYNC.md)
+
+### Agent Context Discovery
+- **AI agents discover skills** and patterns from superpowers repo
+- **Local caching** for fast access with TTL-based refresh
+- **Automatic context refresh** on session start
+- **Multiple context sources**: superpowers wiki, project wiki, local docs, implementation plans
+- 🤖 See [Agent Context Documentation](docs/AGENT-CONTEXT.md)
 
 ## Installation
 
@@ -47,6 +71,46 @@ ln -s ~/.config/opencode/powerlevel/skills ~/.config/opencode/skills/powerlevel
 ```bash
 gh auth status
 ```
+
+## Quick Start
+
+### Onboard Your Project
+
+From your project repository, run:
+
+```bash
+node bin/onboard-project.js
+```
+
+This will:
+- Add the superpowers git remote to your project
+- Create default configuration in `.opencode/config.json`
+- Set up documentation stub in `docs/SUPERPOWERS.md`
+- Enable context discovery for AI agents
+
+### Sync Skills to Wiki
+
+After onboarding, sync skills and docs to your project's GitHub wiki:
+
+```bash
+# One-time: Enable wiki in GitHub repo settings
+# Then run:
+node bin/sync-wiki.js
+```
+
+This makes skills and documentation accessible via your project's wiki.
+
+### Create Your First Epic
+
+Write an implementation plan, then create an epic from it:
+
+```bash
+# Create plan (use writing-plans skill in OpenCode)
+# Then create epic:
+node bin/create-epic.js .opencode/plans/my-plan.md
+```
+
+This creates a GitHub epic issue with sub-tasks automatically.
 
 ## How to Use
 
@@ -122,6 +186,35 @@ The plugin creates these labels automatically:
 **Epic Reference:**
 - `epic/123` - Links task to parent epic #123
 
+## Configuration
+
+Configuration is stored in `.opencode/config.json`:
+
+```json
+{
+  "superpowers": {
+    "enabled": true,
+    "remote": "superpowers",
+    "repoUrl": "git@github.com:castrojo/superpowers.git",
+    "autoOnboard": false,
+    "wikiSync": true
+  },
+  "wiki": {
+    "autoSync": false,
+    "syncOnCommit": false,
+    "includeSkills": true,
+    "includeDocs": true
+  },
+  "tracking": {
+    "autoUpdateEpics": true,
+    "updateOnTaskComplete": true,
+    "commentOnProgress": false
+  }
+}
+```
+
+See [Wiki Sync docs](docs/WIKI-SYNC.md) and [Agent Context docs](docs/AGENT-CONTEXT.md) for detailed configuration options.
+
 ## Troubleshooting
 
 **"gh: command not found"**
@@ -139,6 +232,22 @@ The plugin creates these labels automatically:
 **Epic creation fails**
 - Ensure plan file has proper structure (# Title, **Goal:** section, ## Task N: headers)
 - Check GitHub API rate limits: `gh api rate_limit`
+
+**Wiki sync issues**
+- Enable wiki in GitHub repository settings
+- Verify superpowers remote: `git remote -v | grep superpowers`
+- See [Wiki Sync troubleshooting](docs/WIKI-SYNC.md#troubleshooting)
+
+**Context discovery not working**
+- Run onboarding: `node bin/onboard-project.js`
+- Check config: `cat .opencode/config.json`
+- See [Agent Context troubleshooting](docs/AGENT-CONTEXT.md#troubleshooting)
+
+## Documentation
+
+- [Wiki Sync System](docs/WIKI-SYNC.md) - Syncing skills and docs to wikis
+- [Agent Context Discovery](docs/AGENT-CONTEXT.md) - How agents discover and use context
+- [AGENTS.md](AGENTS.md) - Architecture guide for AI agents working on this codebase
 
 ## Support
 
