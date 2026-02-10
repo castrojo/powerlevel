@@ -1,0 +1,154 @@
+#!/usr/bin/env node
+
+import { readFileSync, appendFileSync } from 'fs';
+import { resolve } from 'path';
+import { detectRepo } from '../lib/repo-detector.js';
+import { loadCache, saveCache, addEpic, addSubIssue } from '../lib/cache-manager.js';
+import { parsePlanFile, formatEpicBody } from '../lib/parser.js';
+import { createEpic, createSubIssue } from '../lib/github-cli.js';
+import { getEpicLabels, getTaskLabels, ensureEpicLabel } from '../lib/label-manager.js';
+import { execGh } from '../lib/github-cli.js';
+
+/**
+ * Main function to create an epic from a plan file
+ */
+async function main() {
+  // Get plan file from command line arguments
+  const planFile = process.argv[2];
+  
+  if (!planFile) {
+    console.error('Usage: node bin/create-epic.js <plan-file>');
+    console.error('Example: node bin/create-epic.js docs/plans/my-feature.md');
+    process.exit(1);
+  }
+  
+  const planPath = resolve(planFile);
+  
+  // Detect repository
+  const repoInfo = detectRepo();
+  if (!repoInfo) {
+    console.error('Error: Not in a GitHub repository');
+    process.exit(1);
+  }
+  
+  const { owner, repo } = repoInfo;
+  const repoPath = `${owner}/${repo}`;
+  
+  console.log(`Repository: ${repoPath}`);
+  console.log(`Plan file: ${planPath}`);
+  console.log('');
+  
+  // Verify gh CLI
+  try {
+    execGh('auth status');
+  } catch (error) {
+    console.error('Error: GitHub CLI not authenticated. Run: gh auth login');
+    process.exit(1);
+  }
+  
+  // Parse plan file
+  console.log('Parsing plan file...');
+  let plan;
+  try {
+    plan = parsePlanFile(planPath);
+  } catch (error) {
+    console.error(`Error parsing plan file: ${error.message}`);
+    process.exit(1);
+  }
+  
+  console.log(`  Title: ${plan.title}`);
+  console.log(`  Priority: ${plan.priority}`);
+  console.log(`  Tasks: ${plan.tasks.length}`);
+  console.log('');
+  
+  // Create epic on GitHub
+  console.log('Creating epic on GitHub...');
+  const epicBody = formatEpicBody(plan);
+  const epicLabels = getEpicLabels(plan.priority);
+  
+  let epicNumber;
+  try {
+    epicNumber = createEpic(repoPath, plan.title, epicBody, epicLabels);
+    console.log(`  ✓ Created epic #${epicNumber}`);
+    console.log(`  URL: https://github.com/${repoPath}/issues/${epicNumber}`);
+  } catch (error) {
+    console.error(`  ✗ Failed to create epic: ${error.message}`);
+    process.exit(1);
+  }
+  
+  // Ensure epic label exists
+  ensureEpicLabel(repoPath, epicNumber);
+  
+  // Load cache
+  const cache = loadCache(owner, repo);
+  
+  // Add epic to cache
+  addEpic(cache, {
+    number: epicNumber,
+    title: plan.title,
+    goal: plan.goal,
+    priority: plan.priority,
+    state: 'open',
+    dirty: false,
+    sub_issues: []
+  });
+  
+  // Create sub-issues for each task
+  if (plan.tasks.length > 0) {
+    console.log('');
+    console.log(`Creating ${plan.tasks.length} sub-issue(s)...`);
+    
+    for (let i = 0; i < plan.tasks.length; i++) {
+      const task = plan.tasks[i];
+      const taskLabels = getTaskLabels(epicNumber, plan.priority);
+      
+      try {
+        const subIssueNumber = createSubIssue(
+          repoPath,
+          task,
+          `Task ${i + 1} of ${plan.tasks.length}`,
+          taskLabels,
+          epicNumber
+        );
+        
+        console.log(`  ✓ Created sub-issue #${subIssueNumber}: ${task}`);
+        
+        // Add to cache
+        addSubIssue(cache, epicNumber, {
+          number: subIssueNumber,
+          title: task,
+          state: 'open',
+          epic_number: epicNumber
+        });
+      } catch (error) {
+        console.error(`  ✗ Failed to create sub-issue: ${error.message}`);
+      }
+    }
+  }
+  
+  // Save cache
+  saveCache(owner, repo, cache);
+  console.log('');
+  console.log('✓ Cache updated');
+  
+  // Append epic reference to plan file
+  console.log('');
+  console.log('Updating plan file...');
+  try {
+    const epicReference = `\n\n---\n\n**Epic:** #${epicNumber} (https://github.com/${repoPath}/issues/${epicNumber})\n`;
+    appendFileSync(planPath, epicReference, 'utf8');
+    console.log('  ✓ Added epic reference to plan file');
+  } catch (error) {
+    console.error(`  ✗ Failed to update plan file: ${error.message}`);
+  }
+  
+  console.log('');
+  console.log('✅ Epic creation complete!');
+  console.log(`View epic: https://github.com/${repoPath}/issues/${epicNumber}`);
+}
+
+// Run main function
+main().catch(error => {
+  console.error(`Fatal error: ${error.message}`);
+  process.exit(1);
+});
