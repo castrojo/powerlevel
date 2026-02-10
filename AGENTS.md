@@ -9,6 +9,58 @@ Powerlevel is a central project management dashboard for OpenCode + Superpowers.
 ### Core Principle
 **"One dashboard for all projects"** - Track multiple projects in one place. Your Powerlevel = number of active projects you're managing.
 
+### Design Philosophy: Tracking-Only Dashboard
+
+**CRITICAL:** Powerlevel is **always a tracking-only system**. All epics track work happening in other repositories. Powerlevel never manages the actual work—it only displays unified status snapshots.
+
+**Two Types of Epics:**
+
+1. **Self-tracking epics** (e.g., Epic #4, #5)
+   - Track development work on Powerlevel itself
+   - Work happens in the Powerlevel repo (castrojo/opencode-superpower-github)
+   - Sub-issues represent implementation phases
+
+2. **External tracking epics** (e.g., Epic #111, #112)
+   - Track work happening in external repositories
+   - Work happens in the external repo (e.g., projectbluefin/common)
+   - Sub-issues mirror open epics from the external project's board
+   - Auto-synced on session start to keep status current
+
+**Powerlevel Score:**
+- Calculated as: `COUNT(epics WHERE status != done)`
+- Each active tracking epic = +1 Powerlevel
+- Displayed on session start and in profile badge
+- Example: 3 active epics = Powerlevel 3
+
+## Project Board Organization Rules
+
+**CRITICAL:** The project board uses a strict hierarchy for status columns:
+
+### Status Column Rules
+- **Todo / In Progress / Done** → **EPICS ONLY**
+  - Only issues with `type/epic` label can have these statuses
+  - Epics represent major initiatives spanning multiple tasks
+  - Max 3-5 epics in progress at any time
+
+- **Subissues** → **ALL SUB-ISSUES**
+  - All issues with a parent relationship MUST be in Subissues column
+  - Sub-issues track detailed work items under an epic
+  - Max 10-15 sub-issues per epic (create another epic if more needed)
+
+### Issue Granularity Guidelines
+- **Epics:** Major features or initiatives (e.g., "Project Board Integration")
+- **Sub-issues:** Consolidated phases or milestones (e.g., "Phase: Core Infrastructure")
+- **NOT individual functions or files** - group related work into meaningful phases
+
+### Enforcement
+When creating or updating issues:
+1. Check if issue has `type/epic` label
+2. Check if issue has a parent relationship (`.parent` field)
+3. Set status accordingly:
+   - Epic + No parent → Todo/In Progress/Done
+   - Has parent → Subissues
+   - Neither → Add appropriate label/parent first
+
 ## Components
 
 ### 1. Plugin Entry Point (`plugin.js`)

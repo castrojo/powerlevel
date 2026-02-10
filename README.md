@@ -1,10 +1,16 @@
 # Powerlevel
 
+![Powerlevel](https://img.shields.io/badge/Powerlevel-5-brightgreen)
+
 **Your personal project management dashboard for OpenCode + Superpowers**
 
 Track all your projects in one central place. Each project you manage contributes to your Powerlevel - the total number of active projects across your repositories.
 
 **Project Board:** [Superpowers Development](https://github.com/users/castrojo/projects/1)
+
+## Design Philosophy
+
+**Powerlevel is tracking-only.** All epics track work happening in other repositories. Powerlevel never manages the actual work—it only displays a unified status snapshot across all your projects. Your Powerlevel score = the number of active projects you're currently managing.
 
 ## What It Does
 
@@ -53,6 +59,16 @@ Your **Powerlevel** = the number of active projects you're managing. Simple as t
 - **Project board integration** - Automatically populates GitHub Project Boards with epics and tasks
 - **Field mapping** - Maps label values (priority, status) to project board fields
 - 🚀 See [Superpowers Integration](docs/SUPERPOWERS-INTEGRATION.md) (coming soon)
+
+### External Project Tracking
+- **Multi-repository tracking** - Track work happening in external repos from one dashboard
+- **Auto-sync on session start** - Sub-issues mirror open epics from external project boards
+- **Powerlevel score** - Each tracked project contributes +1 to your Powerlevel
+- **Tracking-only design** - Work happens in external repos, Powerlevel displays status
+- **Two tracking modes:**
+  - **Self-tracking epics** - Track Powerlevel development itself
+  - **External tracking epics** - Track work in other repositories (e.g., projectbluefin/common)
+- 📊 See [External Tracking Guide](docs/plans/2026-02-10-external-project-tracking.md)
 
 ## Installation
 
@@ -288,6 +304,22 @@ See [Wiki Sync docs](docs/WIKI-SYNC.md) and [Agent Context docs](docs/AGENT-CONT
 - Run onboarding: `node bin/onboard-project.js`
 - Check config: `cat .opencode/config.json`
 - See [Agent Context troubleshooting](docs/AGENT-CONTEXT.md#troubleshooting)
+
+**Project board issues in wrong status columns**
+- Run enforcement script: `node bin/enforce-board-rules.js`
+- This ensures epics stay in Todo/In Progress/Done and sub-issues stay in Subissues
+
+## Maintenance Scripts
+
+**Enforce project board organization rules:**
+```bash
+node bin/enforce-board-rules.js
+```
+Validates and fixes project board status columns according to these rules:
+- **Todo/In Progress/Done** - Epics only (`type/epic` label)
+- **Subissues** - All sub-issues (issues with parent relationships)
+
+Run this after bulk operations or if the board organization gets messy.
 
 ## Documentation
 
