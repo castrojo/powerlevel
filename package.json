@@ -1,0 +1,25 @@
+{
+  "name": "opencode-github-tracker",
+  "version": "0.1.0",
+  "description": "GitHub issue tracking integration for OpenCode + Superpowers",
+  "type": "module",
+  "main": "plugin.js",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "opencode",
+    "github",
+    "issue-tracker",
+    "superpowers",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anomalyco/opencode-github-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anomalyco/opencode-github-tracker/issues"
+  }
+}
