@@ -101,6 +101,59 @@ The plugin creates these labels automatically:
 **Epic Reference:**
 - `epic/123` - Links task to parent epic #123
 
+## Project Board Integration
+
+Epics and sub-issues are automatically added to your GitHub Project Board with proper field mapping.
+
+### Features
+
+- Auto-detects your first project board
+- Maps labels to project fields:
+  - `priority/p0-p3` → Priority field
+  - `status/*` → Status field
+- Adds both epics and sub-issues to the board
+- Gracefully handles missing project boards or fields
+
+### Configuration
+
+**Environment Variables:**
+```bash
+# Disable project board integration
+export GITHUB_TRACKER_PROJECT_ENABLED=false
+
+# Use specific project number
+export GITHUB_TRACKER_PROJECT_NUMBER=2
+```
+
+**Config File** (`.github-tracker.json`):
+```json
+{
+  "projectBoard": {
+    "enabled": true,
+    "projectNumber": 1,
+    "fieldMapping": {
+      "priority": "Priority",
+      "status": "Status"
+    }
+  }
+}
+```
+
+### Field Mapping
+
+The following label-to-field mappings are applied automatically:
+
+| Label | Project Field | Project Value |
+|-------|---------------|---------------|
+| `priority/p0` | Priority | P0 - Critical |
+| `priority/p1` | Priority | P1 - High |
+| `priority/p2` | Priority | P2 - Normal |
+| `priority/p3` | Priority | P3 - Low |
+| `status/planning` | Status | Todo |
+| `status/in-progress` | Status | In Progress |
+| `status/review` | Status | In Progress |
+| `status/done` | Status | Done |
+
 ## Troubleshooting
 
 **"gh: command not found"**
