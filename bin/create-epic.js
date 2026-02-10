@@ -8,6 +8,10 @@ import { parsePlanFile, formatEpicBody } from '../lib/parser.js';
 import { createEpic, createSubIssue } from '../lib/github-cli.js';
 import { getEpicLabels, getTaskLabels, ensureEpicLabel, ensureLabelsExist } from '../lib/label-manager.js';
 import { execGh } from '../lib/github-cli.js';
+import { detectProjectBoard } from '../lib/project-board-detector.js';
+import { getProjectFields, mapLabelToField } from '../lib/project-field-manager.js';
+import { addIssueToProject, updateProjectItemField, getIssueNodeId } from '../lib/project-item-manager.js';
+import { getCachedProjectBoard, cacheProjectBoard } from '../lib/cache-manager.js';
 
 /**
  * Main function to create an epic from a plan file
@@ -142,27 +146,83 @@ async function main() {
   console.log('');
   console.log('✓ Cache updated');
   
-  // Add epic to project board
+  // Add epic to project board with field mapping
   console.log('');
   console.log('Adding epic to project board...');
+  
   try {
-    // Get the first project board for the owner
-    const projectsJson = execGh(`project list --owner ${owner} --format json`);
-    const projects = JSON.parse(projectsJson);
+    // Try to get cached project board first
+    let projectBoard = getCachedProjectBoard(cache);
     
-    if (projects.projects && projects.projects.length > 0) {
-      const projectNumber = projects.projects[0].number;
-      const projectTitle = projects.projects[0].title;
+    // If not cached, detect it
+    if (!projectBoard) {
+      projectBoard = detectProjectBoard(owner);
       
-      // Add the epic to the project board
-      execGh(`project item-add ${projectNumber} --owner ${owner} --url https://github.com/${repoPath}/issues/${epicNumber}`);
-      console.log(`  ✓ Added epic to project board: ${projectTitle}`);
+      if (projectBoard) {
+        cacheProjectBoard(cache, projectBoard);
+        saveCache(owner, repo, cache);
+      }
+    }
+    
+    if (!projectBoard) {
+      console.log('  ⚠ No project board found, skipping');
     } else {
-      console.log(`  ⚠ No project board found, skipping`);
+      console.log(`  Using project: ${projectBoard.title}`);
+      
+      // Get issue node ID
+      const issueNodeId = getIssueNodeId(repoPath, epicNumber);
+      if (!issueNodeId) {
+        throw new Error('Failed to get issue node ID');
+      }
+      
+      // Add epic to project
+      const itemId = addIssueToProject(projectBoard.id, issueNodeId);
+      
+      if (itemId) {
+        console.log(`  ✓ Added epic to project board`);
+        
+        // Get project fields
+        const projectFields = getProjectFields(owner, projectBoard.number);
+        
+        if (projectFields) {
+          // Map priority label to field
+          const priorityLabel = `priority/${plan.priority}`;
+          const priorityMapping = mapLabelToField(priorityLabel, projectFields);
+          
+          if (priorityMapping) {
+            const success = updateProjectItemField(
+              projectBoard.id,
+              itemId,
+              priorityMapping.fieldId,
+              priorityMapping.optionId
+            );
+            
+            if (success) {
+              console.log(`  ✓ Set Priority: ${priorityMapping.optionName}`);
+            }
+          }
+          
+          // Map status label to field
+          const statusMapping = mapLabelToField('status/planning', projectFields);
+          
+          if (statusMapping) {
+            const success = updateProjectItemField(
+              projectBoard.id,
+              itemId,
+              statusMapping.fieldId,
+              statusMapping.optionId
+            );
+            
+            if (success) {
+              console.log(`  ✓ Set Status: ${statusMapping.optionName}`);
+            }
+          }
+        }
+      }
     }
   } catch (error) {
     console.error(`  ✗ Failed to add to project board: ${error.message}`);
-    console.log(`  You can manually add it with: gh project item-add 1 --owner ${owner} --url https://github.com/${repoPath}/issues/${epicNumber}`);
+    console.log(`  (Epic creation succeeded - project board is optional)`);
   }
   
   // Append epic reference to plan file
