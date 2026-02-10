@@ -189,3 +189,8 @@ Architecture/                    # Technical reference
 
 - GitHub Wiki Docs: https://docs.github.com/en/communities/documenting-your-project-with-wikis
 - Current opencode-superpower-github repo: https://github.com/castrojo/opencode-superpower-github
+
+
+---
+
+**Epic:** #4 (https://github.com/castrojo/opencode-superpower-github/issues/4)
