@@ -6,6 +6,7 @@ import { execGh } from './lib/github-cli.js';
 import { findCompletedTasks } from './lib/task-completion-detector.js';
 import { recordTaskCompletion } from './lib/epic-updater.js';
 import { loadConfig } from './lib/config-loader.js';
+import { listProjects, calculatePowerlevel } from './lib/project-manager.js';
 
 /**
  * Verifies gh CLI is installed and authenticated
@@ -177,7 +178,14 @@ async function landThePlane(owner, repo, cwd) {
     clearDirtyFlags(cache);
     saveCache(owner, repo, cache);
     
+    // Calculate and display powerlevel
+    const projects = listProjects(cwd);
+    const powerlevel = calculatePowerlevel(projects);
+    
     console.log('✓ All epics synced and flags cleared.');
+    if (powerlevel > 0) {
+      console.log(`✨ Powerlevel ${powerlevel} - Managing ${powerlevel} active ${powerlevel === 1 ? 'project' : 'projects'}`);
+    }
   } catch (error) {
     console.error(`Error during landing: ${error.message}`);
   }

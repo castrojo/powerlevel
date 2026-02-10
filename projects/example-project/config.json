@@ -1,0 +1,8 @@
+{
+  "repo": "username/example-project",
+  "active": false,
+  "description": "Example project configuration - copy this to create new projects",
+  "labels": {
+    "project": "project/example-project"
+  }
+}
