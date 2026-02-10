@@ -280,3 +280,96 @@ The onboarding system will make it even easier to add new projects as you take o
 4. Want to test onboarding with a different repo?
 
 Sleep well! The board is organized, epics are created, and you're now an Iron Lord. 🔥
+
+---
+
+# 🔄 UPDATE: Auto-Sync Epic Added
+
+## Epic #128: External Project Auto-Sync System
+
+**Priority:** P0 (Critical)  
+**Goal:** Keep Epic #111 and #112 synchronized with their external projects automatically.
+
+### What It Does
+
+Establishes the foundation for all external project tracking by implementing automatic synchronization:
+
+- **Detect new issues** in external projects → create sub-issues here
+- **Detect closed issues** externally → close sub-issues here
+- **Update status changes** → update sub-issue bodies
+- **Auto-sync on session start** - Always current when you start working
+- **Manual sync command** - `/sync-external-projects` for on-demand updates
+
+### Why It's Critical
+
+Without auto-sync:
+- Epic #111 and #112 become stale quickly
+- Manual updates are tedious and error-prone
+- No way to know when external projects change
+- Dashboard doesn't reflect reality
+
+With auto-sync:
+- Always see current state of external projects
+- New issues tracked automatically
+- Closed issues reflected immediately
+- Foundation for all future tracked projects
+
+### Sub-Issues (4 Phases)
+
+1. **#129: Core Sync Engine** - Implement `lib/external-tracker.js` with sync logic
+2. **#130: Plugin Integration** - Hook into session start for auto-sync
+3. **#131: Manual Sync Command** - Create `/sync-external-projects` skill
+4. **#132: Testing & Edge Cases** - Comprehensive testing with Epic #111 and #112
+
+### Timeline Estimate
+
+- **Phase 1:** 4-6 hours
+- **Phase 2:** 1-2 hours
+- **Phase 3:** 1-2 hours
+- **Phase 4:** 2-3 hours
+- **Total:** ~10-15 hours (1-2 days)
+
+### Recommendation
+
+**Implement this BEFORE Epic #123 (Onboarding).** Once sync works, onboarding new projects becomes much more valuable because they'll stay current automatically.
+
+**Priority order:**
+1. Epic #128 (Auto-Sync) - Foundation
+2. Epic #123 (Onboarding) - Builds on sync
+3. Epic #113 (Badge) - Polish
+4. Epic #4, #5 - Powerlevel features
+
+---
+
+## Final Powerlevel Status
+
+**7 Active Epics = Iron Lord** 🔥
+
+1. #4: Central Superpowers Repository Design (In Progress)
+2. #5: Project Board Integration (In Progress)
+3. #111: projectbluefin/common (In Progress) - 5 sub-issues
+4. #112: castrojo/tap (In Progress) - 4 sub-issues
+5. #113: Powerlevel Badge (Todo)
+6. #123: External Project Onboarding System (Todo) - 4 sub-issues
+7. #128: External Project Auto-Sync System (Todo) - 4 sub-issues ⭐ NEW
+
+**Total Sub-Issues:** 24 across all projects
+
+**Rank:** Still Iron Lord (6-10 range)  
+**Board Title:** "Powerlevel 7 ~ Iron Lord"  
+**Description:** "Forged in fire, tempered by challenge"
+
+---
+
+## What to Do When You Wake Up
+
+1. **Read SESSION-SUMMARY.md** - Full context of tonight's work
+2. **Review Epic #128** - Critical foundation for external tracking
+3. **Decide priority:**
+   - **Option A:** Implement sync first (recommended) → then onboarding
+   - **Option B:** Implement onboarding first → sync can wait
+   - **Option C:** Work on something else entirely
+
+My recommendation: **Sync first.** It's the foundation that makes onboarding valuable. Without sync, tracked projects go stale. With sync, tracking "just works."
+
+Good night! You're now managing 7 projects with a solid plan to keep them all current. 🚀
