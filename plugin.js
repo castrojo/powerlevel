@@ -161,7 +161,7 @@ async function fetchSuperpowersWiki(owner, repo, config, client = null) {
     }
     
     // Check if wiki exists
-    if (!wikiExists(superpowersOwner, superpowersRepo)) {
+    if (!wikiExists(superpowersOwner, superpowersRepo, client)) {
       if (client) {
         client.app.log({
           body: { service: 'powerlevel', level: 'warn', message: '⚠️  Superpowers wiki not found or not accessible' }
@@ -171,7 +171,7 @@ async function fetchSuperpowersWiki(owner, repo, config, client = null) {
     }
     
     // Clone/update wiki
-    await cloneWiki(superpowersOwner, superpowersRepo);
+    await cloneWiki(superpowersOwner, superpowersRepo, client);
     
     // Update timestamp
     updateWikiTimestamp(superpowersOwner, superpowersRepo, client);
@@ -272,7 +272,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client = null) {
       return;
     }
     
-    const cache = loadCache(owner, repo);
+    const cache = loadCache(owner, repo, client);
     
     // Get last check time from cache (default to 1 hour ago if first run)
     const lastCheck = cache.last_task_check || new Date(Date.now() - 3600000).toISOString();
@@ -293,7 +293,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client = null) {
         });
       }
       cache.last_task_check = new Date().toISOString();
-      saveCache(owner, repo, cache);
+      saveCache(owner, repo, cache, client);
       return;
     }
     
@@ -360,7 +360,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client = null) {
       };
       
       try {
-        recordTaskCompletion(epic.number, taskNumber, taskTitle, agentInfo, cwd);
+        recordTaskCompletion(epic.number, taskNumber, taskTitle, agentInfo, cwd, client);
         if (client) {
           client.app.log({
             body: { service: 'powerlevel', level: 'info', message: `    ✅ Recorded task ${taskNumber} completion for epic #${epic.number}` }
@@ -377,7 +377,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client = null) {
     
     // Update last check time
     cache.last_task_check = new Date().toISOString();
-    saveCache(owner, repo, cache);
+    saveCache(owner, repo, cache, client);
     
   } catch (error) {
     if (client) {
@@ -406,15 +406,15 @@ async function landThePlane(owner, repo, cwd, client = null) {
     await checkForCompletedTasks(owner, repo, cwd, client);
     
     // Then sync dirty epics
-    const cache = loadCache(owner, repo);
+    const cache = loadCache(owner, repo, client);
     await syncDirtyEpics(owner, repo, cache, client);
     
     // Clear dirty flags after successful sync
     clearDirtyFlags(cache);
-    saveCache(owner, repo, cache);
+    saveCache(owner, repo, cache, client);
     
     // Calculate and display powerlevel
-    const projects = listProjects(cwd);
+    const projects = listProjects(cwd, client);
     const powerlevel = calculatePowerlevel(projects);
     
     if (client) {
@@ -553,7 +553,7 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   }
   
   // Detect repository
-  const repoInfo = detectRepo(cwd);
+  const repoInfo = detectRepo(cwd, client);
   if (!repoInfo) {
     console.error('Powerlevel plugin disabled - not in a GitHub repository');
     return;
@@ -587,7 +587,7 @@ export async function PowerlevelPlugin({ client, session, directory, worktree })
   
   // Check onboarding status (respects autoOnboard setting)
   if (config.superpowers?.autoOnboard !== false) {
-    const status = getOnboardingStatus(cwd);
+    const status = getOnboardingStatus(cwd, client);
     if (!status.onboarded && !session._powerlevel_onboarding_prompted) {
       promptOnboarding(session);
       // Store flag to avoid repeating in the same session
