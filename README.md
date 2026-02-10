@@ -52,24 +52,15 @@ gh auth status
 
 ### Setting Up a Project
 
-1. Create a project directory:
-```bash
-mkdir -p projects/my-awesome-app
-```
+1. Set up `username/powershell` (Right now I've only set myself up, no idea if this part works)
+2. Tell opencode: "Onboard this project: <link>"
+3. Then in the project repo tell opencode: "Onboard this project with to `username/powershell`
 
-2. Add project config:
-```json
-// projects/my-awesome-app/config.json
-{
-  "repo": "username/my-awesome-app",
-  "active": true,
-  "labels": {
-    "project": "project/my-awesome-app"
-  }
-}
-```
+Powerlevel will add a section to that project's AGENTS.md to tell it to check with the main setup.
 
-3. Create your first plan in `projects/my-awesome-app/plans/`
+1. Then just use opencode with superpowers normally with your project(s).
+2. Add things you want all projects to share in `username/powershell`
+3. On launch the projects will "check in" with `username/powershell` for context.
 
 ### Automatic Epic Creation
 
