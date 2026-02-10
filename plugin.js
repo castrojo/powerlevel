@@ -16,6 +16,31 @@ import { updateSessionTitle } from './lib/session-title-updater.js';
 import { registerSessionHooks } from './lib/session-hooks.js';
 
 /**
+ * Converts numbers to words (0-20, then tens)
+ * Falls back to numerals for numbers > 100
+ * @param {number} num - Number to convert
+ * @returns {string} Word representation or numeral
+ */
+function numberToWord(num) {
+  const words = {
+    0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four',
+    5: 'five', 6: 'six', 7: 'seven', 8: 'eight', 9: 'nine',
+    10: 'ten', 11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen',
+    15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen',
+    20: 'twenty', 30: 'thirty', 40: 'forty', 50: 'fifty',
+    60: 'sixty', 70: 'seventy', 80: 'eighty', 90: 'ninety'
+  };
+  
+  if (num <= 20) return words[num];
+  if (num < 100) {
+    const tens = Math.floor(num / 10) * 10;
+    const ones = num % 10;
+    return ones === 0 ? words[tens] : `${words[tens]}-${words[ones]}`;
+  }
+  return num.toString(); // Fallback to numeral for large numbers
+}
+
+/**
  * Verifies gh CLI is installed and authenticated
  * @returns {boolean} True if gh is ready
  */
@@ -423,7 +448,7 @@ async function landThePlane(owner, repo, cwd, client = null) {
       });
       if (powerlevel > 0) {
         client.app.log({
-          body: { service: 'powerlevel', level: 'info', message: `✨ Powerlevel ${powerlevel} - Managing ${powerlevel} active ${powerlevel === 1 ? 'project' : 'projects'}` }
+          body: { service: 'powerlevel', level: 'info', message: `Powerlevel 🔶 ${powerlevel} - Managing ${numberToWord(powerlevel)} active ${powerlevel === 1 ? 'project' : 'projects'}` }
         });
       }
     }
