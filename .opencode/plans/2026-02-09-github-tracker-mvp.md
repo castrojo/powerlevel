@@ -1155,3 +1155,8 @@ Create GitHub issues for these enhancements after MVP is complete:
 13. **Bulk Updates**: Update multiple issues at once when plan changes
 14. **Custom Labels**: Allow custom labels per plan
 15. **Epic Completion Automation**: Auto-close epic when all tasks complete
+
+
+---
+
+**Epic:** #1 (https://github.com/castrojo/opencode-github-tracker/issues/1)

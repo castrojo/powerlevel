@@ -6,7 +6,7 @@ import { detectRepo } from '../lib/repo-detector.js';
 import { loadCache, saveCache, addEpic, addSubIssue } from '../lib/cache-manager.js';
 import { parsePlanFile, formatEpicBody } from '../lib/parser.js';
 import { createEpic, createSubIssue } from '../lib/github-cli.js';
-import { getEpicLabels, getTaskLabels, ensureEpicLabel } from '../lib/label-manager.js';
+import { getEpicLabels, getTaskLabels, ensureEpicLabel, ensureLabelsExist } from '../lib/label-manager.js';
 import { execGh } from '../lib/github-cli.js';
 
 /**
@@ -44,6 +44,17 @@ async function main() {
   } catch (error) {
     console.error('Error: GitHub CLI not authenticated. Run: gh auth login');
     process.exit(1);
+  }
+  
+  // Ensure labels exist
+  console.log('Ensuring required labels exist...');
+  try {
+    await ensureLabelsExist(repoPath);
+    console.log('');
+  } catch (error) {
+    console.error(`Warning: Failed to create labels: ${error.message}`);
+    console.log('Continuing anyway...');
+    console.log('');
   }
   
   // Parse plan file
