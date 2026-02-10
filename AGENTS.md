@@ -216,7 +216,7 @@ Modify `formatEpicBody()` in `parser.js`
 **Setup:**
 ```bash
 git clone <repo>
-cd opencode-github-tracker
+cd opencode-superpower-github
 npm install
 ```
 

@@ -1,4 +1,4 @@
-# OpenCode GitHub Tracker
+# OpenCode Superpower: GitHub
 
 Automatically sync your Superpowers workflow with GitHub Issues. Creates epics from implementation plans and tracks progress through development.
 
@@ -15,7 +15,7 @@ When you create an implementation plan with Superpowers, this plugin automatical
 1. **Clone this repository:**
 ```bash
 cd ~/.config/opencode
-git clone https://github.com/YOUR_USERNAME/opencode-github-tracker.git
+git clone https://github.com/YOUR_USERNAME/opencode-superpower-github.git
 ```
 
 2. **Install the plugin:**
@@ -24,7 +24,7 @@ Add to your `~/.config/opencode/opencode.json`:
 ```json
 {
   "plugin": [
-    "~/.config/opencode/opencode-github-tracker/plugin.js"
+    "~/.config/opencode/opencode-superpower-github/plugin.js"
   ]
 }
 ```
@@ -32,7 +32,7 @@ Add to your `~/.config/opencode/opencode.json`:
 3. **Symlink the skills:**
 ```bash
 mkdir -p ~/.config/opencode/skills
-ln -s ~/.config/opencode/opencode-github-tracker/skills ~/.config/opencode/skills/github-tracker
+ln -s ~/.config/opencode/opencode-superpower-github/skills ~/.config/opencode/skills/github-tracker
 ```
 
 4. **Verify GitHub CLI:**
@@ -64,7 +64,7 @@ This becomes:
 
 Create an epic from any plan file:
 ```bash
-node ~/.config/opencode/opencode-github-tracker/bin/create-epic.js docs/plans/my-plan.md
+node ~/.config/opencode/opencode-superpower-github/bin/create-epic.js docs/plans/my-plan.md
 ```
 
 ### Session End Sync
@@ -119,7 +119,7 @@ The plugin creates these labels automatically:
 
 ## Support
 
-Report issues: https://github.com/YOUR_USERNAME/opencode-github-tracker/issues
+Report issues: https://github.com/YOUR_USERNAME/opencode-superpower-github/issues
 
 ## License
 
