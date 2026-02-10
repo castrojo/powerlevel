@@ -246,6 +246,70 @@ test('loadConfig validates after merging', () => {
   assertThrows(() => loadConfig(testDir), 'Should throw after validation');
 });
 
+// Test 13: mergeConfig handles array input correctly
+test('mergeConfig handles array input correctly', () => {
+  const target = { a: 1, b: 2 };
+  const source = [1, 2, 3]; // Array instead of object
+  
+  const result = mergeConfig(target, source);
+  assertEqual(result, target, 'Should return target unchanged when source is array');
+});
+
+// Test 14: validateConfig accepts self-hosted git URLs (GitLab)
+test('validateConfig accepts self-hosted git URLs (GitLab)', () => {
+  const config = {
+    superpowers: {
+      enabled: true,
+      repoUrl: 'https://gitlab.example.com/user/repo.git',
+      remote: 'origin',
+      autoOnboard: false,
+      wikiSync: true
+    }
+  };
+  
+  validateConfig(config); // Should not throw
+});
+
+// Test 15: validateConfig accepts self-hosted SSH URLs
+test('validateConfig accepts self-hosted SSH URLs', () => {
+  const config = {
+    superpowers: {
+      enabled: true,
+      repoUrl: 'git@gitlab.example.com:team/project.git',
+      remote: 'origin',
+      autoOnboard: false,
+      wikiSync: true
+    }
+  };
+  
+  validateConfig(config); // Should not throw
+});
+
+// Test 16: validateConfig accepts URLs with nested paths
+test('validateConfig accepts URLs with nested paths', () => {
+  const config1 = {
+    superpowers: {
+      enabled: true,
+      repoUrl: 'https://gitlab.example.com/team/subgroup/repo.git',
+      remote: 'origin',
+      autoOnboard: false,
+      wikiSync: true
+    }
+  };
+  validateConfig(config1); // Should not throw
+  
+  const config2 = {
+    superpowers: {
+      enabled: true,
+      repoUrl: 'git@gitlab.example.com:team/subgroup/project.git',
+      remote: 'origin',
+      autoOnboard: false,
+      wikiSync: true
+    }
+  };
+  validateConfig(config2); // Should not throw
+});
+
 // Cleanup
 rmSync(testDir, { recursive: true, force: true });
 
