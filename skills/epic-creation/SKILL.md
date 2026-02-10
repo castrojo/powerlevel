@@ -139,18 +139,30 @@ After creating all sub-tasks, edit the epic body to add sub-task issue numbers.
 
 ### Step 5: Update Plan with Epic Reference
 
-Add epic reference to the top of the plan file:
+Insert epic reference at the top of the plan file using `insertEpicReference` from `lib/parser.js`:
 
+```javascript
+import { insertEpicReference } from '../../lib/parser.js';
+import { readFileSync, writeFileSync } from 'fs';
+
+const planContent = readFileSync(planFilePath, 'utf8');
+const updatedContent = insertEpicReference(planContent, epicNumber, subTaskNumbers);
+writeFileSync(planFilePath, updatedContent);
+```
+
+**Result:**
 ```markdown
 # Feature Name Implementation Plan
 
 > **Epic Issue:** #123
+> **Sub-Tasks:** #124, #125, #126
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** [One sentence describing what this builds]
 ```
 
-**Insert location:** Between the H1 heading and the Claude instruction.
+**Insert location:** Between the H1 heading and the Claude instruction (or other content).
 
 ### Step 6: Commit Plan Update
 

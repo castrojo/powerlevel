@@ -148,23 +148,28 @@ saveCache(repo.owner, repo.repo, cache);
 
 ### 7. Plan File Update
 
-Append epic reference to bottom of plan file:
+Insert epic reference at top of plan file using `insertEpicReference`:
 
 ```javascript
-import fs from 'fs';
+import { insertEpicReference } from '../../lib/parser.js';
+import { readFileSync, writeFileSync } from 'fs';
 
-const epicRef = `\n\n---\n\n**Epic Issue:** #${epicNumber}\n**Sub-Tasks:** ${subTaskNumbers.map(n => `#${n}`).join(', ')}\n`;
-
-fs.appendFileSync(planFilePath, epicRef);
+const planContent = readFileSync(planFilePath, 'utf8');
+const updatedContent = insertEpicReference(planContent, epicNumber, subTaskNumbers);
+writeFileSync(planFilePath, updatedContent);
 ```
 
 **Result:**
 ```markdown
----
+# Feature Name Implementation Plan
 
-**Epic Issue:** #123
-**Sub-Tasks:** #124, #125, #126
+> **Epic Issue:** #123
+> **Sub-Tasks:** #124, #125, #126
+
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans...
 ```
+
+The epic reference is inserted after the title heading, before any other content.
 
 ### 8. Git Commit
 
