@@ -1159,4 +1159,4 @@ Create GitHub issues for these enhancements after MVP is complete:
 
 ---
 
-**Epic:** #1 (https://github.com/castrojo/opencode-github-tracker/issues/1)
+**Epic:** #1 (https://github.com/castrojo/opencode-superpower-github/issues/1)
