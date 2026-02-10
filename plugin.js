@@ -7,6 +7,7 @@ import { findCompletedTasks } from './lib/task-completion-detector.js';
 import { recordTaskCompletion } from './lib/epic-updater.js';
 import { loadConfig } from './lib/config-loader.js';
 import { listProjects, calculatePowerlevel } from './lib/project-manager.js';
+import { ContextProvider } from './lib/context-provider.js';
 
 /**
  * Verifies gh CLI is installed and authenticated
@@ -197,6 +198,9 @@ async function landThePlane(owner, repo, cwd) {
 export async function PowerlevelPlugin({ session }) {
   console.log('Initializing Powerlevel plugin...');
   
+  // Get current working directory
+  const cwd = session.cwd || process.cwd();
+  
   // Verify gh CLI
   if (!verifyGhCli()) {
     console.error('Powerlevel plugin disabled - gh CLI not available');
@@ -204,7 +208,7 @@ export async function PowerlevelPlugin({ session }) {
   }
   
   // Detect repository
-  const repoInfo = detectRepo(session.cwd || process.cwd());
+  const repoInfo = detectRepo(cwd);
   if (!repoInfo) {
     console.error('Powerlevel plugin disabled - not in a GitHub repository');
     return;
@@ -223,12 +227,44 @@ export async function PowerlevelPlugin({ session }) {
     console.error(`Warning: Failed to verify labels: ${error.message}`);
   }
   
+  // Initialize context provider for epic detection
+  const contextProvider = new ContextProvider();
+  
+  // Expose context API to OpenCode
+  if (session && session.context) {
+    session.context.getEpic = () => {
+      return {
+        display: contextProvider.getDisplayString(cwd),
+        url: contextProvider.getEpicUrl(cwd),
+        raw: contextProvider.getContext(cwd)
+      };
+    };
+    
+    console.log('✓ Epic context API exposed to session.context.getEpic()');
+    
+    // Log current epic if detected
+    const epicContext = contextProvider.getContext(cwd);
+    if (epicContext) {
+      console.log(`📌 Current Epic: #${epicContext.epicNumber} - ${epicContext.epicTitle}`);
+      console.log(`   Plan: ${epicContext.planFile}`);
+      console.log(`   URL: ${contextProvider.getEpicUrl(cwd)}`);
+    }
+  }
+  
   // Hook into session.idle event
   if (session && session.on) {
     session.on('idle', async () => {
-      await landThePlane(owner, repo, session.cwd || process.cwd());
+      await landThePlane(owner, repo, cwd);
     });
     console.log('✓ Hooked into session.idle event');
+    
+    // Hook into file change events to invalidate cache
+    session.on('file:change', (event) => {
+      if (event.path && event.path.includes('docs/plans/')) {
+        contextProvider.invalidateCache(cwd);
+        console.log('↻ Epic context cache invalidated (plan file changed)');
+      }
+    });
   } else {
     console.warn('Warning: Session does not support event hooks');
   }
