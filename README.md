@@ -2,6 +2,8 @@
 
 Automatically sync your Superpowers workflow with GitHub Issues. Creates epics from implementation plans and tracks progress through development.
 
+**Project Board:** [Superpowers Development](https://github.com/users/castrojo/projects/1)
+
 ## What It Does
 
 When you create an implementation plan with Superpowers, this plugin automatically:
