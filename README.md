@@ -1,23 +1,28 @@
-# OpenCode Superpower: GitHub
+# Powerlevel
 
-Automatically sync your Superpowers workflow with GitHub Issues. Creates epics from implementation plans and tracks progress through development.
+A multi-project management dashboard for OpenCode + Superpowers. Track all your active projects in one place. Your Powerlevel = number of projects you're managing.
 
-**Project Board:** [Superpowers Development](https://github.com/users/castrojo/projects/1)
+**Dashboard:** [Powerlevel N](https://github.com/users/castrojo/projects/1) (where N = your current level)
 
 ## What It Does
 
-When you create an implementation plan with Superpowers, this plugin automatically:
-- Creates a GitHub epic issue
-- Creates sub-task issues for each task in your plan
-- Links everything together with labels and references
-- Syncs progress at the end of your session
+Powerlevel transforms Superpowers implementation plans into GitHub Project boards that track multiple code repositories from a central management hub.
+
+When you create an implementation plan:
+- Creates a GitHub epic issue with `type/epic` label
+- Creates sub-task issues for each task with `type/task` labels
+- Tags issues with `project/name` labels for filtering
+- Links everything to your central Powerlevel dashboard
+- Syncs progress automatically at session end
+
+**Central Hub:** This repo holds all project plans and configurations. Your actual code lives in separate repositories.
 
 ## Installation
 
 1. **Clone this repository:**
 ```bash
 cd ~/.config/opencode
-git clone https://github.com/YOUR_USERNAME/opencode-superpower-github.git
+git clone https://github.com/castrojo/powerlevel.git
 ```
 
 2. **Install the plugin:**
@@ -26,7 +31,7 @@ Add to your `~/.config/opencode/opencode.json`:
 ```json
 {
   "plugin": [
-    "~/.config/opencode/opencode-superpower-github/plugin.js"
+    "~/.config/opencode/powerlevel/plugin.js"
   ]
 }
 ```
@@ -34,7 +39,7 @@ Add to your `~/.config/opencode/opencode.json`:
 3. **Symlink the skills:**
 ```bash
 mkdir -p ~/.config/opencode/skills
-ln -s ~/.config/opencode/opencode-superpower-github/skills ~/.config/opencode/skills/github-tracker
+ln -s ~/.config/opencode/powerlevel/skills ~/.config/opencode/skills/powerlevel
 ```
 
 4. **Verify GitHub CLI:**
@@ -42,45 +47,87 @@ ln -s ~/.config/opencode/opencode-superpower-github/skills ~/.config/opencode/sk
 gh auth status
 ```
 
-## How to Use
+5. **Create your Powerlevel dashboard:**
+```bash
+node ~/.config/opencode/powerlevel/bin/create-dashboard.js
+```
+
+## Getting Started
+
+See [Getting Started Guide](docs/getting-started.md) for detailed setup and usage.
+
+## Managing Multiple Projects
+
+### Add a New Project
+
+1. Create project directory:
+```bash
+mkdir -p projects/my-awesome-app
+```
+
+2. Add project config:
+```json
+{
+  "name": "my-awesome-app",
+  "repo": "github.com/you/my-awesome-app",
+  "description": "An awesome application"
+}
+```
+
+3. Create your first plan and watch Powerlevel create the epic automatically!
+
+### Project Structure
+
+```
+powerlevel/
+├── projects/
+│   ├── my-awesome-app/
+│   │   ├── config.json
+│   │   ├── plans/
+│   │   │   └── 2026-02-09-add-feature.md
+│   │   └── AGENTS.md (optional)
+│   └── another-project/
+│       └── ...
+├── skills/
+│   ├── epic-creation/
+│   └── land-the-plane/
+└── lib/
+    ├── project-manager.js
+    └── ...
+```
+
+## How It Works
 
 ### Automatic Epic Creation
 
-When you complete a plan using `writing-plans`, the plugin automatically creates a GitHub epic:
+When you complete a plan with `writing-plans`:
 
 ```markdown
 # Your Feature Implementation Plan
 
-**Goal:** Add dark mode support to the app
+**Goal:** Add dark mode support
 
 ## Task 1: Create toggle component
 ...
 ```
 
-This becomes:
-- Epic issue `#123` with label `type/epic`
-- Sub-tasks `#124`, `#125`, etc. with labels `type/task` and `epic/123`
-- Your plan file updated with `**Epic Issue:** #123`
+Powerlevel automatically:
+- Creates epic issue `#123` with labels: `type/epic`, `project/my-app`
+- Creates sub-tasks `#124`, `#125` with labels: `type/task`, `epic/123`, `project/my-app`
+- Updates plan file with epic reference
+- Adds issues to your Powerlevel dashboard
 
 ### Manual Epic Creation
 
-Create an epic from any plan file:
 ```bash
-node ~/.config/opencode/opencode-superpower-github/bin/create-epic.js docs/plans/my-plan.md
+node bin/create-epic.js projects/my-app/plans/my-plan.md
 ```
 
 ### Session End Sync
 
-When your session ends, the plugin automatically syncs all progress to GitHub using the `land-the-plane` skill.
-
-You can also manually sync:
-```bash
-# Will be available as /gh-sync command (post-MVP)
-```
+Powerlevel automatically syncs progress when your session ends using the `land-the-plane` skill.
 
 ## Labels
-
-The plugin creates these labels automatically:
 
 **Type:**
 - `type/epic` - Large feature with multiple tasks
@@ -98,6 +145,9 @@ The plugin creates these labels automatically:
 - `status/review` - Ready for review
 - `status/done` - Complete
 
+**Project:**
+- `project/name` - Links issue to specific project
+
 **Epic Reference:**
 - `epic/123` - Links task to parent epic #123
 
@@ -107,21 +157,24 @@ The plugin creates these labels automatically:
 - Install GitHub CLI: https://cli.github.com/
 
 **"Failed to detect GitHub repository"**
-- Ensure you're in a git repository
-- Verify git remote origin is set to a GitHub URL
-- Run: `git remote -v`
+- Powerlevel works from the central repo, but creates issues in project repos
+- Ensure project config has correct `repo` field
 
 **Labels not created**
 - Check GitHub CLI authentication: `gh auth status`
 - Verify repo access: `gh repo view`
 
 **Epic creation fails**
-- Ensure plan file has proper structure (# Title, **Goal:** section, ## Task N: headers)
-- Check GitHub API rate limits: `gh api rate_limit`
+- Ensure plan has proper structure (# Title, **Goal:**, ## Task N:)
+- Check API rate limits: `gh api rate_limit`
+
+## Migration from opencode-superpower-github
+
+See [Migration Guide](docs/migration.md) for upgrading from the previous version.
 
 ## Support
 
-Report issues: https://github.com/YOUR_USERNAME/opencode-superpower-github/issues
+Report issues: https://github.com/castrojo/powerlevel/issues
 
 ## License
 

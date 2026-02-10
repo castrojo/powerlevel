@@ -1,10 +1,10 @@
-# AGENTS.md - GitHub Tracker Architecture
+# AGENTS.md - Powerlevel Architecture
 
 For AI agents working on this codebase.
 
 ## Architecture Overview
 
-This plugin integrates GitHub Issues with the Superpowers workflow for OpenCode. The system automatically creates GitHub epics from implementation plans and syncs development progress.
+Powerlevel is a multi-project management dashboard that integrates GitHub Issues with the Superpowers workflow for OpenCode. The system automatically creates GitHub epics from implementation plans and syncs development progress across multiple projects.
 
 ### Core Principle
 **"Write once, track everywhere"** - Implementation plans become GitHub issues automatically, with no manual intervention required.

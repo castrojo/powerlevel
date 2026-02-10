@@ -1,7 +1,7 @@
 {
-  "name": "opencode-superpower-github",
-  "version": "0.1.0",
-  "description": "GitHub issue tracking integration for OpenCode + Superpowers",
+  "name": "powerlevel",
+  "version": "0.2.0",
+  "description": "Multi-project management dashboard for OpenCode + Superpowers. Track multiple projects in one place.",
   "type": "module",
   "main": "plugin.js",
   "license": "Apache-2.0",
@@ -11,15 +11,17 @@
   "keywords": [
     "opencode",
     "github",
-    "issue-tracker",
+    "project-management",
+    "dashboard",
     "superpowers",
-    "plugin"
+    "plugin",
+    "powerlevel"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/anomalyco/opencode-superpower-github.git"
+    "url": "https://github.com/castrojo/powerlevel.git"
   },
   "bugs": {
-    "url": "https://github.com/anomalyco/opencode-superpower-github/issues"
+    "url": "https://github.com/castrojo/powerlevel/issues"
   }
 }
