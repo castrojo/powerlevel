@@ -188,6 +188,55 @@ function createDefaultConfig(cwd, repoUrl) {
 }
 
 /**
+ * Create AGENTS.md from template
+ */
+async function createAgentsFile(cwd, repoInfo, force = false) {
+  const agentsPath = join(cwd, 'AGENTS.md');
+  const templatePath = resolve(new URL(import.meta.url).pathname, '../../templates/AGENTS.md.template');
+
+  // Check if AGENTS.md already exists
+  if (existsSync(agentsPath) && !force) {
+    console.log('  ⚠ AGENTS.md already exists');
+    
+    const shouldOverwrite = await promptYesNo('  Do you want to overwrite it with Powerlevel template?');
+    
+    if (!shouldOverwrite) {
+      console.log('  Skipping AGENTS.md creation');
+      return;
+    }
+  }
+
+  // Read template
+  let template;
+  try {
+    template = readFileSync(templatePath, 'utf8');
+  } catch (error) {
+    console.error(`  ❌ Failed to read template: ${error.message}`);
+    return;
+  }
+
+  // Replace placeholders
+  const now = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const content = template
+    .replace(/\{\{PROJECT_NAME\}\}/g, `${repoInfo.owner}/${repoInfo.repo}`)
+    .replace(/\{\{OWNER\}\}/g, repoInfo.owner)
+    .replace(/\{\{REPO\}\}/g, repoInfo.repo)
+    .replace(/\{\{ONBOARDED_DATE\}\}/g, now);
+
+  // Write AGENTS.md
+  try {
+    writeFileSync(agentsPath, content, 'utf8');
+    if (existsSync(agentsPath) && !force) {
+      console.log('  ✓ Updated AGENTS.md with Powerlevel integration');
+    } else {
+      console.log('  ✓ Created AGENTS.md with Powerlevel integration');
+    }
+  } catch (error) {
+    console.error(`  ❌ Failed to write AGENTS.md: ${error.message}`);
+  }
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -382,13 +431,22 @@ async function main() {
     console.error(`  ⚠ Warning: Failed to create config: ${error.message}`);
   }
 
+  // Create AGENTS.md from template
+  console.log('\nCreating AGENTS.md...');
+  try {
+    await createAgentsFile(cwd, repoInfo, args.force);
+  } catch (error) {
+    console.error(`  ⚠ Warning: Failed to create AGENTS.md: ${error.message}`);
+  }
+
   // Success!
   console.log('\n✅ Onboarding complete! You can now access superpowers context.\n');
   console.log('Next steps:');
   console.log(`  1. View remote: git remote -v`);
   console.log(`  2. List branches: git branch -r | grep ${remoteName}`);
   console.log(`  3. View configuration: cat .opencode/config.json`);
-  console.log(`  4. Read documentation: cat docs/SUPERPOWERS.md`);
+  console.log(`  4. Review AGENTS.md: cat AGENTS.md`);
+  console.log(`  5. Check best practices: https://github.com/castrojo/powerlevel/blob/main/docs/best-practices/README.md`);
   console.log('');
 }
 
