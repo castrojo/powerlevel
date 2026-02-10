@@ -12,6 +12,7 @@ import { detectProjectBoard } from '../lib/project-board-detector.js';
 import { getProjectFields, mapLabelToField } from '../lib/project-field-manager.js';
 import { addIssueToProject, updateProjectItemField, getIssueNodeId } from '../lib/project-item-manager.js';
 import { getCachedProjectBoard, cacheProjectBoard } from '../lib/cache-manager.js';
+import { loadConfig, getProjectBoardConfig, getProjectBoardConfigFromEnv } from '../lib/config-loader.js';
 
 /**
  * Main function to create an epic from a plan file
@@ -146,9 +147,21 @@ async function main() {
   console.log('');
   console.log('✓ Cache updated');
   
-  // Add epic to project board with field mapping
-  console.log('');
-  console.log('Adding epic to project board...');
+  // Load project board configuration
+  const fileConfig = loadConfig();
+  const envConfig = getProjectBoardConfigFromEnv();
+  const projectConfig = {
+    ...getProjectBoardConfig(fileConfig),
+    ...envConfig
+  };
+  
+  if (!projectConfig.enabled) {
+    console.log('');
+    console.log('⚠ Project board integration disabled via configuration');
+  } else {
+    // Add epic to project board with field mapping
+    console.log('');
+    console.log('Adding epic to project board...');
   
   try {
     // Try to get cached project board first
@@ -279,6 +292,7 @@ async function main() {
   } catch (error) {
     console.error(`  ✗ Failed to add to project board: ${error.message}`);
     console.log(`  (Epic creation succeeded - project board is optional)`);
+  }
   }
   
   // Append epic reference to plan file
