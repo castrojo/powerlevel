@@ -247,23 +247,25 @@ async function syncExternalProjects(owner, repo, cwd) {
 /**
  * Plugin initialization
  */
-export async function PowerlevelPlugin({ session }) {
+export async function PowerlevelPlugin(options = {}) {
   console.log('Initializing Powerlevel plugin...');
   
+  const session = options?.session;
+  
   // Get current working directory
-  const cwd = session.cwd || process.cwd();
+  const cwd = session?.cwd || process.cwd();
   
   // Verify gh CLI
   if (!verifyGhCli()) {
     console.error('Powerlevel plugin disabled - gh CLI not available');
-    return;
+    return {};
   }
   
   // Detect repository
   const repoInfo = detectRepo(cwd);
   if (!repoInfo) {
     console.error('Powerlevel plugin disabled - not in a GitHub repository');
-    return;
+    return {};
   }
   
   const { owner, repo } = repoInfo;
@@ -325,6 +327,9 @@ export async function PowerlevelPlugin({ session }) {
   }
   
   console.log('✓ Powerlevel plugin initialized successfully');
+  
+  // Return empty hooks object (plugin uses session events instead)
+  return {};
 }
 
 export default PowerlevelPlugin;
