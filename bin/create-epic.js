@@ -87,6 +87,7 @@ async function main() {
     epicNumber = createEpic(repoPath, plan.title, epicBody, epicLabels);
     console.log(`  ✓ Created epic #${epicNumber}`);
     console.log(`  URL: https://github.com/${repoPath}/issues/${epicNumber}`);
+    console.log(`  🌐 Opening epic in browser...`);
   } catch (error) {
     console.error(`  ✗ Failed to create epic: ${error.message}`);
     process.exit(1);

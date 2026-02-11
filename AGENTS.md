@@ -242,8 +242,10 @@ Main OpenCode plugin that:
 
 #### `github-cli.js`
 - Wraps `gh` CLI commands
-- Functions: `createEpic`, `createSubIssue`, `updateIssueBody`, `addComment`, `closeIssue`
+- Functions: `createEpic`, `createSubIssue`, `updateIssueBody`, `addComment`, `closeIssue`, `openInBrowser`
 - Parses issue numbers from CLI output
+- **Browser Integration:** Automatically opens epics in default browser after creation (can be disabled via `openBrowser: false` parameter)
+- Cross-platform browser opening support (Linux/macOS/Windows)
 - Error handling for rate limits and network issues
 
 #### `parser.js`
