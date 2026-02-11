@@ -153,6 +153,23 @@ Epics and sub-issues are automatically added to your GitHub Project Board with f
 
 **Configuration:** Set `GITHUB_TRACKER_PROJECT_ENABLED=false` to disable, or `GITHUB_TRACKER_PROJECT_NUMBER=N` to use a specific board. See [AGENTS.md](AGENTS.md) for full configuration options.
 
+## Performance
+
+Powerlevel has been analyzed for batching and parallelization opportunities to optimize efficiency and reduce API costs.
+
+**Key findings:**
+- 18 optimization opportunities identified
+- Estimated 4% reduction in API calls
+- Estimated 65% reduction in session duration (Phase 1)
+- Estimated 84-93% reduction in cache I/O (Phase 2)
+
+**See:** [Optimization Roadmap](docs/analysis/OPTIMIZATION-ROADMAP.md) for detailed analysis and implementation phases.
+
+**Upcoming optimizations:**
+- 📋 Phase 1: Parallelize external epic syncs, sub-issue creation, project board additions
+- 📋 Phase 2: In-memory cache singleton, batch GraphQL mutations, optimize external fetching
+- 📋 Phase 3: Token usage optimization, rate limit monitoring, TTL-based cache invalidation
+
 ## Troubleshooting
 
 **"gh: command not found"**
