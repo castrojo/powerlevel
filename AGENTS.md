@@ -784,6 +784,48 @@ node bin/create-epic.js test-plan.md
 - Follow Conventional Commits: `feat:`, `fix:`, `docs:`
 - Reference issues: `feat: add journey updates (#15)`
 
+### Multi-Machine Development
+
+**For AI agents assisting with new machine setup:** Reference `docs/MACHINE-SETUP.md` for complete installation instructions.
+
+**Key architectural points:**
+- GitHub Issues API serves as single source of truth
+- Local cache (`cache/<repo-hash>/state.json`) is ephemeral optimization layer
+- Cache auto-regenerates from GitHub when missing or stale
+- Never copy cache directory between machines
+- Session end triggers batch sync to GitHub (`landThePlane()` function)
+- Session start pulls latest state from GitHub
+
+**Setup verification commands:**
+
+```bash
+# Verify Powerlevel installed correctly
+ls ~/.config/opencode/powerlevel/plugin.js
+ls -la ~/.config/opencode/skills/powerlevel
+gh auth status
+
+# Verify cache created and valid
+ls ~/.config/opencode/powerlevel/cache/
+cat ~/.config/opencode/powerlevel/cache/*/state.json | jq
+```
+
+**Common setup issues:**
+
+1. **Cache directory doesn't exist** → Normal on first run, wait for plugin to load
+2. **Plugin not loading** → Check `opencode.json` syntax and plugin path
+3. **Skills not found** → Verify symlink created: `ln -s ~/.config/opencode/powerlevel/skills ~/.config/opencode/skills/powerlevel`
+4. **GitHub CLI errors** → Re-authenticate: `gh auth login`
+
+**Sync behavior:**
+
+- **Frequency:** Session start (pull from GitHub) + Session end (push to GitHub)
+- **External tracking:** Syncs on session start for `project/*` labeled epics
+- **Manual sync:** Delete cache to force rebuild: `rm -rf ~/.config/opencode/powerlevel/cache/`
+
+**See:** `docs/MACHINE-SETUP.md` for detailed step-by-step instructions, troubleshooting, and verification checklist.
+
+---
+
 ## Future Enhancements (Post-MVP)
 
 1. **Bidirectional Sync** - GitHub → Cache (sync changes made directly on GitHub back to local cache)
