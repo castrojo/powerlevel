@@ -1,0 +1,17 @@
+{
+  "repo": "projectbluefin/documentation",
+  "fork": "castrojo/documentation",
+  "active": true,
+  "labels": {
+    "project": "project/bluefin-docs"
+  },
+  "description": "Bluefin Documentation",
+  "tech_stack": [
+    "JavaScript",
+    "Documentation"
+  ],
+  "tracking": {
+    "auto_sync": true,
+    "sync_interval": "session"
+  }
+}
