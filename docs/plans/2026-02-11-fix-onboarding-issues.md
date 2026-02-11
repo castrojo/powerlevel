@@ -2,11 +2,15 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Fix 7 critical issues preventing Powerlevel/Superpowers from working "out of the box" for new users
+**Goal:** Fix 7 critical issues preventing Powerlevel/Superpowers from working "out of the box" for new users, document root cause, and create prevention measures
 
-**Architecture:** This involves documentation updates to AGENTS.md, onboarding script improvements, and creating GitHub issues for future agents to fix technical debt
+**Architecture:** This involves documentation updates to AGENTS.md, onboarding script improvements, creating GitHub issues for future agents to fix technical debt, root cause analysis, and validation tools
 
-**Tech Stack:** Markdown documentation, GitHub Issues API (via gh CLI), Node.js onboarding scripts
+**Tech Stack:** Markdown documentation, GitHub Issues API (via gh CLI), Node.js onboarding scripts, Bash validation scripts
+
+**Root Cause Analysis:** See `docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md` for detailed analysis of why bloat happened and prevention strategy
+
+**Related Issues:** #165 (epic), #166, #167, #168, #169, #170, #171, #172
 
 ---
 
@@ -1037,7 +1041,369 @@ gh issue create \
 
 ---
 
-## Task 10: Commit and Push Plan
+## Task 10: Create Validation Script for Onboarding Footprint
+
+**Files:**
+- Create: `bin/validate-onboarding.sh`
+
+**Purpose:** Automatically detect onboarding bloat and prevent future regressions
+
+**Step 1: Create validation script**
+
+```bash
+cat > bin/validate-onboarding.sh <<'EOF'
+#!/usr/bin/env bash
+# Validates that onboarding produces minimal footprint
+# Usage: bin/validate-onboarding.sh [project-directory]
+#
+# Checks:
+# - AGENTS.md managed section ≤ 15 lines
+# - .opencode/config.json ≤ 10 lines
+# - docs/SUPERPOWERS.md does not exist
+#
+# Exit codes:
+#   0 - Validation passed
+#   1 - Validation failed (bloat detected)
+
+set -euo pipefail
+
+PROJECT_DIR="${1:-.}"
+AGENTS_MD_MAX_LINES=15
+CONFIG_MAX_LINES=10
+
+# Color output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "🔍 Validating onboarding footprint in: $PROJECT_DIR"
+echo ""
+
+FAILURES=0
+
+# Check AGENTS.md managed section
+if [ -f "$PROJECT_DIR/AGENTS.md" ]; then
+  MANAGED_SECTION_LINES=$(sed -n '/<!-- POWERLEVEL MANAGED SECTION - START -->/,/<!-- POWERLEVEL MANAGED SECTION - END -->/p' "$PROJECT_DIR/AGENTS.md" | wc -l)
+  
+  if [ "$MANAGED_SECTION_LINES" -gt "$AGENTS_MD_MAX_LINES" ]; then
+    echo -e "${RED}❌ AGENTS.md managed section is $MANAGED_SECTION_LINES lines (max: $AGENTS_MD_MAX_LINES)${NC}"
+    FAILURES=$((FAILURES + 1))
+  else
+    echo -e "${GREEN}✓${NC} AGENTS.md managed section: $MANAGED_SECTION_LINES lines (within limit)"
+  fi
+  
+  # Check for placeholder sections after managed section
+  if grep -q "## Project-Specific Context" "$PROJECT_DIR/AGENTS.md"; then
+    echo -e "${RED}❌ AGENTS.md contains placeholder section: 'Project-Specific Context'${NC}"
+    FAILURES=$((FAILURES + 1))
+  fi
+  
+  if grep -q "### Architecture" "$PROJECT_DIR/AGENTS.md"; then
+    echo -e "${YELLOW}⚠${NC}  AGENTS.md contains placeholder section: 'Architecture' (may be intentional)"
+  fi
+else
+  echo -e "${YELLOW}⚠${NC}  AGENTS.md not found (skipping check)"
+fi
+
+# Check .opencode/config.json
+if [ -f "$PROJECT_DIR/.opencode/config.json" ]; then
+  CONFIG_LINES=$(wc -l < "$PROJECT_DIR/.opencode/config.json")
+  
+  if [ "$CONFIG_LINES" -gt "$CONFIG_MAX_LINES" ]; then
+    echo -e "${RED}❌ .opencode/config.json is $CONFIG_LINES lines (max: $CONFIG_MAX_LINES)${NC}"
+    FAILURES=$((FAILURES + 1))
+  else
+    echo -e "${GREEN}✓${NC} .opencode/config.json: $CONFIG_LINES lines (within limit)"
+  fi
+  
+  # Check for deprecated config keys
+  if grep -q '"superpowers":' "$PROJECT_DIR/.opencode/config.json"; then
+    echo -e "${RED}❌ .opencode/config.json uses deprecated 'superpowers' key${NC}"
+    echo "   Use 'projectBoard' and 'superpowersIntegration' instead"
+    FAILURES=$((FAILURES + 1))
+  fi
+  
+  if grep -q '"wiki":' "$PROJECT_DIR/.opencode/config.json"; then
+    echo -e "${YELLOW}⚠${NC}  .opencode/config.json uses deprecated 'wiki' key"
+  fi
+else
+  echo -e "${YELLOW}⚠${NC}  .opencode/config.json not found (skipping check)"
+fi
+
+# Check docs/SUPERPOWERS.md (should NOT exist)
+if [ -f "$PROJECT_DIR/docs/SUPERPOWERS.md" ]; then
+  echo -e "${RED}❌ docs/SUPERPOWERS.md should not exist (redundant workflow documentation)${NC}"
+  FAILURES=$((FAILURES + 1))
+else
+  echo -e "${GREEN}✓${NC} docs/SUPERPOWERS.md does not exist (correct)"
+fi
+
+echo ""
+
+# Summary
+if [ "$FAILURES" -eq 0 ]; then
+  echo -e "${GREEN}✅ Onboarding footprint is minimal${NC}"
+  exit 0
+else
+  echo -e "${RED}❌ Validation failed with $FAILURES error(s)${NC}"
+  echo ""
+  echo "See: docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md for principles"
+  exit 1
+fi
+EOF
+
+chmod +x bin/validate-onboarding.sh
+```
+
+**Step 2: Test validation script**
+
+```bash
+# Test on current Powerlevel repo (should pass)
+./bin/validate-onboarding.sh .
+
+# Test on bluespeed (should pass for managed section)
+./bin/validate-onboarding.sh ~/src/bluespeed
+```
+
+**Step 3: Document validation script**
+
+Add to README.md section on onboarding:
+
+```markdown
+### Validate Onboarding Footprint
+
+After onboarding a project, verify minimal footprint:
+
+\`\`\`bash
+cd /path/to/project
+/path/to/powerlevel/bin/validate-onboarding.sh .
+\`\`\`
+
+This checks:
+- AGENTS.md managed section ≤ 15 lines
+- .opencode/config.json ≤ 10 lines  
+- No docs/SUPERPOWERS.md file
+```
+
+**Step 4: Commit validation script**
+
+```bash
+git add bin/validate-onboarding.sh
+git commit -m "feat: add onboarding footprint validation script
+
+Automatically detects bloat in onboarded projects:
+- Checks AGENTS.md managed section size
+- Validates config.json line count
+- Detects deprecated config keys
+- Ensures docs/SUPERPOWERS.md doesn't exist
+
+Related to Epic #165 - prevents future onboarding bloat."
+```
+
+---
+
+## Task 11: Create Minimal Onboarding Example
+
+**Files:**
+- Create: `docs/examples/minimal-onboarding-example.md`
+
+**Purpose:** Provide visual reference showing correct onboarding approach
+
+**Step 1: Create example document**
+
+```bash
+cat > docs/examples/minimal-onboarding-example.md <<'EOF'
+# Minimal Onboarding Example
+
+This document shows what correct Powerlevel onboarding looks like compared to other tracking tools.
+
+## Comparison: Tracking Tools Footprint
+
+| Tool | Files Added | Total Lines | Approach |
+|------|-------------|-------------|----------|
+| **Dependabot** | 1 file | 3 lines | Minimal config only |
+| **Renovate** | 1 file | 8 lines | Minimal config only |
+| **Codecov** | 1 file | 1 line | Minimal config only |
+| **Powerlevel (target)** | 2 files | 37 lines | Metadata + config |
+| **Powerlevel (ideal)** | 1 file | 9 lines | Ultra-minimal snippet |
+
+## Example: Dependabot
+
+**Files added:** `.github/dependabot.yml`
+
+\`\`\`yaml
+version: 2
+updates:
+  - package-ecosystem: "npm"
+\`\`\`
+
+**Total footprint:** 3 lines
+
+## Example: Powerlevel (Current - WRONG ❌)
+
+**Files added:**
+- `AGENTS.md` (53 lines)
+- `.opencode/config.json` (20 lines)
+- `docs/SUPERPOWERS.md` (40 lines)
+
+**Total footprint:** 113 lines ❌
+
+**Problems:**
+- Placeholder sections in AGENTS.md (Architecture, Development Workflow, etc.)
+- Verbose config duplicating defaults
+- Redundant workflow documentation
+
+## Example: Powerlevel (Target - CORRECT ✅)
+
+**Files added:**
+- `AGENTS.md` (31 lines - managed section only)
+- `.opencode/config.json` (6 lines - minimal config)
+
+**Total footprint:** 37 lines ✅
+
+### AGENTS.md (31 lines)
+
+\`\`\`markdown
+# owner/repo
+
+<!-- POWERLEVEL MANAGED SECTION - START -->
+<!-- This section is maintained by Powerlevel. Manual edits may be overwritten. -->
+
+## Managed by Powerlevel
+
+This project is tracked by [Powerlevel](https://github.com/castrojo/powerlevel), a central project management dashboard for OpenCode + Superpowers.
+
+### For AI Agents
+
+**CRITICAL:** Before making any changes to this project, you MUST:
+
+1. Read the Powerlevel best practices: https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/README.md
+2. Review all applicable best practices for this project
+3. Apply MUST requirements strictly (these are lint-enforced)
+4. Follow SHOULD recommendations where appropriate
+
+**Quick Links:**
+- Best Practices Index: https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/README.md
+- Powerlevel Repository: https://github.com/castrojo/powerlevel
+- Powerlevel Architecture: https://github.com/castrojo/powerlevel/blob/main/AGENTS.md
+
+### Project Info
+
+- **Repository:** owner/repo
+- **Onboarded to Powerlevel:** 2026-02-11
+- **Tracking Epic:** [View on GitHub](https://github.com/castrojo/powerlevel/issues?q=is:issue+label:project/repo)
+
+<!-- POWERLEVEL MANAGED SECTION - END -->
+\`\`\`
+
+**No content after the HTML comment.** Project defines its own structure below.
+
+### .opencode/config.json (6 lines)
+
+\`\`\`json
+{
+  "projectBoard": {
+    "enabled": true
+  },
+  "superpowersIntegration": {
+    "enabled": true
+  }
+}
+\`\`\`
+
+**All other defaults provided by `lib/config-loader.js`.**
+
+## Example: Powerlevel (Ideal - FUTURE ✅)
+
+**Files added:**
+- `AGENTS.md` (9 lines - ultra-minimal snippet)
+
+**Total footprint:** 9 lines ✅
+
+### AGENTS.md (9 lines)
+
+\`\`\`markdown
+# owner/repo
+
+<!-- POWERLEVEL MANAGED SECTION - START -->
+## Managed by Powerlevel
+
+**Repository:** owner/repo  
+**Onboarded:** 2026-02-11  
+**Tracking Epic:** [View on GitHub](https://github.com/castrojo/powerlevel/issues?q=is:issue+label:project/repo)
+
+**📘 For AI Agents:** Read [Powerlevel Agent Instructions](https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/AGENT-INSTRUCTIONS.md) before working on this project.
+<!-- POWERLEVEL MANAGED SECTION - END -->
+\`\`\`
+
+**All explanatory content moved to upstream `docs/AGENT-INSTRUCTIONS.md`.**
+
+**Config provided by `.opencode/config.json` (auto-created if missing, or via code defaults).**
+
+## Validation
+
+Verify minimal footprint using validation script:
+
+\`\`\`bash
+cd /path/to/project
+/path/to/powerlevel/bin/validate-onboarding.sh .
+\`\`\`
+
+## See Also
+
+- `docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md` - Why bloat happened
+- `AGENTS.md` - MINIMAL REPOSITORY IMPACT PRINCIPLES section
+- `templates/AGENTS.md.template` - Current template (should be 31 lines)
+EOF
+```
+
+**Step 2: Commit example document**
+
+```bash
+git add docs/examples/minimal-onboarding-example.md
+git commit -m "docs: add minimal onboarding examples
+
+Shows correct vs incorrect onboarding approach:
+- Comparison to Dependabot/Renovate footprint
+- Current (wrong): 113 lines
+- Target (correct): 37 lines
+- Ideal (future): 9 lines
+
+Provides visual reference for agents implementing onboarding."
+```
+
+---
+
+## Task 12: Update Implementation Plan with Root Cause Findings
+
+**Files:**
+- Modify: `docs/plans/2026-02-11-fix-onboarding-issues.md` (this file)
+
+**Step 1: Add reference to root cause analysis**
+
+Insert at top of plan after tech stack:
+
+```markdown
+**Root Cause Analysis:** See `docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md` for detailed analysis of why bloat happened and prevention strategy.
+```
+
+**Step 2: Add new tasks to plan summary**
+
+Update goal to include validation and examples:
+
+```markdown
+**Goal:** Fix 7 critical issues preventing Powerlevel/Superpowers from working "out of the box" for new users, document root cause, and create prevention measures
+```
+
+**Step 3: Update task count**
+
+Original: 10 tasks (Tasks 1-10)  
+Updated: 13 tasks (Tasks 1-13, including validation script, examples, and final commit)
+
+---
+
+## Task 13: Commit and Push All Documentation
 
 **Step 1: Commit plan file**
 
