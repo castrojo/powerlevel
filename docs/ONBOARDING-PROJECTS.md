@@ -2,6 +2,32 @@
 
 Guide for adding external projects to Powerlevel tracking and distributing best practices.
 
+---
+
+## ⚠️ KNOWN ISSUES - DO NOT ONBOARD NEW PROJECTS YET
+
+**Current onboarding process adds excessive bloat (113 lines per project).**
+
+**Status:** Epic #165 in progress to fix onboarding bloat  
+**Root Cause:** [docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md](../analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md)
+
+**Issues being fixed:**
+- Template adds 53-line placeholder sections (should be 15 lines)
+- Config generates 20+ lines (should be 6 lines)
+- Creates unnecessary `docs/SUPERPOWERS.md` (should not exist)
+
+**Timeline:**
+- Documentation phase: ✅ Complete (root cause analysis, validation tools, examples)
+- Implementation phase: ⏳ In progress (Issues #166, #167, #168, #172)
+- Release: Target TBD after all P0/P1 issues resolved
+
+**For new projects:** Wait until Epic #165 is closed before onboarding.  
+**For existing projects:** See [Migration Guide](../examples/minimal-onboarding-example.md#migration-guide) to reduce bloat.
+
+**Validation:** After fixes, run `bin/validate-onboarding.sh` to verify minimal footprint.
+
+---
+
 ## Overview
 
 When you onboard a project to Powerlevel, you create a tracking relationship where:
@@ -56,7 +82,9 @@ The script creates/updates:
 
 ### Step 4: Customize project-specific context
 
-Edit `AGENTS.md` and add project-specific information below the managed section:
+⚠️ **Note:** This section describes the current (bloated) behavior. After Epic #165 fixes, placeholder sections will be removed.
+
+Edit `AGENTS.md` and add **only project-specific information** below the managed section:
 
 ```markdown
 <!-- POWERLEVEL MANAGED SECTION - END -->
@@ -81,6 +109,8 @@ Our project uses a microservices architecture with:
 5. Create PR with template
 6. Squash merge after approval
 ```
+
+**Important:** Only add sections that are actually relevant to your project. Empty placeholder sections violate the "minimal repository impact" principle and will be removed in future template versions.
 
 ### Step 5: Commit changes
 
