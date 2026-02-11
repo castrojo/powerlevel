@@ -3,7 +3,7 @@
 # Usage: bin/validate-onboarding.sh [project-directory]
 #
 # Checks:
-# - AGENTS.md managed section ≤ 15 lines
+# - AGENTS.md managed section ≤ 35 lines
 # - .opencode/config.json ≤ 10 lines
 # - docs/SUPERPOWERS.md does not exist
 #
@@ -14,7 +14,7 @@
 set -euo pipefail
 
 PROJECT_DIR="${1:-.}"
-AGENTS_MD_MAX_LINES=15
+AGENTS_MD_MAX_LINES=35
 CONFIG_MAX_LINES=10
 
 # Color output

@@ -11,7 +11,7 @@ Powerlevel's design philosophy is "tracking-only system" but current onboarding 
 - `.opencode/config.json`: 20 lines (config)
 - `docs/SUPERPOWERS.md`: 40 lines (extra file)
 
-**Expected:** 37 lines max (15 in AGENTS.md, 6 in config, no extra files)  
+**Expected:** ~35 lines max (~29 in AGENTS.md, 6 in config, no extra files)  
 **Ideal:** 9 lines (8 in AGENTS.md, 1 in config)
 
 ---
@@ -179,9 +179,9 @@ Superpowers are advanced workflows...
 
 ---
 
-### Target Implementation (37 lines - ✅ Acceptable)
+### Target Implementation (~35 lines - ✅ Acceptable)
 
-**File:** `AGENTS.md` (15 lines)
+**File:** `AGENTS.md` (~29 lines)
 
 ```markdown
 # castrojo/example-project
@@ -217,7 +217,7 @@ This project is tracked by [Powerlevel](https://github.com/castrojo/powerlevel).
 
 ```json
 {
-  "$schema": "https://r.to/powerlevel-schema",
+  "$schema": "https://raw.githubusercontent.com/castrojo/powerlevel/main/schemas/opencode-config.schema.json",
   "mcp": {
     "servers": {"dosu": {"type": "remote"}}
   }
@@ -226,7 +226,7 @@ This project is tracked by [Powerlevel](https://github.com/castrojo/powerlevel).
 
 **Why this works:**
 - Minimal config (defaults from schema)
-- Shortened schema URL (aliased)
+- Full schema URL (short URL alias `r.to/powerlevel-schema` is aspirational - not yet created)
 - No deprecated keys
 - Remote type only (URL from schema defaults)
 - Authentication from global config
@@ -249,7 +249,7 @@ This project is tracked by [Powerlevel](https://github.com/castrojo/powerlevel).
 # castrojo/example-project
 
 <!-- POWERLEVEL MANAGED SECTION - START -->
-Tracked by [Powerlevel](https://github.com/castrojo/powerlevel). [Best Practices](https://r.to/powerlevel-bp) | [Epic](https://github.com/castrojo/powerlevel/issues?q=label:project/example-project)
+Tracked by [Powerlevel](https://github.com/castrojo/powerlevel). [Best Practices](https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/README.md) | [Epic](https://github.com/castrojo/powerlevel/issues?q=label:project/example-project)
 <!-- POWERLEVEL MANAGED SECTION - END -->
 
 ---
@@ -267,7 +267,7 @@ Tracked by [Powerlevel](https://github.com/castrojo/powerlevel). [Best Practices
 **File:** `.opencode/config.json` (1 line)
 
 ```json
-{"$schema": "https://r.to/powerlevel-schema"}
+{"$schema": "https://raw.githubusercontent.com/castrojo/powerlevel/main/schemas/opencode-config.schema.json"}
 ```
 
 **Why this is ideal:**
@@ -275,6 +275,7 @@ Tracked by [Powerlevel](https://github.com/castrojo/powerlevel). [Best Practices
 - Per-project overrides in project config
 - Global overrides in `~/.config/opencode/config.json`
 - Matches Codecov pattern (empty config enables tracking)
+- Short URL alias (`r.to/powerlevel-schema`) aspirational - not yet created
 
 ---
 
@@ -317,12 +318,12 @@ Tracked by [Powerlevel](https://github.com/castrojo/powerlevel). [Best Practices
 Use `bin/validate-onboarding.sh` to check any project:
 
 ```bash
-cd /var/home/jorge/.config/opencode/powerlevel
+cd ~/.config/opencode/powerlevel
 ./bin/validate-onboarding.sh ~/src/example-project
 ```
 
 **Checks:**
-- ✅ AGENTS.md managed section ≤ 15 lines
+- ✅ AGENTS.md managed section ≤ 35 lines
 - ✅ `.opencode/config.json` ≤ 10 lines
 - ✅ No `docs/SUPERPOWERS.md`
 - ✅ No deprecated config keys
@@ -340,7 +341,7 @@ cd /var/home/jorge/.config/opencode/powerlevel
    cp AGENTS.md AGENTS.md.backup
    ```
 
-2. **Replace managed section** with target implementation (15 lines)
+2. **Replace managed section** with target implementation (~29 lines)
 
 3. **Remove placeholder sections** (Architecture, Development Workflow, etc.)
    - Keep project-specific content below `---`
@@ -359,9 +360,9 @@ cd /var/home/jorge/.config/opencode/powerlevel
    ```
 
 6. **Validate:**
-   ```bash
-   /var/home/jorge/.config/opencode/powerlevel/bin/validate-onboarding.sh .
-   ```
+```bash
+~/.config/opencode/powerlevel/bin/validate-onboarding.sh .
+```
 
 ### For New Projects
 
@@ -373,7 +374,7 @@ npm run onboard castrojo/new-project
 ```
 
 Should produce:
-- 15-line AGENTS.md managed section
+- ~29-line AGENTS.md managed section
 - 6-line `.opencode/config.json`
 - No `docs/SUPERPOWERS.md`
 
@@ -392,8 +393,8 @@ Should produce:
 
 | Metric | Current | Target | Ideal |
 |--------|---------|--------|-------|
-| Total lines | 113 | 37 | 9 |
-| AGENTS.md | 53 | 15 | 8 |
+| Total lines | 113 | ~35 | 9 |
+| AGENTS.md | 53 | ~29 | 8 |
 | Config | 20 | 6 | 1 |
 | Extra files | 1 | 0 | 0 |
 | Maintenance burden | High | Low | Zero |

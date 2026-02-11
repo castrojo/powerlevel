@@ -63,7 +63,7 @@ Powerlevel is a **tracking-only dashboard**. It reads project state and displays
 
 #### Principle 1: HTML Comment Block ONLY for AGENTS.md
 
-**DO THIS (31 lines):**
+**DO THIS (29 lines, may vary with project-specific Quick Links):**
 ```markdown
 <!-- POWERLEVEL MANAGED SECTION - START -->
 <!-- This section is maintained by Powerlevel. Manual edits may be overwritten. -->
@@ -162,7 +162,7 @@ This project is tracked by [Powerlevel](https://github.com/castrojo/powerlevel),
 ```
 chore: add Powerlevel tracking metadata
 
-- Added Powerlevel managed section to AGENTS.md (31 lines)
+- Added Powerlevel managed section to AGENTS.md (~29 lines)
 - Created .opencode/config.json for project board integration
 
 No functional changes to project behavior.
@@ -185,7 +185,7 @@ project/
 **After onboarding:**
 ```
 project/
-├── AGENTS.md          ← 31 lines (HTML comment block only)
+├── AGENTS.md          ← ~29 lines (HTML comment block only)
 ├── .opencode/
 │   └── config.json    ← 6 lines (minimal config)
 ├── README.md
@@ -193,7 +193,7 @@ project/
 └── .git/
 ```
 
-**Total impact:** 37 lines across 2 files
+**Total impact:** ~35 lines across 2 files
 
 #### Example 2: Existing Project (With AGENTS.md)
 
@@ -210,14 +210,14 @@ project/
 **After onboarding:**
 ```
 project/
-├── AGENTS.md          ← 231 lines (31 added at top, 200 preserved)
+├── AGENTS.md          ← ~231 lines (~29 added at top, 200 preserved)
 ├── .opencode/
 │   └── config.json    ← 52 lines (2 keys merged)
 ├── README.md
 └── .git/
 ```
 
-**Total impact:** 33 lines added (31 in AGENTS.md, 2 keys in config.json)
+**Total impact:** ~31 lines added (~29 in AGENTS.md, 2 keys in config.json)
 
 ### Anti-Patterns (DO NOT DO THIS)
 
@@ -261,7 +261,7 @@ project/
 
 Before committing onboarding changes, verify:
 
-- [ ] AGENTS.md has ONLY the HTML comment block (31 lines added)
+- [ ] AGENTS.md has ONLY the HTML comment block (~29 lines added)
 - [ ] No placeholder sections after `<!-- POWERLEVEL MANAGED SECTION - END -->`
 - [ ] No docs/SUPERPOWERS.md file created
 - [ ] .opencode/config.json has ONLY 2 required keys (projectBoard, superpowersIntegration)
@@ -272,7 +272,7 @@ Before committing onboarding changes, verify:
 ### For External Projects
 
 Projects tracked by Powerlevel should be able to:
-- ✅ Remove Powerlevel at any time (delete 31 lines + 2 config keys)
+- ✅ Remove Powerlevel at any time (delete ~29 lines + 2 config keys)
 - ✅ Use their own AGENTS.md structure
 - ✅ Ignore Powerlevel entirely if desired
 - ✅ See Powerlevel as "just metadata for tracking"
@@ -316,7 +316,7 @@ git commit -m "docs: add minimal repository impact principles for onboarding
 ## Task 2: Update AGENTS.md Template to Remove Bloat
 
 **Files:**
-- Modify: `templates/AGENTS.md.template` (reduce from 54 to 31 lines)
+- Modify: `templates/AGENTS.md.template` (reduce from 54 to ~29 lines)
 
 **Step 1: Read current template**
 
@@ -1181,7 +1181,7 @@ cd /path/to/project
 \`\`\`
 
 This checks:
-- AGENTS.md managed section ≤ 15 lines
+- AGENTS.md managed section ≤ 35 lines
 - .opencode/config.json ≤ 10 lines  
 - No docs/SUPERPOWERS.md file
 ```
@@ -1399,7 +1399,78 @@ Update goal to include validation and examples:
 **Step 3: Update task count**
 
 Original: 10 tasks (Tasks 1-10)  
-Updated: 13 tasks (Tasks 1-13, including validation script, examples, and final commit)
+Updated: 17 tasks (Tasks 1-13 original, Tasks 14-17 added from code review)
+
+---
+
+## Task 14: Fix MCP Config Format Mismatch (Issue #173)
+
+**Priority:** P0  
+**GitHub Issue:** #173  
+**Status:** Issue created, not yet implemented
+
+**Problem:** Bluespeed onboarding SKILL.md uses incorrect OpenCode config keys:
+- Uses `"type": "stdio"` → should be `"type": "local"`
+- Uses `"env"` → should be `"environment"`
+
+**Files to modify:**
+- `skills/bluespeed-onboarding/SKILL.md` (in castrojo/bluespeed repo)
+
+**Note:** This is a bluespeed fix tracked by powerlevel. The issue is filed in powerlevel because the onboarding template pattern originated here.
+
+---
+
+## Task 15: Fix Validation Script Bugs (Issue #174)
+
+**Priority:** P1  
+**GitHub Issue:** #174  
+**Status:** Issue created, not yet implemented
+
+**Bugs identified:**
+1. False positive on nonexistent directories (exits 0 instead of 1)
+2. `## Project-Specific Context` check contradicts examples doc (both "target" and "ideal" examples include it as a useful boundary marker)
+3. Missing `tracking` deprecated key check (only checks `superpowers` and `wiki`)
+
+**Files to modify:**
+- `bin/validate-onboarding.sh`
+
+**Recommendation:** Remove `Project-Specific Context` check entirely - it serves as a useful boundary marker between Powerlevel-managed and project-owned content.
+
+---
+
+## Task 16: Powerlevel Repo Self-Cleanup (Issue #175)
+
+**Priority:** P1  
+**GitHub Issue:** #175  
+**Status:** Issue created, not yet implemented
+
+**Problem:** Powerlevel's own repo fails its own validation script:
+- `docs/SUPERPOWERS.md` exists (script says it shouldn't)
+- Deprecated config keys in `.opencode/config.json`
+
+**Recommendation:** Clean up the repo to pass its own validation rather than adding self-exclusion logic.
+
+---
+
+## Task 17: Review Findings Summary
+
+**Added:** 2026-02-11 (from comprehensive code + session log review)
+
+**New issues created from review:**
+- #173 (P0) - MCP config format mismatch
+- #174 (P1) - Validation script bugs (3 bugs)
+- #175 (P1) - Powerlevel repo self-cleanup
+
+**Documentation fixes applied directly:**
+- Fixed date inconsistency in root cause analysis (Feb 9 → Feb 10 for commit b1c1db0)
+- Fixed hardcoded `/var/home/jorge` paths in examples doc → `~`
+- Fixed nonexistent `r.to/` URLs → full GitHub URLs with aspirational notes
+- Reconciled line count targets across all documents (validation: 35, target managed section: ~29, ideal: 9)
+
+**Cross-session contradictions identified:**
+- License mismatch (Apache 2.0 vs MIT) - bluespeed issue, not tracked here
+- Line count disagreements across 4 documents - fixed
+- MCP format mismatch - filed as #173
 
 ---
 

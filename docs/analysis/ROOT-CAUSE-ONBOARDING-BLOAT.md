@@ -10,7 +10,7 @@
 ## Executive Summary
 
 The Powerlevel onboarding process violates its own "tracking-only" design philosophy by adding 113 lines of bloat to newly onboarded projects:
-- 53-line AGENTS.md (should be 31 lines)
+- 53-line AGENTS.md (should be ~29 lines)
 - 40-line SUPERPOWERS.md (should not exist)
 - 20-line config.json (should be 6 lines)
 
@@ -65,7 +65,7 @@ From commit `b1c1db0` (2026-02-10):
 
 ## Timeline of Events
 
-### February 9, 2026: Design Philosophy Established
+### February 10, 2026: Design Philosophy Established
 
 **Commit:** `b1c1db0` - "codify tracking-only design philosophy"
 
@@ -139,7 +139,7 @@ createAgentsFile(cwd);         // Creates AGENTS.md (53 lines from template)
 - Script creates 20-line config with wrong schema
 - No verification checklist, missing token scopes, no npm install docs
 
-**Total impact:** 113 lines added per project (should be 37 lines maximum)
+**Total impact:** 113 lines added per project (should be ~35 lines maximum)
 
 ---
 
@@ -341,10 +341,10 @@ Result: Agent had good intentions, script undermined them
 
 **Action:** Create `bin/validate-onboarding.sh` script
 
-**Purpose:** Check that AGENTS.md is <15 lines, config is <10 lines
+**Purpose:** Check that AGENTS.md is ≤35 lines, config is <10 lines
 
 **Checks:**
-- AGENTS.md managed section ≤ 15 lines
+- AGENTS.md managed section ≤ 35 lines
 - .opencode/config.json ≤ 10 lines
 - docs/SUPERPOWERS.md does not exist
 
@@ -379,7 +379,7 @@ Result: Agent had good intentions, script undermined them
 | **Renovate** | 8 lines | 1 file (`renovate.json`) | Minimal config only |
 | **Codecov** | 1 line | 1 file (`.codecov.yml`) | Minimal config only |
 | **Powerlevel (current)** | 113 lines | 3 files (AGENTS.md, config.json, SUPERPOWERS.md) | Verbose with placeholders ❌ |
-| **Powerlevel (target)** | 37 lines | 2 files (AGENTS.md, config.json) | Metadata only ✅ |
+| **Powerlevel (target)** | ~35 lines | 2 files (AGENTS.md, config.json) | Metadata only ✅ |
 | **Powerlevel (ideal)** | 9 lines | 1 file (AGENTS.md with link to upstream) | Ultra-minimal ✅ |
 
 **Key insight:** Successful tracking tools add 1-8 lines. Powerlevel adds 113 lines (14x-113x more bloat).
@@ -489,9 +489,9 @@ All issues created as part of Epic #165:
 
 ### Target State (After Fixes)
 
-- **Template size:** 31 lines (0 lines of bloat)
+- **Template size:** ~29 lines (0 lines of bloat)
 - **Files created:** 2 (AGENTS.md, config.json)
-- **Total footprint:** 37 lines per project
+- **Total footprint:** ~35 lines per project
 - **Comparison to Dependabot:** 12x more bloat (acceptable for richer metadata)
 
 ### Ideal State (Future Optimization)
