@@ -1,0 +1,10 @@
+{
+  "repo": "castrojo/bluespeed",
+  "active": true,
+  "labels": {
+    "project": "project/bluespeed"
+  },
+  "description": "Agents and skills for maintaining Project Bluefin",
+  "tech_stack": ["OpenCode Skills", "Goose Extensions", "MCP Servers", "Bash"],
+  "framework_version": "1.0.0"
+}

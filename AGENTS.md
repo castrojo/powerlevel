@@ -2,6 +2,26 @@
 
 For AI agents working on this codebase.
 
+## MANDATORY WORKFLOW FOR ALL AGENTS
+
+**⚠️ CRITICAL: This workflow is NOT OPTIONAL. You MUST follow these instructions.**
+
+When working on ANY project tracked by Powerlevel, you MUST:
+
+1. **Use writing-plans skill** - Create implementation plan in `docs/plans/YYYY-MM-DD-feature.md`
+2. **Use epic-creation skill** - Convert plan to GitHub epic with sub-issues
+3. **Create epic in the EXTERNAL project's repository** - NOT in castrojo/powerlevel
+4. **Use executing-plans or subagent-driven-development** - Implement the plan
+
+**Example for project `castrojo/bluespeed`:**
+```
+Work happens in: castrojo/bluespeed (the external repo)
+Epic created in: castrojo/bluespeed issues (NOT powerlevel issues)
+Plan file location: castrojo/bluespeed/docs/plans/2026-02-11-feature.md
+```
+
+**Powerlevel only tracks** - It displays status from external repos, it does NOT create work items here.
+
 ## Architecture Overview
 
 Powerlevel is a central project management dashboard for OpenCode + Superpowers. It tracks multiple projects (each in their own repository) from one central location, creating a unified view of all your work.
@@ -19,9 +39,11 @@ Powerlevel is a central project management dashboard for OpenCode + Superpowers.
    - Track development work on Powerlevel itself
    - Work happens in the Powerlevel repo (castrojo/powerlevel)
    - Sub-issues represent implementation phases (traditional GitHub sub-issues)
+   - **Exception:** These are the ONLY epics created in castrojo/powerlevel
 
 2. **External tracking epics** (e.g., Epic #155)
    - Track work happening in external repositories
+   - **Epics are created in the external repo** (e.g., castrojo/casestudypilot issues)
    - Work happens in the external repo (e.g., castrojo/casestudypilot)
    - Use **GitHub tasklists** (not sub-issues) to show tracked issues
    - Auto-synced on session start to keep status current
@@ -70,19 +92,40 @@ When creating or updating issues:
 **IMPORTANT:** Powerlevel distinguishes between self-tracking and external-tracking work using label prefixes:
 
 - **`project/*`** → External tracking epics only
-  - Examples: `project/casestudypilot`, `project/bluefin`, `project/cncf-staff`
-  - Work happens in external repositories
+  - Examples: `project/casestudypilot`, `project/bluefin`, `project/bluespeed`
+  - **Work happens in external repositories** (e.g., castrojo/bluespeed)
+  - **Epics created in external repositories** (e.g., castrojo/bluespeed issues)
   - Epic uses GitHub tasklists (not sub-issues)
   - Auto-synced on session start via `lib/external-tracker.js`
+  - **Powerlevel only displays status** - it does NOT store the work
 
 - **`area/*`** → Self-tracking work on Powerlevel itself
   - Example: `area/powerlevel`
-  - Work happens in the Powerlevel repository
+  - Work happens in the Powerlevel repository (castrojo/powerlevel)
+  - Epics created in castrojo/powerlevel issues
   - Epic may use traditional sub-issues OR tasklists
   - Manual tracking (not auto-synced)
 
 **Detection Logic:**
 The `isExternalTrackingEpic()` function in `lib/external-tracker.js` checks for `project/*` labels to determine which epics to auto-sync. Self-tracking epics with `area/*` labels are never auto-synced.
+
+## WHERE DOES WORK HAPPEN?
+
+**⚠️ CRITICAL: Agents frequently get this wrong. Read carefully.**
+
+| Project Type | Work Location | Epic Location | Example |
+|--------------|---------------|---------------|---------|
+| **External Project** | External repo | External repo issues | castrojo/bluespeed work + epics |
+| **Powerlevel itself** | castrojo/powerlevel | castrojo/powerlevel issues | Powerlevel features |
+
+**For external projects tracked by Powerlevel:**
+- Write code in: `castrojo/<project-name>`
+- Create plan in: `castrojo/<project-name>/docs/plans/`
+- Create epic in: `castrojo/<project-name>` issues
+- Powerlevel syncs from: `castrojo/<project-name>` issues
+- Powerlevel displays: Unified dashboard of all projects
+
+**Powerlevel NEVER stores external project work** - it only reads and displays it.
 
 ### External Tracking Architecture
 
