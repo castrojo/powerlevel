@@ -48,19 +48,69 @@ ln -s ~/.config/opencode/powerlevel/skills ~/.config/opencode/skills/powerlevel
 gh auth status
 ```
 
+## Multi-Machine Setup
+
+Setting up Powerlevel on additional machines? See the **[Machine Setup Guide](docs/MACHINE-SETUP.md)**.
+
+**Key Points:**
+- GitHub is the single source of truth
+- Never copy the `cache/` directory between machines
+- Cache auto-regenerates from GitHub on first run
+- Follow the guide for step-by-step instructions and troubleshooting
+
+---
+
 ## How to Use
 
-### Setting Up a Project
+### Onboarding a New Project
 
-1. Set up `username/powershell` (Right now I've only set myself up, no idea if this part works)
-2. Tell opencode: "Onboard this project: <link>"
-3. Then in the project repo tell opencode: "Onboard this project with to `username/powershell`
+Powerlevel provides a **single-command automated onboarding** that handles everything:
 
-Powerlevel will add a section to that project's AGENTS.md to tell it to check with the main setup.
+```bash
+# Basic usage
+node bin/auto-onboard.js owner/repo
 
-1. Then just use opencode with superpowers normally with your project(s).
-2. Add things you want all projects to share in `username/powershell`
-3. On launch the projects will "check in" with `username/powershell` for context.
+# With options
+node bin/auto-onboard.js castrojo/myproject \
+  --force \
+  --description="My awesome project" \
+  --tech-stack="Node.js,React,PostgreSQL"
+```
+
+**What it does:**
+1. ✅ Clones the repository (if needed)
+2. ✅ Creates `.opencode/config.json` with Powerlevel configuration
+3. ✅ Adds `superpowers` remote pointing to Powerlevel
+4. ✅ Creates `AGENTS.md` with best practices links
+5. ✅ Creates `docs/SUPERPOWERS.md` documentation
+6. ✅ Creates project config in `projects/repo-name/config.json`
+7. ✅ Commits all changes to the target repository
+
+**Available Options:**
+- `--force` - Skip confirmation prompts
+- `--workspace=PATH` - Clone to specific directory (default: `../repo-name`)
+- `--description=TEXT` - Project description for tracking
+- `--tech-stack=A,B,C` - Technology stack (comma-separated)
+- `--skip-config` - Skip creating Powerlevel project config
+- `--help` - Show detailed help
+
+**Example Workflow:**
+```bash
+# Onboard a documentation project
+cd ~/src/powerlevel
+node bin/auto-onboard.js castrojo/documentation --force
+
+# Result:
+# - Repository cloned to ~/src/documentation
+# - Onboarding files committed
+# - Project config created in projects/documentation/
+# - Ready to track!
+```
+
+**After Onboarding:**
+1. Use OpenCode with Superpowers normally in your project
+2. Share common patterns in `docs/best-practices/`
+3. Projects automatically sync with Powerlevel on session start
 
 ### Automatic Epic Creation
 
