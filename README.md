@@ -20,51 +20,72 @@ Your **Powerlevel** = the number of active projects you're managing. Simple as t
 
 ## Installation
 
-1. **Clone this repository:**
 ```bash
-cd ~/.config/opencode
-git clone https://github.com/YOUR_USERNAME/powerlevel.git
+bash <(curl -fsSL https://raw.githubusercontent.com/castrojo/powerlevel/main/bin/setup-machine.sh)
 ```
 
-2. **Install the plugin:**
+**Prerequisites:** OpenCode, GitHub CLI (`gh auth login`), Git, `jq`
 
-Add to your `~/.config/opencode/opencode.json`:
-```json
-{
-  "plugin": [
-    "~/.config/opencode/powerlevel/plugin.js"
-  ]
-}
-```
+**Multi-machine setup:** See [Machine Setup Guide](docs/MACHINE-SETUP.md)
 
-3. **Symlink the skills:**
+## Workflow
+
+Powerlevel automatically tracks your work as you use OpenCode with Superpowers.
+
+### Example: Building a New Feature
+
+**1. Create a plan**
 ```bash
-mkdir -p ~/.config/opencode/skills
-ln -s ~/.config/opencode/powerlevel/skills ~/.config/opencode/skills/powerlevel
+# In your project repo
+cd ~/src/my-app
+opencode
+
+# Ask agent: "Create a plan for adding user authentication"
+# Agent uses writing-plans skill → Creates docs/plans/2026-02-10-add-auth.md
 ```
 
-4. **Verify GitHub CLI:**
+**2. Epic auto-created**
+- Powerlevel detects plan file
+- Creates Epic #45 in Powerlevel repo with sub-issues
+- Adds to GitHub Project Board
+- Your Powerlevel score increases by 1
+
+**3. Execute work**
 ```bash
-gh auth status
+# Agent uses executing-plans skill
+# → Epic status: Planning → In Progress
+# → Sub-issues update as tasks complete
 ```
 
-## Multi-Machine Setup
+**4. Review and complete**
+```bash
+# Agent uses finishing-a-development-branch skill
+# → Epic status: In Progress → Review
+# → Commits pushed, PR created
 
-Setting up Powerlevel on additional machines? See the **[Machine Setup Guide](docs/MACHINE-SETUP.md)**.
+# Once merged:
+# → Epic closed
+# → Your Powerlevel score decreases by 1
+```
 
-**Key Points:**
-- GitHub is the single source of truth
-- Never copy the `cache/` directory between machines
-- Cache auto-regenerates from GitHub on first run
-- Follow the guide for step-by-step instructions and troubleshooting
+**Your Powerlevel = number of active epics across all tracked projects.**
 
----
+### Tracking External Projects
+
+Track work in other repositories from your central Powerlevel dashboard:
+
+```bash
+cd ~/src/powerlevel
+node bin/track-project.js owner/upstream-repo --auto
+```
+
+Creates tracking epic that syncs upstream issues automatically on session start.
 
 ## How to Use
 
 ### Onboarding a New Project
 
-Powerlevel provides a **single-command automated onboarding** that handles everything:
+Onboard a new project to track it in your Powerlevel dashboard:
 
 ```bash
 # Basic usage
@@ -77,92 +98,23 @@ node bin/auto-onboard.js castrojo/myproject \
   --tech-stack="Node.js,React,PostgreSQL"
 ```
 
-**What it does:**
-1. ✅ Clones the repository (if needed)
-2. ✅ Creates `.opencode/config.json` with Powerlevel configuration
-3. ✅ Adds `superpowers` remote pointing to Powerlevel
-4. ✅ Creates `AGENTS.md` with best practices links
-5. ✅ Creates `docs/SUPERPOWERS.md` documentation
-6. ✅ Creates project config in `projects/repo-name/config.json`
-7. ✅ Commits all changes to the target repository
-
-**Available Options:**
+**Options:**
 - `--force` - Skip confirmation prompts
 - `--workspace=PATH` - Clone to specific directory (default: `../repo-name`)
-- `--description=TEXT` - Project description for tracking
+- `--description=TEXT` - Project description
 - `--tech-stack=A,B,C` - Technology stack (comma-separated)
-- `--skip-config` - Skip creating Powerlevel project config
+- `--skip-config` - Skip creating project config
 - `--help` - Show detailed help
 
-**Example Workflow:**
+### Commands
+
+**Manual epic creation:**
 ```bash
-# Onboard a documentation project
-cd ~/src/powerlevel
-node bin/auto-onboard.js castrojo/documentation --force
-
-# Result:
-# - Repository cloned to ~/src/documentation
-# - Onboarding files committed
-# - Project config created in projects/documentation/
-# - Ready to track!
+node ~/.config/opencode/powerlevel/bin/create-epic.js docs/plans/my-plan.md
 ```
 
-**After Onboarding:**
-1. Use OpenCode with Superpowers normally in your project
-2. Share common patterns in `docs/best-practices/`
-3. Projects automatically sync with Powerlevel on session start
-
-### Automatic Epic Creation
-
-When you complete a plan using `writing-plans`, Powerlevel automatically:
-- Creates an epic issue in the central Powerlevel repo
-- Creates sub-task issues for each task
-- Links everything with `project/name` labels
-- Adds to the Powerlevel dashboard
-- Updates your Powerlevel score
-
-### Manual Epic Creation
-
-Create an epic from any plan file:
-```bash
-node ~/.config/opencode/powerlevel/bin/create-epic.js projects/my-app/plans/my-plan.md
-```
-
-### Session End Sync
-
-When your session ends, the plugin automatically syncs all progress to GitHub.
-
-You can also manually sync:
-```bash
-# Available via session.idle event
-```
-
-### Epic Context Detection
-
-When working in a project with plan files, Powerlevel automatically detects and displays the current epic:
-
-**At OpenCode startup:**
-```
-📌 Current Epic: #21 - OpenCode Epic Header Display
-   Plan: docs/plans/2026-02-10-opencode-epic-header-display.md
-   URL: https://github.com/castrojo/casestudypilot/issues/21
-```
-
-**Programmatic access:**
-```javascript
-// In OpenCode JavaScript console or other plugins
-const epic = session.context.getEpic();
-console.log(epic.display);  // "Epic #21: OpenCode Epic Header Display"
-console.log(epic.url);       // "https://github.com/..."
-console.log(epic.raw);       // Full context object
-```
-
-**How it works:**
-- Scans `docs/plans/*.md` for `**Epic Issue:** #N` references
-- Uses most recent plan file (by filename)
-- Falls back to git branch name (patterns: `epic-123`, `epic/123`, `feature/epic-123`)
-- Caches results for performance
-- Cache invalidates when plan files change
+**View current epic context:**
+Powerlevel automatically detects and displays your current epic at session start by scanning `docs/plans/*.md` for epic references.
 
 ## Labels
 
@@ -192,56 +144,14 @@ The plugin creates these labels automatically:
 
 ## Project Board Integration
 
-Epics and sub-issues are automatically added to your GitHub Project Board with proper field mapping.
+Epics and sub-issues are automatically added to your GitHub Project Board with field mapping for Priority and Status.
 
-### Features
-
+**Features:**
 - Auto-detects your first project board
-- Maps labels to project fields:
-  - `priority/p0-p3` → Priority field
-  - `status/*` → Status field
-- Adds both epics and sub-issues to the board
-- Gracefully handles missing project boards or fields
+- Maps `priority/p0-p3` labels → Priority field
+- Maps `status/*` labels → Status field
 
-### Configuration
-
-**Environment Variables:**
-```bash
-# Disable project board integration
-export GITHUB_TRACKER_PROJECT_ENABLED=false
-
-# Use specific project number
-export GITHUB_TRACKER_PROJECT_NUMBER=2
-```
-
-**Config File** (`.github-tracker.json`):
-```json
-{
-  "projectBoard": {
-    "enabled": true,
-    "projectNumber": 1,
-    "fieldMapping": {
-      "priority": "Priority",
-      "status": "Status"
-    }
-  }
-}
-```
-
-### Field Mapping
-
-The following label-to-field mappings are applied automatically:
-
-| Label | Project Field | Project Value |
-|-------|---------------|---------------|
-| `priority/p0` | Priority | P0 - Critical |
-| `priority/p1` | Priority | P1 - High |
-| `priority/p2` | Priority | P2 - Normal |
-| `priority/p3` | Priority | P3 - Low |
-| `status/planning` | Status | Todo |
-| `status/in-progress` | Status | In Progress |
-| `status/review` | Status | In Progress |
-| `status/done` | Status | Done |
+**Configuration:** Set `GITHUB_TRACKER_PROJECT_ENABLED=false` to disable, or `GITHUB_TRACKER_PROJECT_NUMBER=N` to use a specific board. See [AGENTS.md](AGENTS.md) for full configuration options.
 
 ## Troubleshooting
 
