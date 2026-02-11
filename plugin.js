@@ -247,8 +247,10 @@ async function syncExternalProjects(owner, repo, cwd) {
 /**
  * Plugin initialization
  */
-export async function PowerlevelPlugin({ session } = {}) {
+export async function PowerlevelPlugin(options = {}) {
   console.log('Initializing Powerlevel plugin...');
+  
+  const session = options?.session;
   
   // Get current working directory
   const cwd = session?.cwd || process.cwd();
@@ -256,14 +258,14 @@ export async function PowerlevelPlugin({ session } = {}) {
   // Verify gh CLI
   if (!verifyGhCli()) {
     console.error('Powerlevel plugin disabled - gh CLI not available');
-    return { config: () => ({}) };
+    return {};
   }
   
   // Detect repository
   const repoInfo = detectRepo(cwd);
   if (!repoInfo) {
     console.error('Powerlevel plugin disabled - not in a GitHub repository');
-    return { config: () => ({}) };
+    return {};
   }
   
   const { owner, repo } = repoInfo;
@@ -282,33 +284,11 @@ export async function PowerlevelPlugin({ session } = {}) {
   // Sync external tracking epics (Option B: Session start sync)
   await syncExternalProjects(owner, repo, cwd);
   
-  // Check if current repo is a fork and suggest tracking upstream
-  try {
-    const { detectForkRelationship } = await import('./lib/fork-detector.js');
-    const forkInfo = detectForkRelationship(cwd);
-    if (forkInfo.isDetected) {
-      const projects = listProjects(cwd);
-      const upstreamTracked = projects.some(p => 
-        p.repo === `${forkInfo.upstream.owner}/${forkInfo.upstream.repo}`
-      );
-      
-      if (!upstreamTracked) {
-        console.log('');
-        console.log(`💡 Hint: Detected fork of ${forkInfo.upstream.owner}/${forkInfo.upstream.repo}`);
-        console.log('   To track upstream in Powerlevel:');
-        console.log('   node ~/src/powerlevel/bin/track-project.js --auto');
-        console.log('');
-      }
-    }
-  } catch (error) {
-    // Silently ignore fork detection errors
-  }
-  
   // Initialize context provider for epic detection
   const contextProvider = new ContextProvider();
   
   // Expose context API to OpenCode
-  if (session?.context) {
+  if (session && session.context) {
     session.context.getEpic = () => {
       return {
         display: contextProvider.getDisplayString(cwd),
@@ -329,7 +309,7 @@ export async function PowerlevelPlugin({ session } = {}) {
   }
   
   // Hook into session.idle event
-  if (session?.on) {
+  if (session && session.on) {
     session.on('idle', async () => {
       await landThePlane(owner, repo, cwd);
     });
@@ -343,15 +323,13 @@ export async function PowerlevelPlugin({ session } = {}) {
       }
     });
   } else {
-    console.log('ℹ️  No active session - event hooks not available');
+    console.warn('Warning: Session does not support event hooks');
   }
   
   console.log('✓ Powerlevel plugin initialized successfully');
   
-  // Return plugin object with config function
-  return {
-    config: () => ({})
-  };
+  // Return empty hooks object (plugin uses session events instead)
+  return {};
 }
 
 export default PowerlevelPlugin;
