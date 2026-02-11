@@ -22,6 +22,189 @@ Plan file location: castrojo/bluespeed/docs/plans/2026-02-11-feature.md
 
 **Powerlevel only tracks** - It displays status from external repos, it does NOT create work items here.
 
+## COMMON MISTAKES TO AVOID
+
+**⚠️ CRITICAL: Agents frequently make these mistakes. Read carefully before starting work.**
+
+### Mistake #1: Creating standalone plan files without using the workflow
+**WRONG:**
+```
+Agent creates: /path/to/project/EPIC_feature-name.md (standalone markdown file)
+```
+
+**RIGHT:**
+```
+Agent uses: writing-plans skill → docs/plans/2026-02-11-feature-name.md
+Agent uses: epic-creation skill → GitHub Epic #1 in project repo
+```
+
+**Why this matters:** Standalone files bypass the tracking system. You MUST use writing-plans → epic-creation workflow.
+
+### Mistake #2: Creating epics in the wrong repository
+**WRONG:**
+```
+Working on: castrojo/bluespeed
+Epic created in: castrojo/powerlevel issues ❌
+```
+
+**RIGHT:**
+```
+Working on: castrojo/bluespeed
+Epic created in: castrojo/bluespeed issues ✅
+```
+
+**Why this matters:** Powerlevel is tracking-only. External project work lives in external repos.
+
+### Mistake #3: Not asking before making technology decisions
+**WRONG:**
+```
+Agent assumes: "I'll use Bash scripts because I see them in similar projects"
+Agent implements: Bash solution without confirmation
+```
+
+**RIGHT:**
+```
+Agent asks: "Should this skill use Bash, Node.js, Python, or pure instructions?"
+User confirms: "Use Bash"
+Agent implements: Bash solution
+```
+
+**Why this matters:** Technology choices affect maintainability. ALWAYS ask the user first.
+
+### Mistake #4: Mixing up project-specific vs. powerlevel instructions
+**WRONG:**
+```
+# In castrojo/bluespeed/AGENTS.md
+## Powerlevel Workflow
+[Long explanation of writing-plans → epic-creation workflow]
+```
+
+**RIGHT:**
+```
+# In castrojo/bluespeed/AGENTS.md
+## Related Documentation
+- **Powerlevel AGENTS.md**: Link to powerlevel for workflow
+[Project-specific instructions only]
+```
+
+**Why this matters:** Each repo has its own AGENTS.md. Don't duplicate powerlevel instructions.
+
+### Mistake #5: Not initializing repository properly before creating epic
+**WRONG:**
+```
+1. Create GitHub repo
+2. Create epic immediately
+3. Discover repo has no structure/docs
+```
+
+**RIGHT:**
+```
+1. Create implementation plan (writing-plans skill)
+2. Initialize git repo locally
+3. Create basic structure (AGENTS.md, README.md)
+4. Push to GitHub
+5. Create epic with sub-tasks (epic-creation skill)
+```
+
+**Why this matters:** The plan file and repo structure must exist before creating the epic.
+
+### Mistake #6: Making assumptions about repository organization
+**WRONG:**
+```
+Agent assumes: "Skills go in skills/ directory with no scripts"
+Agent creates: skills/feature/SKILL.md only
+```
+
+**RIGHT:**
+```
+Agent checks: Read project AGENTS.md for structure guidelines
+Agent asks: "Where should scripts be organized?" if unclear
+Agent creates: skills/feature/SKILL.md + skills/feature/scripts/ (per AGENTS.md)
+```
+
+**Why this matters:** Each project may have different organization patterns. Read AGENTS.md first.
+
+### Mistake #7: Starting implementation without explicit instruction
+**WRONG:**
+```
+User: "Continue if you have next steps"
+Agent: [Immediately starts implementing, creating files, making commits]
+```
+
+**RIGHT:**
+```
+User: "Continue if you have next steps"
+Agent: "Here are the next steps:
+1. Create configuration templates in configs/
+2. Create library functions in skills/*/scripts/lib/
+3. Create setup scripts
+
+Should I proceed with implementing these?"
+User: "Yes, go ahead"
+Agent: [Now starts implementing]
+```
+
+**Why this matters:** "Continue" means continue the conversation or planning, NOT execute code changes. Always confirm before making any file edits, commits, or system modifications. Users want control over when implementation starts.
+
+## EXECUTION PROTOCOL
+
+**⚠️ CRITICAL: Never start implementation without explicit user instruction.**
+
+**Before making ANY code changes, commits, or system modifications:**
+
+1. **Present the plan** - Show what you intend to do
+2. **Ask for confirmation** - "Should I proceed with these changes?"
+3. **Wait for explicit instruction** - "Yes", "Go ahead", "Implement this"
+4. **Then and only then execute**
+
+**Phrases that do NOT mean "start implementing":**
+- "Continue if you have next steps"
+- "What's next?"
+- "Keep going"
+- "Continue"
+- "What should we do?"
+- "How do we proceed?"
+
+**Phrases that DO mean "start implementing":**
+- "Yes, go ahead and implement"
+- "Start working on this"
+- "Implement the next task"
+- "Make these changes"
+- "Create the files"
+- "Yes, proceed"
+
+**When in doubt: ASK for confirmation, don't execute.**
+
+**Exception:** You may execute read-only operations (reading files, searching code, checking git status) without explicit confirmation. But ANY write operations (creating files, editing code, making commits, running builds) require explicit user instruction.
+
+## DECISION-MAKING PROTOCOL
+
+**Before making ANY technical decision, ask yourself:**
+
+1. **Is this specified in the user's request?** → Follow it exactly
+2. **Is this documented in the project's AGENTS.md?** → Follow the pattern
+3. **Is this similar to an existing project pattern?** → ASK THE USER if it applies
+4. **Am I unsure?** → STOP AND ASK THE USER
+
+**NEVER assume. ALWAYS ask when uncertain.**
+
+### Examples of Decisions That Require User Confirmation:
+
+- Technology choices (Bash vs. Python vs. Node.js vs. pure instructions)
+- Dependency choices (which JSON/YAML libraries to use)
+- Architecture patterns (scripts vs. instructions vs. hybrid)
+- File organization (where scripts go, how to structure lib/ directories)
+- Configuration approaches (merge vs. replace, backup strategies)
+- Scope changes (adding features not in the original request)
+
+### Examples of Decisions You Can Make Independently:
+
+- Following documented patterns in project AGENTS.md
+- Using established conventions (kebab-case for files, snake_case for functions)
+- Standard error handling patterns (fail fast, clear messages)
+- Git commit message format (follow Conventional Commits)
+- Using documented library functions from existing code
+
 ## Architecture Overview
 
 Powerlevel is a central project management dashboard for OpenCode + Superpowers. It tracks multiple projects (each in their own repository) from one central location, creating a unified view of all your work.
