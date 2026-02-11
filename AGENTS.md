@@ -113,6 +113,68 @@ Each tracked external project has a config file in `projects/<project-name>/conf
 }
 ```
 
+**Fork-Based Tracking:**
+
+Powerlevel supports tracking upstream repositories from within fork working directories using `bin/track-project.js`:
+
+**Automatic Fork Detection:**
+- Detects `upstream` remote (high confidence)
+- Falls back to GitHub API fork detection
+- Determines tracking target: upstream (fork) vs origin (regular repo)
+
+**CLI Usage:**
+```bash
+# Auto-detect from current fork
+cd ~/src/my-fork
+node ~/src/powerlevel/bin/track-project.js --auto
+
+# Explicit tracking
+node ~/src/powerlevel/bin/track-project.js owner/repo --name project-name --priority p1
+
+# Dry-run mode (preview without creating)
+node ~/src/powerlevel/bin/track-project.js --auto --dry-run
+```
+
+**What It Does:**
+1. Detects fork relationship (upstream remote or GitHub API)
+2. Fetches upstream repository metadata and open issues
+3. Generates smart project name (e.g., `projectbluefin/documentation` → `bluefin-docs`)
+4. Creates `projects/{name}/config.json` with fork tracking info
+5. Creates tracking epic in Powerlevel repo with tasklist of upstream issues
+6. Adds epic to project board with Status="Todo"
+7. Creates dynamic `project/{name}` label
+
+**Fork Config Format:**
+```json
+{
+  "repo": "upstream/repo",
+  "fork": "myuser/repo",
+  "active": true,
+  "labels": { "project": "project/shortname" },
+  "description": "Project description",
+  "tech_stack": ["Language", "Framework"],
+  "tracking": {
+    "auto_sync": true,
+    "sync_interval": "session"
+  }
+}
+```
+
+**Key Libraries:**
+- `lib/fork-detector.js` - Detects fork relationships from git remotes
+- `lib/powerlevel-locator.js` - Smart Powerlevel repo location detection
+- `lib/project-config-manager.js` - Project config creation and validation
+
+**Session Start Hint:**
+
+When working in a fork, plugin.js detects the fork relationship and shows:
+```
+💡 Hint: Detected fork of upstream/repo
+   To track upstream: node ~/src/powerlevel/bin/track-project.js --auto
+```
+
+This prompts users to create tracking epics for forks they're contributing to.
+
 ## Components
 
 ### 1. Plugin Entry Point (`plugin.js`)
@@ -230,6 +292,25 @@ Main OpenCode plugin that:
 - Reads project field metadata from GitHub
 - Maps label values to project field values
 - Caches field schemas for efficient updates
+
+#### `fork-detector.js`
+- Detects fork relationships from git remotes and GitHub API
+- Functions: `detectForkRelationship()`, `getAllRemotes()`, `selectTrackingTarget()`, `checkIfFork()`
+- Determines which repository to track (upstream vs origin)
+- Used by `track-project.js` for automatic fork detection
+
+#### `powerlevel-locator.js`
+- Smart Powerlevel repository location detection
+- Multi-strategy search: CWD → global config → common paths → user prompt
+- Functions: `locatePowerlevelRepo()`, `isPowerlevelRepo()`, `loadGlobalConfig()`, `saveGlobalConfig()`
+- Manages global config at `~/.config/opencode/powerlevel.json`
+
+#### `project-config-manager.js`
+- Project configuration creation and management
+- Functions: `generateProjectName()`, `fetchRepoMetadata()`, `detectTechStack()`, `validateProjectConfig()`
+- Smart name generation with shortening rules (e.g., `documentation` → `docs`)
+- Tech stack detection from GitHub API metadata
+- Collision detection and interactive prompts
 
 ## Superpowers Integration
 
