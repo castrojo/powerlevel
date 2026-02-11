@@ -17,7 +17,7 @@ Powerlevel is a central project management dashboard for OpenCode + Superpowers.
 
 1. **Self-tracking epics** (e.g., Epic #4, #5)
    - Track development work on Powerlevel itself
-   - Work happens in the Powerlevel repo (castrojo/opencode-superpower-github)
+   - Work happens in the Powerlevel repo (castrojo/powerlevel)
    - Sub-issues represent implementation phases (traditional GitHub sub-issues)
 
 2. **External tracking epics** (e.g., Epic #155)
@@ -684,7 +684,7 @@ Modify `formatEpicBody()` in `parser.js`
 **Setup:**
 ```bash
 git clone <repo>
-cd opencode-superpower-github
+cd powerlevel
 npm install
 ```
 
@@ -817,6 +817,23 @@ Powerlevel maintains a centralized set of best practices that apply to ALL track
 - Labels and IDs must be unique within a form
 - Required keys: `name`, `description`, `body`
 - No empty strings where values required
+
+#### BP-002: Upstream Pull Request Workflow
+
+**URL:** https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/upstream-pr-workflow.md
+
+**Applies to:** Fork-based contribution workflows
+
+**Summary:** Guidelines for preparing pristine single-commit pull requests from fork to upstream. Squashes all work into one clean commit with proper attribution, runs tests, pushes to fork, and opens browser for manual submission.
+
+**Enforcement:** Agent-Guided (Manual gate enforced)
+
+**Key Rules:**
+- Single commit via squash (curt, technical summary)
+- Attribution: Auto-detected `Assisted-by: [Model] via [Tool]`
+- Test commands auto-detected (npm, just, make, pytest, cargo, go)
+- Conventional commits: detected from upstream PRs (10/20 threshold)
+- Manual submission gate: browser opens, human reviews and submits
 
 ### URL Pattern
 

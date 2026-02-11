@@ -28,6 +28,18 @@ Standards for all projects managed by Powerlevel. These practices apply to ANY p
 
 ---
 
+### BP-002: Upstream Pull Request Workflow
+
+**URL:** https://raw.githubusercontent.com/castrojo/powerlevel/main/docs/best-practices/upstream-pr-workflow.md
+
+**Applies to:** Fork-based contribution workflows
+
+**Summary:** Guidelines for preparing pristine single-commit pull requests from fork to upstream with auto-detection, verification, and manual submission gate.
+
+**Enforcement:** Agent-Guided (Manual gate enforced)
+
+---
+
 ## Adding New Best Practices
 
 1. Create new markdown file: `docs/best-practices/{topic}.md`
