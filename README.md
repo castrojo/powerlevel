@@ -18,6 +18,21 @@ Powerlevel provides a central command center for managing multiple projects with
 
 Your **Powerlevel** = the number of active projects you're managing. Simple as that.
 
+---
+
+## ⚠️ Known Issue: Onboarding Bloat (Epic #165)
+
+**Current project onboarding adds too much content (113 lines per project).**
+
+**What's affected:** New projects onboarded with `bin/onboard-project.js`  
+**Status:** Fixes in progress - [Epic #165](https://github.com/castrojo/powerlevel/issues/165)  
+**Root cause:** [Documentation](docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md)
+
+**For new projects:** Wait until Epic #165 is resolved before onboarding.  
+**For existing projects:** See [docs/ONBOARDING-PROJECTS.md](docs/ONBOARDING-PROJECTS.md) for status.
+
+---
+
 ## Installation
 
 ```bash
