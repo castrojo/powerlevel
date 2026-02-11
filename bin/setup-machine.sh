@@ -97,6 +97,24 @@ jq --arg plugin "$POWERLEVEL_PLUGIN" '
 
 mv "$TMP_CONFIG" "$OPENCODE_CONFIG"
 echo "✅ Added Powerlevel plugin to opencode.json"
+
+# Add Superpowers plugin to config using jq
+SUPERPOWERS_PLUGIN="$HOME/.config/opencode/plugins/superpowers.js"
+TMP_CONFIG=$(mktemp)
+
+jq --arg plugin "$SUPERPOWERS_PLUGIN" '
+  # Ensure plugin key exists as array
+  if .plugin == null then .plugin = [] 
+  elif (.plugin | type) != "array" then .plugin = [.plugin] 
+  else . end |
+  # Add plugin if not already present
+  if (.plugin | index($plugin)) == null then
+    .plugin += [$plugin]
+  else . end
+' "$OPENCODE_CONFIG" > "$TMP_CONFIG"
+
+mv "$TMP_CONFIG" "$OPENCODE_CONFIG"
+echo "✅ Added Superpowers plugin to opencode.json"
 echo ""
 
 # Success message
@@ -105,7 +123,9 @@ echo ""
 echo "Installed components:"
 echo "  • Superpowers: $SUPERPOWERS_DIR"
 echo "  • Powerlevel: $POWERLEVEL_DIR"
-echo "  • Plugin symlinks: ~/.config/opencode/plugins/"
+echo "  • Plugins registered in opencode.json:"
+echo "    - Powerlevel plugin"
+echo "    - Superpowers plugin"
 echo "  • Skills symlinks: ~/.config/opencode/skills/"
 echo ""
 echo "Next steps:"
