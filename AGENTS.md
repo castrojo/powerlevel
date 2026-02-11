@@ -826,6 +826,152 @@ cat ~/.config/opencode/powerlevel/cache/*/state.json | jq
 
 ---
 
+## Project Onboarding Implementation
+
+**For AI agents assisting with project onboarding:**
+
+### Auto-Onboard Script
+
+The `bin/auto-onboard.js` script performs these steps:
+
+1. **Clone repository** (if not present in workspace)
+   - Default location: `../<repo-name>` relative to Powerlevel
+   - Customizable via `--workspace` flag
+
+2. **Create configuration files:**
+   - `.opencode/config.json` - Powerlevel integration config
+   - `AGENTS.md` - Best practices references and project context
+   - `docs/SUPERPOWERS.md` - Workflow documentation
+
+3. **Create project config:**
+   - `projects/<repo-name>/config.json` in Powerlevel repo
+   - Stores: repo, description, tech_stack, tracking settings
+
+4. **Add superpowers remote:**
+   - Points to Powerlevel repo for easy sync
+   - Convention: `git remote add superpowers <powerlevel-url>`
+
+5. **Commit changes:**
+   - All onboarding files committed to target repository
+   - Commit message: "chore: onboard to Powerlevel project tracking"
+
+### Track-Project Script
+
+The `bin/track-project.js` script creates tracking epics for external repositories:
+
+**Fork Detection:**
+- Detects `upstream` remote (fork indicator)
+- Falls back to GitHub API fork check
+- Determines tracking target: upstream vs origin
+
+**What It Creates:**
+1. `projects/{name}/config.json` with fork tracking info
+2. Tracking epic in Powerlevel repo with tasklist of upstream issues
+3. Adds epic to project board (Status="Todo")
+4. Creates dynamic `project/{name}` label
+
+**Auto-Sync:**
+External tracking epics (with `project/*` labels) sync upstream issues on session start.
+
+### Epic Creation Flow
+
+When `writing-plans` skill completes:
+
+1. **Parse plan file** (`lib/parser.js`)
+   - Extract: title (from `# Header`), goal (from `**Goal:**`), tasks (from `## Task N:`)
+
+2. **Create epic** (`lib/github-cli.js`)
+   - Create GitHub issue with epic body
+   - Apply labels: `type/epic`, `priority/*`, `status/planning`
+
+3. **Create sub-issues**
+   - One issue per task
+   - Apply labels: `type/task`, `epic/<number>`, priority
+   - Set parent relationship (GitHub sub-issues API)
+
+4. **Update cache** (`lib/cache-manager.js`)
+   - Store epic metadata locally
+   - Mark dirty=false (just synced)
+
+5. **Insert epic reference** (`lib/parser.js`)
+   - Add `> **Epic Issue:** #N` to top of plan file
+   - Add sub-issue references
+
+6. **Add to project board** (`lib/project-item-manager.js`)
+   - Add epic and sub-issues to board
+   - Set Priority and Status fields from labels
+
+### Session End Sync
+
+The `landThePlane()` function (invoked by `session.idle` event):
+
+1. Load cache, find dirty epics
+2. Batch sync all dirty epics to GitHub
+3. Update issue bodies with journey events
+4. Clear dirty flags
+5. Update last_sync timestamp
+
+**Dirty Flag Lifecycle:**
+- Epic created → `dirty=false` (just synced)
+- Task updated by skill → `dirty=true` (needs sync)
+- Session ends → `dirty=false` (after sync)
+
+### Configuration
+
+Projects can configure Powerlevel behavior via `.opencode/config.json`:
+
+```json
+{
+  "projectBoard": {
+    "enabled": true,
+    "number": null,
+    "autoCreate": true
+  },
+  "superpowersIntegration": {
+    "enabled": true,
+    "trackSkillUsage": true,
+    "updateEpicOnSkillInvocation": true
+  },
+  "tracking": {
+    "autoUpdateEpics": true,
+    "updateOnTaskComplete": true,
+    "commentOnProgress": false
+  }
+}
+```
+
+**Environment variable overrides:**
+```bash
+export GITHUB_TRACKER_PROJECT_ENABLED=false
+export GITHUB_TRACKER_PROJECT_NUMBER=2
+export GITHUB_TRACKER_PROJECT_AUTO_CREATE=true
+```
+
+**See:** `lib/config-loader.js` for full configuration schema.
+
+### Project Board Field Mapping
+
+Labels automatically map to project field values:
+
+| Label | Project Field | Project Value |
+|-------|---------------|---------------|
+| `priority/p0` | Priority | P0 - Critical |
+| `priority/p1` | Priority | P1 - High |
+| `priority/p2` | Priority | P2 - Normal |
+| `priority/p3` | Priority | P3 - Low |
+| `status/planning` | Status | Todo |
+| `status/in-progress` | Status | In Progress |
+| `status/review` | Status | In Progress |
+| `status/done` | Status | Done |
+
+GraphQL mutations used:
+- `addProjectV2ItemById` - Add issue to board
+- `updateProjectV2ItemFieldValue` - Set field values
+
+**See:** `lib/project-field-manager.js` and `lib/project-item-manager.js`
+
+---
+
 ## Future Enhancements (Post-MVP)
 
 1. **Bidirectional Sync** - GitHub → Cache (sync changes made directly on GitHub back to local cache)
