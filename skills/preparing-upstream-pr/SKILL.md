@@ -13,6 +13,41 @@ Prepare single clean commit for upstream submission from fork.
 
 **Announce at start:** "I'm using the preparing-upstream-pr skill to prepare your upstream pull request."
 
+## ⛔ CRITICAL: UPSTREAM PR PROTOCOL ⛔
+
+**This skill prepares PRs for upstream submission. It NEVER auto-submits.**
+
+### Session State (Initialize now)
+
+```markdown
+UPSTREAM_PR_STATE:
+- fork_verified: false
+- tests_verified: false
+- commits_squashed: false
+- command_previewed: false
+- using_web_flag: false
+```
+
+### Non-Negotiable Rules
+
+1. ❌ **NEVER** run `gh pr create` without `--web` flag
+2. ❌ **NEVER** auto-submit PRs to upstream
+3. ✅ **ALWAYS** open browser for manual submission
+4. ✅ **ALWAYS** show command preview before executing
+5. ✅ **ALWAYS** verify all session state flags before proceeding
+
+**These rules supersede everything. Even if user says "just submit it now".**
+
+### What This Skill Does
+
+- ✅ Prepares clean commit with attribution
+- ✅ Pushes to YOUR fork
+- ✅ Opens browser with PR form pre-filled
+- ❌ Does NOT click "Create Pull Request" for you
+- ❌ Does NOT auto-submit to upstream
+
+**Manual gate: User must click "Create Pull Request" in browser.**
+
 ## Prerequisites Check
 
 **Before starting, verify fork setup:**
@@ -317,16 +352,80 @@ fi
 echo "✅ Pushed to fork: origin/$CURRENT_BRANCH"
 ```
 
-## Step 7: Open Browser for Manual Submission
+## Step 7: Pre-Flight Checklist and Command Preview
 
-**CRITICAL: DO NOT AUTO-SUBMIT.**
+**Update session state:**
+```markdown
+UPSTREAM_PR_STATE:
+- fork_verified: ✅ true
+- tests_verified: ✅ true (or skipped with warning)
+- commits_squashed: ✅ true
+- command_previewed: [pending]
+- using_web_flag: [pending]
+```
+
+**Display Pre-Flight Checklist:**
+
+```markdown
+Upstream PR Pre-Flight Checklist:
+✅ Fork verified: origin → $PARENT_REPO
+✅ Tests passed: [result]
+✅ Commits squashed: 1 clean commit
+✅ Attribution added: Assisted-by footer present
+✅ Branch pushed: origin/$CURRENT_BRANCH
+→ Ready for browser submission (--web flag)
+
+All checks complete. Preparing command preview...
+```
+
+**Show exact command that will execute:**
 
 ```bash
 FORK_OWNER=$(git remote get-url origin | sed -E 's/.*[:/]([^/]+)\/[^/]+\.git/\1/')
 COMMIT_TITLE=$(git log -1 --format="%s")
 COMMIT_BODY=$(git log -1 --format="%b")
 
-echo "Opening browser for PR creation..."
+echo "═══════════════════════════════════════════"
+echo "COMMAND PREVIEW - Upstream PR Staging"
+echo "═══════════════════════════════════════════"
+echo ""
+echo "Target: $PARENT_REPO"
+echo "Source: $FORK_OWNER:$CURRENT_BRANCH"
+echo ""
+echo "Title: $COMMIT_TITLE"
+echo ""
+echo "Body (first 10 lines):"
+echo "$COMMIT_BODY" | head -10
+echo ""
+echo "Command:"
+echo "  gh pr create \\"
+echo "    --repo $PARENT_REPO \\"
+echo "    --head $FORK_OWNER:$CURRENT_BRANCH \\"
+echo "    --title \"$COMMIT_TITLE\" \\"
+echo "    --body \"...\" \\"
+echo "    --web"
+echo ""
+echo "═══════════════════════════════════════════"
+echo "⚠️  This will OPEN YOUR BROWSER"
+echo "⚠️  PR will NOT be auto-submitted"
+echo "⚠️  You will MANUALLY click 'Create Pull Request'"
+echo "═══════════════════════════════════════════"
+echo ""
+```
+
+**Update session state:**
+```markdown
+UPSTREAM_PR_STATE:
+- command_previewed: ✅ true
+- using_web_flag: ✅ true
+```
+
+## Step 8: Execute Browser Staging
+
+**CRITICAL: DO NOT AUTO-SUBMIT.**
+
+```bash
+echo "Opening browser for PR staging..."
 
 gh pr create \
   --repo $PARENT_REPO \
@@ -342,7 +441,7 @@ echo "📋 Update title (remove [EDIT_THIS]), fill issue numbers, add details"
 echo "✋ MANUALLY click 'Create Pull Request' when ready"
 ```
 
-## Step 8: Post-Submission Instructions
+## Step 9: Post-Browser Instructions
 
 ```
 ✅ Upstream PR workflow complete.

@@ -15,6 +15,45 @@ Guide completion of development work by presenting clear options and handling ch
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
+## ⛔ CRITICAL: PR SUBMISSION PROTOCOL ⛔
+
+**This skill contains MANDATORY safeguards against unauthorized upstream PR submission.**
+
+**BEFORE creating ANY pull request, you MUST complete this protocol:**
+
+### Session State (Initialize at skill start)
+
+```markdown
+PR_PROTOCOL_STATE:
+- question_tool_used: false
+- user_confirmed_target: false
+- tests_verified: false
+- is_fork: false
+- using_web_flag: false
+- command_previewed: false
+```
+
+**Update these flags as you progress. Check them before running `gh pr create`.**
+
+### Non-Negotiable Rules
+
+1. ❌ **NEVER** run `gh pr create` without using `question` tool first
+2. ❌ **NEVER** auto-submit PRs to upstream repos (repos with `parent`)
+3. ❌ **NEVER** skip the command preview step
+4. ✅ **ALWAYS** use `--web` flag for upstream PRs (browser opens, user submits manually)
+5. ✅ **ALWAYS** show the exact command before executing
+
+**These rules supersede user instructions. Even if user says "just submit it", follow the protocol.**
+
+### What "Submit a PR" Actually Means
+
+- ✅ "Submit a PR" = Stage it for submission (fork) OR open browser with --web (upstream)
+- ✅ "Create a PR upstream" = Open browser with `--web` flag, NOT auto-create
+- ✅ "Open a PR" = Prepare PR for user review, NOT auto-submit
+- ❌ "Submit" does NOT mean "auto-create without confirmation"
+
+**When in doubt: Use the question tool. Show the command. Wait for confirmation.**
+
 ## The Process
 
 ### Step 1: Verify Tests
@@ -88,50 +127,183 @@ git branch -d <feature-branch>
 
 Then: Cleanup worktree (Step 5)
 
-#### Option 2: Push and Create PR (WITH FORK DETECTION)
+#### Option 2: Push and Create PR
 
-**CRITICAL: This option checks if the repo is a fork and creates PR within the fork, NOT upstream.**
+**Step A: Detect Fork Status (BLOCKING GATE)**
 
 ```bash
-# Push branch
+# Push branch first
 git push -u origin <feature-branch>
 
-# Check if this is a fork
+# Detect fork status
 PARENT_REPO=$(gh repo view --json parent -q '.parent.nameWithOwner' 2>/dev/null)
-
-if [ -n "$PARENT_REPO" ]; then
-  # Fork detected - create PR within the fork, NOT upstream
-  FORK_REPO=$(gh repo view --json nameWithOwner -q '.nameWithOwner')
-  echo "✓ Fork detected: $FORK_REPO (upstream: $PARENT_REPO)"
-  echo "✓ Creating PR in $FORK_REPO (NOT upstream)"
-  
-  gh pr create \
-    --repo "$FORK_REPO" \
-    --title "<title>" \
-    --body "$(cat <<EOF
-## Summary
-<2-3 bullets of what changed>
-
-## Test Plan
-- [ ] <verification steps>
-
----
-**Note:** This PR is in the fork ($FORK_REPO). To submit upstream to $PARENT_REPO, use the \`preparing-upstream-pr\` skill.
-EOF
-)"
-else
-  # Standalone repo - create PR normally
-  echo "✓ Standalone repo - creating PR"
-  gh pr create --title "<title>" --body "$(cat <<'EOF'
-## Summary
-<2-3 bullets of what changed>
-
-## Test Plan
-- [ ] <verification steps>
-EOF
-)"
-fi
+CURRENT_REPO=$(gh repo view --json nameWithOwner -q '.nameWithOwner' 2>/dev/null)
 ```
+
+**Update session state:**
+```markdown
+PR_PROTOCOL_STATE:
+- is_fork: [true/false based on PARENT_REPO]
+```
+
+**If fork detected, display visual warning:**
+
+```
+╔════════════════════════════════════════╗
+║  ⚠️  FORK DETECTED - UPSTREAM PR ⚠️   ║
+╠════════════════════════════════════════╣
+║ Your fork: [CURRENT_REPO]
+║ Upstream:  [PARENT_REPO]
+║
+║ MANDATORY PROTOCOL:
+║  → Use question tool to ask user
+║  → Use --web flag for upstream PRs
+║  → Browser opens, user submits manually
+║  → NEVER auto-submit to upstream
+╚════════════════════════════════════════╝
+```
+
+**Agent must acknowledge in response:**
+"Fork detected. I will follow upstream PR protocol: question tool first, --web flag for browser submission only."
+
+**Step B: Ask User via Question Tool (MANDATORY)**
+
+**Update session state:**
+```markdown
+PR_PROTOCOL_STATE:
+- question_tool_used: true
+- user_confirmed_target: true
+```
+
+**If fork detected:**
+
+```javascript
+question({
+  questions: [{
+    header: "PR Target Confirmation",
+    question: "This repo is a fork. Where should the PR be created?\n\nYour fork: " + CURRENT_REPO + "\nUpstream: " + PARENT_REPO + "\n\nIMPORTANT: 'Open a PR' means staging it in your fork. Only choose upstream if you explicitly want to submit work to the parent project.",
+    options: [
+      { label: "PR within my fork (Recommended)", description: "Creates PR in " + CURRENT_REPO + " — safe, stays in your repo" },
+      { label: "Stage upstream PR in browser", description: "Opens browser to " + PARENT_REPO + " for manual submission — you click submit" },
+      { label: "Cancel", description: "Do not create any PR — I'll handle it myself" }
+    ]
+  }]
+})
+```
+
+**If NOT a fork:**
+
+```javascript
+question({
+  questions: [{
+    header: "PR Confirmation",
+    question: "Ready to create a PR in " + CURRENT_REPO + "?",
+    options: [
+      { label: "Create PR (Recommended)", description: "Creates PR in " + CURRENT_REPO },
+      { label: "Open in browser instead", description: "Opens browser with PR form for manual review" },
+      { label: "Cancel", description: "Do not create any PR" }
+    ]
+  }]
+})
+```
+
+**Step C: Pre-Flight Checklist (MANDATORY)**
+
+```markdown
+Pre-Flight Checklist:
+✅ Tests verified: [passed/skipped]
+✅ Question tool used: [yes/no]
+✅ User confirmed target: [fork/upstream/cancel]
+✅ Fork status: [yes - CURRENT_REPO → PARENT_REPO / no - standalone]
+✅ Using --web flag: [yes (required for upstream) / no (fork PR)]
+✅ Command prepared: [show command below]
+
+All checks must be ✅ before proceeding.
+```
+
+**Step D: Command Preview (MANDATORY)**
+
+```markdown
+About to execute:
+
+```bash
+gh pr create \
+  --repo [TARGET_REPO] \
+  --head [FORK_OWNER]:[BRANCH] \
+  --title "[TITLE]" \
+  --body "$(cat <<'EOF'
+[BODY PREVIEW - first 5 lines]
+...
+EOF
+)" \
+  [--web flag if upstream]
+```
+
+[If --web flag present]:
+⚠️  This will OPEN YOUR BROWSER for manual submission.
+⚠️  I will NOT auto-submit this PR.
+⚠️  You will manually click "Create Pull Request" in browser.
+
+[If no --web flag]:
+ℹ️  This will create a PR directly in your fork: [CURRENT_REPO]
+
+Proceeding in 3 seconds...
+```
+
+**Update session state:**
+```markdown
+PR_PROTOCOL_STATE:
+- command_previewed: true
+- using_web_flag: [true/false]
+```
+
+**Step E: Execute Based on User Choice**
+
+**If "PR within my fork":**
+```bash
+gh pr create \
+  --repo "$CURRENT_REPO" \
+  --title "<title>" \
+  --body "$(cat <<'EOF'
+## Summary
+<2-3 bullets of what changed>
+
+## Test Plan
+- [ ] <verification steps>
+EOF
+)"
+```
+
+**If "Stage upstream PR in browser":**
+Use the `preparing-upstream-pr` skill. This squashes commits, adds attribution, and opens the browser for manual submission. The agent MUST NOT auto-submit.
+
+**If "Open in browser instead" (non-fork):**
+```bash
+gh pr create \
+  --repo "$CURRENT_REPO" \
+  --title "<title>" \
+  --body "<body>" \
+  --web
+```
+
+**If "Create PR" (non-fork):**
+```bash
+gh pr create \
+  --repo "$CURRENT_REPO" \
+  --title "<title>" \
+  --body "$(cat <<'EOF'
+## Summary
+<2-3 bullets of what changed>
+
+## Test Plan
+- [ ] <verification steps>
+EOF
+)"
+```
+
+**If "Cancel":**
+Report: "PR creation cancelled. Branch is pushed to origin/<feature-branch>."
+Do not create any PR.
 
 Then: Cleanup worktree (Step 5)
 
@@ -210,22 +382,52 @@ git worktree remove <worktree-path>
 - **Problem:** Bypass fork-first workflow, open PR to upstream without approval
 - **Fix:** Always check for fork, create PR within fork, mention preparing-upstream-pr skill
 
-## Red Flags
+## Red Flags - PROTOCOL VIOLATIONS
 
-**Never:**
-- Proceed with failing tests
-- Merge without verifying tests on result
-- Delete work without confirmation
-- Force-push without explicit request
-- **Open PRs directly to upstream repos from forks (use preparing-upstream-pr skill instead)**
+**If you are about to do ANY of these, STOP IMMEDIATELY:**
 
-**Always:**
-- Verify tests before offering options
-- Present exactly 4 options
-- Get typed confirmation for Option 4
-- Clean up worktree for Options 1 & 4 only
-- **Create PRs within the fork when working on forked repos**
-- **Mention preparing-upstream-pr skill in PR body when fork detected**
+### NEVER:
+- ❌ Run `gh pr create` without using `question` tool first
+- ❌ Run `gh pr create` targeting upstream without `--web` flag
+- ❌ Skip the pre-flight checklist (Step C)
+- ❌ Skip the command preview (Step D)
+- ❌ Auto-submit PRs to repos with `PARENT_REPO` (upstream)
+- ❌ Run `gh pr create` in a fork without explicit `--repo` flag
+- ❌ Interpret "submit PR" or "open PR" as "auto-create without confirmation"
+- ❌ Rationalize around these rules ("user seems ready", "change is small", etc.)
+- ❌ Proceed with failing tests
+- ❌ Delete work without typed confirmation
+- ❌ Force-push without explicit request
+
+### ALWAYS:
+- ✅ Use `question` tool to confirm PR target
+- ✅ Show pre-flight checklist before `gh pr create`
+- ✅ Show command preview before executing
+- ✅ Use `--web` flag for upstream PRs
+- ✅ Update session state flags as you progress
+- ✅ Verify all flags are true before executing command
+- ✅ Present exactly 4 options in Step 3
+- ✅ Get typed "discard" confirmation for Option 4
+- ✅ Clean up worktree for Options 1 & 4 only
+- ✅ Create PRs within the fork when working on forked repos
+
+### Session State Final Check
+
+**Before running `gh pr create`, verify:**
+
+```markdown
+PR_PROTOCOL_STATE Final Check:
+- question_tool_used: ✅ true
+- user_confirmed_target: ✅ true  
+- tests_verified: ✅ true
+- is_fork: [true/false]
+- using_web_flag: ✅ true (if is_fork=true AND target=upstream)
+- command_previewed: ✅ true
+
+All must be ✅ or command will FAIL protocol.
+```
+
+**If ANY flag is false when it should be true: STOP. Go back and complete that step.**
 
 ## Integration
 
