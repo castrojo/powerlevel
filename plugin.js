@@ -133,14 +133,36 @@ export default async function PowerlevelPlugin({ client, directory }) {
 
     'experimental.chat.system.transform': (input) => {
       if (!currentProject) return input;
-      const lines = [
-        '<!-- Powerlevel Context -->',
-        `<!-- Project: ${currentProject.repo}${currentProject.upstream ? ` | Upstream: ${currentProject.upstream}` : ''} -->`,
-        currentProject.upstream
-          ? `<!-- FORK WORKFLOW: This is a fork of ${currentProject.upstream}. NEVER open PRs directly to upstream repos. Always create PRs within the fork (${currentProject.repo}). To submit work upstream, the user must explicitly ask, and you MUST use the preparing-upstream-pr skill which opens a browser for manual submission. -->`
-          : '<!-- This is a standalone repo. PRs go to origin. -->',
-        '<!-- END Powerlevel Context -->',
-      ];
+      const lines = [];
+
+      if (currentProject.upstream) {
+        lines.push(
+          `## PR SAFETY — MANDATORY RULES`,
+          ``,
+          `**Current project:** ${currentProject.repo} (fork of ${currentProject.upstream})`,
+          ``,
+          `You MUST follow these rules for ALL pull request operations:`,
+          ``,
+          `1. **NEVER run \`gh pr create\` targeting ${currentProject.upstream}.** All PRs go to ${currentProject.repo}.`,
+          `2. **ALWAYS use the \`question\` tool** to confirm with the user before ANY PR operation. Show them the exact target repo and let them choose.`,
+          `3. **When the user says "open a PR"**, they mean "stage the PR by opening the browser for me to review." Use \`gh pr create --web\` or the \`finishing-a-development-branch\` skill.`,
+          `4. **For upstream submissions**, the user must EXPLICITLY say "submit upstream" or "upstream PR." Use the \`preparing-upstream-pr\` skill which opens a browser for manual submission.`,
+          `5. **ALWAYS pass \`--repo ${currentProject.repo}\`** when running \`gh pr create\` to prevent GitHub CLI from defaulting to the upstream parent.`,
+          ``,
+          `Violating these rules is unacceptable. When in doubt, ask the user.`,
+          ``,
+        );
+      } else {
+        lines.push(
+          `## PR Context`,
+          ``,
+          `**Current project:** ${currentProject.repo} (standalone — not a fork)`,
+          `PRs go to origin (${currentProject.repo}). Use the \`question\` tool to confirm target before creating PRs.`,
+          `When the user says "open a PR", they mean "stage the PR by opening the browser." Use \`--web\` flag.`,
+          ``,
+        );
+      }
+
       return {
         ...input,
         system: lines.join('\n') + '\n\n' + (input.system || ''),

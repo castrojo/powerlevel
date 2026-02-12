@@ -1,5 +1,6 @@
 {
   "repo": "castrojo/akmods",
+  "upstream": "ublue-os/akmods",
   "active": true,
   "labels": {
     "project": "project/akmods"

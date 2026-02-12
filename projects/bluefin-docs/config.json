@@ -1,6 +1,6 @@
 {
-  "repo": "projectbluefin/documentation",
-  "fork": "castrojo/documentation",
+  "repo": "castrojo/documentation",
+  "upstream": "projectbluefin/documentation",
   "active": true,
   "labels": {
     "project": "project/bluefin-docs"
