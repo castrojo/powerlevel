@@ -1,0 +1,11 @@
+{
+  "repo": "castrojo/bluefin-lts",
+  "active": true,
+  "labels": {
+    "project": "project/bluefin-lts"
+  },
+  "description": "Fork of ublue-os/bluefin-lts - Bluefin LTS built on CentOS Stream 10 using bootc",
+  "upstream": "ublue-os/bluefin-lts",
+  "tech_stack": ["Containerfiles", "GitHub Actions", "OCI", "Just", "bootc", "CentOS Stream 10"],
+  "framework_version": "1.0.0"
+}

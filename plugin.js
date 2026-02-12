@@ -42,10 +42,16 @@ function loadProjects() {
 }
 
 function detectProject(cwd, projects) {
-  return projects.find(p => {
+  let best = null;
+  let bestLen = 0;
+  for (const p of projects) {
     const repoName = p.repo?.split('/')[1];
-    return repoName && cwd.includes(repoName);
-  });
+    if (repoName && cwd.includes(repoName) && repoName.length > bestLen) {
+      best = p;
+      bestLen = repoName.length;
+    }
+  }
+  return best;
 }
 
 async function gh(...args) {
