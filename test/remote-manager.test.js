@@ -7,14 +7,11 @@
 
 import {
   parseRepoFromUrl,
-  convertHttpsToSsh,
   hasRemote,
   getRemoteUrl,
-  setRemoteUrl,
   addRemote,
   fetchRemote,
-  detectRepoFromRemote,
-  ensureRemotesUseSSH
+  detectRepoFromRemote
 } from '../lib/remote-manager.js';
 import { existsSync, mkdirSync, rmSync } from 'fs';
 import { join } from 'path';
@@ -91,45 +88,6 @@ test('parseRepoFromUrl: returns null for null input', () => {
   assertEqual(result, null);
 });
 
-// Test convertHttpsToSsh
-console.log('\n=== Testing convertHttpsToSsh ===\n');
-
-test('convertHttpsToSsh: converts HTTPS URL with .git', () => {
-  const result = convertHttpsToSsh('https://github.com/owner/repo.git');
-  assertEqual(result, 'git@github.com:owner/repo.git');
-});
-
-test('convertHttpsToSsh: converts HTTPS URL without .git', () => {
-  const result = convertHttpsToSsh('https://github.com/owner/repo');
-  assertEqual(result, 'git@github.com:owner/repo.git');
-});
-
-test('convertHttpsToSsh: returns same URL if already SSH', () => {
-  const sshUrl = 'git@github.com:owner/repo.git';
-  const result = convertHttpsToSsh(sshUrl);
-  assertEqual(result, sshUrl);
-});
-
-test('convertHttpsToSsh: returns null for non-GitHub URL', () => {
-  const result = convertHttpsToSsh('https://gitlab.com/owner/repo.git');
-  assertEqual(result, null);
-});
-
-test('convertHttpsToSsh: returns null for invalid URL', () => {
-  const result = convertHttpsToSsh('not-a-url');
-  assertEqual(result, null);
-});
-
-test('convertHttpsToSsh: returns null for empty string', () => {
-  const result = convertHttpsToSsh('');
-  assertEqual(result, null);
-});
-
-test('convertHttpsToSsh: returns null for null input', () => {
-  const result = convertHttpsToSsh(null);
-  assertEqual(result, null);
-});
-
 // Test with actual git repository
 console.log('\n=== Testing with actual git repository ===\n');
 
@@ -175,55 +133,9 @@ test('getRemoteUrl: returns the remote URL', () => {
   assertEqual(url, 'https://github.com/test/repo.git');
 });
 
-test('setRemoteUrl: changes the remote URL', () => {
-  setRemoteUrl('origin', 'git@github.com:test/repo.git', testRepoPath);
-  const url = getRemoteUrl('origin', testRepoPath);
-  assertEqual(url, 'git@github.com:test/repo.git');
-});
-
 test('detectRepoFromRemote: detects repository from remote', () => {
   const repoInfo = detectRepoFromRemote('origin', testRepoPath);
   assertEqual(repoInfo, { owner: 'test', repo: 'repo' });
-});
-
-test('ensureRemotesUseSSH: converts HTTPS remotes to SSH', () => {
-  // Add another HTTPS remote
-  addRemote('upstream', 'https://github.com/upstream/repo.git', testRepoPath);
-  
-  // Ensure remotes use SSH
-  const conversions = ensureRemotesUseSSH(testRepoPath);
-  
-  // Should convert the upstream remote (origin is already SSH)
-  assert(conversions.length === 1, 'Should convert one remote');
-  assertEqual(conversions[0].remote, 'upstream');
-  assertEqual(conversions[0].oldUrl, 'https://github.com/upstream/repo.git');
-  assertEqual(conversions[0].newUrl, 'git@github.com:upstream/repo.git');
-  
-  // Verify the remote was actually changed
-  const upstreamUrl = getRemoteUrl('upstream', testRepoPath);
-  assertEqual(upstreamUrl, 'git@github.com:upstream/repo.git');
-});
-
-test('ensureRemotesUseSSH: does not convert SSH remotes', () => {
-  // All remotes should now be SSH
-  const conversions = ensureRemotesUseSSH(testRepoPath);
-  assertEqual(conversions.length, 0, 'Should not convert any remotes');
-});
-
-test('ensureRemotesUseSSH: handles multiple HTTPS remotes', () => {
-  // Add two more HTTPS remotes
-  addRemote('fork', 'https://github.com/fork/repo.git', testRepoPath);
-  addRemote('mirror', 'https://github.com/mirror/repo.git', testRepoPath);
-  
-  const conversions = ensureRemotesUseSSH(testRepoPath);
-  
-  assert(conversions.length === 2, 'Should convert two remotes');
-  
-  // Verify both were converted
-  const forkUrl = getRemoteUrl('fork', testRepoPath);
-  const mirrorUrl = getRemoteUrl('mirror', testRepoPath);
-  assertEqual(forkUrl, 'git@github.com:fork/repo.git');
-  assertEqual(mirrorUrl, 'git@github.com:mirror/repo.git');
 });
 
 // Cleanup
