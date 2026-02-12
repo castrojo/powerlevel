@@ -9,6 +9,7 @@ import { listProjects, calculatePowerlevel } from './lib/project-manager.js';
 import { ContextProvider } from './lib/context-provider.js';
 import { isExternalTrackingEpic, syncExternalEpic } from './lib/external-tracker.js';
 import { getRankForPowerlevel } from './lib/destiny-ranks.js';
+import { logInfo, logWarn, logError, logDebug } from './lib/logger.js';
 
 /**
  * Verifies gh CLI is installed and authenticated
@@ -18,10 +19,10 @@ import { getRankForPowerlevel } from './lib/destiny-ranks.js';
 function verifyGhCli(client) {
   try {
     execGh('auth status');
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: '✓ GitHub CLI authenticated' } });
+    logInfo(client, '✓ GitHub CLI authenticated');
     return true;
   } catch (error) {
-    client.app.log({ body: { service: 'powerlevel', level: 'error', message: '✗ GitHub CLI not authenticated. Run: gh auth login' } });
+    logError(client, '✗ GitHub CLI not authenticated. Run: gh auth login');
     return false;
   }
 }
@@ -37,17 +38,17 @@ async function syncDirtyEpics(owner, repo, cache, client) {
   const dirtyEpics = getDirtyEpics(cache);
 
   if (dirtyEpics.length === 0) {
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: 'No epics need syncing.' } });
+    logInfo(client, 'No epics need syncing.');
     return;
   }
 
-  client.app.log({ body: { service: 'powerlevel', level: 'info', message: `Syncing ${dirtyEpics.length} epic(s) to GitHub...` } });
+  logInfo(client, `Syncing ${dirtyEpics.length} epic(s) to GitHub...`);
 
   const repoPath = `${owner}/${repo}`;
 
   for (const epic of dirtyEpics) {
     try {
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `  Syncing epic #${epic.number}...` } });
+      logInfo(client, `  Syncing epic #${epic.number}...`);
 
       // Build task checklist
       let body = epic.goal ? `## Goal\n\n${epic.goal}\n\n` : '';
@@ -63,9 +64,9 @@ async function syncDirtyEpics(owner, repo, cache, client) {
       // Update the epic issue
       execGh(`issue edit ${epic.number} --repo ${repoPath} --body "${body.replace(/"/g, '\\"')}"`);
 
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `  ✓ Synced epic #${epic.number}` } });
+      logInfo(client, `  ✓ Synced epic #${epic.number}`);
     } catch (error) {
-      client.app.log({ body: { service: 'powerlevel', level: 'error', message: `  ✗ Failed to sync epic #${epic.number}: ${error.message}` } });
+      logError(client, `  ✗ Failed to sync epic #${epic.number}: ${error.message}`);
     }
   }
 }
@@ -91,31 +92,31 @@ async function checkForCompletedTasks(owner, repo, cwd, client) {
     // Get last check time from cache (default to 1 hour ago if first run)
     const lastCheck = cache.last_task_check || new Date(Date.now() - 3600000).toISOString();
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: `Checking for completed tasks since ${lastCheck}...` } });
+    logInfo(client, `Checking for completed tasks since ${lastCheck}...`);
 
     // Find completed tasks from commits
     const completedTasks = findCompletedTasks(lastCheck, cwd);
 
     if (completedTasks.length === 0) {
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: 'No completed tasks found.' } });
+      logInfo(client, 'No completed tasks found.');
       cache.last_task_check = new Date().toISOString();
       saveCache(owner, repo, cache);
       return;
     }
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: `Found ${completedTasks.length} completed task(s):` } });
+    logInfo(client, `Found ${completedTasks.length} completed task(s):`);
 
     // For each completed task, try to map to epic and record completion
     for (const task of completedTasks) {
       const { issueNumber, keyword, commit } = task;
 
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `  - Issue #${issueNumber} (${keyword}) in commit ${commit.hash.substring(0, 7)}` } });
+      logInfo(client, `  - Issue #${issueNumber} (${keyword}) in commit ${commit.hash.substring(0, 7)}`);
 
       // Find the issue in cache
       const issue = cache.issues?.find(i => i.number === issueNumber);
 
       if (!issue) {
-        client.app.log({ body: { service: 'powerlevel', level: 'warn', message: `    ⚠️  Issue #${issueNumber} not found in cache (may not be a task from an epic)` } });
+        logWarn(client, `    ⚠️  Issue #${issueNumber} not found in cache (may not be a task from an epic)`);
         continue;
       }
 
@@ -125,14 +126,14 @@ async function checkForCompletedTasks(owner, repo, cwd, client) {
       );
 
       if (!epic) {
-        client.app.log({ body: { service: 'powerlevel', level: 'warn', message: `    ⚠️  Could not find epic for issue #${issueNumber}` } });
+        logWarn(client, `    ⚠️  Could not find epic for issue #${issueNumber}`);
         continue;
       }
 
       // Extract task number from issue title (assumes format "Task N: Title")
       const taskMatch = issue.title?.match(/Task\s+(\d+):/i);
       if (!taskMatch) {
-        client.app.log({ body: { service: 'powerlevel', level: 'warn', message: `    ⚠️  Could not extract task number from issue title: ${issue.title}` } });
+        logWarn(client, `    ⚠️  Could not extract task number from issue title: ${issue.title}`);
         continue;
       }
 
@@ -147,9 +148,9 @@ async function checkForCompletedTasks(owner, repo, cwd, client) {
 
       try {
         recordTaskCompletion(epic.number, taskNumber, taskTitle, agentInfo, cwd);
-        client.app.log({ body: { service: 'powerlevel', level: 'info', message: `    ✅ Recorded task ${taskNumber} completion for epic #${epic.number}` } });
+        logInfo(client, `    ✅ Recorded task ${taskNumber} completion for epic #${epic.number}`);
       } catch (error) {
-        client.app.log({ body: { service: 'powerlevel', level: 'error', message: `    ✗ Failed to record completion: ${error.message}` } });
+        logError(client, `    ✗ Failed to record completion: ${error.message}`);
       }
     }
 
@@ -158,7 +159,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client) {
     saveCache(owner, repo, cache);
 
   } catch (error) {
-    client.app.log({ body: { service: 'powerlevel', level: 'error', message: `Error checking for completed tasks: ${error.message}` } });
+    logError(client, `Error checking for completed tasks: ${error.message}`);
   }
 }
 
@@ -171,7 +172,7 @@ async function checkForCompletedTasks(owner, repo, cwd, client) {
  */
 async function landThePlane(owner, repo, cwd, client) {
   try {
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: '🛬 Landing the plane - syncing epics to GitHub...' } });
+    logInfo(client, '🛬 Landing the plane - syncing epics to GitHub...');
 
     // First, check for completed tasks from commits
     await checkForCompletedTasks(owner, repo, cwd, client);
@@ -188,15 +189,15 @@ async function landThePlane(owner, repo, cwd, client) {
     const projects = listProjects(cwd, client);
     const powerlevel = calculatePowerlevel(projects);
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: '✓ All epics synced and flags cleared.' } });
+    logInfo(client, '✓ All epics synced and flags cleared.');
     client.tui.showToast({ body: { message: '✓ All epics synced', variant: 'success' } });
 
     if (powerlevel > 0) {
       const rank = getRankForPowerlevel(powerlevel);
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `✨ Powerlevel ${powerlevel} ~ ${rank.title}` } });
+      logInfo(client, `✨ Powerlevel ${powerlevel} ~ ${rank.title}`);
     }
   } catch (error) {
-    client.app.log({ body: { service: 'powerlevel', level: 'error', message: `Error during landing: ${error.message}` } });
+    logError(client, `Error during landing: ${error.message}`);
   }
 }
 
@@ -213,7 +214,7 @@ async function syncExternalProjects(owner, repo, cwd, client) {
     const projects = listProjects(cwd, client);
     const repoPath = `${owner}/${repo}`;
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: 'Syncing external project tracking epics...' } });
+    logInfo(client, 'Syncing external project tracking epics...');
 
     for (const epic of cache.epics) {
       if (isExternalTrackingEpic(epic)) {
@@ -225,7 +226,7 @@ async function syncExternalProjects(owner, repo, cwd, client) {
         const project = projects.find(p => p.name === projectName);
 
         if (!project || !project.repo) {
-          client.app.log({ body: { service: 'powerlevel', level: 'warn', message: `⚠ Skip Epic #${epic.number}: No project config found for ${projectName}` } });
+          logWarn(client, `⚠ Skip Epic #${epic.number}: No project config found for ${projectName}`);
           continue;
         }
 
@@ -247,9 +248,9 @@ async function syncExternalProjects(owner, repo, cwd, client) {
 
     // Save updated cache
     saveCache(owner, repo, cache);
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: '✓ External project sync complete' } });
+    logInfo(client, '✓ External project sync complete');
   } catch (error) {
-    client.app.log({ body: { service: 'powerlevel', level: 'error', message: `Error syncing external projects: ${error.message}` } });
+    logError(client, `Error syncing external projects: ${error.message}`);
   }
 }
 
@@ -262,35 +263,35 @@ async function syncExternalProjects(owner, repo, cwd, client) {
  */
 export async function PowerlevelPlugin({ client, directory, worktree }) {
   try {
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: 'Initializing Powerlevel plugin...' } });
+    logInfo(client, 'Initializing Powerlevel plugin...');
 
     // Get current working directory from plugin context
     const cwd = directory;
 
     // Verify gh CLI
     if (!verifyGhCli(client)) {
-      client.app.log({ body: { service: 'powerlevel', level: 'error', message: 'Powerlevel plugin disabled - gh CLI not available' } });
+      logError(client, 'Powerlevel plugin disabled - gh CLI not available');
       return {};
     }
 
     // Detect repository
     const repoInfo = detectRepo(cwd, client);
     if (!repoInfo) {
-      client.app.log({ body: { service: 'powerlevel', level: 'error', message: 'Powerlevel plugin disabled - not in a GitHub repository' } });
+      logError(client, 'Powerlevel plugin disabled - not in a GitHub repository');
       return {};
     }
 
     const { owner, repo } = repoInfo;
     const repoPath = `${owner}/${repo}`;
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: `✓ Detected repository: ${repoPath}` } });
+    logInfo(client, `✓ Detected repository: ${repoPath}`);
 
     // Ensure labels exist
     try {
       await ensureLabelsExist(repoPath);
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: '✓ Labels verified' } });
+      logInfo(client, '✓ Labels verified');
     } catch (error) {
-      client.app.log({ body: { service: 'powerlevel', level: 'warn', message: `Warning: Failed to verify labels: ${error.message}` } });
+      logWarn(client, `Warning: Failed to verify labels: ${error.message}`);
     }
 
     // Sync external tracking epics (Option B: Session start sync)
@@ -305,20 +306,20 @@ export async function PowerlevelPlugin({ client, directory, worktree }) {
 
     if (powerlevel > 0) {
       const rank = getRankForPowerlevel(powerlevel);
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `✨ Powerlevel ${powerlevel} ~ ${rank.title}` } });
+      logInfo(client, `✨ Powerlevel ${powerlevel} ~ ${rank.title}`);
       client.tui.showToast({ body: { message: `Powerlevel ${powerlevel} ~ ${rank.title}`, variant: 'success' } });
     }
 
     // Log current epic if detected
     const epicContext = contextProvider.getContext(cwd);
     if (epicContext) {
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `📌 Current Epic: #${epicContext.epicNumber} - ${epicContext.epicTitle}` } });
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `   Plan: ${epicContext.planFile}` } });
-      client.app.log({ body: { service: 'powerlevel', level: 'info', message: `   URL: ${contextProvider.getEpicUrl(cwd)}` } });
+      logInfo(client, `📌 Current Epic: #${epicContext.epicNumber} - ${epicContext.epicTitle}`);
+      logInfo(client, `   Plan: ${epicContext.planFile}`);
+      logInfo(client, `   URL: ${contextProvider.getEpicUrl(cwd)}`);
       client.tui.showToast({ body: { message: `Epic #${epicContext.epicNumber} - ${epicContext.epicTitle}`, variant: 'info' } });
     }
 
-    client.app.log({ body: { service: 'powerlevel', level: 'info', message: '✓ Powerlevel plugin initialized successfully' } });
+    logInfo(client, '✓ Powerlevel plugin initialized successfully');
 
     // Return proper hooks object
     return {
@@ -329,13 +330,13 @@ export async function PowerlevelPlugin({ client, directory, worktree }) {
         // Check if plan file was edited, invalidate cache
         if (input.file && input.file.includes('docs/plans/')) {
           contextProvider.invalidateCache(cwd);
-          client.app.log({ body: { service: 'powerlevel', level: 'debug', message: 'Epic context cache invalidated (plan file changed)' } });
+          logDebug(client, 'Epic context cache invalidated (plan file changed)');
         }
       }
     };
   } catch (error) {
     // Wrap entire init in try/catch so plugin errors don't crash OpenCode
-    client.app.log({ body: { service: 'powerlevel', level: 'error', message: `Powerlevel plugin failed to initialize: ${error.message}` } });
+    logError(client, `Powerlevel plugin failed to initialize: ${error.message}`);
     return {};
   }
 }
