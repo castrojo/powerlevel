@@ -137,7 +137,7 @@ export default async function PowerlevelPlugin({ client, directory }) {
         '<!-- Powerlevel Context -->',
         `<!-- Project: ${currentProject.repo}${currentProject.upstream ? ` | Upstream: ${currentProject.upstream}` : ''} -->`,
         currentProject.upstream
-          ? '<!-- This is a fork. PRs go to upstream. Fork-only changes stay on origin/main. -->'
+          ? `<!-- FORK WORKFLOW: This is a fork of ${currentProject.upstream}. NEVER open PRs directly to upstream repos. Always create PRs within the fork (${currentProject.repo}). To submit work upstream, the user must explicitly ask, and you MUST use the preparing-upstream-pr skill which opens a browser for manual submission. -->`
           : '<!-- This is a standalone repo. PRs go to origin. -->',
         '<!-- END Powerlevel Context -->',
       ];
