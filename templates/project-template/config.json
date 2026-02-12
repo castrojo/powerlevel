@@ -1,8 +1,0 @@
-{
-  "repo": "username/project-name",
-  "active": true,
-  "description": "Brief description of this project",
-  "labels": {
-    "project": "project/project-name"
-  }
-}

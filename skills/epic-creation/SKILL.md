@@ -17,7 +17,7 @@ Automatically create GitHub epic issues from implementation plans. Extracts plan
 
 Use this skill when:
 - You've just completed writing an implementation plan
-- The plan file is saved to `docs/plans/YYYY-MM-DD-<feature-name>.md`
+- The plan file is saved to `~/.config/opencode/powerlevel/projects/<project>/plans/YYYY-MM-DD-<feature-name>.md`
 - You need to create a GitHub epic to track implementation
 
 **Do NOT use this skill when:**
@@ -29,11 +29,11 @@ Use this skill when:
 
 ### Step 1: Load Plan File
 
-Read the plan file from `docs/plans/` directory:
+Read the plan file from the powerlevel projects directory:
 
 ```bash
 # Plan file location
-docs/plans/YYYY-MM-DD-<feature-name>.md
+~/.config/opencode/powerlevel/projects/<project>/plans/YYYY-MM-DD-<feature-name>.md
 ```
 
 **Verify:**
@@ -86,7 +86,7 @@ gh issue create \
 [Tech Stack from plan]
 
 ## Implementation Plan
-See full plan: `docs/plans/YYYY-MM-DD-<feature-name>.md`
+Plan file: `projects/<project>/plans/YYYY-MM-DD-<feature-name>.md` (powerlevel repo)
 
 ## Tasks
 - [ ] Task 1: [Title] (#issue-number)
@@ -122,7 +122,7 @@ gh issue create \
 [Steps from task - formatted as checklist]
 
 ---
-*Part of implementation plan: `docs/plans/YYYY-MM-DD-<feature-name>.md`*
+*Part of implementation plan in powerlevel repo*
 EOF
 )" \
   --label "task"
@@ -139,16 +139,7 @@ After creating all sub-tasks, edit the epic body to add sub-task issue numbers.
 
 ### Step 5: Update Plan with Epic Reference
 
-Insert epic reference at the top of the plan file using `insertEpicReference` from `lib/parser.js`:
-
-```javascript
-import { insertEpicReference } from '../../lib/parser.js';
-import { readFileSync, writeFileSync } from 'fs';
-
-const planContent = readFileSync(planFilePath, 'utf8');
-const updatedContent = insertEpicReference(planContent, epicNumber, subTaskNumbers);
-writeFileSync(planFilePath, updatedContent);
-```
+Insert epic reference at the top of the plan file, between the H1 heading and the first content line. Use the Edit tool to add:
 
 **Result:**
 ```markdown
@@ -164,13 +155,15 @@ writeFileSync(planFilePath, updatedContent);
 
 **Insert location:** Between the H1 heading and the Claude instruction (or other content).
 
-### Step 6: Commit Plan Update
+### Step 6: Commit and Push
 
-Commit the updated plan file with epic reference:
+Commit the updated plan file and push the powerlevel repo:
 
 ```bash
-git add docs/plans/YYYY-MM-DD-<feature-name>.md
-git commit -m "docs: link epic #123 to implementation plan"
+cd ~/.config/opencode/powerlevel
+git add -A
+git commit -m "epic: link #<epic-number> to plan"
+git push
 ```
 
 **Announce completion:**

@@ -1,155 +1,78 @@
 ---
 name: land-the-plane
-description: Use at session end or when disconnecting - syncs dirty epics to GitHub, ensuring no work is lost when the session ends
+description: Use at session end or when disconnecting - syncs all work to GitHub, ensuring nothing is lost
 ---
 
 # Land the Plane
 
 ## Overview
 
-Sync dirty epics to GitHub before session end, ensuring all work is persisted.
+Sync all work to GitHub before session end. Two things get synced: the powerlevel repo (plans, configs) and completed issues in the current project.
 
-**Core principle:** Session state is temporary. GitHub is permanent. Sync before disconnect.
-
-**Called by:** `session.idle` hook (automatic) and `/gh-sync` command (manual).
+**Announce at start:** "Landing the plane -- syncing work to GitHub."
 
 ## The Process
 
-### 1. Load Cache and Check Dirty State
+### 1. Sync Powerlevel Repo
+
+Commit and push any uncommitted changes in the powerlevel repo:
 
 ```bash
-# Load the epic cache
-cache_file="$XDG_CACHE_HOME/opencode-superpower/epic-cache.json"
-
-# Check for dirty epics
-dirty_count=$(jq '[.epics[] | select(.dirty == true)] | length' "$cache_file")
+cd ~/.config/opencode/powerlevel
+git add -A
+git status --short
 ```
 
-**If no dirty epics:** Report "All epics synced, nothing to land" and exit.
-
-**If dirty epics found:** Proceed to sync.
-
-### 2. Sync Each Dirty Epic to GitHub
-
-For each dirty epic:
+**If there are changes:**
 
 ```bash
-# Extract epic data
-epic_id=$(jq -r '.epics[0].id' "$cache_file")
-epic_title=$(jq -r '.epics[0].title' "$cache_file")
-epic_body=$(jq -r '.epics[0].description' "$cache_file")
-issue_number=$(jq -r '.epics[0].github_issue' "$cache_file")
-
-# Sync to GitHub
-if [ -n "$issue_number" ]; then
-  # Update existing issue
-  gh issue edit "$issue_number" --title "$epic_title" --body "$epic_body"
-else
-  # Create new issue
-  new_issue=$(gh issue create --title "$epic_title" --body "$epic_body" --label "epic")
-  issue_number=$(echo "$new_issue" | grep -oP '#\K\d+')
-  
-  # Update cache with issue number
-  jq --arg id "$epic_id" --arg issue "$issue_number" \
-    '(.epics[] | select(.id == $id) | .github_issue) = $issue' \
-    "$cache_file" > "$cache_file.tmp" && mv "$cache_file.tmp" "$cache_file"
-fi
+git commit -m "sync: land-the-plane"
+git push
 ```
 
-**Report progress:** "Synced epic: <title> (#<issue_number>)"
+**If nothing to commit:** Report "Powerlevel repo is clean."
 
-### 3. Clear Dirty Flags
+**If push fails:** Report the error. Do NOT lose the commit -- it will push next session.
 
-After successful sync:
+### 2. Close Completed Issues
+
+Check recent commits in the current project repo for issue references:
 
 ```bash
-# Clear all dirty flags
-jq '(.epics[] | .dirty) = false' "$cache_file" > "$cache_file.tmp" \
-  && mv "$cache_file.tmp" "$cache_file"
+git log --oneline -20 --format='%s'
 ```
 
-**Final report:** "Landed <N> epic(s). All changes synced to GitHub."
+Look for patterns: `closes #N`, `fixes #N`, `resolves #N`
 
-## Integration
+For each referenced issue, close it on GitHub:
 
-**Automatic trigger:**
-- `session.idle` hook detects inactivity
-- Checks for dirty epics
-- Syncs automatically if found
+```bash
+gh issue close <number> --repo <owner/repo>
+```
 
-**Manual trigger:**
-- User runs `/gh-sync` command
-- Immediate sync of all dirty epics
+**Report:** "Closed issues: #N, #M" or "No issues to close."
 
-**Called by:**
-- Session management system (automatic)
-- User commands (manual)
+### 3. Report Summary
 
-## Key Principles
+```
+Powerlevel repo: pushed N changes (or: clean)
+Issues closed: #N, #M (or: none)
+All work synced to GitHub.
+```
 
-- **Sync before disconnect** - Never lose work to session timeout
-- **Batch operations** - Sync all dirty epics in one pass
-- **Idempotent** - Safe to run multiple times
-- **Report progress** - User knows what's being saved
-- **Error recovery** - If sync fails, dirty flag remains set
+## When to Use
 
-## Quick Reference
+- End of session (manual invocation)
+- Before switching machines
+- When unsure if changes were saved
 
-| Situation | Action |
-|-----------|--------|
-| No dirty epics | Report "nothing to land", exit |
-| Epic has github_issue | Update existing issue |
-| Epic has no github_issue | Create new issue, store number |
-| Sync succeeds | Clear dirty flag |
-| Sync fails | Keep dirty flag, report error |
-| Session idle detected | Auto-run land-the-plane |
-| User runs /gh-sync | Manual land-the-plane |
+The plugin's `session.idle` hook does the same thing automatically, but this skill provides an explicit, user-visible sync with reporting.
 
 ## Error Handling
 
-**If gh command fails:**
-- Log error to stderr
-- Keep dirty flag set
-- Report which epic failed
-- Continue to next epic
-
-**If cache file missing:**
-- Report "No cache found, nothing to land"
-- Exit gracefully
-
-**If cache file corrupt:**
-- Report error
-- Do NOT clear cache
-- Ask user to check `$XDG_CACHE_HOME/opencode-superpower/epic-cache.json`
-
-## Why This Matters
-
-- **Session state is ephemeral** - Memory is cleared on disconnect
-- **GitHub is persistent** - Issues survive session end
-- **Dirty flag tracks changes** - Know what needs syncing
-- **Automatic safety net** - User doesn't need to remember
-
-## When To Apply
-
-**Automatically:**
-- Session idle timeout (5+ minutes of inactivity)
-- Graceful shutdown
-
-**Manually:**
-- User runs `/gh-sync`
-- Before major context switch
-- When unsure if changes were saved
-
-## Red Flags
-
-**Never:**
-- Clear dirty flags before successful sync
-- Assume GitHub is up-to-date
-- Skip error reporting
-- Lose epic data on sync failure
-
-**Always:**
-- Verify sync succeeded before clearing dirty flag
-- Report what's being synced
-- Handle errors gracefully
-- Preserve dirty state on failure
+| Situation | Action |
+|-----------|--------|
+| git push fails | Report error, keep local commit |
+| gh issue close fails | Report error, continue to next |
+| Not in a git repo | Skip step 2, only sync powerlevel repo |
+| No gh auth | Report "gh not authenticated", skip issue closing |

@@ -1,212 +1,102 @@
 # Powerlevel
 
-**Your personal project management dashboard for OpenCode + Superpowers**
+Your personal project management dashboard for OpenCode.
 
-Track all your projects in one central place. Each project you manage contributes to your Powerlevel - the total number of active projects across your repositories.
+Track all your projects in one place. Your **Powerlevel** = the number of active projects you're managing.
 
-**Project Board:** [Superpowers Development](https://github.com/users/castrojo/projects/1)
+## How It Works
 
-## What It Does
+Powerlevel is an OpenCode plugin + a set of skills. The plugin handles display and sync. The skills handle planning and GitHub operations.
 
-Powerlevel provides a central command center for managing multiple projects with Superpowers:
+**Plugin (automatic):**
+- Shows your Powerlevel rank on session start
+- Injects project context (fork/upstream info) into the system prompt
+- Auto-syncs the powerlevel repo across machines (git pull on start, git push on idle)
+- Closes GitHub issues referenced in commits (`closes #N`)
 
-- **Central Dashboard**: One project board showing all tracked projects
-- **Multi-Project Tracking**: Each project lives in its own repo, tracked here
-- **Automatic Epic Creation**: Plans become GitHub issues automatically
-- **Progress Sync**: Updates flow from projects to your central board
-- **Powerlevel Score**: See total active projects and completion metrics
+**Skills (invoked by agent):**
+- `writing-plans` -- Create implementation plans
+- `epic-creation` -- Turn plans into GitHub epic issues
+- `land-the-plane` -- Sync all work to GitHub before disconnecting
+- `preparing-upstream-pr` -- Prepare clean commits for upstream submission
+- `bluefin-kernel-pin` -- Pin kernel versions when akmods lag behind
 
-Your **Powerlevel** = the number of active projects you're managing. Simple as that.
+## Multi-Machine Workflow
 
----
+Powerlevel syncs across machines via git. Push happens automatically; pull happens on session start.
 
-## ⚠️ Known Issue: Onboarding Bloat (Epic #165)
-
-**Current project onboarding adds too much content (113 lines per project).**
-
-**What's affected:** New projects onboarded with `bin/onboard-project.js`  
-**Status:** Fixes in progress - [Epic #165](https://github.com/castrojo/powerlevel/issues/165)  
-**Root cause:** [Documentation](docs/analysis/ROOT-CAUSE-ONBOARDING-BLOAT.md)
-
-**For new projects:** Wait until Epic #165 is resolved before onboarding.  
-**For existing projects:** See [docs/ONBOARDING-PROJECTS.md](docs/ONBOARDING-PROJECTS.md) for status.
-
----
-
-## Installation
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/castrojo/powerlevel/main/bin/setup-machine.sh)
+```
+Machine A                    GitHub                     Machine B
+   |                           |                           |
+   |-- skill saves plan ------>|                           |
+   |-- plugin auto-pushes ---->|                           |
+   |                           |                           |
+   |                           |<-- plugin auto-pulls -----|
+   |                           |   (session start)         |
+   |                           |                           |
 ```
 
-**Prerequisites:** OpenCode, GitHub CLI (`gh auth login`), Git, `jq`
+**What syncs:**
 
-**Multi-machine setup:** See [Machine Setup Guide](docs/MACHINE-SETUP.md)
+| Artifact | Where it lives | Synced how |
+|----------|---------------|------------|
+| Project configs | `projects/<name>/config.json` | git push/pull of this repo |
+| Plan files | `projects/<name>/plans/*.md` | git push/pull of this repo |
+| GitHub epics | Project repo (e.g. `castrojo/bluefin`) | Already on GitHub |
+| Skills | `skills/` | git push/pull of this repo |
 
-## Workflow
+**When does push happen?**
 
-Powerlevel automatically tracks your work as you use OpenCode with Superpowers.
+1. Skills commit + push immediately after creating/modifying files
+2. Plugin's idle hook catches any uncommitted changes
+3. `land-the-plane` skill does a final explicit sync
 
-### Example: Building a New Feature
+## Project Structure
 
-**1. Create a plan**
-```bash
-# In your project repo
-cd ~/src/my-app
-opencode
-
-# Ask agent: "Create a plan for adding user authentication"
-# Agent uses writing-plans skill → Creates docs/plans/2026-02-10-add-auth.md
+```
+powerlevel/
+  plugin.js              # OpenCode plugin (~120 lines)
+  projects/
+    bluefin/
+      config.json        # Project metadata
+      plans/             # Implementation plans
+    akmods/
+      config.json
+      plans/
+    ...
+  skills/
+    epic-creation/
+    land-the-plane/
+    preparing-upstream-pr/
+    bluefin-kernel-pin/
 ```
 
-**2. Epic auto-created**
-- Powerlevel detects plan file
-- Creates Epic #45 in Powerlevel repo with sub-issues
-- Adds to GitHub Project Board
-- Your Powerlevel score increases by 1
+## Adding a Project
 
-**3. Execute work**
-```bash
-# Agent uses executing-plans skill
-# → Epic status: Planning → In Progress
-# → Sub-issues update as tasks complete
+Create `projects/<name>/config.json`:
+
+```json
+{
+  "repo": "owner/repo",
+  "active": true,
+  "description": "What this project is",
+  "upstream": "upstream-owner/repo",
+  "tech_stack": ["Go", "Docker"]
+}
 ```
 
-**4. Review and complete**
-```bash
-# Agent uses finishing-a-development-branch skill
-# → Epic status: In Progress → Review
-# → Commits pushed, PR created
+Fields:
+- `repo` (required) -- GitHub repo in `owner/name` format
+- `active` (required) -- Set `false` to exclude from powerlevel count
+- `upstream` (optional) -- If this is a fork, the upstream repo
+- `description`, `tech_stack` (optional) -- Context injected into system prompt
 
-# Once merged:
-# → Epic closed
-# → Your Powerlevel score decreases by 1
-```
+## Prerequisites
 
-**Your Powerlevel = number of active epics across all tracked projects.**
-
-### Tracking External Projects
-
-Track work in other repositories from your central Powerlevel dashboard:
-
-```bash
-cd ~/src/powerlevel
-node bin/track-project.js owner/upstream-repo --auto
-```
-
-Creates tracking epic that syncs upstream issues automatically on session start.
-
-## How to Use
-
-### Onboarding a New Project
-
-Onboard a new project to track it in your Powerlevel dashboard:
-
-```bash
-# Basic usage
-node bin/auto-onboard.js owner/repo
-
-# With options
-node bin/auto-onboard.js castrojo/myproject \
-  --force \
-  --description="My awesome project" \
-  --tech-stack="Node.js,React,PostgreSQL"
-```
-
-**Options:**
-- `--force` - Skip confirmation prompts
-- `--workspace=PATH` - Clone to specific directory (default: `../repo-name`)
-- `--description=TEXT` - Project description
-- `--tech-stack=A,B,C` - Technology stack (comma-separated)
-- `--skip-config` - Skip creating project config
-- `--help` - Show detailed help
-
-### Commands
-
-**Manual epic creation:**
-```bash
-node ~/.config/opencode/powerlevel/bin/create-epic.js docs/plans/my-plan.md
-```
-
-**View current epic context:**
-Powerlevel automatically detects and displays your current epic at session start by scanning `docs/plans/*.md` for epic references.
-
-## Labels
-
-The plugin creates these labels automatically:
-
-**Type:**
-- `type/epic` - Large feature with multiple tasks
-- `type/task` - Individual task from a plan
-
-**Priority:**
-- `priority/p0` - Critical
-- `priority/p1` - High
-- `priority/p2` - Normal
-- `priority/p3` - Low
-
-**Status:**
-- `status/planning` - Plan created, not started
-- `status/in-progress` - Currently being worked on
-- `status/review` - Ready for review
-- `status/done` - Complete
-
-**Project Reference:**
-- `project/my-app` - Links issue to specific project
-
-**Epic Reference:**
-- `epic/123` - Links task to parent epic #123
-
-## Project Board Integration
-
-Epics and sub-issues are automatically added to your GitHub Project Board with field mapping for Priority and Status.
-
-**Features:**
-- Auto-detects your first project board
-- Maps `priority/p0-p3` labels → Priority field
-- Maps `status/*` labels → Status field
-
-**Configuration:** Set `GITHUB_TRACKER_PROJECT_ENABLED=false` to disable, or `GITHUB_TRACKER_PROJECT_NUMBER=N` to use a specific board. See [AGENTS.md](AGENTS.md) for full configuration options.
-
-## Performance
-
-Powerlevel has been analyzed for batching and parallelization opportunities to optimize efficiency and reduce API costs.
-
-**Key findings:**
-- 18 optimization opportunities identified
-- Estimated 4% reduction in API calls
-- Estimated 65% reduction in session duration (Phase 1)
-- Estimated 84-93% reduction in cache I/O (Phase 2)
-
-**See:** [Optimization Roadmap](docs/analysis/OPTIMIZATION-ROADMAP.md) for detailed analysis and implementation phases.
-
-**Upcoming optimizations:**
-- 📋 Phase 1: Parallelize external epic syncs, sub-issue creation, project board additions
-- 📋 Phase 2: In-memory cache singleton, batch GraphQL mutations, optimize external fetching
-- 📋 Phase 3: Token usage optimization, rate limit monitoring, TTL-based cache invalidation
-
-## Troubleshooting
-
-**"gh: command not found"**
-- Install GitHub CLI: https://cli.github.com/
-
-**"Failed to detect GitHub repository"**
-- Powerlevel tracks projects via the `projects/` directory
-- Ensure you have project configs in `projects/` directory
-- Run: `ls projects/`
-
-**Labels not created**
-- Check GitHub CLI authentication: `gh auth status`
-- Verify repo access: `gh repo view`
-
-**Epic creation fails**
-- Ensure plan file has proper structure (# Title, **Goal:** section, ## Task N: headers)
-- Check GitHub API rate limits: `gh api rate_limit`
-
-## Support
-
-Report issues: https://github.com/YOUR_USERNAME/powerlevel/issues
+- [OpenCode](https://opencode.ai)
+- [GitHub CLI](https://cli.github.com/) (`gh auth login`)
+- Git
 
 ## License
 
-Apache 2.0 - See LICENSE file
+Apache 2.0
