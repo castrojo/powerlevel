@@ -1,3 +1,5 @@
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { detectRepo } from './lib/repo-detector.js';
 import { loadCache, saveCache, getDirtyEpics, clearDirtyFlags, updateTrackedItems } from './lib/cache-manager.js';
 import { ensureLabelsExist } from './lib/label-manager.js';
@@ -10,6 +12,10 @@ import { ContextProvider } from './lib/context-provider.js';
 import { isExternalTrackingEpic, syncExternalEpic } from './lib/external-tracker.js';
 import { getRankForPowerlevel } from './lib/destiny-ranks.js';
 import { logInfo, logWarn, logError, logDebug } from './lib/logger.js';
+
+// Derive the powerlevel repo path from this file's location.
+// This always resolves correctly regardless of where OpenCode was launched.
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Verifies gh CLI is installed and authenticated
@@ -185,8 +191,8 @@ async function landThePlane(owner, repo, cwd, client) {
     clearDirtyFlags(cache);
     saveCache(owner, repo, cache);
 
-    // Calculate and display powerlevel
-    const projects = listProjects(cwd, client);
+    // Calculate and display powerlevel (use __dirname to find projects/ in powerlevel repo)
+    const projects = listProjects(__dirname, client);
     const powerlevel = calculatePowerlevel(projects);
 
     logInfo(client, '✓ All epics synced and flags cleared.');
@@ -211,7 +217,7 @@ async function landThePlane(owner, repo, cwd, client) {
 async function syncExternalProjects(owner, repo, cwd, client) {
   try {
     const cache = loadCache(owner, repo);
-    const projects = listProjects(cwd, client);
+    const projects = listProjects(__dirname, client);
     const repoPath = `${owner}/${repo}`;
 
     logInfo(client, 'Syncing external project tracking epics...');
@@ -268,17 +274,47 @@ export async function PowerlevelPlugin({ client, directory, worktree }) {
     // Get current working directory from plugin context
     const cwd = directory;
 
-    // Verify gh CLI
-    if (!verifyGhCli(client)) {
-      logError(client, 'Powerlevel plugin disabled - gh CLI not available');
-      return {};
+    // ── Dashboard tier (always runs) ──────────────────────────────
+    // Uses __dirname (powerlevel repo path) to find projects/.
+    // Works regardless of whether cwd is a git repo.
+
+    const projects = listProjects(__dirname, client);
+    const powerlevel = calculatePowerlevel(projects);
+
+    let powerlevelMessage = null;
+    if (powerlevel > 0) {
+      const rank = getRankForPowerlevel(powerlevel);
+      powerlevelMessage = `Powerlevel ${powerlevel} ~ ${rank.title}`;
+      logInfo(client, `✨ ${powerlevelMessage}`);
     }
 
-    // Detect repository
+    // ── Repo tier (only when in a git repo with gh CLI) ──────────
+    // Features that require a detected GitHub repo: label management,
+    // external project sync, epic context, session hooks.
+
+    // Verify gh CLI
+    if (!verifyGhCli(client)) {
+      logWarn(client, 'gh CLI not available - repo features disabled, dashboard-only mode');
+      return {
+        event: async ({ event }) => {
+          if (event.type === 'server.connected' && powerlevelMessage) {
+            client.tui.showToast({ body: { message: powerlevelMessage, variant: 'success' } });
+          }
+        }
+      };
+    }
+
+    // Detect repository (non-fatal if not in a git repo)
     const repoInfo = detectRepo(cwd, client);
     if (!repoInfo) {
-      logError(client, 'Powerlevel plugin disabled - not in a GitHub repository');
-      return {};
+      logInfo(client, 'Not in a GitHub repository - repo features disabled, dashboard-only mode');
+      return {
+        event: async ({ event }) => {
+          if (event.type === 'server.connected' && powerlevelMessage) {
+            client.tui.showToast({ body: { message: powerlevelMessage, variant: 'success' } });
+          }
+        }
+      };
     }
 
     const { owner, repo } = repoInfo;
@@ -300,29 +336,36 @@ export async function PowerlevelPlugin({ client, directory, worktree }) {
     // Initialize context provider for epic detection
     const contextProvider = new ContextProvider();
 
-    // Calculate and display powerlevel
-    const projects = listProjects(cwd, client);
-    const powerlevel = calculatePowerlevel(projects);
-
-    if (powerlevel > 0) {
-      const rank = getRankForPowerlevel(powerlevel);
-      logInfo(client, `✨ Powerlevel ${powerlevel} ~ ${rank.title}`);
-      client.tui.showToast({ body: { message: `Powerlevel ${powerlevel} ~ ${rank.title}`, variant: 'success' } });
-    }
-
     // Log current epic if detected
     const epicContext = contextProvider.getContext(cwd);
+    let epicTitle = null;
     if (epicContext) {
-      logInfo(client, `📌 Current Epic: #${epicContext.epicNumber} - ${epicContext.epicTitle}`);
+      epicTitle = `Epic #${epicContext.epicNumber} - ${epicContext.epicTitle}`;
+      logInfo(client, `📌 Current ${epicTitle}`);
       logInfo(client, `   Plan: ${epicContext.planFile}`);
       logInfo(client, `   URL: ${contextProvider.getEpicUrl(cwd)}`);
-      client.tui.showToast({ body: { message: `Epic #${epicContext.epicNumber} - ${epicContext.epicTitle}`, variant: 'info' } });
     }
 
     logInfo(client, '✓ Powerlevel plugin initialized successfully');
 
-    // Return proper hooks object
+    // Return hooks (repo-specific features)
     return {
+      event: async ({ event }) => {
+        if (event.type === 'session.created' && epicTitle) {
+          // Set session title to epic info so it shows in the TUI header
+          const sessionId = event.properties.info.id;
+          try {
+            await client.session.update({ path: { sessionID: sessionId }, body: { title: epicTitle } });
+            logInfo(client, `Session title set to: ${epicTitle}`);
+          } catch (error) {
+            logWarn(client, `Failed to set session title: ${error.message}`);
+          }
+        }
+        if (event.type === 'server.connected' && powerlevelMessage) {
+          // Show toast after TUI is ready to render
+          client.tui.showToast({ body: { message: powerlevelMessage, variant: 'success' } });
+        }
+      },
       'session.idle': async () => {
         await landThePlane(owner, repo, cwd, client);
       },
