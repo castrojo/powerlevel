@@ -1,10 +1,11 @@
 {
-  "repo": "projectbluefin/common",
+  "repo": "castrojo/bluefin",
   "active": true,
   "labels": {
     "project": "project/bluefin"
   },
-  "description": "Universal Blue / Bluefin common components and infrastructure",
-  "tech_stack": ["Containerfiles", "GitHub Actions", "OCI", "RPM-OSTree"],
+  "description": "Fork of ublue-os/bluefin - The next generation Linux workstation",
+  "upstream": "ublue-os/bluefin",
+  "tech_stack": ["Containerfiles", "GitHub Actions", "OCI", "Just", "ZFS"],
   "framework_version": "1.0.0"
 }

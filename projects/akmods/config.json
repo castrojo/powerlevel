@@ -1,0 +1,10 @@
+{
+  "repo": "castrojo/akmods",
+  "active": true,
+  "labels": {
+    "project": "project/akmods"
+  },
+  "description": "A caching layer for pre-built Fedora akmod RPMs",
+  "tech_stack": ["Containerfiles", "GitHub Actions", "RPM", "Fedora"],
+  "framework_version": "1.0.0"
+}

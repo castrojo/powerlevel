@@ -48,7 +48,36 @@ if ! git remote | grep -q "^upstream$"; then
   echo "Adding upstream remote: $PARENT_REPO"
   UPSTREAM_URL=$(gh repo view $PARENT_REPO --json sshUrl -q '.sshUrl')
   git remote add upstream $UPSTREAM_URL
-  git fetch upstream
+fi
+
+# CRITICAL: Always fetch upstream/main before any branch operations
+git fetch upstream main --depth 1
+```
+
+**CRITICAL: Verify branch base is upstream/main, not origin/main:**
+
+If the feature branch was created from `origin/main` instead of `upstream/main`, the PR will contain unrelated commits (merge commits from fork sync, shallow clone artifacts, fork-only files). This is the #1 cause of dirty upstream PRs.
+
+```bash
+# Check if current branch diverged from upstream/main
+MERGE_BASE=$(git merge-base HEAD upstream/main 2>/dev/null)
+UPSTREAM_TIP=$(git rev-parse upstream/main)
+
+if [ "$MERGE_BASE" != "$UPSTREAM_TIP" ]; then
+  echo "⚠️ Branch is not based on upstream/main."
+  echo "   Creating clean branch from upstream/main and cherry-picking changes..."
+
+  CURRENT_BRANCH=$(git branch --show-current)
+  COMMITS=$(git log --oneline upstream/main..HEAD --reverse --format="%H" | grep -v "^$(git log --merges --format="%H" upstream/main..HEAD)")
+
+  git checkout -B "${CURRENT_BRANCH}-clean" upstream/main
+  for COMMIT in $COMMITS; do
+    git cherry-pick "$COMMIT" || git cherry-pick --abort
+  done
+
+  git branch -D "$CURRENT_BRANCH"
+  git branch -m "$CURRENT_BRANCH"
+  echo "✅ Rebased onto upstream/main"
 fi
 ```
 

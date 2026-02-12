@@ -252,6 +252,44 @@ When this workflow is invoked in a tracked project:
 
 ## Common Mistakes
 
+### ❌ Branching from origin/main Instead of upstream/main
+
+**The most dangerous mistake.** If you branch from `origin/main` (your fork), the branch may include:
+- Merge commits from `gh repo sync` (e.g., "Merge branch 'ublue-os:main' into main")
+- Shallow clone artifacts
+- Fork-only commits (onboarding files, local config)
+
+These all show up as unrelated commits in the upstream PR.
+
+**Always do this:**
+```bash
+# Fetch upstream first
+git fetch upstream main --depth 1
+
+# Branch from upstream/main, NOT origin/main
+git checkout -b my-feature upstream/main
+
+# Make your changes, commit, then push to origin
+git push -u origin my-feature --force-with-lease
+```
+
+**Never do this:**
+```bash
+# ❌ WRONG - branches from fork's main, inherits merge commits
+git checkout main
+git checkout -b my-feature
+
+# ❌ WRONG - shallow clone base has no real upstream history
+git clone --depth 1 fork-url
+git checkout -b my-feature
+```
+
+**Why `git reset --soft upstream/main` isn't enough:** If your branch was created from `origin/main` and origin has a merge commit that upstream doesn't have, the squash will include that merge commit's diff. The only fix is to start the branch from `upstream/main`.
+
+### ❌ Forgetting to Squash Before Push
+
+The skill says squash, but if you push first and then squash, the remote branch has dirty history. Always squash locally, then force-push.
+
 ### ❌ Verbose Commit Messages
 
 **Wrong:**
