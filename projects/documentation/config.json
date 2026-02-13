@@ -1,0 +1,17 @@
+{
+  "repo": "projectbluefin/documentation",
+  "active": true,
+  "labels": {
+    "project": "project/documentation"
+  },
+  "description": "Official documentation for Bluefin OS - Docusaurus 3.8.1 TypeScript site with auto-generated changelogs",
+  "tech_stack": [
+    "TypeScript",
+    "Docusaurus",
+    "React",
+    "MDX",
+    "GitHub Actions",
+    "Docker"
+  ],
+  "framework_version": "1.0.0"
+}
