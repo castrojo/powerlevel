@@ -1,10 +1,11 @@
 {
-  "repo": "projectbluefin/documentation",
+  "repo": "castrojo/documentation",
   "active": true,
   "labels": {
     "project": "project/documentation"
   },
-  "description": "Official documentation for Bluefin OS - Docusaurus 3.8.1 TypeScript site with auto-generated changelogs",
+  "description": "Fork of projectbluefin/documentation - Official documentation for Bluefin OS - Docusaurus 3.8.1 TypeScript site with auto-generated changelogs",
+  "upstream": "projectbluefin/documentation",
   "tech_stack": [
     "TypeScript",
     "Docusaurus",
