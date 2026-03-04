@@ -86,3 +86,11 @@ The README is a **skill and feature focused product page**. Describe what the us
 (skills, memory, journal, workflow discipline) and how to use the repo. It is not a manual
 and contains no agent instructions. Keep it under 2 pages. Agent instructions belong in
 this file (`AGENTS.md`), not the README.
+
+---
+
+## What NOT to Do
+
+- Do NOT set `gh repo edit --template` on this repo. An agent reads the repo directly.
+  The GitHub template flag is for humans using the "Use this template" UI — it has no
+  effect on how agents interact with the repo.
