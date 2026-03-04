@@ -6,7 +6,9 @@ This repo sets up a structured OpenCode workflow. When a user points you here, f
 
 ## Session Recommendations
 
-When instructed to **"go through Gemini's recommendations"**, look in `templates/plans/` for recent architectural guidance and plans. These files take absolute precedence over default behaviors.
+When instructed to **"go through Gemini's recommendations"**, look in `~/.config/opencode/plans/powerlevel/` for recent architectural guidance and plans. These files take absolute precedence over default behaviors.
+
+Note: `templates/plans/` does not exist in this repo — plans are personal and live in the user's private `opencode-config` repo, not in this shared template.
 
 ---
 
