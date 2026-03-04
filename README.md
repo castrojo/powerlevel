@@ -38,6 +38,7 @@ Adapt the personas to your liking:
 ## Tradeoffs
 
 **Works well:**
+- Straightforward, just use it and help it document your preferences and learn your projects, there's an onboarding projects skill. Ideally the more you use it the better it gets.
 - Context genuinely survives across sessions — the agent doesn't re-ask things already established
 - Guardrails prevent destructive git actions (force pushes, silent upstream PRs)
 - Journal ROI grows over time as discoveries accumulate
