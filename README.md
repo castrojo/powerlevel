@@ -55,6 +55,15 @@ Adapt the personas to your liking:
 
 ---
 
+## Review Workflow
+
+To have a senior agent review your work or to see previous architectural guidance, tell your agent:
+> "Go through Gemini's recommendations in templates/plans/."
+
+The Senior Reviewer (Gemini CLI) documents decisions and identifies "pattern mistakes" in `templates/plans/`. Implementation agents MUST follow these plans to ensure architectural integrity.
+
+---
+
 ## How to Get It
 
 **Prerequisites:** [OpenCode](https://opencode.ai/install), [GitHub CLI](https://cli.github.com/) authenticated with SSH, `git`, `npm`
