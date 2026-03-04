@@ -24,6 +24,22 @@ Before approving a plan or a change, ask:
 
 ---
 
+## 🔜 Next Recommended Work
+
+### project-discovery skill (not started)
+
+Plan: `templates/plans/2026-03-04-project-discovery-skill.md`
+
+**What:** A utility skill that runs one command and emits a structured "Discovery Report" — build tool, validation command, runtime versions. Eliminates the ad-hoc detection logic duplicated in `onboarding-a-repository` and `session-start`.
+
+**Why now:** The token efficiency work (2026-03-04) reduced memory block bloat. The remaining toil is agents re-deriving the same build facts each session. This skill is the clean fix.
+
+**Scope:** Two files — `templates/skills/personal/project-discovery/SKILL.md` and the same in the live `~/.config/opencode/`. Under 60 lines each. No username placeholders needed.
+
+**Reviewer check when implemented:** Does the skill run all detection in a single bash call? Is output structured (not prose)? Does it record the validation command into the memory block if missing?
+
+---
+
 ## 📐 Design Decisions
 
 These are settled decisions. Do not flag them as issues unless a concrete regression is found.
