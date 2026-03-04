@@ -1,102 +1,77 @@
-# Powerlevel
+# castrojo's OpenCode Setup
 
-Your personal project management dashboard for OpenCode.
+A structured AI agent workflow built on [OpenCode](https://opencode.ai). Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations.
 
-Track all your projects in one place. Your **Powerlevel** = the number of active projects you're managing.
+---
 
-## How It Works
+## What's Included
 
-Powerlevel is an OpenCode plugin + a set of skills. The plugin handles display and sync. The skills handle planning and GitHub operations.
+| Component | What it does |
+|---|---|
+| [OpenCode](https://opencode.ai) | AI coding agent (required) |
+| [opencode-agent-memory](https://github.com/opencode-ai/opencode-agent-memory) | Persistent memory blocks + append-only journal across sessions |
+| [obra/superpowers](https://github.com/obra/superpowers) | Core workflow discipline skills (brainstorm → plan → execute, TDD, debugging, PR protocol) |
+| Personal skills | Session hygiene, repo onboarding, discovery capture, workflow self-correction |
+| `templates/` | Starting config for your private `opencode-config` repo |
 
-**Plugin (automatic):**
-- Shows your Powerlevel rank on session start
-- Injects project context (fork/upstream info) into the system prompt
-- Auto-syncs the powerlevel repo across machines (git pull on start, git push on idle)
-- Closes GitHub issues referenced in commits (`closes #N`)
+---
 
-**Skills (invoked by agent):**
-- `writing-plans` -- Create implementation plans
-- `epic-creation` -- Turn plans into GitHub epic issues
-- `land-the-plane` -- Sync all work to GitHub before disconnecting
-- `preparing-upstream-pr` -- Prepare clean commits for upstream submission
-- `bluefin-kernel-pin` -- Pin kernel versions when akmods lag behind
+## What You Get
 
-## Multi-Machine Workflow
+- **Memory that persists** — the agent knows your preferences, your project context, and what it discovered last session
+- **A searchable journal** — discoveries, gotchas, and design decisions accumulate and surface automatically
+- **Workflow discipline** — structured stages for feature work (brainstorm → plan → execute) with mandatory stops between them
+- **Session hygiene** — every session starts with context verification and ends with config sync
+- **Git rails** — SSH-only remotes, upstream push protection, conventional commits enforced
 
-Powerlevel syncs across machines via git. Push happens automatically; pull happens on session start.
+## Tradeoffs
 
+**Works well:**
+- Context genuinely survives across sessions — the agent doesn't re-ask things already established
+- Guardrails prevent destructive git actions (force pushes, silent upstream PRs)
+- Journal ROI grows over time as discoveries accumulate
+
+**Costs:**
+- Overhead on simple tasks — the machinery exists for complex work, it's noise on trivial requests
+- Requires maintenance — skills and AGENTS.md drift if you don't run `improve-workflow` consistently
+- OpenCode-specific — not portable to other agents without significant adaptation
+
+---
+
+## How to Get It
+
+**Prerequisites:** [OpenCode](https://opencode.ai/install), [GitHub CLI](https://cli.github.com/) authenticated with SSH, `git`, `npm`
+
+Tell your agent:
+
+> "Set up my OpenCode workflow. Read the AGENTS.md in castrojo/powerlevel and run setup.sh."
+
+The agent will:
+1. Detect your GitHub username
+2. Create a private `opencode-config` repo in your account
+3. Clone [obra/superpowers](https://github.com/obra/superpowers) as read-only (push disabled — no accidental upstream PRs)
+4. Wire up symlinks, install npm dependencies, configure global gitignore
+5. Open a new session and walk you through filling in your preferences
+
+Your config lives in `yourname/opencode-config`. powerlevel stays here as a reference.
+
+---
+
+## After Setup
+
+Open a new OpenCode session in `~/.config/opencode/` and say "session-start". The agent orients itself, verifies the setup, and you're ready to work.
+
+For each new project: tell your agent "onboard this repository" and it runs the `onboarding-a-repository` skill — sets up remotes, plans directory, and project memory block.
+
+---
+
+## Syncing Across Machines
+
+```bash
+# On any new machine after setup
+cd ~/.config/opencode && git pull
+
+# After any session that changes config
+cd ~/.config/opencode
+git add . && git commit -m "chore(config): sync" && git push
 ```
-Machine A                    GitHub                     Machine B
-   |                           |                           |
-   |-- skill saves plan ------>|                           |
-   |-- plugin auto-pushes ---->|                           |
-   |                           |                           |
-   |                           |<-- plugin auto-pulls -----|
-   |                           |   (session start)         |
-   |                           |                           |
-```
-
-**What syncs:**
-
-| Artifact | Where it lives | Synced how |
-|----------|---------------|------------|
-| Project configs | `projects/<name>/config.json` | git push/pull of this repo |
-| Plan files | `projects/<name>/plans/*.md` | git push/pull of this repo |
-| GitHub epics | Project repo (e.g. `castrojo/bluefin`) | Already on GitHub |
-| Skills | `skills/` | git push/pull of this repo |
-
-**When does push happen?**
-
-1. Skills commit + push immediately after creating/modifying files
-2. Plugin's idle hook catches any uncommitted changes
-3. `land-the-plane` skill does a final explicit sync
-
-## Project Structure
-
-```
-powerlevel/
-  plugin.js              # OpenCode plugin (~120 lines)
-  projects/
-    bluefin/
-      config.json        # Project metadata
-      plans/             # Implementation plans
-    akmods/
-      config.json
-      plans/
-    ...
-  skills/
-    epic-creation/
-    land-the-plane/
-    preparing-upstream-pr/
-    bluefin-kernel-pin/
-```
-
-## Adding a Project
-
-Create `projects/<name>/config.json`:
-
-```json
-{
-  "repo": "owner/repo",
-  "active": true,
-  "description": "What this project is",
-  "upstream": "upstream-owner/repo",
-  "tech_stack": ["Go", "Docker"]
-}
-```
-
-Fields:
-- `repo` (required) -- GitHub repo in `owner/name` format
-- `active` (required) -- Set `false` to exclude from powerlevel count
-- `upstream` (optional) -- If this is a fork, the upstream repo
-- `description`, `tech_stack` (optional) -- Context injected into system prompt
-
-## Prerequisites
-
-- [OpenCode](https://opencode.ai)
-- [GitHub CLI](https://cli.github.com/) (`gh auth login`)
-- Git
-
-## License
-
-Apache 2.0

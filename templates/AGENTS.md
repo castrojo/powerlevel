@@ -1,0 +1,78 @@
+# Global Agent Rules
+
+These rules apply in every repository. Project-level `AGENTS.md` files are additive — they
+add project-specific context but do not override these rules.
+
+---
+
+## Session Hygiene
+
+**Start of every session:** invoke the `session-start` skill before any other work.
+
+**End of every session:** invoke the `session-end` skill.
+
+---
+
+## Feature Workflow
+
+Non-trivial work follows three stages with mandatory stops between them:
+
+```
+Stage 1: Brainstorm  →  STOP, confirm  →  Stage 2: Plan  →  STOP, confirm  →  Stage 3: Execute
+```
+
+- **Brainstorm**: load the `brainstorming` skill. Explore intent, constraints, options. No code.
+- **Plan**: load the `writing-plans` skill. Write a task-by-task plan to `~/.config/opencode/plans/<repo>/`. No code.
+- **Execute**: load the `executing-plans` skill. Mandatory review + confirm before touching any file.
+
+Skipping stages or merging them is banned.
+
+Plans live in `~/.config/opencode/plans/<repo-name>/` — never inside git repos.
+
+---
+
+## Commit Convention
+
+```
+type(scope): description
+
+Assisted-by: <Model> via <Tool>
+```
+
+Types: `feat`, `fix`, `docs`, `ci`, `chore`, `refactor`
+
+---
+
+## Git Rules
+
+- Always use SSH URLs: `git@github.com:org/repo.git` — never HTTPS
+- Remote naming: `origin` = your fork (push here), `upstream` = source (fetch only, never push)
+- Work branches: `feat/`, `fix/`, `chore/` — never commit directly to `main`
+
+---
+
+## PR Protocol
+
+- Never `gh pr create` to upstream without `--web` — user clicks Submit manually
+- Squash to one clean commit before any upstream PR
+- Never push to the `upstream` remote
+- Wait for automated review before merging
+
+---
+
+## Context Discipline
+
+- Before any investigation or non-trivial task: `journal_search(text: "<topic>", limit: 3)`
+- When you make a discovery: invoke `capture-discovery` immediately, not at session end
+- When corrected: invoke `improve-workflow` immediately, fix the file, commit, journal — before continuing
+
+---
+
+## Banned
+
+- `gh pr create` to upstream without `--web`
+- Pushing to the `upstream` remote
+- HTTPS remote URLs
+- Multi-commit history in upstream PRs
+- Committing plans, session notes, or AGENTS.md into project repos
+- Claiming work is done without running verification commands

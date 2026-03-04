@@ -1,0 +1,11 @@
+{
+  "journal": {
+    "enabled": true,
+    "tags": [
+      { "name": "debugging", "description": "Debugging sessions and findings" },
+      { "name": "design-decision", "description": "Architecture and design choices" },
+      { "name": "workflow-learning", "description": "Insights about the workflow system" },
+      { "name": "ci-cd", "description": "CI/CD pipeline work" }
+    ]
+  }
+}
