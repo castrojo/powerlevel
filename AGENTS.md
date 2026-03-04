@@ -44,18 +44,20 @@ If the script fails, read the error — it will tell you exactly what to fix.
 After setup, the user needs to install community skills via the OpenCode skill installer.
 Tell the user: "Open a new OpenCode session, press ctrl+p, and install these skills:"
 
-| Skill | Source |
-|---|---|
-| `gh-cli` | `github/awesome-copilot` |
-| `code-review` | `supercent-io/skills-template` |
-| `container-debugging` | `aj-geddes/useful-ai-prompts` |
-| `shellcheck-configuration` | `wshobson/agents` |
-| `devops-engineer` | `jeffallan/claude-skills` |
-| `github-actions-templates` | `wshobson/agents` |
-| `git-commit` | `github/awesome-copilot` |
-| `bash-linux` | `sickn33/antigravity-awesome-skills` |
-| `fedora-linux-triage` | `github/awesome-copilot` |
-| `find-skills` | `vercel-labs/skills` |
+| Skill | What it does | Source |
+|---|---|---|
+| `find-skills` | **Search [skills.sh](https://skills.sh) to discover and install more skills** — install this first | `vercel-labs/skills` |
+| `gh-cli` | GitHub CLI operations (PRs, issues, releases) | `github/awesome-copilot` |
+| `code-review` | Thorough code review workflow | `supercent-io/skills-template` |
+| `container-debugging` | Debug Docker/Podman containers | `aj-geddes/useful-ai-prompts` |
+| `shellcheck-configuration` | Shell script static analysis | `wshobson/agents` |
+| `devops-engineer` | CI/CD, Docker, Kubernetes, cloud | `jeffallan/claude-skills` |
+| `github-actions-templates` | GitHub Actions workflow templates | `wshobson/agents` |
+| `git-commit` | Conventional commit generation | `github/awesome-copilot` |
+| `bash-linux` | Bash/Linux terminal patterns | `sickn33/antigravity-awesome-skills` |
+| `fedora-linux-triage` | Fedora/dnf/systemd/SELinux triage | `github/awesome-copilot` |
+
+Once `find-skills` is installed, the agent can run `npx skills find <query>` to search for more skills at any time.
 
 ---
 

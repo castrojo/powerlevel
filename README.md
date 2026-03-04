@@ -57,7 +57,23 @@ The agent will:
 2. Create a private `opencode-config` repo in your account
 3. Clone [obra/superpowers](https://github.com/obra/superpowers) as read-only (push disabled — no accidental upstream PRs)
 4. Wire up symlinks, install npm dependencies, configure global gitignore
-5. Open a new session and walk you through filling in your preferences
+
+Then **in a new OpenCode session**, press `ctrl+p` and install these community skills:
+
+| Skill | What it does | Source |
+|---|---|---|
+| `find-skills` | **Search [skills.sh](https://skills.sh) to discover and install more skills** — install this first | `vercel-labs/skills` |
+| `gh-cli` | GitHub CLI operations (PRs, issues, releases) | `github/awesome-copilot` |
+| `code-review` | Thorough code review workflow | `supercent-io/skills-template` |
+| `container-debugging` | Debug Docker/Podman containers | `aj-geddes/useful-ai-prompts` |
+| `shellcheck-configuration` | Shell script static analysis | `wshobson/agents` |
+| `devops-engineer` | CI/CD, Docker, Kubernetes, cloud | `jeffallan/claude-skills` |
+| `github-actions-templates` | GitHub Actions workflow templates | `wshobson/agents` |
+| `git-commit` | Conventional commit generation | `github/awesome-copilot` |
+| `bash-linux` | Bash/Linux terminal patterns | `sickn33/antigravity-awesome-skills` |
+| `fedora-linux-triage` | Fedora/dnf/systemd/SELinux triage | `github/awesome-copilot` |
+
+Once `find-skills` is installed, the agent can run `npx skills find <query>` to search for more skills at any time.
 
 Your config lives in `yourname/opencode-config`. powerlevel stays here as a reference.
 
