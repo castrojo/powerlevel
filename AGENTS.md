@@ -4,6 +4,12 @@ This repo sets up a structured OpenCode workflow. When a user points you here, f
 
 ---
 
+## Session Recommendations
+
+Before starting work, check `templates/plans/` for recent architectural guidance and plans from the Senior Reviewer. These files take precedence over default behaviors.
+
+---
+
 ## Step 1: Check prerequisites
 
 Run:

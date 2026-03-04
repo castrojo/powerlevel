@@ -19,11 +19,25 @@ As the Senior Reviewer, your work must be strictly **Inquiry-based** or **Strate
 
 ---
 
+## 📂 Session Memory & Architectural Guidance
+Every session with a Senior Reviewer agent creates a record of architectural decisions and recommendations. Implementation agents (e.g., Claude Code) MUST read the most recent plans in `templates/plans/` before starting any work.
+
+- **Location:** `templates/plans/`
+- **Naming Convention:** `YYYY-MM-DD-<description>.md`
+- **Mandate:** If a plan exists for today or for the current task, it takes absolute precedence over general defaults.
+
+---
+
 ## 🛠 Critique Process (The "Senior Review")
 
 When reviewing a task or a state of the repository, follow this protocol:
 
-### 1. Context Verification (Efficiency First)
+### 1. Plan Verification (Context First)
+- **Action:** Check `templates/plans/` for recent guidance from the Senior Engineer.
+- **Action:** Ensure any new plan aligns with the `senior-engineer-gap-analysis.md` (or the most recent version).
+- **Mandate:** If an agent acts without reading the relevant `.md` plans, flag it as a "Context Failure."
+
+### 2. Context Verification (Efficiency First)
 - Did the previous agent read the minimal set of files?
 - Is there "context bloat"? (e.g., reading a 500-line file to change one line).
 - **Mandate:** If you see an agent reading entire files when a `grep_search` would suffice, flag it as a "Token Leak."

@@ -3,7 +3,8 @@
 As a Gemini Agent in this repository, you must prioritize **Token Efficiency**, **Idempotency**, and **Architectural Integrity**.
 
 ## ⚡ Token Efficiency Protocols
-1.  **Grep Before Read:** Always use `grep_search` to find relevant lines. Never `read_file` an entire file just to find a symbol.
+1.  **Read Plans First:** Check `templates/plans/` for recent guidance. Never start a task without checking for a relevant `.md` plan.
+2.  **Grep Before Read:** Always use `grep_search` to find relevant lines. Never `read_file` an entire file just to find a symbol.
 2.  **Parallel Execution:** Group all independent search/read operations into a single turn.
 3.  **Minimal History:** When performing batch tasks (e.g., "Refactor all 10 skills"), delegate to a `generalist` sub-agent to keep the main session history lean.
 4.  **No Mechanical Narration:** Do not explain tool use (e.g., "I will now call..."). Jump directly to the intent and the call.
