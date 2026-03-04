@@ -77,3 +77,12 @@ git push
 ```
 
 Setup is complete.
+
+---
+
+## README Constraint
+
+The README is a **skill and feature focused product page**. Describe what the user gets
+(skills, memory, journal, workflow discipline) and how to use the repo. It is not a manual
+and contains no agent instructions. Keep it under 2 pages. Agent instructions belong in
+this file (`AGENTS.md`), not the README.
