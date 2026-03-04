@@ -25,29 +25,35 @@ If on a branch with 0 commits ahead of main, it's likely stale. Ask the user bef
 
 ## Step 2: Check the project memory block
 
-The block is correct if:
-1. First line is `# <RepoName>` matching the current repo
-2. It contains the validation command
-3. It's under 1000 chars
+The block is correct if **all three** hold:
+1. First line is `# <RepoName>` matching the repo you just verified
+2. It contains the validation command for this repo
+3. It is under 500 chars
 
-If wrong or empty: rewrite it now using Step 3.
+**If all three are true: skip Step 3 entirely.** No write needed.
+
+**If empty, wrong repo name, or missing the validation command:** rewrite now using Step 3.
+
+Do not proceed with stale or wrong context.
 
 ---
 
-## Step 3: (Re)write the project memory block if needed
+## Step 3: (Re)write the project memory block (only if Step 2 failed)
 
-Read the project's `AGENTS.md`, then call `memory_set` (scope: project):
+The memory block must not duplicate facts already in the project's `AGENTS.md` — those are always in the system prompt. Store only what is NOT there.
+
+Call `memory_set` with scope `project`:
 
 ```
 # <RepoName>
 
 - Repo: git@github.com:<org>/<repo>.git
-- Validation: <exact command>
+- Validation: <exact command, e.g. bash -n setup.sh>
 - Plans: ~/.config/opencode/plans/<repo-name>/
 - Architecture: <1-2 sentence summary>
 ```
 
-Keep under 1000 chars. Stable facts only.
+Keep under 500 chars. If the project has a well-populated `AGENTS.md`, skip fields that are already covered there.
 
 ---
 

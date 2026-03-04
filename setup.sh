@@ -34,40 +34,46 @@ echo ""
 
 # --- Backup existing config ---
 if [[ -d "$CONFIG_DIR" ]]; then
-  echo "Backing up existing $CONFIG_DIR to ${CONFIG_DIR}.bak"
-  mv "$CONFIG_DIR" "${CONFIG_DIR}.bak"
+  BACKUP_DIR="${CONFIG_DIR}.$(date +%Y%m%d%H%M%S).bak"
+  echo "Backing up existing $CONFIG_DIR to $BACKUP_DIR"
+  mv "$CONFIG_DIR" "$BACKUP_DIR"
 fi
 
 # --- Create private opencode-config repo ---
 REPO="$USERNAME/opencode-config"
+REPO_EXISTS=false
+
 if gh repo view "$REPO" &>/dev/null 2>&1; then
-  echo "Repo $REPO already exists — skipping creation"
+  echo "Repo $REPO already exists — skipping creation and seed"
+  REPO_EXISTS=true
 else
   echo "Creating private repo: $REPO"
   gh repo create "$REPO" --private --clone=false
 fi
 
-# --- Seed repo from templates ---
-STAGING=$(mktemp -d)
-trap 'rm -rf "$STAGING"' EXIT
+# --- Seed repo from templates (only on fresh repo) ---
+if [[ "$REPO_EXISTS" == "false" ]]; then
+  STAGING=$(mktemp -d)
+  trap 'rm -rf "$STAGING"' EXIT
 
-cp -r "$POWERLEVEL_DIR/templates/." "$STAGING/"
+  cp -r "$POWERLEVEL_DIR/templates/." "$STAGING/"
 
-# Replace YOUR_USERNAME placeholder
-find "$STAGING" -type f | while read -r f; do
-  sed -i "s/YOUR_USERNAME/$USERNAME/g" "$f"
-done
+  # Replace YOUR_USERNAME placeholder
+  find "$STAGING" -type f | while read -r f; do
+    sed -i "s/YOUR_USERNAME/$USERNAME/g" "$f"
+  done
 
-# Init and push to opencode-config
-cd "$STAGING"
-git init -b main
-git add .
-git commit -m "chore(config): initial workflow setup from castrojo/powerlevel
+  # Init and push to opencode-config
+  cd "$STAGING"
+  git init -b main
+  git add .
+  git commit -m "chore(config): initial workflow setup from castrojo/powerlevel
 
 Assisted-by: agent via OpenCode"
-git remote add origin "git@github.com:$REPO.git"
-git push -u origin main
-cd - >/dev/null
+  git remote add origin "git@github.com:$REPO.git"
+  git push -u origin main
+  cd - >/dev/null
+fi
 
 # --- Clone config to ~/.config/opencode ---
 echo "Cloning $REPO → $CONFIG_DIR"
