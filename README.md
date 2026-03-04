@@ -1,6 +1,6 @@
 # castrojo's OpenCode Setup
 
-A structured AI agent workflow built on [OpenCode](https://opencode.ai). Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations.
+A structured AI agent workflow built on [OpenCode](https://opencode.ai). Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations. This is designed for you to be able to build a knowledge base of the projects you work on without polluting the project repos themselves with AI working state. 
 
 ---
 
@@ -32,7 +32,7 @@ A structured AI agent workflow built on [OpenCode](https://opencode.ai). Point y
 - Journal ROI grows over time as discoveries accumulate
 
 **Costs:**
-- Overhead on simple tasks — the machinery exists for complex work, it's noise on trivial requests
+- Overhead on simple tasks — the machinery exists for complex work, it's noise on trivial requests - I just use normal copilot for tasks like this. This is for long term maintenance. 
 - Requires maintenance — skills and AGENTS.md drift if you don't run `improve-workflow` consistently
 - OpenCode-specific — not portable to other agents without significant adaptation
 
