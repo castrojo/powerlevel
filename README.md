@@ -1,4 +1,7 @@
 # castrojo's OpenCode Setup
+_ This is designed to up your powerlevel ..._ 
+
+### Point your agent at this and tell it to follow the instructions
 
 A structured AI agent workflow built on [OpenCode](https://opencode.ai). Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations. This is designed for you to be able to build a knowledge base of the projects you work on without polluting the project repos themselves with AI working state. 
 
