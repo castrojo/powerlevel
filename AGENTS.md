@@ -82,11 +82,6 @@ Setup is complete.
 
 ---
 
-## 💡 Protip: Multi-Model Review
-Use Gemini or another model on your plans in the GitHub private `opencode-config` repo to get second opinions from different models. This helps catch architectural gaps or "pattern mistakes" that a single model might miss.
-
----
-
 ## README Constraint
 
 The README is a **skill and feature focused product page**. Describe what the user gets
