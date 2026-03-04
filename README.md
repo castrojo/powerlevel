@@ -30,6 +30,9 @@ We keep project specific state seperate from workflow state!
 - **Session hygiene** — every session starts with context verification and ends with config sync
 - **Git rails** — SSH-only remotes, upstream push protection, conventional commits enforced
 
+- https://github.com/castrojo/powerlevel/blob/main/templates/memory/human.md
+- https://github.com/castrojo/powerlevel/blob/main/templates/memory/persona.md
+
 ## Tradeoffs
 
 **Works well:**
