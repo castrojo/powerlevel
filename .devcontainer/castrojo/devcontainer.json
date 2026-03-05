@@ -1,0 +1,16 @@
+{
+  "name": "castrojo-fork",
+  "image": "ghcr.io/bootc-dev/devenv-debian",
+  "mounts": [
+    {
+      "source": "${localEnv:HOME}/.config/opencode",
+      "target": "/root/.config/opencode",
+      "type": "bind"
+    },
+    {
+      "source": "${localEnv:HOME}/.local/share/opencode",
+      "target": "/root/.local/share/opencode",
+      "type": "bind"
+    }
+  ]
+}
