@@ -3,9 +3,13 @@ __ This is designed to up your powerlevel ...__
 
 A structured AI agent workflow built on [OpenCode](https://opencode.ai). 
 
-Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations. This is designed for you to be able to build a knowledge base of the projects you work on without polluting the project repos themselves with AI working state. But this also tracks all your personal and system level skills and maintains them in the opencode config directory and synced in your personal opencode-config repo. The goal is to ensure the system is always learning and improving.
+Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations. 
 
-We keep project specific state seperate from workflow state!
+- Designed to use superpowers skills and expand on them by building a knowledge base of the projects you work on without polluting the project repos themselves with AI working state. "Let's start on a new feauture" or similar language will walk you through the process.
+- Tracks all your personal and system level skills and maintains them in the opencode config directory and synced in your personal opencode-config repo.
+- Keeps project-level context outside of the project github repo for memory and context.
+
+We keep project specific state seperate from workflow state! Congrats, you've turned github into a real slow and crappy database. But it works. 
 
 
 ---
