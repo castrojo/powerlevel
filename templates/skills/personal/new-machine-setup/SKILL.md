@@ -54,9 +54,18 @@ gh auth status  # verify SSH protocol
 
 ```bash
 ssh -T git@github.com
+# Expected: "Hi <user>! You've successfully authenticated..."
+# NOTE: ssh -T always exits 1 even on success (GitHub has no shell).
+#       Exit code 1 here is correct. If missing or wrong key, the message above won't appear.
 # If missing:
 ssh-keygen -t ed25519 -C "your@email.com"
 gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"
+```
+
+**Scripted check pattern** (avoids pipefail false failure):
+```bash
+ssh_out=$(ssh -T git@github.com 2>&1) || true
+grep -q "successfully authenticated" <<< "$ssh_out"
 ```
 
 ### Step 4: Clone opencode-config
