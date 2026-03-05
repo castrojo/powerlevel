@@ -56,7 +56,7 @@ Adapt the personas to your liking:
 ---
 
 > [!TIP]
-> **Multi-Model Review:** Use Gemini or another model on your plans in your GitHub private `opencode-config` repo to get second opinions. This helps catch architectural gaps or "pattern mistakes" that a single model might miss. Setup the free gemini code review or run it locally for a 2nd opinion. 
+> **Multi-Model Review:** Use Gemini or another model on your plans in your GitHub private `opencode-config` repo to get second opinions. This helps catch architectural gaps or "pattern mistakes" that a single model might miss. Setup the free gemini code review or run it locally. 
 
 ---
 
