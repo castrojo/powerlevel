@@ -21,6 +21,7 @@ We keep project specific state seperate from workflow state! Congrats, you've tu
 |---|---|
 | [OpenCode](https://opencode.ai) | AI coding agent (required) |
 | [opencode-agent-memory](https://github.com/opencode-ai/opencode-agent-memory) | Persistent memory blocks + append-only journal across sessions |
+| [devaipod](https://github.com/cgwalters/devaipod) | Container-based agent isolation for build/test loops (optional but recommended) |
 | [obra/superpowers](https://github.com/obra/superpowers) | Core workflow discipline skills (brainstorm → plan → execute, TDD, debugging, PR protocol) |
 | Personal skills | Session hygiene, repo onboarding, discovery capture, workflow self-correction |
 | `templates/` | Starting config for your private `opencode-config` repo |
@@ -71,7 +72,7 @@ The Senior Reviewer (Gemini CLI) documents decisions and identifies "pattern mis
 
 ## How to Get It
 
-**Prerequisites:** [OpenCode](https://opencode.ai/install), [GitHub CLI](https://cli.github.com/) authenticated with SSH, `git`, `npm`
+**Prerequisites:** [OpenCode](https://opencode.ai/install), [GitHub CLI](https://cli.github.com/) authenticated with SSH, `git`, `npm`, Rust/cargo (for devaipod - optional)
 
 Tell your agent:
 
@@ -109,6 +110,37 @@ Your config lives in `yourname/opencode-config`. powerlevel stays here as a refe
 Open a new OpenCode session in `~/.config/opencode/` and say "session-start". The agent orients itself, verifies the setup, and you're ready to work.
 
 For each new project: tell your agent "onboard this repository" and it runs the `onboarding-a-repository` skill — sets up remotes, plans directory, and project memory block.
+
+### Optional: Install devaipod
+
+For container-isolated build/test loops (recommended for complex projects):
+
+```bash
+# Install Rust if not already present
+brew install rust  # or curl https://sh.rustup.rs -sSf | sh
+
+# Install devaipod
+cargo install --git https://github.com/cgwalters/devaipod
+
+# Link config
+ln -sf ~/.config/opencode/devaipod.toml ~/.config/devaipod.toml
+
+# Initialize podman secrets (GitHub token for private repos)
+~/.cargo/bin/devaipod init --host
+# When prompted: use `gh auth token` output for GitHub token
+
+# Verify
+~/.cargo/bin/devaipod --version --host
+podman secret ls | grep gh_token
+```
+
+**What devaipod provides:**
+- Isolated container environment for build/test loops
+- Automatic injection of your OpenCode config (AGENTS.md, skills, memory)
+- Podman secrets management for credentials (never committed to repos)
+- Host-mode execution via `devaipod run ~/src/<repo> --host -c 'command'`
+
+See `~/.config/opencode/skills/personal/new-machine-setup` (Step 6b) for full details.
 
 ---
 

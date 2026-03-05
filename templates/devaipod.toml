@@ -1,0 +1,24 @@
+default-image = "ghcr.io/bootc-dev/devenv-debian"
+
+# GH_TOKEN: workspace + gator containers only — never the agent
+[trusted]
+secrets = ["GH_TOKEN=gh_token"]
+
+# castrojo forks get read + draft PR access
+[service-gator.gh.repos]
+"castrojo/*" = { read = true, create-draft = true }
+
+# Deliver OpenCode config to all containers (workspace + agent) via podman cp.
+# Use granular subdirectory/file paths — NOT ".config/opencode" itself.
+# Reason: devaipod's agent startup script pre-creates .config/opencode before
+# copy_bind_home_files runs; podman cp of a directory into an existing directory
+# copies the source INSIDE the target (POSIX cp behavior), causing nesting.
+# Granular paths avoid this because .config/opencode/skills etc. don't exist yet.
+# Note: do NOT include opencode.json — devaipod writes its own version there.
+[bind_home]
+paths = [
+  ".config/opencode/AGENTS.md",
+  ".config/opencode/skills",
+  ".config/opencode/memory",
+  ".config/opencode/agents",
+]
