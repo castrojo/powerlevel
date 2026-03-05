@@ -3,13 +3,13 @@
   "image": "ghcr.io/bootc-dev/devenv-debian",
   "mounts": [
     {
-      "source": "${localEnv:HOME}/.config/opencode",
-      "target": "/root/.config/opencode",
+      "source": "/var/home/jorge/.config/opencode",
+      "target": "/home/devenv/.config/opencode",
       "type": "bind"
     },
     {
-      "source": "${localEnv:HOME}/.local/share/opencode",
-      "target": "/root/.local/share/opencode",
+      "source": "/var/home/jorge/.local/share/opencode",
+      "target": "/home/devenv/.local/share/opencode",
       "type": "bind"
     }
   ]
