@@ -16,7 +16,10 @@ fi
 echo "GitHub user: $USERNAME"
 
 # --- Check SSH ---
-if ! ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+# ssh -T always exits 1 (GitHub has no shell), so capture output and || true to
+# prevent pipefail from treating successful auth as a failure.
+ssh_out=$(ssh -T git@github.com 2>&1) || true
+if ! grep -q "successfully authenticated" <<< "$ssh_out"; then
   echo "ERROR: SSH key not configured for GitHub."
   echo "  ssh-keygen -t ed25519 -C your@email.com"
   echo "  gh ssh-key add ~/.ssh/id_ed25519.pub --title \"\$(hostname)\""
