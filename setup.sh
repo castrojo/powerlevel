@@ -137,7 +137,7 @@ done
 
 # --- Seed workflow-state DB ---
 echo "Seeding workflow-state DB (rules + skills)"
-cd "$CONFIG_DIR/mcp/state" && go run ./seed/rules && go run ./seed/skills && cd - >/dev/null
+cd "$CONFIG_DIR/mcp/state" && go run ./seed/rules && go run ./seed/skills && go run ./seed/banner && cd - >/dev/null
 
 # --- Install devaipod (container-isolated build/test loops) ---
 if ! command -v devaipod &>/dev/null && ! [[ -f "$HOME/.cargo/bin/devaipod" ]]; then
