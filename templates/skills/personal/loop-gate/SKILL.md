@@ -33,7 +33,7 @@ Pipeline: <pipeline_bar> <current_phase_name> <N>/<total_phases> | Phase runs: <
 
 List what was accomplished this phase:
 - Runs completed: X/Y
-- Systemic improvements found: count `[GAP]`-prefixed findings in run_history for this phase (visible in `get_session_context` latest run summary; full count requires direct DB query)
+- Systemic improvements found: call `get_run_history(repo: "<REPO>", phase: "<current_phase_name>", filter: "[GAP]")` and count returned items
 
 ---
 
@@ -53,11 +53,7 @@ search_rules(query: "devaipod loop capture loop batch-append")
 ```
 If results return: flag as `STALE: old loop terminology found`
 
-```
-# Check trigger table skill files exist — query DB for all known skills
-```
-
-**Primary (MCP):** Get the full skill list from the DB:
+**Primary (MCP):** Verify all skills in DB have a SKILL.md on disk:
 
 ```
 list_skills()
@@ -70,15 +66,6 @@ for skill in <list from list_skills>; do
   [ ! -f "$HOME/.config/opencode/skills/personal/${skill}/SKILL.md" ] && echo "MISSING: $skill"
 done
 ```
-
-Use `workflow-state_search_rules` to check for stale terminology:
-
-```
-search_rules(query: "capture-loop retired stale")
-search_rules(query: "devaipod loop batch-append")
-```
-
-If results surface stale references, fix them via improve-workflow. If null, AGENTS.md is clean.
 
 **If conflicts found:** For each conflict, use the question tool:
 ```
@@ -129,7 +116,7 @@ append_run_summary(
 **Primary (MCP):** Query run_history for `[GAP]`-prefixed findings across all runs this phase:
 
 ```
-get_run_history(repo: "<REPO>", phase: "<current_phase_name>", findings_only: true)
+get_run_history(repo: "<REPO>", phase: "<current_phase_name>", filter: "[GAP]")
 ```
 
 For each item listed:
@@ -189,8 +176,6 @@ set_loop_state(
   goal: "<goal>"
 )
 ```
-
-Ask user for Y (run count for next phase) if unknown.
 
 Ask user for Y (run count for next phase) if unknown.
 

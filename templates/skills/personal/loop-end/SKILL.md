@@ -33,7 +33,7 @@ Pipeline: <all phases ▓> | All phases complete
 **Primary (MCP):**
 
 ```
-get_run_history(repo: "<REPO>", findings_only: true)
+get_run_history(repo: "<REPO>", filter: "[GAP]")
 ```
 
 Any returned finding with `[GAP]` prefix is a workflow improvement candidate.
@@ -127,15 +127,13 @@ Check `latest_run_summary` for keywords: "loop", "skill", "workflow". If found, 
 
 **If count = 0 (project work):** check DB for recent skill_sections updates:
 
-**Primary (MCP):** Use `list_skills()` to get all skills, then use `search_skill` to spot-check recently active ones:
+**Primary (MCP):**
 
 ```
-list_skills()
+get_recent_skill_updates(since: "24 hours")
 ```
 
-If the list includes any skill that was modified this session (you'll know from earlier steps), auto-pass. If uncertain, use the question tool below regardless.
-
-If output is empty AND the loop produced non-trivial work: surface this via the question tool.
+If the returned list is empty AND the loop produced non-trivial work: surface this via the question tool.
 
 Use the question tool:
 ```
