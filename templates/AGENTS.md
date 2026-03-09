@@ -7,9 +7,31 @@ add project-specific context but do not override these rules.
 
 ## Session Hygiene
 
-**Start of every session:** invoke the `session-start` skill before any other work.
+**Start of every session:**
+
+```bash
+cd ~/.config/opencode && git pull
+```
+
+Then invoke the `session-start` skill before any other work.
 
 **End of every session:** invoke the `session-end` skill.
+
+---
+
+## Personal Skills
+
+| Skill | When |
+|---|---|
+| `session-start` | Start of every session, before any work |
+| `session-end` | End of every session |
+| `capture-discovery` | When you figure out how something works or find a gotcha |
+| `improve-workflow` | When the user corrects you or a skill/rule is wrong |
+| `onboarding-a-repository` | First time working in a new repo |
+| `loop-start` | Before any N-run loop series — initialize or resume loop-state.md, orient context, confirm run count; also use when the user says "start a loop" |
+| `loop-task` | Each individual run — executes work, writes blocking journal entry, updates loop-state.md |
+| `loop-gate` | After all runs in a phase — process systemic improvements, commit, gate phase transition |
+| `loop-end` | After final phase — backport review, state integrity checklist, reset loop-state.md |
 
 ---
 

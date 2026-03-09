@@ -64,6 +64,32 @@ Plans never go inside the git repo.
 
 ---
 
+## Step 2c: Initialize loop state
+
+Copy the loop state template for this repo:
+
+```bash
+cp ~/.config/opencode/loop-state-template.md ~/.config/opencode/plans/<repo-name>/loop-state.md
+```
+
+This creates a clean active_phase: 0 state. The first loop-start for this repo will find it ready.
+
+If `~/.config/opencode/loop-state-template.md` doesn't exist (bootstrap hasn't been run or template was removed), create a minimal version:
+
+```bash
+cat > ~/.config/opencode/plans/<repo-name>/loop-state.md << 'EOF'
+active_phase: 0
+run_progress: 0/0
+last_action: none
+next_action: invoke loop-start
+
+## Systemic improvements
+
+EOF
+```
+
+---
+
 ## Step 3: Set up worktree directory
 
 ```bash
