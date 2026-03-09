@@ -92,6 +92,21 @@ Proceed to Step 4.
 
 ---
 
+## Step 4b: Set execution mode
+
+Use the question tool:
+
+```
+question: "Execution mode for this loop?"
+options:
+  - "Autonomous — all decisions upfront, no mid-loop gates (Recommended)" → set MODE=autonomous
+  - "Interactive — confirm at each phase gate" → set MODE=interactive
+```
+
+Record `MODE`. When MODE=autonomous: loop-gate Step 7 and loop-end Stage 1 question gates are skipped automatically.
+
+---
+
 ## Step 5: Confirm run count with user
 
 Use the question tool:

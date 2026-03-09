@@ -141,6 +141,8 @@ git push
 
 ## Step 7: Human confirmation gate
 
+**Autonomous mode bypass:** If loop-start was invoked with `mode=autonomous` (i.e., the user front-loaded all decisions), skip this question and advance the phase automatically. Only use the question tool when mode=interactive (the default).
+
 Use the question tool:
 
 ```

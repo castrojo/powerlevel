@@ -51,6 +51,7 @@ Use the Edit tool. Do NOT rewrite the file. Add only what is missing or fix only
 ### 2d: Sync to DB
 
 - Skill section edit → `workflow-state_upsert_skill_section(skill: "<name>", section: "<heading>", content: "<full updated section text>")`
+- Frontmatter → also upsert as a dedicated section: `workflow-state_upsert_skill_section(skill: "<name>", section: "frontmatter", content: "name: <name>\ndescription: <description>")`
 - AGENTS.md section edit → `workflow-state_upsert_rule(id: "<agents-<slug>>", domain: "<domain>", content: "<full updated section text>")`
 
 ### 2e: Decide powerlevel backport

@@ -81,6 +81,7 @@ After applying the edit, push the updated content to the workflow-state DB so it
   ```
   workflow-state_upsert_skill_section(skill: "<skill-name>", section: "<heading>", content: "<full section text>")
   ```
+  If editing the frontmatter (name, description), also upsert it as section `frontmatter`.
 
 - **AGENTS.md edit** → call `upsert_rule` for the changed section:
   ```
@@ -95,9 +96,9 @@ This is mandatory — it keeps the DB as the live source so `search_rules` and `
 
 Commit to the appropriate repo:
 
-- Global `AGENTS.md` or `memory/*.md` → `YOUR_USERNAME/opencode-config`
-- Superpowers skill → `YOUR_USERNAME/superpowers` (rebase on upstream before pushing)
-- Personal skill → `YOUR_USERNAME/opencode-config`
+- Global `AGENTS.md` or `memory/*.md` → `castrojo/opencode-config`
+- Superpowers skill → `castrojo/superpowers` (rebase on upstream before pushing)
+- Personal skill → `castrojo/opencode-config`
 - Project `AGENTS.md` → that project's fork
 
 ```bash
