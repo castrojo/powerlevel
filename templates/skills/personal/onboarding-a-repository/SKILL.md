@@ -220,6 +220,17 @@ If MCPs are configured:
 
 If no `opencode.json` or no MCPs: note "no MCPs configured" in project-notes.md.
 
+Additionally, verify the **always-present** global workflow-state MCP is healthy before
+any loop work:
+
+```bash
+systemctl --user is-active opencode-state-db && echo "DB: ok"
+ls ~/.config/opencode/mcp/state/opencode-state-mcp && echo "binary: ok"
+```
+
+If either fails: see new-machine-setup Step 6c to fix it. Do not proceed with loop work
+until the MCP is healthy — loop state and plan imports will silently fail.
+
 ---
 
 ### Step 4: Write initial project notes
@@ -319,24 +330,40 @@ If it fails: investigate before starting any work. Do not skip this.
 
 ---
 
-### Step 9: Set up devcontainer.json
+### Step 9: devaipod fitness assessment
 
-devaipod requires a `.devcontainer/devcontainer.json` in each repo. Without it, devaipod
-falls back to `default-image` in `~/.config/devaipod.toml` — this works but is fragile and
-misses repo-specific capabilities. Every repo must have its own file.
+devaipod provides container-isolated build/test runs. Every repo must have a
+`.devcontainer/devcontainer.json` — without it devaipod falls back to `default-image`
+which is fragile and misses repo-specific capabilities.
 
-**Check if it already exists:**
+**Check existing devcontainer:**
 
 ```bash
-ls .devcontainer/devcontainer.json 2>/dev/null && echo "exists" || echo "MISSING"
+cat .devcontainer/devcontainer.json 2>/dev/null || echo "MISSING"
 ```
 
-**If missing, ask the user:**
+If already present and tested: skip to Step 9d.
 
-> "Does this repo build container images or run nested podman/flatpak-builder during its
-> normal workflow (e.g. `just build` invokes podman build or flatpak-builder)?"
+**Step 9a: Analyze the project build profile**
 
-**If NO** (standard repo — web app, CLI tool, library, etc.) — create:
+Determine which category this repo falls into:
+
+| Category | Indicators | devcontainer type |
+|---|---|---|
+| Standard repo | web app, CLI, library, script — `just build` has no nested containers | minimal |
+| Container-building repo | `just build` or CI uses `podman build`, `flatpak-builder`, or nested containers | privileged |
+| Go/Rust binary | `go.mod` or `Cargo.toml` present | minimal + language tooling |
+| Node/web | `package.json` present | minimal |
+
+Run:
+```bash
+ls Cargo.toml go.mod package.json pyproject.toml 2>/dev/null
+grep -r "podman\|docker\|flatpak-builder" Justfile Makefile 2>/dev/null | head -5
+```
+
+**Step 9b: Create devcontainer.json**
+
+**For standard repos (web, CLI, library, Go, Node):**
 
 ```bash
 mkdir -p .devcontainer
@@ -345,7 +372,7 @@ cat > .devcontainer/devcontainer.json << 'EOF'
 EOF
 ```
 
-**If YES** (container-building repo) — create:
+**For container-building repos (nested podman/flatpak-builder):**
 
 ```bash
 mkdir -p .devcontainer
@@ -370,28 +397,54 @@ cat > .devcontainer/devcontainer.json << 'EOF'
 EOF
 ```
 
-Commit to the repo's `main` (fork only — not part of any upstream PR):
+**Step 9c: Test with a real devaipod run**
+
+```bash
+~/.cargo/bin/devaipod run ~/src/<repo> --host -c 'echo "devaipod: ok" && pwd && ls'
+```
+
+Expected output: prints "devaipod: ok", working directory inside container, repo files visible.
+
+If it fails:
+- Check that podman is running: `systemctl --user is-active podman.socket`
+- Check devcontainer image can pull: `podman pull ghcr.io/bootc-dev/devenv-debian:latest`
+- Check `DEVAIPOD_HOST_MODE=1` is set or `--host` was passed
+
+**Step 9d: Run the project validation inside devaipod**
+
+```bash
+~/.cargo/bin/devaipod run ~/src/<repo> --host -c '<validation command from Step 3>'
+```
+
+This confirms the container can actually build/test the project. If it fails, investigate — common causes:
+- Missing tool in devenv-debian (add `postCreateCommand` to install it)
+- Permission issue (needs `capAdd: SYS_ADMIN` for mount operations)
+- Network dependency not available in container
+
+**Step 9e: Commit devcontainer.json**
 
 ```bash
 git add .devcontainer/devcontainer.json
-git commit -m "chore(devcontainer): add devcontainer.json for devaipod
+git commit -m "chore(devcontainer): add devcontainer.json for devaipod integration
 
-Assisted-by: Claude Sonnet 4.6 via OpenCode"
+Assisted-by: <Model> via OpenCode"
 git push origin main
 ```
 
-**devaipod invocation pattern** (same for all repos):
+Note: `.devcontainer/devcontainer.json` is committed to the **fork** (`origin`). If the repo is yours (no upstream remote), commit to `main`. It is acceptable to include in upstream PRs if the upstream has no existing devcontainer.
+
+**devaipod invocation pattern (all repos):**
 
 ```bash
-# Fork repos (with personal config via bind_home):
-~/.cargo/bin/devaipod run ~/src/<repo> --host -c 'task description'
+# Fork repos (personal config via bind_home):
+~/.cargo/bin/devaipod run ~/src/<repo> --host -c 'just build'
 
-# Upstream repos (read-only recon, no personal config needed):
+# Upstream recon (read-only, no personal config):
 ~/.cargo/bin/devaipod run https://github.com/org/repo --host -c 'investigate X'
 ```
 
-The `mounts` field in devcontainer.json is parsed by devaipod but silently ignored — use
-`bind_home` in `~/.config/devaipod.toml` to deliver AGENTS.md, skills, and memory instead.
+The `mcp/state` bind_home path in `devaipod.toml` delivers the MCP binary to containers
+automatically — loop-task runs inside containers can call workflow-state tools.
 
 ---
 
@@ -404,6 +457,68 @@ journal_write(
   tags: "workflow-learning"
 )
 ```
+
+---
+
+### Step 10a: Bootstrap loop state and import initial plan
+
+After onboarding completes, initialize this repo's loop state and seed a starter plan
+so the first loop session starts immediately without orientation overhead.
+
+**Initialize loop state in the DB:**
+
+```
+set_loop_state(
+  repo: "<repo-name>",
+  phase: "",
+  run: "0/0",
+  goal: ""
+)
+```
+
+**If the project has a non-trivial validation command or build pipeline**, create a starter plan file:
+
+```bash
+mkdir -p ~/.config/opencode/plans/<repo-name>
+cat > ~/.config/opencode/plans/<repo-name>/project-loop-starter.md << 'EOF'
+# <Repo Name> — Loop Starter Plan
+
+## Goal
+
+First loop: verify the project builds and tests pass in devaipod containers. Establish baseline.
+
+## Tasks
+
+- [ ] Task 1: Run validation baseline inside devaipod (just check / make test / cargo test)
+- [ ] Task 2: Verify devaipod container has all required tools (missing tools → add postCreateCommand)
+- [ ] Task 3: Document build time and any environment gotchas in project-notes.md
+EOF
+```
+
+**Import the starter plan into the DB:**
+
+```
+import_plan(
+  repo: "<repo-name>",
+  plan_id: "onboarding-starter",
+  tasks: [
+    {"task_num": 1, "description": "Run validation baseline inside devaipod"},
+    {"task_num": 2, "description": "Verify container has all required tools"},
+    {"task_num": 3, "description": "Document build time and gotchas in project-notes.md"}
+  ]
+)
+```
+
+**Verify the plan imported:**
+
+```
+get_plan_tasks(repo: "<repo-name>", plan_id: "onboarding-starter")
+```
+
+Expected: 3 tasks with status `pending`.
+
+When ready to run the project's first loop:
+> "Say **'start a loop'** in this repo to run `loop-start` and begin iterating on the onboarding-starter plan."
 
 ---
 
@@ -515,9 +630,13 @@ git push origin main   # fork only — NEVER upstream
 # Step 8: Validate
 just check && just lint   # or project equivalent
 
-# Step 9: devaipod (no files to commit — just use the central config)
-~/.cargo/bin/devaipod run ~/src/<repo> --host -c 'task description'
-# Upstream recon: ~/.cargo/bin/devaipod run https://github.com/org/repo --host -c 'investigate X'
+# Step 9: devaipod fitness assessment
+~/.cargo/bin/devaipod run ~/src/<repo> --host -c 'echo "devaipod: ok"'
+# Full validation in container:
+~/.cargo/bin/devaipod run ~/src/<repo> --host -c '<validation command>'
+
+# Step 10a: bootstrap loop state
+# (Use MCP tools: set_loop_state, import_plan, get_plan_tasks)
 ```
 
 Full git workflow reference: `~/.config/opencode/plans/git-workflow.md`

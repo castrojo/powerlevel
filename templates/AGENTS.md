@@ -19,6 +19,29 @@ Then invoke the `session-start` skill before any other work.
 
 ---
 
+## MCP Servers
+
+The `workflow-state` MCP provides loop state, task tracking, and skill/rule search. It
+is always present on every machine (installed by setup.sh or new-machine-setup). Every
+session uses it automatically through the `session-start` skill.
+
+| You are about to... | Use this tool |
+|---|---|
+| Look up a workflow rule | `workflow-state_search_rules` |
+| Look up a skill section | `workflow-state_search_skill` |
+| Check loop state or last run | `workflow-state_get_session_context` |
+| Check pending plan tasks | `workflow-state_get_plan_tasks` |
+
+**Read workflow state via DB tools only. Never `cat` loop-state.md or plan files.**
+
+```bash
+# Health check (run if session-start reports MCP issues)
+systemctl --user is-active opencode-state-db
+ls ~/.config/opencode/mcp/state/opencode-state-mcp
+```
+
+---
+
 ## Personal Skills
 
 | Skill | When |
@@ -101,3 +124,4 @@ Types: `feat`, `fix`, `docs`, `ci`, `chore`, `refactor`
 - Multi-commit history in upstream PRs
 - Committing plans, session notes, or AGENTS.md into project repos
 - Claiming work is done without running verification commands
+- Reading workflow state from files (`cat`/`grep` on loop-state.md or plan files) — use DB tools

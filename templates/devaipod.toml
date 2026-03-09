@@ -21,4 +21,5 @@ paths = [
   ".config/opencode/skills",
   ".config/opencode/memory",
   ".config/opencode/agents",
+  ".config/opencode/mcp/state",
 ]
