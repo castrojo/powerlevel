@@ -1,6 +1,6 @@
 ---
 name: loop-end
-description: Use to close a completed loop — backport approved improvements to powerlevel, run state integrity checklist, reset loop state in DB so the next loop on any machine starts cleanly
+description: Use to close a completed loop — dispatch workflow-capture subagent at postflight, run state integrity checklist, reset loop state in DB so the next loop on any machine starts cleanly
 ---
 
 Announce: "Using loop-end to close the loop."
@@ -26,9 +26,9 @@ Pipeline: <all phases ▓> | All phases complete
 
 ---
 
-## Stage 1: Backport review
+## Stage 1: Dispatch workflow-capture subagent
 
-### Step 1: Read improvements
+### Step 1: Check for [GAP] items
 
 **Primary (MCP):**
 
@@ -36,45 +36,50 @@ Pipeline: <all phases ▓> | All phases complete
 get_run_history(repo: "<REPO>", filter: "[GAP]")
 ```
 
-Any returned finding with `[GAP]` prefix is a workflow improvement candidate.
+If no items: skip to Stage 2. Note "No workflow gaps this loop."
 
-If no items: skip to Stage 2.
+### Step 2: Dispatch autonomous subagent
 
-### Step 2: Collect decisions for all items
+Dispatch a subagent with the full content of the `workflow-capture` skill as the prompt.
+Pass the repo name, loop goal, and the list of [GAP] items as context.
 
-For each item, use the question tool — do NOT copy files yet:
+> **Note:** The invocation form below is conceptual pseudocode. In OpenCode, dispatch a
+> subagent via the Task tool with subagent_type: "general". The prompt content below is
+> definitive — adapt the invocation syntax to what OpenCode exposes at execution time.
 
 ```
-question: "Systemic improvement: '<item description>'. Backport this to powerlevel templates?"
-options:
-  - "Yes — approve for backport" → mark approved
-  - "No — opencode-config only" → skip
+Task(
+  description: "Postflight workflow capture: process [GAP] items from <REPO> loop",
+  subagent_type: "general",
+  prompt: """
+You are the autonomous workflow-capture subagent for the <REPO> loop.
+
+Loop goal: <goal>
+Repo: <REPO>
+
+The following [GAP] items were recorded during this loop:
+<paste [GAP] items from run history>
+
+Follow the workflow-capture skill instructions exactly:
+1. For each item: classify target file, read current content (DB-first via search_skill or search_rules; fallback Read only if DB returns nothing), apply surgical edit, sync DB, decide powerlevel backport
+2. One opencode-config commit covering all edits
+3. One powerlevel commit if any backports
+4. One journal entry summarizing all fixes
+5. Return a summary: N items, N backported, commit hash(es)
+
+workflow-capture skill: <load workflow-capture skill content via Skill tool or paste inline>
+"""
+)
 ```
 
-Collect a list: `approved = [<item1>, <item2>, ...]`
+Wait for the subagent to return before proceeding.
 
-### Step 3: Copy all approved items and commit once
+**If subagent fails or returns an error:** fall back to the original per-item question tool workflow:
+for each [GAP] item, use the question tool to present it and invoke `improve-workflow` interactively.
 
-After all decisions are collected:
+### Step 3: Show result
 
-For each approved item (skill changes):
-```bash
-# Example: if the improvement is to loop-start/SKILL.md
-cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
-   ~/src/powerlevel/templates/skills/personal/loop-start/SKILL.md
-```
-
-After ALL copies:
-```bash
-cd ~/src/powerlevel
-git add templates/
-git commit -m "feat(templates): backport workflow improvements from <REPO> loop
-
-Assisted-by: Claude Sonnet 4.6 via OpenCode"
-git push
-```
-
-If no items approved for backport: skip the powerlevel commit entirely.
+Display the subagent's summary. Then proceed to Stage 2.
 
 ---
 
@@ -84,26 +89,15 @@ Every item is required. Do not declare loop complete until all are checked.
 
 ### Checklist
 
-**[ ] Plan file has run blocks for all N runs**
+**[ ] All plan tasks are done or skipped in DB**
 
-**Primary (MCP):** Export the plan and write to the plan file:
+**Primary (MCP):**
 
 ```
-export_plan(repo: "<REPO>", plan_id: "<plan_id>")
+get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")
 ```
 
-Write the returned markdown to `~/.config/opencode/plans/<REPO>/<active-plan-file>.md`. This replaces the run count check — the export includes all tasks with their status and notes, which serves as the permanent record.
-
-**[ ] Plan file has findings block appended**
-Check ~/.config/opencode/plans/<REPO>/ for the active plan file.
-If no findings block exists: append one now:
-```markdown
-## Loop findings — <YYYY-MM-DD>
-
-- Runs completed: <N>/<N>
-- Systemic improvements: <list or "none">
-- Backported to powerlevel: <list or "none">
-```
+If any tasks are still `pending` or `in_progress`: surface them and ask the user whether to close anyway or complete them first. The DB is the permanent record — no file write needed.
 
 **[ ] Skills-as-byproduct check**
 
@@ -160,8 +154,8 @@ git push
 ```
 Verify push succeeded. "Committed" without push is not enough — cross-machine sync requires push.
 
-**[ ] powerlevel committed AND pushed** (only if backport happened)
-Already done in Stage 1 Step 3 if applicable. Verify:
+**[ ] powerlevel committed AND pushed** (only if workflow-capture subagent backported items)
+Already done by the subagent in Stage 1 Step 2 if applicable. Verify:
 ```bash
 git -C ~/src/powerlevel status --short
 ```
@@ -190,7 +184,7 @@ Next loop-start will find a clean slate on any machine.
 
 Tell the user what was accomplished:
 - Runs completed
-- Systemic improvements processed
+- Postflight workflow capture dispatched: [N] improvements processed (or "none")
 - Skills created or updated (if any)
 - Backports (if any)
 - All state committed and pushed

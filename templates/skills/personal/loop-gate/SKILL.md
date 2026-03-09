@@ -1,6 +1,6 @@
 ---
 name: loop-gate
-description: Use after all loop-task runs complete — shows progress, processes systemic improvements via improve-workflow, commits, and gates the phase transition on human confirmation
+description: Use after all loop-task runs complete — shows progress, parks [GAP] items for postflight capture, commits, and gates the phase transition on human confirmation
 ---
 
 Announce: "Using loop-gate to confirm phase transition."
@@ -111,28 +111,18 @@ append_run_summary(
 
 ---
 
-## Step 5: Process systemic improvements
+## Step 5: Workflow improvements
 
-**Primary (MCP):** Query run_history for `[GAP]`-prefixed findings across all runs this phase:
+`[GAP]` items recorded during this phase are processed autonomously at postflight
+by the `workflow-capture` subagent (dispatched from `loop-end` Stage 1).
 
-```
-get_run_history(repo: "<REPO>", phase: "<current_phase_name>", filter: "[GAP]")
-```
-
-For each item listed:
-1. Present it to the user
-2. Invoke improve-workflow (one invocation per item — do not batch)
-3. Each improve-workflow call produces a commit to opencode-config
-
-If no items: skip to Step 6.
-
-Note: improve-workflow was banned mid-run. This is where those parked items get actioned.
+No action needed here. Continue to Step 6.
 
 ---
 
 ## Step 6: Commit opencode-config (catch-all)
 
-After all improve-workflow calls:
+After all parked items are queued (catch-all for any uncommitted changes):
 ```bash
 git -C ~/.config/opencode status --short
 ```

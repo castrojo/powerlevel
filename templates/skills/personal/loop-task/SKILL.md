@@ -136,7 +136,7 @@ If a workflow gap or AGENTS.md correction surfaces:
 findings: "[GAP] <gap description>"
 ```
 
-Processed at loop-gate and loop-end.
+Processed at postflight via the `workflow-capture` subagent (dispatched from `loop-end` Stage 1).
 
 ---
 
