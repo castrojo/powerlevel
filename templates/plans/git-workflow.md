@@ -120,7 +120,7 @@ All feature work runs in isolated git worktrees. Standard location: `.worktrees/
 
 `.worktrees/` is excluded via the **global gitignore** (`~/.config/git/ignore`), which covers every repo on the machine — including fork repos where you cannot commit upstream `.gitignore` changes. For owner repos, also add `.worktrees` to the repo's `.gitignore` explicitly.
 
-The global gitignore source is tracked in `castrojo/opencode-config` at `git-config/ignore`. New machine setup (Step 4b) installs it automatically.
+The global gitignore source is tracked in `YOUR_USERNAME/opencode-config` at `git-config/ignore`. New machine setup (Step 4b) installs it automatically.
 
 ### Creating a worktree
 
