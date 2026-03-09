@@ -7,6 +7,20 @@ Announce: "Using loop-end to close the loop."
 
 ---
 
+## Stage 0: Orient and declare
+
+```bash
+cat ~/.config/opencode/plans/<REPO>/loop-state.md
+```
+
+Show:
+```
+Loop goal: <loop_goal>
+[ LOOP END ] <REPO> • All <total_phases> phases complete • Closing loop
+```
+
+---
+
 ## Stage 1: Backport review
 
 ### Step 1: Read systemic improvements
@@ -59,12 +73,12 @@ Every item is required. Do not declare loop complete until all are checked.
 
 ### Checklist
 
-**[ ] All N journal_write entries confirmed present**
+**[ ] Plan file has run blocks for all N runs**
+```bash
+grep "^## Run " ~/.config/opencode/plans/<REPO>/<active-plan-file>.md | wc -l
 ```
-journal_search(text: "<REPO> Loop Run", limit: 20)
-```
-Count the entries. Must equal N (the run count set at loop-start).
-If any are missing: write the missing entries now from session context before proceeding.
+Count must equal N (the run count set at loop-start).
+If any run blocks are missing: append them now from session context before proceeding.
 
 **[ ] Plan file has findings block appended**
 Check ~/.config/opencode/plans/<REPO>/ for the active plan file.

@@ -9,11 +9,11 @@ Announce: "Using loop-task for Run X of N."
 
 ## Step 1: Identify current position
 
-Read current run number from loop-state.md:
+Read current state from loop-state.md:
 ```bash
-grep "run_progress" ~/.config/opencode/plans/<REPO>/loop-state.md
+grep -E "run_progress|loop_goal|total_phases|active_phase" ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
-Parse X and N. This is Run X+1.
+Parse X and N from `run_progress`. Record `loop_goal`, `total_phases`, and `active_phase` for use in status blocks. This is Run X+1.
 
 ---
 
@@ -33,19 +33,26 @@ Record: what ran, what succeeded, what failed, any observations.
 
 ---
 
-## Step 3: journal_write — BLOCKING
+## Step 3: Append run summary to plan file — BLOCKING
 
-This write must complete before any other action. Run X+1 does not start until this is written.
-
-```
-journal_write(
-  title: "<REPO> Loop Run <X+1> — <YYYY-MM-DD>",
-  body: "<what ran, what passed, what failed, observations, timing if relevant>",
-  tags: "workflow-learning, <REPO>"
-)
+Find the active plan file:
+```bash
+ls ~/.config/opencode/plans/<REPO>/ | grep -vE "loop-state|project-notes" | sort | tail -1
 ```
 
-If the session ends before this write: the run is not documented and must be re-run. The blocking requirement exists precisely to prevent this.
+Append a run block to it. This write must complete before the next run starts.
+
+```markdown
+## Run <X+1> — <YYYY-MM-DD>
+
+- What ran: <description of work done>
+- Outcome: <pass / fail / partial — one line>
+- Findings: <any observations worth noting, or "none">
+```
+
+If no plan file exists: append to loop-state.md under a `## Run log` section instead.
+
+If a notable non-workflow finding (gotcha, design decision, tool behavior): invoke `capture-discovery` immediately after appending. Journal entries are for cross-session, cross-project recall — not for run tracking.
 
 ---
 
@@ -83,7 +90,8 @@ If a notable non-workflow finding (gotcha, design decision, tool behavior): invo
 
 Show:
 ```
-[ RUN <X+1> COMPLETE ] <REPO> • Run <X+1>/<N> • <pass/fail summary>
+Loop goal: <loop_goal>
+[ RUN <X+1> COMPLETE ] <REPO> • Phase <active_phase>/<total_phases> • Run <X+1>/<N> • <pass/fail summary>
 ```
 
 Use the question tool to ask what to do next:

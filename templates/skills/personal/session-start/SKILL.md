@@ -5,7 +5,7 @@ description: Use at the start of every session in any repository, before doing a
 
 # Session Start
 
-Run at the beginning of every session, before any other action. Takes under 60 seconds.
+Run this at the beginning of every session, before any other action. Takes under 60 seconds.
 
 **Announce:** "Using session-start to orient context."
 
@@ -26,7 +26,13 @@ cat ~/.config/opencode/plans/${REPO}/loop-state.md 2>/dev/null || echo "NO_STATE
 If file exists AND active_phase > 0: output this block at the TOP of the Step 5 report:
 
 ```
-[ LOOP ACTIVE ] <REPO> • Phase <active_phase> • Run <run_progress> • Last: <last_action> • Next: <next_action>
+Loop goal: <loop_goal>
+Position: Phase <active_phase>/<total_phases> • Run <run_progress> • Next: <next_action>
+```
+
+If `loop_goal` or `total_phases` fields are missing (old schema): fall back to:
+```
+[ LOOP ACTIVE ] <REPO> • Phase <active_phase> • Run <run_progress> • Next: <next_action>
 ```
 
 If file missing or active_phase is 0: output nothing. Do not mention loops in the report if no loop is active.
@@ -70,7 +76,7 @@ cd ~/.config/opencode
 git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
 git commit -m "chore(config): sync uncommitted session changes
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
@@ -148,13 +154,17 @@ git worktree list
 
 and the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
 
+**If an active plan was found AND no loop is active (active_phase is 0 or loop-state.md is missing):** add this to the Step 5 report:
+
+> "Active plan found with no loop running. Say **'start a loop'** to begin a loop-start session for this plan."
+
 ---
 
 ## Step 4b: Surface relevant journal entries
 
 Search for recent discoveries in this project using **text search, not project filter**.
 The `project:` field in journal entries stores the full working directory path (e.g.
-`/home/user/src`), not the repo name — filtering by repo name returns nothing.
+`/var/home/jorge/src`), not the repo name — filtering by repo name returns nothing.
 
 ```
 journal_search(text: "<repo-name>", limit: 5)

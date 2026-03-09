@@ -15,7 +15,8 @@ cat ~/.config/opencode/plans/<REPO>/loop-state.md
 
 Show current position:
 ```
-[ LOOP GATE ] <REPO> • Phase <N> complete • Runs: <X>/<Y>
+Loop goal: <loop_goal>
+[ LOOP GATE ] <REPO> • Phase <N>/<total_phases> complete • Runs: <X>/<Y>
 ```
 
 ---
@@ -93,27 +94,28 @@ Update loop-state.md:
 - next_action: (depends on new phase — see below)
 
 Phase transition next actions:
-- Phase 1 → 2: next_action = invoke loop-task (Phase 2 Run 1)
-- Phase 2 → 3: next_action = invoke loop-end
+- Phase N → N+1 (not final): next_action = invoke loop-task (Phase <N+1> Run 1)
+- Phase N → N+1 (final, N+1 = total_phases): next_action = invoke loop-end
 
 Show:
 ```
-[ GATE PASSED ] <REPO> • Now in Phase <N+1> • Next: <next_action>
+Loop goal: <loop_goal>
+[ GATE PASSED ] <REPO> • Now in Phase <N+1>/<total_phases> • Next: <next_action>
 ```
 
 Then use the question tool to ask what to do next:
 
-**If advancing to Phase 2:**
+**If advancing to a non-final phase:**
 ```
-question: "Phase 2 ready. Start Phase 2 Run 1 now?"
+question: "Phase <N+1> ready. Start Phase <N+1> Run 1 now?"
 options:
-  - "Yes — start Phase 2 Run 1 now" → invoke loop-task immediately
+  - "Yes — start Phase <N+1> Run 1 now" → invoke loop-task immediately
   - "Stop here — I'll continue later" → stop
 ```
 
-**If advancing to Phase 3:**
+**If advancing to the final phase (N+1 = total_phases):**
 ```
-question: "Phase 3 ready. Run loop-end now?"
+question: "Final phase ready. Run loop-end now?"
 options:
   - "Yes — run loop-end now" → invoke loop-end immediately
   - "Stop here — I'll run loop-end later" → stop

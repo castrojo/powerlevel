@@ -1,6 +1,6 @@
 ---
 name: loop-start
-description: Use when starting a new loop or resuming an interrupted one — checks loop-state.md, resumes or starts fresh, orients context, confirms run count
+description: Use when starting a new loop or resuming an interrupted one — checks loop-state.md, resumes or starts fresh, orients context, confirms run count and loop goal
 ---
 
 # Skill: loop-start
@@ -28,7 +28,8 @@ cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
 - If file exists **and** `active_phase > 0`: show the resume block, then go to Step 2b:
 
   ```
-  [ LOOP RESUMING ] <REPO> • Phase <active_phase> • Run <run_progress> • Last: <last_action> • Next: <next_action>
+  Loop goal: <loop_goal>
+  [ LOOP RESUMING ] <REPO> • Phase <active_phase>/<total_phases> • Run <run_progress> • Next: <next_action>
   ```
 
 - If file missing **or** `active_phase` is `0`: go to Step 3 (fresh start)
@@ -40,7 +41,7 @@ cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
 Use the question tool:
 
 ```
-question: "A loop is already in progress for Phase <N> (Run <X>/<Y>). Resume or restart?"
+question: "Loop in progress for <REPO>: '<loop_goal>' (Phase <N>/<total_phases>, Run <X>/<Y>). Resume or restart?"
 options:
   - "Resume — continue from Phase <N>, Run <X>/<Y>" → skip to Step 4
   - "Restart — archive state and start fresh" → rename loop-state.md to loop-state-<YYYYMMDD>.md, go to Step 3
@@ -83,6 +84,36 @@ Record `N` from the answer.
 
 ---
 
+## Step 5b: Set loop goal
+
+Use the question tool:
+
+```
+question: "Describe this loop's goal in one sentence."
+options:
+  - (custom — user types their own)
+```
+
+Record as `LOOP_GOAL`.
+
+---
+
+## Step 5c: Confirm total phases
+
+Use the question tool:
+
+```
+question: "How many phases does this loop have?"
+options:
+  - "3 phases (Recommended)"
+  - "2 phases"
+  - "4 phases"
+```
+
+Record as `TOTAL_PHASES`.
+
+---
+
 ## Step 6: Update loop-state.md
 
 Set these fields in `~/.config/opencode/plans/<REPO>/loop-state.md`:
@@ -92,6 +123,8 @@ active_phase: 1
 run_progress: 0/<N>
 last_action: loop-start complete
 next_action: invoke loop-task (Run 1)
+loop_goal: <LOOP_GOAL>
+total_phases: <TOTAL_PHASES>
 ```
 
 Use `Edit` or write the file directly — update each field in place.
@@ -101,7 +134,8 @@ Use `Edit` or write the file directly — update each field in place.
 ## Step 7: Show ready state and offer to start
 
 ```
-[ LOOP READY ] <REPO> • Phase 1 • Run 0/<N>
+Loop goal: <LOOP_GOAL>
+[ LOOP READY ] <REPO> • Phase 1/<TOTAL_PHASES> • Run 0/<N> • Next: loop-task (Run 1)
 ```
 
 Use the question tool:
