@@ -18,7 +18,7 @@ Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,s
 
 ## Before You Start: Fork Check
 
-Work always happens in a local fork in `YOUR_USERNAME`, not on upstream directly.
+Work always happens in a local fork in `castrojo`, not on upstream directly.
 
 ```bash
 git remote -v
@@ -26,12 +26,12 @@ git remote -v
 
 Expected:
 ```
-origin    git@github.com:YOUR_USERNAME/<repo>.git  (push here)
+origin    git@github.com:castrojo/<repo>.git  (push here)
 upstream  git@github.com:<org>/<repo>.git     (fetch only)
 ```
 
 If the remote layout is wrong: stop and run `onboarding-a-repository` first.
-If the repo is already owned by `YOUR_USERNAME` (no upstream): proceed directly.
+If the repo is already owned by `castrojo` (no upstream): proceed directly.
 
 ---
 
@@ -84,7 +84,7 @@ Each run via `loop-task`:
 1. Run `just build` (or the project's validation command) via devaipod
 2. Observe: what passed, what failed, what's unexpected
 3. Append run summary to plan (loop-task Step 3)
-4. Update loop-state.md (loop-task Step 4)
+4. Update loop state via set_loop_state MCP (loop-task Step 4)
 5. Park any systemic findings under ## Systemic improvements
 
 **Fixes happen after observation.** A run that produces a clear failure block is not wasted — it is the ralph wiggum property: the byproduct is the KNOWN ISSUES entry and journal.
@@ -122,7 +122,7 @@ The loop-gate CI parity check should have already surfaced any mismatch. If not:
 
 ```bash
 # Local image
-cat .devcontainer/devcontainer.json | python3 -c "import sys,json; print(json.load(sys.stdin).get('image',''))"
+grep '"image"' .devcontainer/devcontainer.json | head -1
 
 # CI image
 grep -r "image:" .github/workflows/*.yml 2>/dev/null | head -3
@@ -147,19 +147,13 @@ The skill handles:
 After PR is created (not merged — merged is out of scope for the loop):
 - Invoke `loop-end` for the state integrity checklist
 - Verify skills-as-byproduct: the execute phase must have produced or improved at least one skill
-- Reset loop-state.md
+- Reset loop state via set_loop_state MCP
 
 ---
 
 ## Cross-machine note
 
-`loop-state.md` lives in `~/.config/opencode/plans/<repo>/` and syncs via `opencode-config`.
-Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
-```
-Loop goal: <goal>
-Pipeline: ▓▓░ execute 2/3 | Phase runs: ▓▓░░░ 2/5
-```
-No context is lost between machines as long as `session-start` runs `cd ~/.config/opencode && git pull` first.
+Loop state is stored in the workflow-state DB. Start Phase 1 on one machine, continue Phase 2 on another — session-start calls get_session_context automatically and surfaces the active loop in the banner. No file sync needed.
 
 ---
 

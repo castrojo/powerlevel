@@ -17,27 +17,33 @@ Every loop session produces useful output even when the main task "fails" — a 
 
 ## Step 0: Orient
 
-Confirm session-start has already run. If not, invoke it first.
+**HARD STOP.** Invoke the `session-start` skill NOW if it has not already run this session. Do not read further. Do not pull loop state. Do not invoke `loop-session`. The welcome banner must be displayed and session-start must complete before any loop work begins.
 
-Then pull latest loop state:
+Once session-start is complete, pull latest config:
 ```bash
 cd ~/.config/opencode && git pull
 ```
-
-This ensures loop-state.md is current — loop state syncs across machines via GitHub.
 
 ---
 
 ## Step 1: Determine work type
 
-Use the question tool:
+**In autonomous mode:** auto-detect from DB state:
+- `get_session_context` returned non-empty `phase` → route to "Resume active loop" → invoke loop-start
+- User's opening message contains "project", "feature", "fix", "build", "ship" → route to `project-loop`
+- User's opening message contains "workflow", "audit", "skill", "improve", "template" → route to `workflow-improvement-loop`
+- Default → `workflow-improvement-loop`
+
+Announce: "Auto-detected: invoking <skill>." Do not use the question tool.
+
+**In interactive mode:** use the question tool:
 
 ```
 question: "What are we looping over today?"
 options:
   - "Workflow improvement — audit/fix skills, AGENTS.md, templates" → invoke workflow-improvement-loop
   - "Project work — build, test, ship a feature or fix in a repo" → invoke project-loop
-  - "Resume active loop — loop-state.md shows an active loop" → invoke loop-start (resume path)
+  - "Resume active loop — active loop in DB" → invoke loop-start (resume path)
   - "Workflow critique + improvement — systematic audit of the current design against a vision" → invoke workflow-improvement-loop (audit phases)
 ```
 
@@ -54,7 +60,7 @@ workflow-state_get_session_context(repo: "<REPO>")
 
 Do NOT use `cat`, `ls`, or any file read on loop-state.md or plan files — DB tools only.
 
-**If loop state shows an active phase** (non-empty phase field): route to "Resume active loop" regardless of user's selection — confirm with them first.
+**If loop state shows an active phase** (non-empty phase field): route to "Resume active loop" regardless of user's selection — confirm with them first in interactive mode; in autonomous mode, route directly.
 
 **If latest_run_summary is non-empty**: mention the last run context; the user may want to continue from it.
 
@@ -66,11 +72,11 @@ Do NOT use `cat`, `ls`, or any file read on loop-state.md or plan files — DB t
 |---|---|---|
 | Workflow meta-improvement | `workflow-improvement-loop` | "Audit and improve loop schema and entry skills" |
 | Project feature/fix | `project-loop` | "Implement RSS feed in firehose" |
-| Resume active loop | `loop-start` | (read from loop-state.md goal field) |
+| Resume active loop | `loop-start` | (read from get_session_context goal field) |
 
-Confirm the loop goal with the user before invoking the entry skill.
+**In autonomous mode:** skip confirmation. Invoke the entry skill immediately. Announce: "Routing to <entry_skill> with goal: '<goal>'."
 
-Use the question tool:
+**In interactive mode:** confirm the loop goal with the user before invoking the entry skill. Use the question tool:
 ```
 question: "Loop goal confirmed: '<goal>'. Start the <entry_skill> now?"
 options:
@@ -87,13 +93,14 @@ These apply to every loop session. Read them. They are not optional.
 
 1. **Skills and subagents are the top primitives.** Never do work directly in the parent agent that could be dispatched as a subagent (loop-task does this via Task tool).
 2. **Plans + journal = persistent memory.** The plan file is the run-by-run ground truth. The journal captures discoveries and design decisions.
-3. **opencode-config syncs across machines via GitHub.** loop-state.md lives there. session-start pulls it. Start a loop on any machine; resume on any other.
+3. **opencode-config syncs across machines via GitHub.** Loop state is stored in the workflow-state DB. session-start calls get_session_context and surfaces the active loop in the welcome banner. Start a loop on any machine; resume on any other.
 4. **devaipod is the local execution environment** for all build/test tasks. CI must use the same image as .devcontainer/devcontainer.json — loop-gate checks this.
 5. **Context efficiency is a hard constraint.** Subagent-per-run (loop-task) prevents parent context window exhaustion on multi-run loops.
 6. **Failures are data (Ralph Wiggum property).** A failed run that produces KNOWN ISSUES entries is never wasted — it makes the next run better. This is the ralph wiggum virtuous feedback loop: even "failure" produces a useful byproduct. The loop always produces output.
 7. **Skills as byproduct.** Every non-trivial loop must produce or improve at least one personal skill before loop-end is declared complete.
 8. **Two audiences, two repos.** powerlevel = generic bootstrap for any agent; opencode-config = accumulated deep knowledge for your synced future self. Skills backport to powerlevel when generic; stay in opencode-config when personal. The loop-end backport decision is the enforcement mechanism. powerlevel bootstraps once; opencode-config evolves continuously.
 9. **This skill is the design.** The loop-session skill IS the evolving prompt. It is the single source of truth for how the loop system works. Improve it in place — never annotate or append.
+10. **improve-workflow is always invisible.** When any correction arrives, dispatch improve-workflow via Task subagent with no announcement and continue immediately. The user must never see or wait for a correction capture. This is true inside and outside loops.
 
 ---
 
@@ -103,5 +110,5 @@ This skill IS the evolving prompt. When the design changes:
 
 1. **Edit this file in place** — rewrite the relevant section to reflect the best current design. Never append amendments. Never log what changed. The skill always reads as if it was written for the current design.
 2. **Do not keep a changelog** — the git log of opencode-config is the history. The skill is the current truth.
-3. **After editing**: copy to `~/src/powerlevel/templates/skills/personal/loop-session/SKILL.md` if the change is generic (no personal-specific content).
+3. **After editing**: copy to `~/src/powerlevel/templates/skills/personal/loop-session/SKILL.md` if the change is generic (no castrojo-specific content).
 4. **When to trigger a rewrite**: at the end of every loop-session, answer: "Did routing work? Was any step wrong? Did a design invariant need updating?" — if yes, fix inline before loop-end.

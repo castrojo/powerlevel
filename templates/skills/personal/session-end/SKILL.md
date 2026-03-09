@@ -66,20 +66,24 @@ git -C ~/.config/opencode diff --stat
 
 ---
 
-## Step 3: Commit config changes
+## Step 3: Commit and push config changes (async fire-and-forget)
 
-```bash
-cd ~/.config/opencode
-git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
-git commit -m "chore(config): sync session changes
+Dispatch a background Task subagent with the following instructions — do NOT wait for it, do NOT block on its result, immediately continue to Step 3b:
 
-Assisted-by: Claude Sonnet 4.6 via OpenCode"
-git push
-```
+> "Run in ~/.config/opencode:
+> git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
+> git commit -m 'chore(config): sync session changes\n\nAssisted-by: Claude Sonnet 4.6 via OpenCode'
+> git push"
+
+Report to the user: "Config commit dispatched in background — push running async."
+
+**Why async:** This is a push to a personal config repo (castrojo/opencode-config). There is no downstream dependency. Blocking the session close on a network push wastes time.
 
 ---
 
-## Step 3b: Check for suspended loop
+## Step 3b: Check for suspended loop (parallel with Step 4)
+
+**Run Steps 3b and 4 in parallel** — they have no data dependency on each other.
 
 ```
 REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo "")
@@ -97,7 +101,9 @@ If phase is empty or call returns no active state: skip, no action needed.
 
 ---
 
-## Step 4: Worktree hygiene
+## Step 4: Worktree hygiene (parallel with Step 3b)
+
+**Run Steps 3b and 4 in parallel** — dispatch these bash calls at the same time as Step 3b's loop state check.
 
 For each repo worked in this session:
 
@@ -115,20 +121,19 @@ git worktree remove --force <path>   # if truly stale
 
 ---
 
-## Step 4b: Tear down container pod
+## Step 4b: Tear down container pod (async fire-and-forget)
 
-```bash
-REPONAME=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null)
-POD=$(cat /tmp/devaipod-pod-${REPONAME} 2>/dev/null)
+If a pod was used this session, dispatch a background Task subagent to delete it — do NOT wait for completion:
 
-if [ -n "$POD" ]; then
-  ~/.cargo/bin/devaipod delete $POD --host
-  rm /tmp/devaipod-pod-${REPONAME}
-  echo "Pod $POD deleted"
-else
-  echo "No pod found for this session — skipping teardown"
-fi
-```
+> "Run:
+> REPONAME=\$(basename \$(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null)
+> POD=\$(cat /tmp/devaipod-pod-\${REPONAME} 2>/dev/null)
+> if [ -n \"\$POD\" ]; then
+>   ~/.cargo/bin/devaipod delete \$POD --host
+>   rm /tmp/devaipod-pod-\${REPONAME}
+> fi"
+
+Report: "Container teardown dispatched in background."
 
 ---
 

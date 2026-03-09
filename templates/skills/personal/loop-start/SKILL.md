@@ -49,7 +49,9 @@ Parse the JSON response:
 
 ## Step 2b: Resume path
 
-Use the question tool:
+**In autonomous mode (MODE=autonomous):** auto-resume. Output the resume block and skip to Step 4.
+
+**In interactive mode:** use the question tool:
 
 ```
 question: "Loop in progress for <REPO>: '<goal>' (<phase>, Run <run>). Resume or restart?"
@@ -92,59 +94,33 @@ Proceed to Step 4.
 
 ---
 
-## Step 4b: Set execution mode
+## Step 4b: Execution mode
 
-Set `MODE=autonomous` by default. Announce:
-
-> "Execution mode: autonomous — all phase gates and confirmation prompts will be skipped. To override, say 'interactive mode' at any time."
-
-Record `MODE=autonomous`. No question needed unless the user's opening message explicitly requested interactive/step-by-step mode.
+Always autonomous. All phase gates and confirmation prompts are skipped by default.
+User can say "interactive mode" at any point to enable question-tool confirmations.
 
 ---
 
-## Step 5: Confirm run count with user
+## Step 5: Run count
 
-Use the question tool:
-
-```
-question: "How many runs for this loop set?"
-options:
-  - "5 runs (Recommended)"
-  - "3 runs"
-  - "10 runs"
-```
-
-Record `N` from the answer.
+Default `N=5`. Use `N=3` for quick validation loops, `N=10` for deep fix phases.
+Derive from user's opening message if they specified a count. Otherwise use 5.
 
 ---
 
-## Step 5b: Set loop goal
+## Step 5b: Loop goal
 
-Use the question tool:
-
-```
-question: "Describe this loop's goal in one sentence."
-options:
-  - (custom — user types their own)
-```
-
-Record as `LOOP_GOAL`.
+Derive `LOOP_GOAL` from: (1) user's opening message, or (2) active plan goal from `get_session_context`.
 
 ---
 
-## Step 5c: Set phase names
+## Step 5c: Phase names
 
-Use the question tool:
-
-```
-question: "What are the phases for this loop? (comma-separated)"
-options:
-  - "fix,backport  (workflow improvement — Recommended for workflow-improvement-loop)"
-  - "plan,execute,ship  (project work — Recommended for project-loop)"
-  - "audit,fix,backport  (full workflow improvement with audit phase)"
-```
-
-Record as `PHASE_NAMES`. Derive `TOTAL_PHASES` from the count of comma-separated values.
+Infer `PHASE_NAMES` from context:
+- Goal contains "audit" → `"audit,fix,backport"`
+- Called from `workflow-improvement-loop` → `"fix,backport"`
+- Called from `project-loop` → `"plan,execute,ship"`
+- Default → `"fix,backport"`
 
 ---
 
@@ -172,35 +148,17 @@ set_loop_state(
 
 ---
 
-## Step 7: Show ready state and offer to start
+## Step 7: Start
+
+Show ready state and immediately invoke loop-task for Run 1:
 
 ```
 Goal: <LOOP_GOAL>
-Pipeline: <phase bar> | Phase runs: ░░░░░ 0/<N>
+Pipeline: ▓░ <first_phase> 1/<TOTAL_PHASES> | Phase runs: ░░░░░ 0/<N>
 [ LOOP READY ] <REPO> • Next: loop-task (Run 1)
 ```
 
-**Progress bar format:**
-
-Split `PHASE_NAMES` on commas. Map to filled/empty blocks:
-- Completed phases: `▓`
-- Current phase (first): `▓` with phase name
-- Future phases: `░`
-
-Example for phases="fix,backport", 2 total:
-```
-Goal: Improve loop system
-Pipeline: ▓░ fix 1/2 | Phase runs: ░░░░░ 0/5
-```
-
-Use the question tool:
-
-```
-question: "Loop ready. Start Run 1 now?"
-options:
-  - "Yes — start Run 1 now" → invoke loop-task immediately
-  - "Stop here — I'll start the loop later" → stop
-```
+Invoke loop-task immediately. Do not wait for confirmation.
 
 ---
 

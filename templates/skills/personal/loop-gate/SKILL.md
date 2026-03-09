@@ -7,15 +7,16 @@ Announce: "Using loop-gate to confirm phase transition."
 
 ---
 
-## Step 1: Read current state
+## Step 1: Read current state + count [GAP] items
 
-**Primary (MCP):**
+**Run in parallel (no dependency between these two calls):**
 
 ```
 get_session_context(repo: "<REPO>")
+get_run_history(repo: "<REPO>", phase: "<current_phase_name>", filter: "[GAP]")
 ```
 
-Parse the JSON response:
+From `get_session_context` parse:
 - `phase` → `<name> <current>/<total>` → current_phase_name, N (current), total_phases
 - `run` → `<X>/<Y>` → X, Y
 - `goal` → loop goal text
@@ -31,9 +32,9 @@ Pipeline: <pipeline_bar> <current_phase_name> <N>/<total_phases> | Phase runs: <
 
 ## Step 2: Show progress summary
 
-List what was accomplished this phase:
+List what was accomplished this phase using the results already fetched in Step 1:
 - Runs completed: X/Y
-- Systemic improvements found: call `get_run_history(repo: "<REPO>", phase: "<current_phase_name>", filter: "[GAP]")` and count returned items
+- Systemic improvements found: count of [GAP] items from the parallel `get_run_history` call above
 
 ---
 
@@ -67,12 +68,9 @@ for skill in <list from list_skills>; do
 done
 ```
 
-**If conflicts found:** For each conflict, use the question tool:
+**If conflicts found:** Auto-park all conflicts as `[GAP]` items — no question needed:
 ```
-question: "AGENTS.md conflict: '<conflict description>'. Fix now or park as systemic improvement?"
-options:
-  - "Fix now" → invoke improve-workflow immediately
-  - "Park it — add to Systemic improvements" → record via `append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] <gap description>", phase: "<current_phase_name>")` (run_num 0 = gate-level finding)
+append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] <conflict description>", phase: "<current_phase_name>")
 ```
 
 **If no conflicts:** note "AGENTS.md clean" and continue.
@@ -139,26 +137,19 @@ git push
 
 ---
 
-## Step 7: Human confirmation gate
+## Step 7: Advance phase — auto
 
-**Default (MODE=autonomous):** Auto-advance. Skip the question. Proceed directly to Step 8.
+Auto-advance to Step 8. No confirmation needed.
 
-**If MODE=interactive** (user explicitly requested step-by-step mode at loop-start):
-
-Use the question tool:
-
-```
-question: "Phase '<current_phase_name>' complete. Advance to '<next_phase_name>'?"
-options:
-  - "Yes — advance to <next_phase_name>" → proceed to Step 8
-  - "No — run more iterations in <current_phase_name>" → stop here, user invokes loop-task again
-```
-
-Do not advance without explicit "Yes" when MODE=interactive.
+If the user explicitly says "stop" or "wait" before loop-gate runs, stop. Otherwise proceed.
 
 ---
 
 ## Step 8: Advance phase
+
+**Primary (MCP):** Determine Y (run count for next phase):
+
+Derive Y from `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — count tasks in the next phase, or default to 5 if no plan tasks exist. Never ask.
 
 **Primary (MCP):** Update DB state — advance phase name and reset run count:
 
@@ -171,8 +162,6 @@ set_loop_state(
 )
 ```
 
-Ask user for Y (run count for next phase) if unknown.
-
 Show:
 ```
 Goal: <goal>
@@ -180,24 +169,6 @@ Pipeline: <updated pipeline_bar> <next_phase_name> <N+1>/<total_phases> | Phase 
 [ GATE PASSED ] <REPO> • Now in phase: <next_phase_name> • Next: loop-task Run 1
 ```
 
-**Default (MODE=autonomous):** Auto-invoke the next action — `loop-task Run 1` if advancing to a non-final phase, or `loop-end` if all phases complete. Skip the question.
-
-**If MODE=interactive:** Use the question tool as shown below.
-
-**If advancing to a non-final phase:**
-```
-question: "Phase '<next_phase_name>' ready. Start Run 1 now?"
-options:
-  - "Yes — start <next_phase_name> Run 1 now" → invoke loop-task immediately
-  - "Skip — already done / not needed" → mark phase complete, advance without running loop-task
-  - "Stop here — I'll continue later" → stop
-```
-
-**If this is the final phase:**
-```
-question: "All phases complete. Run loop-end now?"
-options:
-  - "Yes — run loop-end now" → invoke loop-end immediately
-  - "Skip — already done / not needed" → mark complete, no loop-end needed
-  - "Stop here — I'll run loop-end later" → stop
-```
+Auto-invoke the next action immediately:
+- Non-final phase → invoke `loop-task Run 1`
+- Final phase → invoke `loop-end`

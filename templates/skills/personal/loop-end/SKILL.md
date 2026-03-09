@@ -97,7 +97,7 @@ Every item is required. Do not declare loop complete until all are checked.
 get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")
 ```
 
-If any tasks are still `pending` or `in_progress`: surface them and ask the user whether to close anyway or complete them first. The DB is the permanent record — no file write needed.
+If any tasks are still `pending` or `in_progress`: list them in the output, mark them `skipped` in the DB, and continue. The loop end is authoritative — leftover tasks are deferred to the next loop, not a blocker.
 
 **[ ] Skills-as-byproduct check**
 
@@ -127,17 +127,14 @@ Check `latest_run_summary` for keywords: "loop", "skill", "workflow". If found, 
 get_recent_skill_updates(since: "24 hours")
 ```
 
-If the returned list is empty AND the loop produced non-trivial work: surface this via the question tool.
+If the returned list is empty AND the loop produced non-trivial work: log a warning and continue.
 
-Use the question tool:
+Show:
 ```
-question: "No skills were updated this loop. Is that intentional?"
-options:
-  - "Yes — this was a trivial/administrative loop" → continue
-  - "No — identify a skill to create or improve now" → identify and update the skill before proceeding
+[ BYPRODUCT CHECK ] WARNING: No skills updated this loop. Review run history for non-obvious processes that should be captured.
 ```
 
-This enforces AGENTS.md rule: "any task that involves a non-obvious process must produce or improve at least one personal skill before the task is marked complete."
+Proceed without blocking. The AGENTS.md rule (every non-trivial task must produce/improve a skill) is enforced by discipline, not by a gate here.
 
 **[ ] opencode-config committed AND pushed**
 ```bash

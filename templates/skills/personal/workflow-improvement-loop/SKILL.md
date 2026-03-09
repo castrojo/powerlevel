@@ -32,10 +32,10 @@ For each skill, classify:
 | Skill | In personal | In templates | Should be in templates? |
 |---|---|---|---|
 
-A skill belongs in powerlevel templates if it is **generic** — useful to any user who bootstraps from powerlevel, with no personal-specific references (no personal usernames, no specific personal repo names, no personal ecosystem names).
+A skill belongs in powerlevel templates if it is **generic** — useful to any user who bootstraps from powerlevel, with no castrojo-specific references (no Bluefin, no specific repo names, no personal usernames).
 
 Flag any skill in templates that:
-- References personal usernames, personal repo names, or personal ecosystem-specific content
+- References castrojo, Bluefin, bluefin-lts, ublue-os, projectbluefin, or any personal repo
 - Contains hardcoded paths specific to the author's machine
 
 ### Step 2: Audit the trigger table
@@ -55,14 +55,24 @@ Use `workflow-state_search_skill(skill: "loop-start", query: "loop state fields"
 
 Verify required fields are present: `phase`, `run`, `goal`. Also verify the `## Improvements` section exists.
 
-### Step 4: Parallel subagent audit (optional, for large audits)
+### Step 4: Parallel subagent audit
 
-If auditing more than 5 skills, dispatch parallel subagents via `dispatching-parallel-agents`:
-- Agent A: audit loop-* skills for internal consistency
-- Agent B: audit session-start/session-end for completeness
-- Agent C: diff personal skills vs templates to find divergence
+**Threshold: 5+ components → dispatch in parallel batches of 5. Fewer than 5 → sequential is fine.**
 
-This cuts audit time significantly compared to serial reading.
+Do NOT gate on a confirmation before dispatching. Send all subagents simultaneously, then collect results.
+
+**Dispatch pattern (send all in one message):**
+
+```
+Task(description: "Audit: loop-start", prompt: "Read ~/.config/opencode/skills/personal/loop-start/SKILL.md. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. Return findings as bullets.")
+Task(description: "Audit: session-start", prompt: "Read ~/.config/opencode/skills/personal/session-start/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
+Task(description: "Audit: loop-task", prompt: "Read ~/.config/opencode/skills/personal/loop-task/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
+Task(description: "Audit: loop-gate", prompt: "Read ~/.config/opencode/skills/personal/loop-gate/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
+Task(description: "Audit: loop-end", prompt: "Read ~/.config/opencode/skills/personal/loop-end/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
+# Dispatch all simultaneously — no gate before dispatch
+```
+
+Collect all subagent results, then compile into the Step 5 findings list. The gate (loop-gate) comes after findings are compiled, not before dispatch.
 
 ### Step 5: Compile findings
 
@@ -118,7 +128,7 @@ Each run targets one of:
 
 For each fix applied in Phase 2, answer: does this belong in the public template?
 
-Generic = yes. Personal-specific = no.
+Generic = yes. castrojo-specific = no.
 
 ### Step 2: Copy approved skills
 

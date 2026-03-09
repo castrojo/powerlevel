@@ -34,7 +34,10 @@ REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo
 
 ### MCP health check
 
-Run both checks in parallel:
+Run all three in parallel (no dependencies):
+1. `systemctl --user is-active opencode-state-db 2>&1`
+2. `ls ~/.config/opencode/mcp/state/opencode-state-mcp`
+3. `get_session_context(repo: "<REPO>")`
 
 ```bash
 systemctl --user is-active opencode-state-db 2>&1
@@ -71,6 +74,38 @@ Goal: <goal>
 
 If `phase` is empty or the template placeholder: output nothing. Do not mention loops in the report if no loop is active.
 
+**Parallel batch:** Steps 0b (MCP health + get_session_context), Step 1 (git identity), Step 1b (opencode-config status), Step 1c (devcontainer check), and Step 4b (journal_search) are all independent. Fire them as one parallel tool call group — do not wait for each before starting the next.
+
+---
+
+## Step 0c: Skill DB health check (re-seed if stale)
+
+After Step 0b, check whether the skill DB is populated. A cold DB causes every `search_skill` call to return null, forcing full SKILL.md file reads instead of fast DB lookups.
+
+```
+workflow-state_list_skills()
+```
+
+If the result is empty or fewer than 5 skills: the DB was never seeded or was reset. Skip the probe step and go directly to re-seed.
+
+If skills are listed, probe one known personal skill to check if content is queryable:
+
+```
+workflow-state_search_skill(skill_name: "improve-workflow", query: "upsert_skill_section")
+```
+
+**If the probe returns null** (skills listed but content not queryable): trigger a re-seed pass for all personal skills. For each skill file found in `~/.config/opencode/skills/personal/`, read the SKILL.md and call `upsert_skill_section` for every `##` section heading. This is a one-time background operation — do it silently without blocking the session report.
+
+```bash
+ls ~/.config/opencode/skills/personal/
+```
+
+Read each `SKILL.md` and upsert all `##` sections. Priority order (most-used first): `improve-workflow`, `capture-discovery`, `session-start`, `session-end`, `loop-start`, `loop-task`, `loop-gate`, `loop-end`, then remaining skills.
+
+Note in the Step 5 report: "Skill DB was stale — re-seeded N skills."
+
+**If the probe returns content:** proceed silently — no mention in the report.
+
 ---
 
 ## Step 1: Verify the project
@@ -88,7 +123,10 @@ git branch --show-current
 git log --oneline origin/main..HEAD 2>/dev/null | wc -l
 ```
 
-If the current branch is **not** `main` and has **0 commits ahead of `main`**, it is a stale merged branch. Say so explicitly and ask:
+If the current branch is **not** `main` and has **0 commits ahead of `main`**, it is a stale merged branch.
+
+**In autonomous mode:** note it in the Step 5 report. Do not block — continue to Step 1b immediately.
+**In interactive mode only:** say so explicitly and ask:
 
 > "You're on `<branch>` which has already been merged (0 commits ahead of main). Switch to `main`, create a new branch, or stay here?"
 
@@ -186,9 +224,17 @@ git worktree list
 
 and the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
 
-**If an active plan was found AND no loop is active (phase is empty in `get_session_context`):** add this to the Step 5 report:
+**If an active plan was found AND no loop is active (phase is empty in `get_session_context`):**
 
-> "Active plan found with no loop running. Say **'start a loop'** to begin a loop-start session for this plan."
+**In autonomous mode:** auto-invoke loop-start after session-start completes. Note in Step 5 report: "Active plan found — loop-start will be invoked automatically."
+**In interactive mode only:** use the `question` tool immediately — do NOT continue to Step 4b until the user responds:
+
+```
+question: "Active plan found with no loop running. Start a loop now to execute it?"
+options:
+  - "Yes — start loop now (Recommended)" → invoke loop-start immediately after session-start completes
+  - "No — I'll start it manually later"   → continue to Step 4b, note it in the Step 5 report
+```
 
 ---
 
@@ -196,7 +242,7 @@ and the project's validation command (from the project block). Include all resul
 
 Search for recent discoveries in this project using **text search, not project filter**.
 The `project:` field in journal entries stores the full working directory path (e.g.
-`~/src`), not the repo name — filtering by repo name returns nothing.
+`/var/home/jorge/src`), not the repo name — filtering by repo name returns nothing.
 
 ```
 journal_search(text: "<repo-name>", limit: 5)
@@ -245,11 +291,16 @@ Tell the user in one paragraph:
 
 Then stop. Do not begin any other work until the user gives a task.
 
-**CRITICAL:** The project memory block reflects the last active project — it does not mean that is what the user wants to work on today. After reporting, always ask:
+**CRITICAL:** The project memory block reflects the last active project — it does not mean that is what the user wants to work on today. After reporting:
+
+**In autonomous mode:** report the active project context in the summary and proceed directly.
+**In interactive mode:** ask:
 
 > "The active project context is `<repo>` — is that what we're working on today, or something different?"
 
 Wait for the user to name the task before doing anything.
+
+**If the user's first message is a non-trivial task** (audit, feature, investigation, multi-step work), or they name such a task after session-start: invoke `loop-session` immediately — do not begin scoping or clarifying questions before the loop context is set up.
 
 ---
 

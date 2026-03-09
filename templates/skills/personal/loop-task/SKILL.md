@@ -66,31 +66,8 @@ Working directory: ~/src/<REPO>
 ## Your task
 <specific instructions — what to build, what files to change, what commands to run>
 
-## On completion, record the run summary via MCP (primary):
-
-  append_run_summary(
-    repo: "<REPO>",
-    run_num: <X+1>,
-    summary: "<one-paragraph outcome summary>",
-    findings: "<bullet-point observations, or empty>",
-    plan_id: "<plan_id if applicable>",
-    phase: "<phase name>"
-  )
-
-  update_task_status(
-    repo: "<REPO>",
-    plan_id: "<plan_id>",
-    task_num: <N>,
-    status: "done",
-    notes: "<completion notes or empty>"
-  )
-
-  set_loop_state(
-    repo: "<REPO>",
-    phase: "<phase>",
-    run: "<X+1>/<N>",
-    goal: "<goal>"
-  )
+## On completion
+Record per loop-task MCP recording template: append_run_summary + update_task_status + set_loop_state.
 
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
 """
@@ -114,6 +91,8 @@ After the subagent returns:
 ```
 get_session_context(repo: "<REPO>")
 ```
+
+In autonomous mode, if the subagent already called `set_loop_state`, skip this verification step and proceed directly to Step 4.
 
 Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, call the MCP tools now:
 
@@ -140,7 +119,7 @@ Processed at postflight via the `workflow-capture` subagent (dispatched from `lo
 
 ---
 
-## Step 5: Report and offer next action via question tool
+## Step 5: Report and auto-proceed
 
 Show:
 ```
@@ -149,26 +128,11 @@ Pipeline: <pipeline_bar> <phase_name> <current>/<total> | Phase runs: <run_bar> 
 [ RUN <X+1> COMPLETE ] <REPO> • <pass/fail summary from subagent>
 ```
 
-**Default (MODE=autonomous):** Auto-proceed — invoke `loop-task` for the next run immediately, or invoke `loop-gate` if all runs complete. Skip the question.
+**Auto-proceed:**
+- If X+1 < N: invoke `loop-task` for the next run immediately.
+- If X+1 = N: invoke `loop-gate` immediately.
 
-**If MODE=interactive:** Use the question tool as shown below.
-
-**If X+1 < N:**
-```
-question: "Run <X+1> complete. What next?"
-options:
-  - "Run <X+2> now" → invoke loop-task immediately
-  - "Advance phase early (loop-gate)" → invoke loop-gate immediately
-  - "Stop here — I'll continue later" → stop
-```
-
-**If X+1 = N:**
-```
-question: "All <N> runs complete. Advance to gate?"
-options:
-  - "Yes — run loop-gate now" → invoke loop-gate immediately
-  - "Stop here — I'll run loop-gate later" → stop
-```
+No confirmation needed. The user can interrupt at any time by typing.
 
 ---
 
@@ -177,10 +141,23 @@ options:
 - Invoking improve-workflow mid-run (park under ## Improvements instead)
 - Starting the next run before subagent result is received and plan append verified
 - Doing the work directly in the parent agent instead of dispatching a subagent
-- Using plain text to ask the user for input — always use the question tool
+- Using the question tool for run-to-run navigation (auto-proceed is unconditional)
 
 ---
 
 ## Why subagents
 
 Each run dispatches a fresh subagent. The parent only sees the result summary, not the full execution context. This prevents context window exhaustion on long loops and keeps the parent clean for orchestration across the entire series.
+
+---
+
+## MCP recording template
+
+Every subagent dispatched by loop-task MUST call these three MCP tools on completion:
+
+1. `append_run_summary(repo, run_num, summary, findings, plan_id, phase)`
+2. `update_task_status(repo, plan_id, task_num, status, notes)` — omit if no plan
+3. `set_loop_state(repo, phase, run, goal)`
+
+In the subagent prompt, reference this as: "Record completion per the loop-task MCP recording template."
+This replaces the full 25-line block that was previously inlined in every prompt.
