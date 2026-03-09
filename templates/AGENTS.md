@@ -133,6 +133,18 @@ Types: `feat`, `fix`, `docs`, `ci`, `chore`, `refactor`
 
 ---
 
+## Onboarding Produces Skills
+
+Every `onboarding-a-repository` session must end with a skill audit (Step 10b). This is mandatory:
+
+- Non-obvious processes discovered → create a personal skill (`writing-skills`)
+- Existing skills with gaps found during onboarding → fix via `improve-workflow`
+- Oversized skills doing multiple conceptual tasks → split into focused sub-skills
+
+An onboarding session that produces no skill update is incomplete.
+
+---
+
 ## Banned
 
 - `gh pr create` to upstream without `--web`

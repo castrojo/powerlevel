@@ -522,6 +522,22 @@ When ready to run the project's first loop:
 
 ---
 
+### Step 10b: Skill audit and update
+
+Onboarding is a high-signal moment — you have read the codebase, run the build, and hit every friction point fresh. That context is perishable. Before closing the session, answer these three questions and act on every yes:
+
+1. **New skill needed?** Did any step involve a non-obvious process (took >30s to figure out, or required trial and error)? If yes → create a personal skill using `writing-skills`. Examples: project-specific build sequence, tricky devcontainer setup, MCP query pattern for this domain, non-standard tool config.
+
+2. **Existing skill incomplete?** Was any skill invoked during onboarding wrong, missing a step, or unclear? If yes → fix it now with `improve-workflow`. Do not defer.
+
+3. **Skill too large?** Is any skill doing more than one conceptual task — could a step be extracted into a focused sub-skill that other skills could call? If yes → split it. Extract the focused part as a new skill; replace it in the parent with a one-line reference: `> See <skill-name> skill.`
+
+Write or update the affected skills. Commit to your `opencode-config` repo (or your superpowers fork for superpowers skills).
+
+**Do not skip.** An onboarding that produces no skill improvement is incomplete. Friction was encountered and not captured for the next session.
+
+---
+
 ### Step 11: Improve this skill if needed
 
 If any step in this skill was **missing, wrong, or unclear**, invoke `writing-skills` now — before the session ends:
