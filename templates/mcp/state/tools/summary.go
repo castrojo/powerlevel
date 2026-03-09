@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -52,6 +53,7 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			LoopRuns       []loopRun       `json:"loop_runs"`
 			Totals         totals          `json:"totals"`
 			DBSize         string          `json:"db_size"`
+			RenderedBox    string          `json:"rendered_box"`
 		}
 
 		result := summary{
@@ -159,6 +161,54 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		pool.QueryRow(ctx,
 			`SELECT pg_size_pretty(pg_database_size(current_database()))`,
 		).Scan(&result.DBSize)
+
+		// Build rendered_box
+		var box strings.Builder
+		headerSuffix := innerWidth - 24 - len(since)
+		if headerSuffix < 0 {
+			headerSuffix = 0
+		}
+		box.WriteString("╭─ Session Summary (last " + since + ") " +
+			strings.Repeat("─", headerSuffix) + "╮\n")
+
+		if len(result.SkillsUpdated) > 0 {
+			names := make([]string, len(result.SkillsUpdated))
+			for i, su := range result.SkillsUpdated {
+				names[i] = su.Skill
+			}
+			box.WriteString(row(fmt.Sprintf("Skills:  %d updated  (%s)",
+				len(result.SkillsUpdated), strings.Join(names, ", "))))
+		}
+		if len(result.RulesUpdated) > 0 {
+			ids := make([]string, len(result.RulesUpdated))
+			for i, ru := range result.RulesUpdated {
+				ids[i] = ru.ID
+			}
+			box.WriteString(row(fmt.Sprintf("Rules:   %d updated  (%s)",
+				len(result.RulesUpdated), strings.Join(ids, ", "))))
+		}
+		for _, tc := range result.TasksCompleted {
+			box.WriteString(row(fmt.Sprintf("Tasks:   %d completed  (%s/%s)",
+				tc.Count, tc.Repo, tc.PlanID)))
+		}
+		for _, lr := range result.LoopRuns {
+			box.WriteString(row(fmt.Sprintf("Runs:    %d loop runs  (%s)", lr.Count, lr.Repo)))
+		}
+
+		allEmpty := len(result.SkillsUpdated) == 0 && len(result.RulesUpdated) == 0 &&
+			len(result.TasksCompleted) == 0 && len(result.LoopRuns) == 0
+		if allEmpty {
+			box.WriteString(row("No workflow changes in the last " + since + "."))
+		}
+
+		box.WriteString(divider())
+		box.WriteString(row(fmt.Sprintf("DB:  %d rules · %d skill_sections · %d tasks · %d runs",
+			result.Totals.Rules, result.Totals.SkillSections,
+			result.Totals.PlanTasks, result.Totals.RunHistory)))
+		box.WriteString(row("     " + result.DBSize))
+		box.WriteString("╰" + strings.Repeat("─", innerWidth+2) + "╯\n")
+
+		result.RenderedBox = box.String()
 
 		b, _ := json.Marshal(result)
 		return mcp.NewToolResultText(string(b)), nil
