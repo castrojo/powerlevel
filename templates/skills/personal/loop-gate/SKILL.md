@@ -141,7 +141,9 @@ git push
 
 ## Step 7: Human confirmation gate
 
-**Autonomous mode bypass:** If loop-start was invoked with `mode=autonomous` (i.e., the user front-loaded all decisions), skip this question and advance the phase automatically. Only use the question tool when mode=interactive (the default).
+**Default (MODE=autonomous):** Auto-advance. Skip the question. Proceed directly to Step 8.
+
+**If MODE=interactive** (user explicitly requested step-by-step mode at loop-start):
 
 Use the question tool:
 
@@ -152,7 +154,7 @@ options:
   - "No — run more iterations in <current_phase_name>" → stop here, user invokes loop-task again
 ```
 
-Do not advance without explicit "Yes".
+Do not advance without explicit "Yes" when MODE=interactive.
 
 ---
 
@@ -178,9 +180,9 @@ Pipeline: <updated pipeline_bar> <next_phase_name> <N+1>/<total_phases> | Phase 
 [ GATE PASSED ] <REPO> • Now in phase: <next_phase_name> • Next: loop-task Run 1
 ```
 
-**MUST: end with the question tool below. Do NOT substitute inline text or "say X to continue" instructions.**
+**Default (MODE=autonomous):** Auto-invoke the next action — `loop-task Run 1` if advancing to a non-final phase, or `loop-end` if all phases complete. Skip the question.
 
-Then use the question tool to ask what to do next:
+**If MODE=interactive:** Use the question tool as shown below.
 
 **If advancing to a non-final phase:**
 ```

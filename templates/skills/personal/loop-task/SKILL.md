@@ -149,6 +149,10 @@ Pipeline: <pipeline_bar> <phase_name> <current>/<total> | Phase runs: <run_bar> 
 [ RUN <X+1> COMPLETE ] <REPO> • <pass/fail summary from subagent>
 ```
 
+**Default (MODE=autonomous):** Auto-proceed — invoke `loop-task` for the next run immediately, or invoke `loop-gate` if all runs complete. Skip the question.
+
+**If MODE=interactive:** Use the question tool as shown below.
+
 **If X+1 < N:**
 ```
 question: "Run <X+1> complete. What next?"

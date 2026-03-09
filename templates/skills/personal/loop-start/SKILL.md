@@ -94,16 +94,11 @@ Proceed to Step 4.
 
 ## Step 4b: Set execution mode
 
-Use the question tool:
+Set `MODE=autonomous` by default. Announce:
 
-```
-question: "Execution mode for this loop?"
-options:
-  - "Autonomous — all decisions upfront, no mid-loop gates (Recommended)" → set MODE=autonomous
-  - "Interactive — confirm at each phase gate" → set MODE=interactive
-```
+> "Execution mode: autonomous — all phase gates and confirmation prompts will be skipped. To override, say 'interactive mode' at any time."
 
-Record `MODE`. When MODE=autonomous: loop-gate Step 7 and loop-end Stage 1 question gates are skipped automatically.
+Record `MODE=autonomous`. No question needed unless the user's opening message explicitly requested interactive/step-by-step mode.
 
 ---
 
