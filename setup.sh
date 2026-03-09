@@ -130,7 +130,7 @@ cp "$CONFIG_DIR/mcp/state/opencode-state-db.container" "$HOME/.config/containers
 systemctl --user daemon-reload
 systemctl --user enable --now opencode-state-db
 # Wait up to 10s for DB to be ready
-for i in $(seq 1 10); do
+for _ in $(seq 1 10); do
   systemctl --user is-active opencode-state-db &>/dev/null && break
   sleep 1
 done
