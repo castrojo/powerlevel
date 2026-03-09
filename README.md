@@ -23,7 +23,9 @@ This repo is a bootstrapper. You clone it once, run `setup.sh`, then move on. Yo
 ## What You Get
 
 - **Persistent memory** — the agent knows your preferences, project context, and what it discovered last session; memory blocks survive across machines via git sync
-- **Searchable journal** — discoveries, gotchas, and design decisions accumulate automatically and surface via semantic search before related tasks
+  - **Searchable journal** — discoveries, gotchas, and design decisions accumulate automatically and surface via semantic search before related tasks
+  - **Token efficiency**: Querying the DB via MCP tools returns only the relevant rows/fields needed for the current task, rather than loading entire plan files or journal logs into context. Targeted SQL/MCP queries = fewer tokens consumed per session.
+  -  Without the DB, the agent would need entire files injected into context to find relevant state. The MCP query returns only what's needed.
 - **Workflow discipline** — structured stages for feature work (brainstorm → plan → execute) with mandatory stops between them; plans live outside repos, never committed
 - **Loop system** — N-run iteration loops with plan import, per-task state, and run summaries stored in PostgreSQL; resumable across machines
 - **Container isolation** — every build/test loop runs in a fresh devaipod container; OpenCode config injected via bind_home; credentials via podman secrets, never committed
