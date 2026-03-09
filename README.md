@@ -28,6 +28,7 @@ This repo is a bootstrapper. You clone it once, run `setup.sh`, then move on. Yo
   -  Without the DB, the agent would need entire files injected into context to find relevant state. The MCP query returns only what's needed.
 - **Workflow discipline** — structured stages for feature work (brainstorm → plan → execute) with mandatory stops between them; plans live outside repos, never committed
 - **Loop system** — N-run iteration loops with plan import, per-task state, and run summaries stored in PostgreSQL; resumable across machines
+  - "Ralph Wiggum" for your workflow improvements AND per project improvements. 
 - **Container isolation** — every build/test loop runs in a fresh devaipod container; OpenCode config injected via bind_home; credentials via podman secrets, never committed
 - **Automatic devcontainer setup** — project onboarding includes a fitness assessment (standard vs privileged container) and commits `.devcontainer/devcontainer.json` to your fork
 - **Session hygiene** — `session-start` verifies MCP health, memory block, and active plans; `session-end` commits config and syncs across machines
