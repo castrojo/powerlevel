@@ -15,7 +15,7 @@ This repo is a bootstrapper. You clone it once, run `setup.sh`, then move on. Yo
 | workflow-state MCP (Go + PostgreSQL) | Loop state, task tracking, skill/rule search — all sessions, all projects, queryable via MCP tools |
 | [devaipod](https://github.com/cgwalters/devaipod) | Container-isolated build/test loops; credentials via podman secrets |
 | [obra/superpowers](https://github.com/obra/superpowers) | Workflow discipline skills (brainstorm → plan → execute, TDD, debugging, PR protocol) |
-| Personal skills | Session hygiene, repo onboarding, discovery capture, loop system, workflow self-correction |
+| Personal skills | Enforces skill addition and improvements to your workflow AND projects, constant improvement |
 | `templates/` | Seeds your private `opencode-config` repo with AGENTS.md, opencode.json (MCP config pre-wired), memory stubs, devaipod config |
 
 ---
