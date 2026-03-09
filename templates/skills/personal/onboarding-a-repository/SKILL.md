@@ -111,27 +111,18 @@ This is where all project plans, architecture notes, and LLM session artifacts l
 
 ### Step 2c: Initialize loop state
 
-Copy the loop state template for this repo:
+Initialize a clean loop state for this repo in the DB:
 
-```bash
-cp ~/.config/opencode/loop-state-template.md ~/.config/opencode/plans/<repo-name>/loop-state.md
+```
+set_loop_state(
+  repo: "<repo-name>",
+  phase: "",
+  run: "0/0",
+  goal: ""
+)
 ```
 
-This creates a clean active_phase: 0 state. The first loop-start for this repo will find it ready.
-
-If ~/.config/opencode/loop-state-template.md doesn't exist: the powerlevel bootstrap hasn't been run or the template was removed. Create a minimal version:
-
-```bash
-cat > ~/.config/opencode/plans/<repo-name>/loop-state.md << 'EOF'
-active_phase: 0
-run_progress: 0/0
-last_action: none
-next_action: invoke loop-start
-
-## Systemic improvements
-
-EOF
-```
+This creates a clean empty state. The first loop-start for this repo will find it ready.
 
 ---
 

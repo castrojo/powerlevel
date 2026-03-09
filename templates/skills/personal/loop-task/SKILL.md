@@ -21,14 +21,6 @@ Parse the JSON response:
 - `goal` → loop goal text
 - `pending_tasks` → pending task count
 
-**Fallback** (if MCP unavailable):
-
-```bash
-cat ~/.config/opencode/plans/<REPO>/loop-state.md
-```
-
-Parse `phase:`, `run:`, `goal:` from the file.
-
 **Show progress at the start of every response (before any work):**
 
 ```
@@ -52,9 +44,8 @@ Next: implement feed parser
 ## Step 2: Determine task and dispatch subagent
 
 Identify the task for this run from:
-1. **Primary (MCP):** If `plan_id` is known, call `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — take the lowest `task_num` result as the next task.
-2. **Fallback:** Find the active plan file: `ls ~/.config/opencode/plans/<REPO>/ | grep -vE "loop-state|project-notes" | sort | tail -1`
-3. The user's instruction for this run if no plan exists
+1. `workflow-state_get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — claim the next pending task
+2. The user's instruction for this run if no plan exists
 
 **Dispatch via Task tool** (subagent type: `general`):
 
@@ -99,19 +90,6 @@ Working directory: ~/src/<REPO>
     goal: "<goal>"
   )
 
-## Fallback (if MCP unavailable): append this block to ~/.config/opencode/plans/<REPO>/<plan-file>.md:
-
-### Run <X+1> — <YYYY-MM-DD>
-- What ran: <what you did>
-- Outcome: pass / fail — <root cause if fail>
-- Findings: <observations, or "none">
-[If failed, also add:]
-- KNOWN ISSUES:
-  - [ ] <specific issue to fix next run>
-
-## And update ~/.config/opencode/plans/<REPO>/loop-state.md:
-Change `run: <X>/<N>` to `run: <X+1>/<N>`
-
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
 """
 )
@@ -142,15 +120,6 @@ set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>
 append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>")
 ```
 
-**Fallback (file):**
-
-```bash
-tail -8 ~/.config/opencode/plans/<REPO>/<plan-file>.md
-grep "^run:" ~/.config/opencode/plans/<REPO>/loop-state.md
-```
-
-If either is missing: do it now before proceeding.
-
 ---
 
 ## Step 4: Handle workflow gaps
@@ -163,12 +132,6 @@ If a workflow gap or AGENTS.md correction surfaces:
 
 ```
 findings: "[GAP] <gap description>"
-```
-
-**Fallback (file):** Append under ## Improvements in loop-state.md:
-
-```bash
-echo "- [ ] <gap description>" >> ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
 Processed at loop-gate and loop-end.

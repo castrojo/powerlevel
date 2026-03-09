@@ -24,8 +24,8 @@ Suggested goal: "Audit and improve [specific aspect] of workflow"
 ### Step 1: Inventory personal skills
 
 ```bash
-ls ~/.config/opencode/skills/personal/
-ls ~/src/powerlevel/templates/skills/personal/
+ls ~/.config/opencode/skills/personal/  # file discovery for audit — not a workflow state read
+ls ~/src/powerlevel/templates/skills/personal/  # file discovery for audit — not a workflow state read
 ```
 
 For each skill, classify:
@@ -40,8 +40,7 @@ Flag any skill in templates that:
 
 ### Step 2: Audit the trigger table
 
-Read `~/.config/opencode/AGENTS.md` (Personal Skills table).
-Read `~/src/powerlevel/templates/AGENTS.md` (same table).
+Use `workflow-state_search_rules(query: "personal skills trigger table")` to surface the skill table. No file read needed.
 
 For each row: verify the skill file exists and the description matches what the skill actually does.
 Flag: missing files, stale descriptions, skills that exist but aren't in the table.
@@ -52,9 +51,7 @@ Flag: missing files, stale descriptions, skills that exist but aren't in the tab
 
 **Fallback only (if MCP unavailable):**
 
-```bash
-cat ~/.config/opencode/loop-state-template.md
-```
+Use `workflow-state_search_skill(skill: "loop-start", query: "loop state fields")` to verify required fields. No file read.
 
 Verify required fields are present: `phase`, `run`, `goal`. Also verify the `## Improvements` section exists.
 

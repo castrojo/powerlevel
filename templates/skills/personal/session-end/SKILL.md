@@ -1,6 +1,6 @@
 ---
 name: session-end
-description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to opencode-config, and runs worktree hygiene in repos worked in during the session.
+description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to castrojo/opencode-config, and runs worktree hygiene in repos worked in during the session.
 ---
 
 # Session End
@@ -29,7 +29,7 @@ question([{
   header: "Unsaved discoveries",
   multiple: true,
   options: [
-    { label: "Rule gap found", description: "AGENTS.md was missing a rule that was triggered — corrected this session" },
+    { label: "Capture-mode rule gap", description: "AGENTS.md was missing the rule about no inline fixes during multi-run loops — triggered a correction this session" },
     { label: "Justfile self-contained rule", description: "just build must include npm install — confirmed gap and fixed" },
     { label: "Nothing to capture", description: "All findings are already journaled" }
   ]
@@ -73,7 +73,7 @@ cd ~/.config/opencode
 git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
 git commit -m "chore(config): sync session changes
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
@@ -81,18 +81,19 @@ git push
 
 ## Step 3b: Check for suspended loop
 
-```bash
+```
 REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo "")
 if [ -n "$REPO" ]; then
-  grep "^active_phase:" ~/.config/opencode/plans/${REPO}/loop-state.md 2>/dev/null || true
+  get_loop_state(repo: "$REPO")
 fi
 ```
 
-If active_phase > 0 (loop is mid-phase):
-- Include loop-state.md in the git add in Step 3 (it may have new ## Systemic improvements entries)
-- Inform the user: "Loop is suspended mid-phase on <REPO> (Phase <N>, Run <X>/<Y>). It will resume when you invoke session-start + loop-task on any machine."
+Check if the `phase` field returned is non-empty to determine if a loop is active.
 
-If active_phase is 0 or file missing: skip, no action needed.
+If phase is non-empty (loop is mid-phase):
+- Inform the user: "Loop is suspended mid-phase on <REPO> (Phase <phase>, Run <run>). It will resume when you invoke session-start + loop-task on any machine."
+
+If phase is empty or call returns no active state: skip, no action needed.
 
 ---
 

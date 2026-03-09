@@ -20,14 +20,6 @@ Parse the JSON response:
 - `run` → `<X>/<Y>` → X, Y
 - `goal` → loop goal text
 
-**Fallback (file):**
-
-```bash
-cat ~/.config/opencode/plans/<REPO>/loop-state.md
-```
-
-Parse `phase:`, `run:`, `goal:` from the file.
-
 Show current position:
 ```
 Goal: <goal>
@@ -78,22 +70,14 @@ podman exec $(podman ps --filter name=opencode-state-db -q) \
 echo "skill check complete"
 ```
 
-**Fallback (file):** If MCP unavailable:
+Use `workflow-state_search_rules` to check for stale terminology:
 
-```bash
-# Check for retired skill references
-grep -n "capture-loop" ~/.config/opencode/AGENTS.md && echo "STALE: capture-loop reference found"
-
-# Check for retired terminology
-grep -n "devaipod loop\|capture loop\|batch-append" ~/.config/opencode/AGENTS.md && echo "STALE: old loop terminology found"
-
-# Check trigger table skill files exist
-while IFS= read -r skill; do
-  path="$HOME/.config/opencode/skills/personal/${skill}/SKILL.md"
-  [ ! -f "$path" ] && echo "MISSING skill file: $path"
-done < <(grep -E "^\| \`[a-z]" ~/.config/opencode/AGENTS.md | grep -v "/" | sed "s/.*\`\([a-z][a-z-]*\)\`.*/\1/" | grep -v "\.")
-echo "AGENTS.md scan complete"
 ```
+search_rules(query: "capture-loop retired stale")
+search_rules(query: "devaipod loop batch-append")
+```
+
+If results surface stale references, fix them via improve-workflow. If null, AGENTS.md is clean.
 
 **If conflicts found:** For each conflict, use the question tool:
 ```
@@ -148,8 +132,6 @@ podman exec $(podman ps --filter name=opencode-state-db -q) \
   psql -U workflow -d workflow_state \
   -c "SELECT run_num, findings FROM run_history WHERE repo='<REPO>' AND findings LIKE '%[GAP]%' ORDER BY run_num;"
 ```
-
-**Fallback (file):** Read `## Improvements` from `~/.config/opencode/plans/<REPO>/loop-state.md`.
 
 For each item listed:
 1. Present it to the user
@@ -210,13 +192,6 @@ set_loop_state(
 ```
 
 Ask user for Y (run count for next phase) if unknown.
-
-**Fallback (file):** Update `loop-state.md` — change `phase:` to the next phase name and reset `run:`:
-
-```
-phase: <next_phase_name> <N+1>/<total_phases>
-run: 0/<Y>
-```
 
 Ask user for Y (run count for next phase) if unknown.
 

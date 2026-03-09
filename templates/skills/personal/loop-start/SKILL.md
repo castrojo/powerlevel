@@ -33,15 +33,7 @@ Parse the JSON response:
 - `goal` — loop goal text
 - `pending_tasks` — count of pending plan tasks (replaces counting tasks in plan file)
 
-**Fallback** (if MCP unavailable or returns an error):
-
-```bash
-cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
-```
-
-Parse `phase:` field from the file. Format is `<name> <current>/<total>`.
-
-**Decision logic** (same for both MCP and file fallback):
+**Decision logic**:
 
 - If `phase` is non-empty **and** phase current > 0 (i.e. not the template placeholder `0`): show the resume block, then go to Step 2b:
 
@@ -70,24 +62,15 @@ options:
 
 ## Step 3: Fresh start
 
-**MCP path (primary):** No action needed — state is initialized in Step 6 via `set_loop_state`. Proceed to Step 4.
-
-**Fallback only (if MCP unavailable):**
-
-```bash
-mkdir -p ~/.config/opencode/plans/<REPO>
-cp ~/.config/opencode/loop-state-template.md ~/.config/opencode/plans/<REPO>/loop-state.md
-```
+**No action needed** — state is initialized in Step 6 via `set_loop_state`. Proceed to Step 4.
 
 ---
 
 ## Step 4: Orient — surface recent relevant work
 
-```
-journal_search(text: "<REPO> loop", limit: 3)
-```
+`get_session_context` (Step 2) already returns `latest_run_summary` — the most recent run summary from the DB. Report it in one sentence to orient context. No additional lookups needed. The DB is the single source of truth for loop run history.
 
-Read titles only. If a title is directly relevant to the current work, read that entry's body. Report any relevant findings in one sentence. If nothing relevant: say "No relevant journal entries found."
+**Token efficiency note:** `get_session_context` returns loop state + pending task count + latest run summary in one call (~100 tokens). `journal_search` loads N full entries unnecessarily. Always prefer the DB.
 
 ---
 
@@ -150,8 +133,6 @@ This is a cost/efficiency decision — parallel subagents cut audit time but add
 
 ## Step 6: Update loop state
 
-**Primary:** Call the workflow-state MCP tool:
-
 ```
 set_loop_state(
   repo: "<REPO>",
@@ -160,18 +141,6 @@ set_loop_state(
   goal: "<LOOP_GOAL>"
 )
 ```
-
-**Fallback** (if MCP unavailable):
-
-Write these fields to `~/.config/opencode/plans/<REPO>/loop-state.md`:
-
-```
-phase: <first_phase_name> 1/<TOTAL_PHASES>
-run: 0/<N>
-goal: <LOOP_GOAL>
-```
-
-Use `Edit` to update each field in place. The `## Improvements` section stays unchanged.
 
 ---
 

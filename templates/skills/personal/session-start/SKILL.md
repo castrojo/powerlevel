@@ -48,14 +48,6 @@ get_session_context(repo: "<REPO>")
 
 Parse `phase` field from the JSON response.
 
-**Fallback** (if MCP unavailable or binary missing):
-
-```bash
-cat ~/.config/opencode/plans/${REPO}/loop-state.md 2>/dev/null || echo "NO_STATE"
-```
-
-Parse `phase:` field from the file.
-
 If `phase` is non-empty and not the template placeholder: output this block at the TOP of the Step 5 report:
 
 ```
@@ -165,15 +157,13 @@ Keep under 500 chars. If the project has a well-populated `AGENTS.md`, skip fiel
 
 ## Step 4: Check for active plans
 
-```bash
-ls ~/.config/opencode/plans/<repo-name>/ 2>/dev/null || echo "no plans directory"
-```
+`get_session_context` (Step 0) already returns `latest_run_summary` and `pending_tasks` — no additional file lookups needed. If a plan was active, these fields will be non-empty.
 
-If files exist, scan their names. If any plan looks in-progress (not dated far in the past), read its header and report to the user:
+If `latest_run_summary` is non-empty, report it:
 
-> "Found active plan: `<filename>` — last task was: `<last completed task>`"
+> "Found active plan context: `<latest_run_summary>`"
 
-**If an active plan was found**, also run:
+**If `pending_tasks` > 0 or `latest_run_summary` is non-empty**, also run:
 
 ```bash
 git status --short

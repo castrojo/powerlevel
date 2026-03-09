@@ -17,14 +17,6 @@ get_session_context(repo: "<REPO>")
 
 Parse `phase` and `goal` from the JSON response.
 
-**Fallback (file):**
-
-```bash
-cat ~/.config/opencode/plans/<REPO>/loop-state.md
-```
-
-Parse `phase:` and `goal:`.
-
 Show:
 ```
 Goal: <goal>
@@ -47,15 +39,6 @@ podman exec $(podman ps --filter name=opencode-state-db -q) psql -U workflow -d 
 ```
 
 Any line with `[GAP]` prefix is a workflow improvement candidate.
-
-**Fallback (file):**
-
-```bash
-grep '\[GAP\]' ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null
-cat ~/.config/opencode/plans/<REPO>/loop-state.md
-```
-
-Extract all items under ## Improvements.
 
 If no items: skip to Stage 2.
 
@@ -112,15 +95,6 @@ export_plan(repo: "<REPO>", plan_id: "<plan_id>")
 ```
 
 Write the returned markdown to `~/.config/opencode/plans/<REPO>/<active-plan-file>.md`. This replaces the run count check — the export includes all tasks with their status and notes, which serves as the permanent record.
-
-**Fallback (file):**
-
-```bash
-grep "^## Run " ~/.config/opencode/plans/<REPO>/<active-plan-file>.md | wc -l
-```
-
-Count must equal N (the run count set at loop-start).
-If any run blocks are missing: append them now from session context before proceeding.
 
 **[ ] Plan file has findings block appended**
 Check ~/.config/opencode/plans/<REPO>/ for the active plan file.
@@ -209,12 +183,6 @@ Must be clean if a backport occurred.
 
 ```
 set_loop_state(repo: "<REPO>", phase: "", run: "0/0", goal: "")
-```
-
-**Fallback (file):**
-
-```bash
-cp ~/.config/opencode/loop-state-template.md ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
 Then commit and push this reset as part of the opencode-config commit above (or as a separate commit if the above already ran).

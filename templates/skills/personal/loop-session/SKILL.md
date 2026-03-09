@@ -45,16 +45,18 @@ options:
 
 ## Step 2: Pre-flight check
 
-Before routing, run:
+Before routing, call:
 
-```bash
-cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_ACTIVE_LOOP"
-ls ~/.config/opencode/plans/<REPO>/ 2>/dev/null | grep -v loop-state | tail -3
+```
+workflow-state_get_loop_state(repo: "<REPO>")
+workflow-state_get_session_context(repo: "<REPO>")
 ```
 
-**If loop-state.md shows an active phase** (not the template placeholder): route to "Resume active loop" regardless of user's selection — confirm with them first.
+Do NOT use `cat`, `ls`, or any file read on loop-state.md or plan files — DB tools only.
 
-**If plan files exist**: mention the most recent one; the user may want to continue from it.
+**If loop state shows an active phase** (non-empty phase field): route to "Resume active loop" regardless of user's selection — confirm with them first.
+
+**If latest_run_summary is non-empty**: mention the last run context; the user may want to continue from it.
 
 ---
 
