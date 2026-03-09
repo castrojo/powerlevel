@@ -11,7 +11,21 @@ Run this at the beginning of every session, before any other action. Takes under
 
 ---
 
-## Step 0: Verify workflow-state MCP and check for active loop
+## Step 0: Opening banner
+
+Identify repo name:
+```bash
+REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo "")
+```
+
+Call `get_welcome_banner(repo: "$REPO")` and output the `banner` field verbatim.
+Do not paraphrase or reformat — print it exactly as returned.
+
+Then continue to Step 0b.
+
+---
+
+## Step 0b: Verify workflow-state MCP and check for active loop
 
 Identify repo name (may be done as part of Step 1 — run early if needed):
 ```bash
