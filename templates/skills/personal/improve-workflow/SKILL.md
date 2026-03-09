@@ -36,6 +36,25 @@ Determine the right file to update:
 
 ---
 
+## Step 1b: Look up existing content (DB-first)
+
+Before drafting the change, retrieve the current content to edit surgically.
+
+- **Updating AGENTS.md** → use `search_rules` with the relevant topic keyword:
+  ```
+  workflow-state_search_rules(query: "<topic>", domain: "<domain if known>")
+  ```
+  This returns the exact rule text and ID so you can make a targeted edit without reading the full file.
+
+- **Updating a skill** → use `search_skill` to locate the specific section:
+  ```
+  workflow-state_search_skill(skill_name: "<skill>", query: "<topic>")
+  ```
+
+- **Fallback** (if neither returns the relevant section): read the file directly.
+
+---
+
 ## Step 2: Draft the change
 
 Write 1–3 sentences that capture the correction precisely. Be surgical — add only what's missing. Do not rewrite surrounding content.
@@ -58,9 +77,9 @@ Use the Edit tool to make the surgical change. Do not rewrite the file.
 
 Commit to the appropriate repo:
 
-- Global `AGENTS.md` or `memory/*.md` → `opencode-config`
-- Superpowers skill → `superpowers` fork (rebase on upstream before pushing)
-- Personal skill → `opencode-config`
+- Global `AGENTS.md` or `memory/*.md` → `castrojo/opencode-config`
+- Superpowers skill → `castrojo/superpowers` (rebase on upstream before pushing)
+- Personal skill → `castrojo/opencode-config`
 - Project `AGENTS.md` → that project's fork
 
 ```bash
@@ -68,7 +87,7 @@ cd <repo>
 git add <file>
 git commit -m "fix(workflow): <what was wrong and what was fixed>
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 

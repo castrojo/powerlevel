@@ -9,6 +9,16 @@ Announce: "Using loop-end to close the loop."
 
 ## Stage 0: Orient and declare
 
+**Primary (MCP):**
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Parse `phase` and `goal` from the JSON response.
+
+**Fallback (file):**
+
 ```bash
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
@@ -28,7 +38,20 @@ Pipeline: <all phases ▓> | All phases complete
 
 ### Step 1: Read improvements
 
+**Primary (psql):** There is no `get_run_history` MCP tool. Query `run_history` directly:
+
 ```bash
+podman exec $(podman ps --filter name=opencode-state-db -q) psql -U workflow -d workflow_state \
+  -c "SELECT findings FROM run_history WHERE repo='<REPO>' ORDER BY created_at" \
+  | grep '\[GAP\]'
+```
+
+Any line with `[GAP]` prefix is a workflow improvement candidate.
+
+**Fallback (file):**
+
+```bash
+grep '\[GAP\]' ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
@@ -81,9 +104,21 @@ Every item is required. Do not declare loop complete until all are checked.
 ### Checklist
 
 **[ ] Plan file has run blocks for all N runs**
+
+**Primary (MCP):** Export the plan and write to the plan file:
+
+```
+export_plan(repo: "<REPO>", plan_id: "<plan_id>")
+```
+
+Write the returned markdown to `~/.config/opencode/plans/<REPO>/<active-plan-file>.md`. This replaces the run count check — the export includes all tasks with their status and notes, which serves as the permanent record.
+
+**Fallback (file):**
+
 ```bash
 grep "^## Run " ~/.config/opencode/plans/<REPO>/<active-plan-file>.md | wc -l
 ```
+
 Count must equal N (the run count set at loop-start).
 If any run blocks are missing: append them now from session context before proceeding.
 
@@ -102,6 +137,16 @@ If no findings block exists: append one now:
 
 First, detect loop type:
 
+**Primary (MCP):** Check run_history for loop-skill keywords in findings/summaries:
+
+```bash
+podman exec $(podman ps --filter name=opencode-state-db -q) \
+  psql -U workflow -d workflow_state \
+  -c "SELECT COUNT(*) FROM run_history WHERE repo='<REPO>' AND (summary ILIKE '%loop%' OR summary ILIKE '%skill%' OR findings ILIKE '%loop%');"
+```
+
+**Fallback (file):**
+
 ```bash
 # Check if this was a workflow-improvement or loop-session run
 grep -l "workflow-improvement-loop\|loop-session\|loop-task\|loop-gate\|loop-start\|loop-end" \
@@ -114,13 +159,17 @@ grep -l "workflow-improvement-loop\|loop-session\|loop-task\|loop-gate\|loop-sta
 [ BYPRODUCT CHECK ] Auto-pass: workflow improvement loop — skill edits are the work.
 ```
 
-**If count = 0 (project work):** run the original check:
+**If count = 0 (project work):** check DB for recent skill_sections updates:
+
+**Primary (MCP):**
 
 ```bash
-git -C ~/.config/opencode diff --name-only HEAD 2>/dev/null | grep "skills/personal"
+podman exec $(podman ps --filter name=opencode-state-db -q) \
+  psql -U workflow -d workflow_state \
+  -c "SELECT skill, MAX(updated_at) FROM skill_sections WHERE updated_at > NOW() - INTERVAL '24 hours' GROUP BY skill ORDER BY MAX(updated_at) DESC;"
 ```
 
-If output is empty AND the loop produced non-trivial work: surface this:
+If output is empty AND the loop produced non-trivial work: surface this via the question tool.
 
 Use the question tool:
 ```
@@ -154,9 +203,16 @@ git -C ~/src/powerlevel status --short
 ```
 Must be clean if a backport occurred.
 
-**[ ] loop-state.md reset to clean template**
+**[ ] loop state reset to clean template**
 
-Write the clean template state back:
+**Primary (MCP):**
+
+```
+set_loop_state(repo: "<REPO>", phase: "", run: "0/0", goal: "")
+```
+
+**Fallback (file):**
+
 ```bash
 cp ~/.config/opencode/loop-state-template.md ~/.config/opencode/plans/<REPO>/loop-state.md
 ```

@@ -9,14 +9,24 @@ Announce: "Using loop-gate to confirm phase transition."
 
 ## Step 1: Read current state
 
+**Primary (MCP):**
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Parse the JSON response:
+- `phase` → `<name> <current>/<total>` → current_phase_name, N (current), total_phases
+- `run` → `<X>/<Y>` → X, Y
+- `goal` → loop goal text
+
+**Fallback (file):**
+
 ```bash
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
-Parse:
-- `phase: <name> <current>/<total>` → current_phase_name, N (current), total_phases
-- `run: <X>/<Y>` → X, Y
-- `goal: <text>` → loop goal
+Parse `phase:`, `run:`, `goal:` from the file.
 
 Show current position:
 ```
@@ -31,13 +41,44 @@ Pipeline: <pipeline_bar> <current_phase_name> <N>/<total_phases> | Phase runs: <
 
 List what was accomplished this phase:
 - Runs completed: X/Y
-- Systemic improvements found: (count items under ## Improvements)
+- Systemic improvements found: count `[GAP]`-prefixed findings in run_history for this phase (visible in `get_session_context` latest run summary; full count requires direct DB query)
 
 ---
 
 ## Step 3: Scan AGENTS.md for conflicts — MANDATORY
 
 This step catches stale references, retired tool names, and broken cross-references that accumulate over time.
+
+**Primary (MCP):** Use `search_rules` to detect stale content — do NOT grep the file:
+
+```
+search_rules(query: "capture-loop", domain: "loop")
+```
+If results return: flag as `STALE: capture-loop reference found`
+
+```
+search_rules(query: "devaipod loop capture loop batch-append")
+```
+If results return: flag as `STALE: old loop terminology found`
+
+```
+# Check trigger table skill files exist — query DB for all known skills
+```
+
+**Primary (MCP):** Get the full skill list from the DB:
+
+```bash
+podman exec $(podman ps --filter name=opencode-state-db -q) \
+  psql -U workflow -d workflow_state -c \
+  "SELECT DISTINCT skill FROM skill_sections ORDER BY skill;" \
+  | tail -n +3 | head -n -2 | while read skill; do
+    path="$HOME/.config/opencode/skills/personal/${skill}/SKILL.md"
+    [ ! -f "$path" ] && echo "MISSING skill file: $path"
+  done
+echo "skill check complete"
+```
+
+**Fallback (file):** If MCP unavailable:
 
 ```bash
 # Check for retired skill references
@@ -59,7 +100,7 @@ echo "AGENTS.md scan complete"
 question: "AGENTS.md conflict: '<conflict description>'. Fix now or park as systemic improvement?"
 options:
   - "Fix now" → invoke improve-workflow immediately
-  - "Park it — add to Systemic improvements" → echo "- [ ] <gap>" >> loop-state.md
+  - "Park it — add to Systemic improvements" → record via `append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] <gap description>", phase: "<current_phase_name>")` (run_num 0 = gate-level finding)
 ```
 
 **If no conflicts:** note "AGENTS.md clean" and continue.
@@ -94,7 +135,15 @@ echo "- [ ] CI parity: local uses <LOCAL_IMAGE>, CI uses <CI_IMAGE> — align th
 
 ## Step 5: Process systemic improvements
 
-Read ## Improvements from loop-state.md.
+**Primary (MCP):** Query run_history for `[GAP]`-prefixed findings across all runs this phase:
+
+```bash
+podman exec $(podman ps --filter name=opencode-state-db -q) \
+  psql -U workflow -d workflow_state \
+  -c "SELECT run_num, findings FROM run_history WHERE repo='<REPO>' AND findings LIKE '%[GAP]%' ORDER BY run_num;"
+```
+
+**Fallback (file):** Read `## Improvements` from `~/.config/opencode/plans/<REPO>/loop-state.md`.
 
 For each item listed:
 1. Present it to the user
@@ -143,7 +192,20 @@ Do not advance without explicit "Yes".
 
 ## Step 8: Advance phase
 
-Update loop-state.md — change `phase:` to the next phase name and reset `run:`:
+**Primary (MCP):** Update DB state — advance phase name and reset run count:
+
+```
+set_loop_state(
+  repo: "<REPO>",
+  phase: "<next_phase_name> <N+1>/<total_phases>",
+  run: "0/<Y>",
+  goal: "<goal>"
+)
+```
+
+Ask user for Y (run count for next phase) if unknown.
+
+**Fallback (file):** Update `loop-state.md` — change `phase:` to the next phase name and reset `run:`:
 
 ```
 phase: <next_phase_name> <N+1>/<total_phases>

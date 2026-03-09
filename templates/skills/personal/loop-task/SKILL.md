@@ -1,6 +1,6 @@
 ---
 name: loop-task
-description: Use to execute one loop iteration — dispatches a subagent to do the work, appends run summary to plan, updates loop-state.md, and parks workflow improvements for later
+description: Use to execute one loop iteration — dispatches a subagent to do the work, records run summary via MCP, updates DB state, and parks workflow improvements for later
 ---
 
 Announce: "Using loop-task for Run X of N."
@@ -9,15 +9,25 @@ Announce: "Using loop-task for Run X of N."
 
 ## Step 1: Show position and orient
 
-Read current state from loop-state.md:
+**Primary:** Call the workflow-state MCP tool:
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Parse the JSON response:
+- `phase` → `<name> <current>/<total>`
+- `run` → `<X>/<N>` (X = runs done, this run is X+1)
+- `goal` → loop goal text
+- `pending_tasks` → pending task count
+
+**Fallback** (if MCP unavailable):
+
 ```bash
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
-Parse:
-- `phase: <name> <current>/<total>` → name, current phase number, total phases
-- `run: <X>/<N>` → X (runs done), N (total runs this phase). This run is X+1.
-- `goal: <text>` → loop goal
+Parse `phase:`, `run:`, `goal:` from the file.
 
 **Show progress at the start of every response (before any work):**
 
@@ -42,8 +52,9 @@ Next: implement feed parser
 ## Step 2: Determine task and dispatch subagent
 
 Identify the task for this run from:
-1. The active plan file (find latest: `ls ~/.config/opencode/plans/<REPO>/ | grep -vE "loop-state|project-notes" | sort | tail -1`)
-2. The user's instruction for this run if no plan exists
+1. **Primary (MCP):** If `plan_id` is known, call `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — take the lowest `task_num` result as the next task.
+2. **Fallback:** Find the active plan file: `ls ~/.config/opencode/plans/<REPO>/ | grep -vE "loop-state|project-notes" | sort | tail -1`
+3. The user's instruction for this run if no plan exists
 
 **Dispatch via Task tool** (subagent type: `general`):
 
@@ -62,7 +73,33 @@ Working directory: ~/src/<REPO>
 ## Your task
 <specific instructions — what to build, what files to change, what commands to run>
 
-## On completion, append this block to ~/.config/opencode/plans/<REPO>/<plan-file>.md:
+## On completion, record the run summary via MCP (primary):
+
+  append_run_summary(
+    repo: "<REPO>",
+    run_num: <X+1>,
+    summary: "<one-paragraph outcome summary>",
+    findings: "<bullet-point observations, or empty>",
+    plan_id: "<plan_id if applicable>",
+    phase: "<phase name>"
+  )
+
+  update_task_status(
+    repo: "<REPO>",
+    plan_id: "<plan_id>",
+    task_num: <N>,
+    status: "done",
+    notes: "<completion notes or empty>"
+  )
+
+  set_loop_state(
+    repo: "<REPO>",
+    phase: "<phase>",
+    run: "<X+1>/<N>",
+    goal: "<goal>"
+  )
+
+## Fallback (if MCP unavailable): append this block to ~/.config/opencode/plans/<REPO>/<plan-file>.md:
 
 ### Run <X+1> — <YYYY-MM-DD>
 - What ran: <what you did>
@@ -72,7 +109,7 @@ Working directory: ~/src/<REPO>
 - KNOWN ISSUES:
   - [ ] <specific issue to fix next run>
 
-## Then update ~/.config/opencode/plans/<REPO>/loop-state.md:
+## And update ~/.config/opencode/plans/<REPO>/loop-state.md:
 Change `run: <X>/<N>` to `run: <X+1>/<N>`
 
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
@@ -88,9 +125,24 @@ Wait for the subagent to return before proceeding.
 
 ---
 
-## Step 3: Verify plan append and loop-state update
+## Step 3: Verify run recorded and loop state updated
 
 After the subagent returns:
+
+**Primary (MCP):**
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, call the MCP tools now:
+
+```
+set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>")
+append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>")
+```
+
+**Fallback (file):**
 
 ```bash
 tail -8 ~/.config/opencode/plans/<REPO>/<plan-file>.md
@@ -107,7 +159,14 @@ If a workflow gap or AGENTS.md correction surfaces:
 
 **DO NOT invoke improve-workflow.** It is banned mid-run.
 
-Append under ## Improvements in loop-state.md:
+**Primary (MCP):** Note in the `findings` parameter of `append_run_summary` with prefix `[GAP]`:
+
+```
+findings: "[GAP] <gap description>"
+```
+
+**Fallback (file):** Append under ## Improvements in loop-state.md:
+
 ```bash
 echo "- [ ] <gap description>" >> ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
