@@ -28,24 +28,13 @@ cd ~/.config/opencode && git pull
 
 ## Step 1: Determine work type
 
-**In autonomous mode:** auto-detect from DB state:
+Auto-detect from DB state and user's opening message:
 - `get_session_context` returned non-empty `phase` → route to "Resume active loop" → invoke loop-start
 - User's opening message contains "project", "feature", "fix", "build", "ship" → route to `project-loop`
 - User's opening message contains "workflow", "audit", "skill", "improve", "template" → route to `workflow-improvement-loop`
 - Default → `workflow-improvement-loop`
 
 Announce: "Auto-detected: invoking <skill>." Do not use the question tool.
-
-**In interactive mode:** use the question tool:
-
-```
-question: "What are we looping over today?"
-options:
-  - "Workflow improvement — audit/fix skills, AGENTS.md, templates" → invoke workflow-improvement-loop
-  - "Project work — build, test, ship a feature or fix in a repo" → invoke project-loop
-  - "Resume active loop — active loop in DB" → invoke loop-start (resume path)
-  - "Workflow critique + improvement — systematic audit of the current design against a vision" → invoke workflow-improvement-loop (audit phases)
-```
 
 ---
 
@@ -74,16 +63,7 @@ Do NOT use `cat`, `ls`, or any file read on loop-state.md or plan files — DB t
 | Project feature/fix | `project-loop` | "Implement RSS feed in firehose" |
 | Resume active loop | `loop-start` | (read from get_session_context goal field) |
 
-**In autonomous mode:** skip confirmation. Invoke the entry skill immediately. Announce: "Routing to <entry_skill> with goal: '<goal>'."
-
-**In interactive mode:** confirm the loop goal with the user before invoking the entry skill. Use the question tool:
-```
-question: "Loop goal confirmed: '<goal>'. Start the <entry_skill> now?"
-options:
-  - "Yes — launch <entry_skill>"
-  - "Refine the goal first"
-  - "Stop here — I'll start the loop manually"
-```
+Skip confirmation. Invoke the entry skill immediately. Announce: "Routing to <entry_skill> with goal: '<goal>'."
 
 ---
 

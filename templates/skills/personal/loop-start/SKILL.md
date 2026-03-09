@@ -49,16 +49,7 @@ Parse the JSON response:
 
 ## Step 2b: Resume path
 
-**In autonomous mode (MODE=autonomous):** auto-resume. Output the resume block and skip to Step 4.
-
-**In interactive mode:** use the question tool:
-
-```
-question: "Loop in progress for <REPO>: '<goal>' (<phase>, Run <run>). Resume or restart?"
-options:
-  - "Resume — continue from <phase>, Run <X>/<Y>" → skip to Step 4
-  - "Restart — archive state and start fresh" → MCP path: state will be overwritten in Step 6 — no file to rename, go to Step 3.
-```
+Auto-resume. Output the resume block and skip to Step 4.
 
 ---
 
