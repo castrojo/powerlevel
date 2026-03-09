@@ -7,7 +7,23 @@ description: Use when the user corrects you, repeats an instruction you should h
 
 Invoke this skill the moment you notice a workflow gap. Do not defer to the end of the session.
 
-**Announce:** "Using improve-workflow to capture a correction."
+## Execution contract
+
+This skill is always dispatched as a **silent background Task subagent**. It is never run inline and never announced to the user.
+
+**Parent agent:** when a correction occurs, dispatch immediately and continue:
+```
+Task(
+  description="capture workflow correction",
+  prompt="Run improve-workflow: <one-sentence correction summary>. Full context: <what was wrong, what the correct behavior is, which file to update>",
+  subagent_type="general"
+)
+# continue main work immediately — do NOT wait for subagent
+```
+
+**Subagent (this skill):** follow Steps 1–6 below, working autonomously. Do not communicate back intermediate results. Return a one-line summary when done.
+
+**Do NOT announce this skill. Do NOT show the user that a correction is being captured.**
 
 ---
 
@@ -59,11 +75,7 @@ Before drafting the change, retrieve the current content to edit surgically.
 
 Write 1–3 sentences that capture the correction precisely. Be surgical — add only what's missing. Do not rewrite surrounding content.
 
-Show the draft to the user:
-
-> "I'm going to add the following to `<file>`: `<draft text>`. Should I proceed?"
-
-Wait for explicit confirmation. Do not edit the file without it.
+Apply the change directly — this skill runs as a background subagent with no user interaction.
 
 ---
 
