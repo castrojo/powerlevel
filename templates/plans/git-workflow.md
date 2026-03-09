@@ -10,8 +10,8 @@ Apply this to every repo before starting work.
 Every repo must have exactly this layout:
 
 ```
-origin    → castrojo/<repo>   (your fork — push here only)
-upstream  → <org>/<repo>      (upstream — fetch only, NEVER push)
+origin    → YOUR_USERNAME/<repo>   (your fork — push here only)
+upstream  → <org>/<repo>           (upstream — fetch only, NEVER push)
 ```
 
 Verify with:
@@ -30,7 +30,7 @@ Always clone your fork first, then add upstream:
 
 ```bash
 # 1. Clone your fork
-git clone git@github.com:castrojo/<repo>.git
+git clone git@github.com:YOUR_USERNAME/<repo>.git
 cd <repo>
 
 # 2. Add upstream
@@ -38,8 +38,8 @@ git remote add upstream git@github.com:<upstream-org>/<repo>.git
 
 # 3. Verify
 git remote -v
-# origin    git@github.com:castrojo/<repo>.git (fetch)
-# origin    git@github.com:castrojo/<repo>.git (push)
+# origin    git@github.com:YOUR_USERNAME/<repo>.git (fetch)
+# origin    git@github.com:YOUR_USERNAME/<repo>.git (push)
 # upstream  git@github.com:<upstream-org>/<repo>.git (fetch)
 # upstream  git@github.com:<upstream-org>/<repo>.git (push)
 
@@ -62,12 +62,12 @@ If a repo has wrong remote names (e.g. both pointing to upstream, fork named som
 # Identify what you have
 git remote -v
 
-# Rename your fork remote to origin (if it's named something else, e.g. castrojo)
-git remote rename castrojo origin
+# Rename your fork remote to origin (if it's named something else, e.g. YOUR_USERNAME)
+git remote rename YOUR_USERNAME origin
 
 # If origin currently points to upstream, rename it first
 git remote rename origin upstream-old
-git remote add origin git@github.com:castrojo/<repo>.git
+git remote add origin git@github.com:YOUR_USERNAME/<repo>.git
 git remote set-url upstream git@github.com:<upstream-org>/<repo>.git
 git remote remove upstream-old
 

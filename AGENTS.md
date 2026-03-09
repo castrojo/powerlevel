@@ -8,7 +8,7 @@ This repo sets up a structured OpenCode workflow. When a user points you here, f
 
 The author uses Claude but uses Gemini as a review model with its own guidelines. When instructed to **"go through Gemini's recommendations"**, look in `~/.config/opencode/plans/powerlevel/` for recent architectural guidance and plans. These files take absolute precedence over default behaviors.
 
-Note: `templates/plans/` seeds one reference doc (`git-workflow.md`) into the user's private `opencode-config` repo. Personal per-project plans are not committed here — they live only in the user's private `opencode-config` repo.
+Note: `templates/plans/git-workflow.md` is seeded into `~/.config/opencode/plans/` as part of the full `templates/` copy that setup.sh performs. `YOUR_USERNAME` placeholders in the file are substituted with the actual GitHub username during setup. Personal per-project plans are not committed here — they live only in the user's private `opencode-config` repo.
 
 ---
 
