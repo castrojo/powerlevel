@@ -54,3 +54,11 @@ CREATE TABLE IF NOT EXISTS run_history (
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS run_history_repo_idx ON run_history (repo, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS ui_panels (
+    panel_id    TEXT PRIMARY KEY,
+    title       TEXT NOT NULL,
+    content     TEXT NOT NULL,
+    sort_order  INT  NOT NULL DEFAULT 0,
+    updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
