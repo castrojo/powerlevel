@@ -112,6 +112,7 @@ Then use the question tool to ask what to do next:
 question: "Phase <N+1> ready. Start Phase <N+1> Run 1 now?"
 options:
   - "Yes — start Phase <N+1> Run 1 now" → invoke loop-task immediately
+  - "Skip — already done / not needed" → mark phase complete, advance without running loop-task
   - "Stop here — I'll continue later" → stop
 ```
 
@@ -120,5 +121,6 @@ options:
 question: "Final phase ready. Run loop-end now?"
 options:
   - "Yes — run loop-end now" → invoke loop-end immediately
+  - "Skip — already done / not needed" → mark complete, no loop-end needed
   - "Stop here — I'll run loop-end later" → stop
 ```
