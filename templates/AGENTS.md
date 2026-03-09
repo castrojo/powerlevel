@@ -79,6 +79,21 @@ Plans live in `~/.config/opencode/plans/<repo-name>/` — never inside git repos
 
 ---
 
+## Justfile Convention
+
+Every project must have a `Justfile` with at minimum:
+
+- `just build` — full build pipeline (must work clean, no pre-installed deps assumed)
+- `just serve` — start server and open browser
+
+Key rules:
+- `set shell := ["bash", "-euo", "pipefail", "-c"]` at the top
+- `just serve` pattern: `xdg-open <url> & sleep 1 && <server-cmd>` — all on one line
+- Never proxy raw tool commands in docs — always use `just`
+- `just build` must run `npm install` / equivalent as first step
+
+---
+
 ## Commit Convention
 
 ```
