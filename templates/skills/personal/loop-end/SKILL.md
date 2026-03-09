@@ -30,15 +30,13 @@ Pipeline: <all phases ▓> | All phases complete
 
 ### Step 1: Read improvements
 
-**Primary (psql):** There is no `get_run_history` MCP tool. Query `run_history` directly:
+**Primary (MCP):**
 
-```bash
-podman exec $(podman ps --filter name=opencode-state-db -q) psql -U workflow -d workflow_state \
-  -c "SELECT findings FROM run_history WHERE repo='<REPO>' ORDER BY created_at" \
-  | grep '\[GAP\]'
+```
+get_run_history(repo: "<REPO>", findings_only: true)
 ```
 
-Any line with `[GAP]` prefix is a workflow improvement candidate.
+Any returned finding with `[GAP]` prefix is a workflow improvement candidate.
 
 If no items: skip to Stage 2.
 
@@ -111,23 +109,17 @@ If no findings block exists: append one now:
 
 First, detect loop type:
 
-**Primary (MCP):** Check run_history for loop-skill keywords in findings/summaries:
+**Primary:** Check the `goal` field from `get_session_context` (already in-context from Stage 0). If `goal` contains any of: `workflow`, `loop`, `skill`, `audit` — this is a workflow improvement loop. Auto-pass this check. No DB query needed.
 
-```bash
-podman exec $(podman ps --filter name=opencode-state-db -q) \
-  psql -U workflow -d workflow_state \
-  -c "SELECT COUNT(*) FROM run_history WHERE repo='<REPO>' AND (summary ILIKE '%loop%' OR summary ILIKE '%skill%' OR findings ILIKE '%loop%');"
+**Fallback** (if goal is ambiguous):
+
+```
+get_session_context(repo: "<REPO>")
 ```
 
-**Fallback (file):**
+Check `latest_run_summary` for keywords: "loop", "skill", "workflow". If found, auto-pass.
 
-```bash
-# Check if this was a workflow-improvement or loop-session run
-grep -l "workflow-improvement-loop\|loop-session\|loop-task\|loop-gate\|loop-start\|loop-end" \
-  ~/.config/opencode/plans/<REPO>/<active-plan-file>.md 2>/dev/null | wc -l
-```
-
-**If count > 0 (plan references loop/workflow skills):** this is a workflow improvement loop — the work itself IS skill edits. Auto-pass this check. Show:
+**If auto-pass:** Show:
 
 ```
 [ BYPRODUCT CHECK ] Auto-pass: workflow improvement loop — skill edits are the work.
@@ -135,13 +127,13 @@ grep -l "workflow-improvement-loop\|loop-session\|loop-task\|loop-gate\|loop-sta
 
 **If count = 0 (project work):** check DB for recent skill_sections updates:
 
-**Primary (MCP):**
+**Primary (MCP):** Use `list_skills()` to get all skills, then use `search_skill` to spot-check recently active ones:
 
-```bash
-podman exec $(podman ps --filter name=opencode-state-db -q) \
-  psql -U workflow -d workflow_state \
-  -c "SELECT skill, MAX(updated_at) FROM skill_sections WHERE updated_at > NOW() - INTERVAL '24 hours' GROUP BY skill ORDER BY MAX(updated_at) DESC;"
 ```
+list_skills()
+```
+
+If the list includes any skill that was modified this session (you'll know from earlier steps), auto-pass. If uncertain, use the question tool below regardless.
 
 If output is empty AND the loop produced non-trivial work: surface this via the question tool.
 

@@ -43,6 +43,8 @@ Next: implement feed parser
 
 ## Step 2: Determine task and dispatch subagent
 
+**Batching note:** `get_plan_tasks` has no dependency on `get_session_context` — if you have a plan_id, you can fire both calls in parallel during Step 1 to save a round-trip. The `plan_id` is typically known from loop-start context.
+
 Identify the task for this run from:
 1. `workflow-state_get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — claim the next pending task
 2. The user's instruction for this run if no plan exists

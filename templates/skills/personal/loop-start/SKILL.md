@@ -55,7 +55,7 @@ Use the question tool:
 question: "Loop in progress for <REPO>: '<goal>' (<phase>, Run <run>). Resume or restart?"
 options:
   - "Resume — continue from <phase>, Run <X>/<Y>" → skip to Step 4
-  - "Restart — archive state and start fresh" → MCP path: state will be overwritten in Step 6 — no file to rename, go to Step 3. Fallback: rename loop-state.md to loop-state-<YYYYMMDD>.md, go to Step 3.
+  - "Restart — archive state and start fresh" → MCP path: state will be overwritten in Step 6 — no file to rename, go to Step 3.
 ```
 
 ---

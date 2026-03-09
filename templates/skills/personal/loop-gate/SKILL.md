@@ -59,15 +59,16 @@ If results return: flag as `STALE: old loop terminology found`
 
 **Primary (MCP):** Get the full skill list from the DB:
 
+```
+list_skills()
+```
+
+For each skill returned, verify `~/.config/opencode/skills/personal/<skill>/SKILL.md` exists:
 ```bash
-podman exec $(podman ps --filter name=opencode-state-db -q) \
-  psql -U workflow -d workflow_state -c \
-  "SELECT DISTINCT skill FROM skill_sections ORDER BY skill;" \
-  | tail -n +3 | head -n -2 | while read skill; do
-    path="$HOME/.config/opencode/skills/personal/${skill}/SKILL.md"
-    [ ! -f "$path" ] && echo "MISSING skill file: $path"
-  done
-echo "skill check complete"
+# Only use bash for file existence check — not for DB queries
+for skill in <list from list_skills>; do
+  [ ! -f "$HOME/.config/opencode/skills/personal/${skill}/SKILL.md" ] && echo "MISSING: $skill"
+done
 ```
 
 Use `workflow-state_search_rules` to check for stale terminology:
@@ -127,10 +128,8 @@ append_run_summary(
 
 **Primary (MCP):** Query run_history for `[GAP]`-prefixed findings across all runs this phase:
 
-```bash
-podman exec $(podman ps --filter name=opencode-state-db -q) \
-  psql -U workflow -d workflow_state \
-  -c "SELECT run_num, findings FROM run_history WHERE repo='<REPO>' AND findings LIKE '%[GAP]%' ORDER BY run_num;"
+```
+get_run_history(repo: "<REPO>", phase: "<current_phase_name>", findings_only: true)
 ```
 
 For each item listed:
