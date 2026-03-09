@@ -11,26 +11,59 @@ Run this at the beginning of every session, before any other action. Takes under
 
 ---
 
-## Step 0: Check for active loop
+## Step 0: Verify workflow-state MCP and check for active loop
 
 Identify repo name (may be done as part of Step 1 — run early if needed):
 ```bash
 REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo "")
 ```
 
-If in a git repo, check for loop state:
+### MCP health check
+
+Run both checks in parallel:
+
+```bash
+systemctl --user is-active opencode-state-db 2>&1
+ls ~/.config/opencode/mcp/state/opencode-state-mcp 2>/dev/null && echo "binary: ok" || echo "binary: MISSING"
+```
+
+**If quadlet is not `active`:**
+> "workflow-state DB is not running. Fix: `systemctl --user start opencode-state-db`"
+> Include in Step 5 report. Do not block the session.
+
+**If binary is MISSING:**
+> "workflow-state binary missing (expected after clean clone or machine reprovision)."
+> "Fix: `cd ~/.config/opencode/mcp/state && go build -o opencode-state-mcp .`"
+> Include in Step 5 report. Do not block the session.
+
+**If both are healthy:** proceed silently — no mention in the report.
+
+### Active loop check
+
+**Primary (MCP)** — only if binary is healthy:
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Parse `phase` field from the JSON response.
+
+**Fallback** (if MCP unavailable or binary missing):
+
 ```bash
 cat ~/.config/opencode/plans/${REPO}/loop-state.md 2>/dev/null || echo "NO_STATE"
 ```
 
-If file exists AND `phase:` is set (not the template placeholder): output this block at the TOP of the Step 5 report:
+Parse `phase:` field from the file.
+
+If `phase` is non-empty and not the template placeholder: output this block at the TOP of the Step 5 report:
 
 ```
 Goal: <goal>
 [ LOOP ACTIVE ] <REPO> • <phase> • Run <run> • Next: loop-task
 ```
 
-If file missing or `phase:` contains the template placeholder text: output nothing. Do not mention loops in the report if no loop is active.
+If `phase` is empty or the template placeholder: output nothing. Do not mention loops in the report if no loop is active.
 
 ---
 
@@ -149,7 +182,7 @@ git worktree list
 
 and the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
 
-**If an active plan was found AND no loop is active (active_phase is 0 or loop-state.md is missing):** add this to the Step 5 report:
+**If an active plan was found AND no loop is active (phase is empty in `get_session_context`):** add this to the Step 5 report:
 
 > "Active plan found with no loop running. Say **'start a loop'** to begin a loop-start session for this plan."
 

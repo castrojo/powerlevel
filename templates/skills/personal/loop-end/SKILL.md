@@ -1,6 +1,6 @@
 ---
 name: loop-end
-description: Use to close a completed loop — backport approved improvements to powerlevel, run state integrity checklist, reset loop-state.md so the next loop on any machine starts cleanly
+description: Use to close a completed loop — backport approved improvements to powerlevel, run state integrity checklist, reset loop state in DB so the next loop on any machine starts cleanly
 ---
 
 Announce: "Using loop-end to close the loop."
@@ -241,8 +241,6 @@ Tell the user what was accomplished:
 
 ## Why the checklist is strict
 
-If loop-state.md is not reset to the clean template, the next session-start (possibly on a different machine) will show "[ LOOP ACTIVE ]" with stale state.
-
-Push (not just commit) is mandatory because loop-state.md lives in opencode-config for cross-machine sync. A local-only commit defeats the purpose.
+If loop state is not reset to empty values in the DB, the next session-start (possibly on a different machine) will show "[ LOOP ACTIVE ]" with stale state. The `set_loop_state` call with empty phase/run/goal is the authoritative reset.
 
 The skills-as-byproduct check prevents the common failure mode of completing work without capturing the knowledge gained. Every loop must leave a better skill behind — that is what makes the next loop faster.

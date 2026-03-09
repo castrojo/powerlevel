@@ -124,9 +124,15 @@ echo "CI: $CI_IMAGE"
 
 **If devcontainer is missing:** note it (do not block gate — some repos intentionally lack devcontainer).
 
-**If images differ:** surface as a systemic improvement:
-```bash
-echo "- [ ] CI parity: local uses <LOCAL_IMAGE>, CI uses <CI_IMAGE> — align them" >> ~/.config/opencode/plans/<REPO>/loop-state.md
+**If images differ:** surface as a systemic improvement via MCP:
+
+```
+append_run_summary(
+  repo: "<REPO>",
+  run_num: 0,
+  findings: "[GAP] CI parity: local uses <LOCAL_IMAGE>, CI uses <CI_IMAGE> — align them",
+  phase: "<current_phase_name>"
+)
 ```
 
 **If images match or are compatible:** note "CI parity OK" and continue.

@@ -46,14 +46,17 @@ Read `~/src/powerlevel/templates/AGENTS.md` (same table).
 For each row: verify the skill file exists and the description matches what the skill actually does.
 Flag: missing files, stale descriptions, skills that exist but aren't in the table.
 
-### Step 3: Check loop-state-template.md schema
+### Step 3: Verify loop state schema
+
+**Primary (MCP):** Call `get_session_context(repo: "<REPO>")` and confirm the response contains `phase`, `run`, and `goal` fields. If the call fails or returns an error, add a `[GAP]`: "workflow-state MCP unavailable — schema cannot be verified".
+
+**Fallback only (if MCP unavailable):**
 
 ```bash
 cat ~/.config/opencode/loop-state-template.md
 ```
 
-Verify required fields are present: `phase`, `run`, `goal`.
-Also verify the `## Improvements` section exists.
+Verify required fields are present: `phase`, `run`, `goal`. Also verify the `## Improvements` section exists.
 
 ### Step 4: Parallel subagent audit (optional, for large audits)
 
@@ -95,16 +98,16 @@ Each run targets one of:
 ### Per-run discipline (via loop-task)
 
 1. Execute the fix
-2. Append run summary to active plan file (BLOCKING — per loop-task Step 3)
+2. Record run summary via MCP: `append_run_summary(repo, run_num, summary, findings, phase)`
 3. If notable discovery: invoke `capture-discovery`
-4. Update loop-state.md (loop-task Step 4)
+4. Update DB state via MCP: `set_loop_state(repo, phase, run, goal)`
 5. Report via question tool (loop-task Step 6)
 
 ### Banned in Phase 2
 
-- `improve-workflow` calls mid-run — park under ## Systemic improvements in loop-state.md
-- Fixing more than one component per run — one run, one component, one plan append
-- Skipping the plan-file append — it IS the run record
+- `improve-workflow` calls mid-run — park via `append_run_summary(findings: '[GAP] <description>', run_num: 0, phase: "<current_phase_name>")`
+- Fixing more than one component per run — one run, one component, one `append_run_summary`
+- Skipping the `append_run_summary` call — it IS the run record
 
 **End of Phase 2.** Use `loop-gate` to advance to Phase 3.
 
@@ -162,7 +165,7 @@ Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
-**End of Phase 3.** Invoke `loop-end` to run the state integrity checklist and reset loop-state.md.
+**End of Phase 3.** Invoke `loop-end` to run the state integrity checklist and reset loop state in DB.
 
 ---
 
@@ -181,10 +184,9 @@ This is the "evolving prompt" property: each use produces a better skill for the
 
 ## Cross-machine note
 
-`loop-state.md` lives in `~/.config/opencode/plans/<repo>/` and syncs via `opencode-config`.
-Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
+Loop state lives in the workflow-state DB. `get_session_context` returns current state in a single round-trip. Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
 ```
 Goal: Audit and improve workflow skills
 Pipeline: ▓▓░ fix 2/3 | Phase runs: ▓░░ 1/3
 ```
-No context is lost between machines as long as `session-start` runs `cd ~/.config/opencode && git pull` first.
+No context is lost between machines as long as the DB is running (`systemctl --user is-active opencode-state-db`).
