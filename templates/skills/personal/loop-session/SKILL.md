@@ -103,5 +103,5 @@ This skill IS the evolving prompt. When the design changes:
 
 1. **Edit this file in place** — rewrite the relevant section to reflect the best current design. Never append amendments. Never log what changed. The skill always reads as if it was written for the current design.
 2. **Do not keep a changelog** — the git log of opencode-config is the history. The skill is the current truth.
-3. **After editing**: copy to `~/src/powerlevel/templates/skills/personal/loop-session/SKILL.md` if the change is generic (no castrojo-specific content).
+3. **After editing**: copy to `~/src/powerlevel/templates/skills/personal/loop-session/SKILL.md` if the change is generic (no personal-specific content).
 4. **When to trigger a rewrite**: at the end of every loop-session, answer: "Did routing work? Was any step wrong? Did a design invariant need updating?" — if yes, fix inline before loop-end.

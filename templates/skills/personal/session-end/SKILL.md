@@ -1,6 +1,6 @@
 ---
 name: session-end
-description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to castrojo/opencode-config, and runs worktree hygiene in repos worked in during the session.
+description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to YOUR_USERNAME/opencode-config, and runs worktree hygiene in repos worked in during the session.
 ---
 
 # Session End

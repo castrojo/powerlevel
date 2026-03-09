@@ -32,10 +32,10 @@ For each skill, classify:
 | Skill | In personal | In templates | Should be in templates? |
 |---|---|---|---|
 
-A skill belongs in powerlevel templates if it is **generic** — useful to any user who bootstraps from powerlevel, with no castrojo-specific references (no Bluefin, no specific repo names, no personal usernames).
+A skill belongs in powerlevel templates if it is **generic** — useful to any user who bootstraps from powerlevel, with no personal-specific references (no personal usernames, no specific personal repo names, no personal ecosystem names).
 
 Flag any skill in templates that:
-- References castrojo, Bluefin, bluefin-lts, ublue-os, projectbluefin, or any personal repo
+- References personal usernames, personal repo names, or personal ecosystem-specific content
 - Contains hardcoded paths specific to the author's machine
 
 ### Step 2: Audit the trigger table

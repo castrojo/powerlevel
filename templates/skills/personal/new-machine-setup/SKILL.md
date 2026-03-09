@@ -64,7 +64,7 @@ gh auth login --git-protocol ssh
 Verify existing key:
 ```bash
 ssh -T git@github.com
-# Expected: "Hi castrojo! You've successfully authenticated..."
+# Expected: "Hi YOUR_USERNAME! You've successfully authenticated..."
 # NOTE: ssh -T always exits 1 even on success (GitHub has no shell).
 #       Exit code 1 here is correct. The message above is what matters.
 ```
@@ -93,15 +93,15 @@ rm -rf ~/.config/opencode
 
 Clone:
 ```bash
-git clone git@github.com:castrojo/opencode-config.git ~/.config/opencode
+git clone git@github.com:YOUR_USERNAME/opencode-config.git ~/.config/opencode
 ```
 
 Verify remotes:
 ```bash
 git -C ~/.config/opencode remote -v
 # Expected:
-# origin  git@github.com:castrojo/opencode-config.git (fetch)
-# origin  git@github.com:castrojo/opencode-config.git (push)
+# origin  git@github.com:YOUR_USERNAME/opencode-config.git (fetch)
+# origin  git@github.com:YOUR_USERNAME/opencode-config.git (push)
 ```
 
 Verify:
@@ -152,7 +152,7 @@ This step is idempotent — safe to re-run. If `~/.config/git/ignore` already ex
 Clone from the personal fork — this carries workflow improvements on top of upstream:
 
 ```bash
-git clone git@github.com:castrojo/superpowers.git ~/.config/opencode/superpowers
+git clone git@github.com:YOUR_USERNAME/superpowers.git ~/.config/opencode/superpowers
 cd ~/.config/opencode/superpowers
 git remote add upstream git@github.com:obra/superpowers.git
 git remote set-url --push upstream DISABLE
@@ -162,8 +162,8 @@ git remote set-url --push upstream DISABLE
 ```bash
 git -C ~/.config/opencode/superpowers remote -v
 # Expected:
-# origin    git@github.com:castrojo/superpowers.git (fetch)
-# origin    git@github.com:castrojo/superpowers.git (push)
+# origin    git@github.com:YOUR_USERNAME/superpowers.git (fetch)
+# origin    git@github.com:YOUR_USERNAME/superpowers.git (push)
 # upstream  git@github.com:obra/superpowers.git (fetch)
 # upstream  DISABLE (push)
 ```
@@ -351,11 +351,11 @@ ls ~/.config/opencode/mcp/state/opencode-state-mcp  # MCP binary present
 
 # Verify opencode-config remote layout
 git -C ~/.config/opencode remote get-url origin
-# Expected: git@github.com:castrojo/opencode-config.git
+# Expected: git@github.com:YOUR_USERNAME/opencode-config.git
 
 # Verify superpowers remote layout
 git -C ~/.config/opencode/superpowers remote -v
-# Expected: origin → castrojo/superpowers, upstream → obra/superpowers (push DISABLED)
+# Expected: origin → YOUR_USERNAME/superpowers, upstream → obra/superpowers (push DISABLED)
 
 # Verify personal workflow commits are present on superpowers fork
 git -C ~/.config/opencode/superpowers log --oneline upstream/main..main
@@ -370,16 +370,16 @@ All checks must pass before starting any development work, **including** the wor
 
 | Path | How it gets there | Managed by |
 |---|---|---|
-| `AGENTS.md` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `opencode.json` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `memory/` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `agent-memory.json` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `agents/` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `plans/` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `skills/personal/` | `git clone opencode-config` | `castrojo/opencode-config` |
-| `git-config/ignore` | `git clone opencode-config` | `castrojo/opencode-config` |
+| `AGENTS.md` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `opencode.json` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `memory/` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `agent-memory.json` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `agents/` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `plans/` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `skills/personal/` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
+| `git-config/ignore` | `git clone opencode-config` | `YOUR_USERNAME/opencode-config` |
 | `~/.config/git/ignore` | `cp git-config/ignore` (step 4b) | update source + re-cp |
-| `superpowers/` | `git clone castrojo/superpowers` | `git fetch upstream && rebase` |
+| `superpowers/` | `git clone YOUR_USERNAME/superpowers` | `git fetch upstream && rebase` |
 | `plugins/` | symlink (step 5) | recreate manually |
 | `skills/superpowers` | symlink (step 5) | recreate manually |
 | `journal/` | runtime state | never tracked |

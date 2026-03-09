@@ -4,9 +4,9 @@ default-image = "ghcr.io/bootc-dev/devenv-debian"
 [trusted]
 secrets = ["GH_TOKEN=gh_token"]
 
-# castrojo forks get read + draft PR access
+# Your forks get read + draft PR access — replace YOUR_USERNAME with your GitHub username
 [service-gator.gh.repos]
-"castrojo/*" = { read = true, create-draft = true }
+"YOUR_USERNAME/*" = { read = true, create-draft = true }
 
 # Deliver OpenCode config to all containers (workspace + agent) via podman cp.
 # Use granular subdirectory/file paths — NOT ".config/opencode" itself.

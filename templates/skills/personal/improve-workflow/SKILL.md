@@ -95,9 +95,9 @@ This is mandatory — it keeps the DB as the live source so `search_rules` and `
 
 Commit to the appropriate repo:
 
-- Global `AGENTS.md` or `memory/*.md` → `castrojo/opencode-config`
-- Superpowers skill → `castrojo/superpowers` (rebase on upstream before pushing)
-- Personal skill → `castrojo/opencode-config`
+- Global `AGENTS.md` or `memory/*.md` → `YOUR_USERNAME/opencode-config`
+- Superpowers skill → `YOUR_USERNAME/superpowers` (rebase on upstream before pushing)
+- Personal skill → `YOUR_USERNAME/opencode-config`
 - Project `AGENTS.md` → that project's fork
 
 ```bash

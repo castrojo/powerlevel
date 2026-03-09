@@ -61,8 +61,8 @@ jobs:
           set -euo pipefail
           template="templates/loop-state-template.md"
           failed=0
-          for field in active_phase run_progress last_action next_action loop_goal total_phases; do
-            if ! grep -q "^${field}:" "$template"; then
+          for field in "^phase:" "^run:" "^goal:" "^## Improvements"; do
+            if ! grep -q "$field" "$template"; then
               echo "MISSING field: ${field} in $template"
               failed=1
             fi

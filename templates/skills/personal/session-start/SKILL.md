@@ -182,7 +182,7 @@ and the project's validation command (from the project block). Include all resul
 
 Search for recent discoveries in this project using **text search, not project filter**.
 The `project:` field in journal entries stores the full working directory path (e.g.
-`/var/home/jorge/src`), not the repo name — filtering by repo name returns nothing.
+`~/src`), not the repo name — filtering by repo name returns nothing.
 
 ```
 journal_search(text: "<repo-name>", limit: 5)

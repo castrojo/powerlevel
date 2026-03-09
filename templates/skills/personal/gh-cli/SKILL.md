@@ -71,41 +71,6 @@ gh label delete "label-name" -R <owner>/<repo> --confirm
 gh label clone <source-owner>/<source-repo> -R <dest-owner>/<dest-repo> --force
 ```
 
-### Bluefin Label Enforcement
-
-**Canonical schema lives in `projectbluefin/common`. Sync these four repos only — no others:**
-- `projectbluefin/common` (canonical)
-- `projectbluefin/dakota` (formerly distroless)
-- `ublue-os/bluefin`
-- `ublue-os/bluefin-lts`
-
-**Hard rules:**
-- NEVER edit issues — only labels
-- Colors must match `projectbluefin/common` exactly
-- Full schema + known drift inventory: `~/.config/opencode/plans/common/project-notes.md`
-
-```bash
-# Audit drift: compare label colors between common and a downstream repo
-diff \
-  <(gh label list -R projectbluefin/common --json name,color | jq -r '.[] | "\(.name) \(.color)"' | sort) \
-  <(gh label list -R ublue-os/bluefin --json name,color | jq -r '.[] | "\(.name) \(.color)"' | sort)
-
-# Sync a specific label to all four repos
-for repo in projectbluefin/dakota ublue-os/bluefin ublue-os/bluefin-lts; do
-  gh label edit "area/buildstream" --color "0066FF" -R "$repo"
-done
-
-# Add a missing label to downstream repos
-for repo in projectbluefin/dakota ublue-os/bluefin ublue-os/bluefin-lts; do
-  gh label create "kind/translation" --color "8B5CF6" \
-    --description "Translation and localization work (i18n/l10n)" \
-    -R "$repo" 2>/dev/null || \
-  gh label edit "kind/translation" --color "8B5CF6" \
-    --description "Translation and localization work (i18n/l10n)" \
-    -R "$repo"
-done
-```
-
 ## Releases
 
 ```bash

@@ -30,7 +30,7 @@ brew install gh
 gh auth login
 ```
 
-**just** (command runner — required for bluefin-lts and other projects):
+**just** (command runner — required for many projects):
 ```bash
 mkdir -p ~/.local/bin
 wget -qO- "https://github.com/casey/just/releases/download/1.34.0/just-1.34.0-x86_64-unknown-linux-musl.tar.gz" \
@@ -42,7 +42,7 @@ export PATH="$HOME/.local/bin:$PATH"  # add to ~/.bashrc or ~/.zshrc
 ```bash
 # Verify
 ssh -T git@github.com
-# Expected: "Hi castrojo! You've successfully authenticated..."
+# Expected: "Hi YOUR_USERNAME! You've successfully authenticated..."
 ```
 
 ---
@@ -50,7 +50,7 @@ ssh -T git@github.com
 ### 2. Clone this repo
 
 ```bash
-git clone git@github.com:castrojo/opencode-config.git ~/.config/opencode
+git clone git@github.com:YOUR_USERNAME/opencode-config.git ~/.config/opencode
 ```
 
 ### 3. Install superpowers
@@ -145,46 +145,6 @@ cd ~/.config/opencode && git pull
 
 ## Per-Project Setup
 
-### bluefin-lts
-
-```bash
-# Clone upstream
-git clone git@github.com:ublue-os/bluefin-lts.git ~/src/bluefin-lts
-cd ~/src/bluefin-lts
-
-# Normalize remote layout (legacy exception — cloned before fork existed)
-git remote rename castrojo origin 2>/dev/null || true
-git remote remove upstream 2>/dev/null || true
-git remote rename origin upstream 2>/dev/null || true
-git remote add origin git@github.com:castrojo/bluefin-lts.git
-
-# Verify
-git remote -v
-# origin    git@github.com:castrojo/bluefin-lts.git (fetch/push)
-# upstream  git@github.com:ublue-os/bluefin-lts.git (fetch/push)
-
-# Set tracking branches
-git fetch upstream
-git branch --set-upstream-to=upstream/main main
-git branch --set-upstream-to=upstream/lts lts
-
-# Validate build tooling works
-just --list
-just check
-```
-
-Reference docs: `plans/bluefin-lts/`
-
-### Any other repo (standard flow)
-
-```bash
-git clone git@github.com:castrojo/<repo>.git ~/src/<repo>
-cd ~/src/<repo>
-git remote add upstream git@github.com:<upstream-org>/<repo>.git
-git fetch upstream
-git branch --set-upstream-to=upstream/main main
-```
-
-Then **use the `onboarding-a-repository` skill** in an OpenCode session. It handles remote verification, plans directory, fork AGENTS.md creation, project memory block, and validation baseline.
+Use the `onboarding-a-repository` skill in an OpenCode session for any new repo. It handles remote verification, plans directory, fork AGENTS.md creation, project memory block, and validation baseline.
 
 Full workflow reference: `plans/git-workflow.md`

@@ -17,7 +17,7 @@ Run this checklist **once per repo, before any other work begins.** Every step i
 
 ### Step 1: Verify remote layout
 
-**For bluefin ecosystem repos** (`ublue-os/*`, `projectbluefin/*`): a fork in `castrojo` namespace
+**For forked repos** (`ublue-os/*`, `projectbluefin/*`, or any upstream org): a fork in `YOUR_USERNAME` namespace
 is mandatory. If the fork doesn't exist yet, create it on GitHub before continuing:
 
 ```bash
@@ -30,8 +30,8 @@ git remote -v
 
 Expected:
 ```
-origin    git@github.com:castrojo/<repo>.git (fetch)
-origin    git@github.com:castrojo/<repo>.git (push)
+origin    git@github.com:YOUR_USERNAME/<repo>.git (fetch)
+origin    git@github.com:YOUR_USERNAME/<repo>.git (push)
 upstream  git@github.com:<org>/<repo>.git (fetch)
 upstream  git@github.com:<org>/<repo>.git (push)
 ```
@@ -44,7 +44,7 @@ git remote rename <fork-name> origin
 
 # If origin currently points to upstream, rotate it:
 git remote rename origin upstream-old
-git remote add origin git@github.com:castrojo/<repo>.git
+git remote add origin git@github.com:YOUR_USERNAME/<repo>.git
 git remote set-url upstream git@github.com:<org>/<repo>.git
 git remote remove upstream-old
 
@@ -243,7 +243,7 @@ Create `~/.config/opencode/plans/<repo-name>/project-notes.md` with:
 ## Quick Reference
 
 - **Upstream:** git@github.com:<org>/<repo>.git
-- **Fork:** git@github.com:castrojo/<repo>.git
+- **Fork:** git@github.com:YOUR_USERNAME/<repo>.git
 - **Target branch:** main (or lts, stable — identify from upstream)
 - **Validation:** <exact command discovered in Step 3>
 - **Build tool:** just / make / npm / cargo / ...
@@ -264,7 +264,7 @@ Update this file over time as you learn the project.
 ### Step 5: Check for AGENTS.md on your fork
 
 ```bash
-# Does castrojo/<repo> already have an AGENTS.md?
+# Does YOUR_USERNAME/<repo> already have an AGENTS.md?
 git log --oneline --all -- AGENTS.md | head -5
 ls AGENTS.md 2>/dev/null && echo "exists" || echo "missing"
 ```
@@ -298,7 +298,7 @@ git push origin main
 
 **Hard rules — enforced unconditionally:**
 - NEVER include AGENTS.md in any PR to the upstream repo
-- NEVER send AGENTS.md to any remote other than `origin` (your `castrojo/<repo>` fork)
+- NEVER send AGENTS.md to any remote other than `origin` (your `YOUR_USERNAME/<repo>` fork)
 - If upstream already has an AGENTS.md, treat it as reference only — your fork's file is authoritative for your workflow
 
 ---
@@ -577,15 +577,14 @@ The agent reads it on demand. This keeps AGENTS.md under ~150 lines (target: ~1,
 
 ### Canonical example
 
-`bluefin-lts` AGENTS.md at `~/src/bluefin-lts/AGENTS.md` is the reference implementation:
-- 124 lines
-- Lazy-loads CI architecture, build architecture, development tasks to `~/.config/opencode/plans/bluefin-lts/`
-- Contains only project-specific content
+A well-structured fork AGENTS.md is 100–150 lines. It lazy-loads deeper reference docs
+(CI architecture, build notes, development tasks) from `~/.config/opencode/plans/<repo>/`
+on demand. It contains only project-specific content — no global workflow rules.
 
 ### Never-commit rule
 
 ```
-AGENTS.md committed to: castrojo/<repo> fork, main branch ✅
+AGENTS.md committed to: YOUR_USERNAME/<repo> fork, main branch ✅
 AGENTS.md in upstream PR:                                   ❌ NEVER
 AGENTS.md pushed to upstream remote:                        ❌ NEVER
 ```

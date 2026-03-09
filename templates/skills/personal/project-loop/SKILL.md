@@ -18,7 +18,7 @@ Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,s
 
 ## Before You Start: Fork Check
 
-Work always happens in a local fork in `castrojo`, not on upstream directly.
+Work always happens in a local fork in `YOUR_USERNAME`, not on upstream directly.
 
 ```bash
 git remote -v
@@ -26,12 +26,12 @@ git remote -v
 
 Expected:
 ```
-origin    git@github.com:castrojo/<repo>.git  (push here)
+origin    git@github.com:YOUR_USERNAME/<repo>.git  (push here)
 upstream  git@github.com:<org>/<repo>.git     (fetch only)
 ```
 
 If the remote layout is wrong: stop and run `onboarding-a-repository` first.
-If the repo is already owned by `castrojo` (no upstream): proceed directly.
+If the repo is already owned by `YOUR_USERNAME` (no upstream): proceed directly.
 
 ---
 
