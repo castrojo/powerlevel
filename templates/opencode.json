@@ -1,4 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": ["opencode-agent-memory"]
+  "plugin": ["opencode-agent-memory"],
+  "mcp": {
+    "workflow-state": {
+      "type": "local",
+      "command": ["YOUR_HOME/.config/opencode/mcp/state/opencode-state-mcp"],
+      "enabled": true,
+      "environment": {
+        "PGHOST": "localhost",
+        "PGPORT": "5432",
+        "PGDATABASE": "workflow_state",
+        "PGUSER": "workflow",
+        "PGPASSWORD": "workflow_local_only"
+      }
+    }
+  }
 }

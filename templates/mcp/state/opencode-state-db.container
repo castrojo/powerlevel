@@ -1,0 +1,18 @@
+[Unit]
+Description=OpenCode Workflow State Database
+After=network.target
+
+[Container]
+Image=cgr.dev/chainguard/postgres:latest
+Environment=POSTGRES_DB=workflow_state
+Environment=POSTGRES_USER=workflow
+Environment=POSTGRES_PASSWORD=workflow_local_only
+Volume=%h/.local/share/opencode-state-db:/var/lib/postgresql/data:Z
+PublishPort=127.0.0.1:5432:5432
+
+[Service]
+Restart=always
+ExecStartPre=mkdir -p %h/.local/share/opencode-state-db
+
+[Install]
+WantedBy=default.target

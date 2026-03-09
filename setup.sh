@@ -32,6 +32,18 @@ if ! command -v npm &>/dev/null; then
   exit 1
 fi
 
+# --- Check podman ---
+if ! command -v podman &>/dev/null; then
+  echo "ERROR: podman not found. Install podman: https://podman.io"
+  exit 1
+fi
+
+# --- Check go ---
+if ! command -v go &>/dev/null; then
+  echo "ERROR: go not found. Install Go: https://go.dev/dl/"
+  exit 1
+fi
+
 echo "Prerequisites: OK"
 echo ""
 
@@ -61,9 +73,10 @@ if [[ "$REPO_EXISTS" == "false" ]]; then
 
   cp -r "$POWERLEVEL_DIR/templates/." "$STAGING/"
 
-  # Replace YOUR_USERNAME placeholder
+  # Replace placeholders: YOUR_USERNAME and YOUR_HOME
   find "$STAGING" -type f | while read -r f; do
     sed -i "s/YOUR_USERNAME/$USERNAME/g" "$f"
+    sed -i "s|YOUR_HOME|$HOME|g" "$f"
   done
 
   # Init and push to opencode-config
@@ -106,6 +119,45 @@ echo "Installing npm dependencies"
 cd "$CONFIG_DIR" && npm install --silent
 cd - >/dev/null
 
+# --- Build workflow-state MCP binary ---
+echo "Building workflow-state MCP server"
+cd "$CONFIG_DIR/mcp/state" && go build -o opencode-state-mcp . && cd - >/dev/null
+
+# --- Install PostgreSQL quadlet (workflow-state DB) ---
+echo "Installing workflow-state DB quadlet"
+mkdir -p "$HOME/.config/containers/systemd"
+cp "$CONFIG_DIR/mcp/state/opencode-state-db.container" "$HOME/.config/containers/systemd/"
+systemctl --user daemon-reload
+systemctl --user enable --now opencode-state-db
+# Wait up to 10s for DB to be ready
+for i in $(seq 1 10); do
+  systemctl --user is-active opencode-state-db &>/dev/null && break
+  sleep 1
+done
+
+# --- Seed workflow-state DB ---
+echo "Seeding workflow-state DB (rules + skills)"
+cd "$CONFIG_DIR/mcp/state" && go run ./seed/rules && go run ./seed/skills && cd - >/dev/null
+
+# --- Install devaipod (container-isolated build/test loops) ---
+if ! command -v devaipod &>/dev/null && ! [[ -f "$HOME/.cargo/bin/devaipod" ]]; then
+  echo "Installing devaipod (requires Rust/cargo)"
+  if command -v cargo &>/dev/null; then
+    cargo install --git https://github.com/cgwalters/devaipod
+    ln -sf "$CONFIG_DIR/devaipod.toml" "$HOME/.config/devaipod.toml"
+    echo "Initialize devaipod secrets: ~/.cargo/bin/devaipod init --host"
+    echo "(When prompted for GitHub token: use 'gh auth token' output)"
+  else
+    echo "NOTICE: cargo not found — skipping devaipod install."
+    echo "  Install Rust: curl https://sh.rustup.rs -sSf | sh"
+    echo "  Then: cargo install --git https://github.com/cgwalters/devaipod"
+  fi
+else
+  echo "devaipod already installed — skipping"
+  # Ensure config symlink exists
+  [[ -L "$HOME/.config/devaipod.toml" ]] || ln -sf "$CONFIG_DIR/devaipod.toml" "$HOME/.config/devaipod.toml"
+fi
+
 # --- Global gitignore ---
 mkdir -p "$HOME/.config/git"
 cp "$CONFIG_DIR/git-config/ignore" "$HOME/.config/git/ignore"
@@ -127,6 +179,9 @@ FAILED=0
 [[ "$(git config --global core.excludesFile)" != "" ]]    && ok "global gitignore set"        || fail "global gitignore not set"
 [[ "$(git -C "$SUPERPOWERS_DIR" remote get-url --push origin)" == "DISABLE" ]] \
                                                           && ok "superpowers push disabled"   || fail "superpowers push NOT disabled"
+systemctl --user is-active opencode-state-db 2>/dev/null | grep -q "^active" \
+                                                          && ok "workflow-state DB running"     || fail "workflow-state DB not running"
+[[ -f "$CONFIG_DIR/mcp/state/opencode-state-mcp" ]]      && ok "MCP binary present"            || fail "MCP binary missing"
 
 echo ""
 if [[ "$FAILED" -eq 0 ]]; then
@@ -157,3 +212,9 @@ echo "   Once find-skills is installed: npx skills find <query>"
 echo ""
 echo "4. Your config repo: git@github.com:$REPO.git"
 echo "   Sync across machines: cd ~/.config/opencode && git pull"
+echo ""
+if command -v cargo &>/dev/null || [[ -f "$HOME/.cargo/bin/devaipod" ]]; then
+echo "5. Initialize devaipod secrets (one-time per machine):"
+echo "   ~/.cargo/bin/devaipod init --host"
+echo "   When prompted for GitHub token: gh auth token"
+fi
