@@ -141,7 +141,7 @@ cd ~/.config/opencode
 git add . && git commit -m "chore(config): sync" && git push
 ```
 
-The workflow-state DB (`~/.local/share/opencode-state-db/`) is machine-local and not synced — it rebuilds from the seed scripts on each machine. Loop state (plan task status, run summaries) is also machine-local by design; the plan files in `plans/` are what get synced.
+The workflow-state DB (`~/.local/share/opencode-state-db/`) is machine-local and rebuilds from the seed scripts on each machine. Per-task status and run summaries stored in PostgreSQL are also machine-local — the plan markdown files in `~/.config/opencode/plans/` are what get synced via git and serve as the durable record across machines.
 
 ---
 

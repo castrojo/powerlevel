@@ -19,14 +19,18 @@ Run:
 gh auth status
 ssh -T git@github.com
 npm --version
+go version
+podman --version
 ```
 
 If any fail, stop and tell the user:
 - `gh auth status` fails → `gh auth login --git-protocol ssh`
 - SSH fails → generate a key: `ssh-keygen -t ed25519` then `gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"`
 - `npm` missing → install Node.js from https://nodejs.org
+- `go` missing → install Go from https://go.dev/dl/
+- `podman` missing → install from https://podman.io
 
-Do not proceed until all three pass.
+Do not proceed until all five pass.
 
 ---
 
@@ -40,8 +44,10 @@ bash /tmp/powerlevel-setup/setup.sh
 The script is fully automated. It will:
 - Create a private `opencode-config` repo in the user's GitHub account
 - Clone `obra/superpowers` as read-only (push disabled)
+- Build the workflow-state MCP binary (`go build`)
+- Install the PostgreSQL quadlet (`opencode-state-db.container`), start the DB, seed rules and skill sections
+- Install devaipod if `cargo` is available (skips with a notice otherwise)
 - Wire up symlinks, run `npm install`, configure global gitignore
-- Seed the config with templates and commit everything
 
 If the script fails, read the error — it will tell you exactly what to fix.
 
