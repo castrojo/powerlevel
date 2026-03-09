@@ -118,7 +118,7 @@ Each run targets one of:
 
 For each fix applied in Phase 2, answer: does this belong in the public template?
 
-Generic = yes. castrojo-specific = no.
+Generic = yes. Personal-specific = no.
 
 ### Step 2: Copy approved skills
 
