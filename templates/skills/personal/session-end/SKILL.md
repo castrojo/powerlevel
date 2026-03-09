@@ -11,6 +11,15 @@ Run this before closing OpenCode. Takes under 2 minutes.
 
 ---
 
+## Step 0: Closing summary
+
+Call `get_session_summary()` and output the `rendered_box` field verbatim.
+Do not paraphrase or reformat — print it exactly as returned.
+
+Then continue to Step 1.
+
+---
+
 ## Step 1: Prompt for unsaved discoveries
 
 Scan the session context and surface 4–5 candidate discoveries, prioritized by:
