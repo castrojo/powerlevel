@@ -13,10 +13,16 @@ Announce: "Using loop-gate to confirm phase transition."
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
+Parse:
+- `phase: <name> <current>/<total>` → current_phase_name, N (current), total_phases
+- `run: <X>/<Y>` → X, Y
+- `goal: <text>` → loop goal
+
 Show current position:
 ```
-Loop goal: <loop_goal>
-[ LOOP GATE ] <REPO> • Phase <N>/<total_phases> complete • Runs: <X>/<Y>
+Goal: <goal>
+Pipeline: <pipeline_bar> <current_phase_name> <N>/<total_phases> | Phase runs: <run_bar> <X>/<Y>
+[ LOOP GATE ] <REPO> • Phase <current_phase_name> complete
 ```
 
 ---
@@ -24,34 +30,84 @@ Loop goal: <loop_goal>
 ## Step 2: Show progress summary
 
 List what was accomplished this phase:
-- Runs completed: X/N
-- journal_write entries: (search journal for this loop's run entries)
-- Systemic improvements found: (count items under ## Systemic improvements)
-
-```
-journal_search(text: "<REPO> Loop Run", limit: 10)
-```
-
-List the titles found. This confirms all runs are documented.
+- Runs completed: X/Y
+- Systemic improvements found: (count items under ## Improvements)
 
 ---
 
-## Step 3: Process systemic improvements
+## Step 3: Scan AGENTS.md for conflicts — MANDATORY
 
-Read ## Systemic improvements from loop-state.md.
+This step catches stale references, retired tool names, and broken cross-references that accumulate over time.
+
+```bash
+# Check for retired skill references
+grep -n "capture-loop" ~/.config/opencode/AGENTS.md && echo "STALE: capture-loop reference found"
+
+# Check for retired terminology
+grep -n "devaipod loop\|capture loop\|batch-append" ~/.config/opencode/AGENTS.md && echo "STALE: old loop terminology found"
+
+# Check trigger table skill files exist
+while IFS= read -r skill; do
+  path="$HOME/.config/opencode/skills/personal/${skill}/SKILL.md"
+  [ ! -f "$path" ] && echo "MISSING skill file: $path"
+done < <(grep -E "^\| \`[a-z]" ~/.config/opencode/AGENTS.md | grep -v "/" | sed "s/.*\`\([a-z][a-z-]*\)\`.*/\1/" | grep -v "\.")
+echo "AGENTS.md scan complete"
+```
+
+**If conflicts found:** For each conflict, use the question tool:
+```
+question: "AGENTS.md conflict: '<conflict description>'. Fix now or park as systemic improvement?"
+options:
+  - "Fix now" → invoke improve-workflow immediately
+  - "Park it — add to Systemic improvements" → echo "- [ ] <gap>" >> loop-state.md
+```
+
+**If no conflicts:** note "AGENTS.md clean" and continue.
+
+---
+
+## Step 4: CI parity check — MANDATORY
+
+Verify the project's local devcontainer matches the CI workflow image.
+
+```bash
+# Get local image
+LOCAL_IMAGE=$(cat .devcontainer/devcontainer.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('image','NOT_FOUND'))" 2>/dev/null || echo "NO_DEVCONTAINER")
+
+# Get CI image (check common locations)
+CI_IMAGE=$(grep -r "image:\|container:\|FROM " .github/workflows/*.yml 2>/dev/null | grep -v "^Binary" | head -3 || echo "NO_CI")
+
+echo "Local: $LOCAL_IMAGE"
+echo "CI: $CI_IMAGE"
+```
+
+**If devcontainer is missing:** note it (do not block gate — some repos intentionally lack devcontainer).
+
+**If images differ:** surface as a systemic improvement:
+```bash
+echo "- [ ] CI parity: local uses <LOCAL_IMAGE>, CI uses <CI_IMAGE> — align them" >> ~/.config/opencode/plans/<REPO>/loop-state.md
+```
+
+**If images match or are compatible:** note "CI parity OK" and continue.
+
+---
+
+## Step 5: Process systemic improvements
+
+Read ## Improvements from loop-state.md.
 
 For each item listed:
 1. Present it to the user
 2. Invoke improve-workflow (one invocation per item — do not batch)
 3. Each improve-workflow call produces a commit to opencode-config
 
-If no items: skip to Step 4.
+If no items: skip to Step 6.
 
 Note: improve-workflow was banned mid-run. This is where those parked items get actioned.
 
 ---
 
-## Step 4: Commit opencode-config (catch-all)
+## Step 6: Commit opencode-config (catch-all)
 
 After all improve-workflow calls:
 ```bash
@@ -62,7 +118,7 @@ If any uncommitted changes remain:
 ```bash
 cd ~/.config/opencode
 git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml loop-state-template.md
-git commit -m "chore(config): loop-gate sync — Phase <N> complete
+git commit -m "chore(config): loop-gate sync — Phase <current_phase_name> complete
 
 Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
@@ -70,37 +126,37 @@ git push
 
 ---
 
-## Step 5: Human confirmation gate
+## Step 7: Human confirmation gate
 
 Use the question tool:
 
 ```
-question: "Phase <N> complete. Advance to Phase <N+1>?"
+question: "Phase '<current_phase_name>' complete. Advance to '<next_phase_name>'?"
 options:
-  - "Yes — advance to Phase <N+1>" → proceed to Step 6
-  - "No — run more iterations in Phase <N>" → stop here, user invokes loop-task again
+  - "Yes — advance to <next_phase_name>" → proceed to Step 8
+  - "No — run more iterations in <current_phase_name>" → stop here, user invokes loop-task again
 ```
 
 Do not advance without explicit "Yes".
 
 ---
 
-## Step 6: Advance phase
+## Step 8: Advance phase
 
-Update loop-state.md:
-- active_phase: <N+1>
-- run_progress: 0/<Y> (reset run counter for next phase if applicable, or keep as-is)
-- last_action: loop-gate Phase <N> complete
-- next_action: (depends on new phase — see below)
+Update loop-state.md — change `phase:` to the next phase name and reset `run:`:
 
-Phase transition next actions:
-- Phase N → N+1 (not final): next_action = invoke loop-task (Phase <N+1> Run 1)
-- Phase N → N+1 (final, N+1 = total_phases): next_action = invoke loop-end
+```
+phase: <next_phase_name> <N+1>/<total_phases>
+run: 0/<Y>
+```
+
+Ask user for Y (run count for next phase) if unknown.
 
 Show:
 ```
-Loop goal: <loop_goal>
-[ GATE PASSED ] <REPO> • Now in Phase <N+1>/<total_phases> • Next: <next_action>
+Goal: <goal>
+Pipeline: <updated pipeline_bar> <next_phase_name> <N+1>/<total_phases> | Phase runs: ░░░░░ 0/<Y>
+[ GATE PASSED ] <REPO> • Now in phase: <next_phase_name> • Next: loop-task Run 1
 ```
 
 **MUST: end with the question tool below. Do NOT substitute inline text or "say X to continue" instructions.**
@@ -109,16 +165,16 @@ Then use the question tool to ask what to do next:
 
 **If advancing to a non-final phase:**
 ```
-question: "Phase <N+1> ready. Start Phase <N+1> Run 1 now?"
+question: "Phase '<next_phase_name>' ready. Start Run 1 now?"
 options:
-  - "Yes — start Phase <N+1> Run 1 now" → invoke loop-task immediately
+  - "Yes — start <next_phase_name> Run 1 now" → invoke loop-task immediately
   - "Skip — already done / not needed" → mark phase complete, advance without running loop-task
   - "Stop here — I'll continue later" → stop
 ```
 
-**If advancing to the final phase (N+1 = total_phases):**
+**If this is the final phase:**
 ```
-question: "Final phase ready. Run loop-end now?"
+question: "All phases complete. Run loop-end now?"
 options:
   - "Yes — run loop-end now" → invoke loop-end immediately
   - "Skip — already done / not needed" → mark complete, no loop-end needed

@@ -33,6 +33,7 @@ Then invoke the `session-start` skill before any other work.
 | `loop-gate` | After all runs in a phase — process systemic improvements, commit, gate phase transition |
 | `loop-end` | After final phase — backport review, state integrity checklist, reset loop-state.md |
 | `workflow-improvement-loop` | Use when starting a workflow improvement session — audits skills/AGENTS.md/templates, fixes gaps, backports to powerlevel |
+| `project-loop` | Use when starting project work (features, bugs, refactors) — wraps brainstorm→plan→execute→ship pipeline with loop-task iterations; devaipod is the execution environment |
 
 ---
 

@@ -25,14 +25,16 @@ Record: `REPO=<name>`
 cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
 ```
 
-- If file exists **and** `active_phase > 0`: show the resume block, then go to Step 2b:
+Parse `phase:` field. Format is `<name> <current>/<total>` (e.g. `audit 1/3`).
+
+- If file exists **and** phase current > 0 (i.e. not the template placeholder): show the resume block, then go to Step 2b:
 
   ```
-  Loop goal: <loop_goal>
-  [ LOOP RESUMING ] <REPO> • Phase <active_phase>/<total_phases> • Run <run_progress> • Next: <next_action>
+  Goal: <goal>
+  [ LOOP RESUMING ] <REPO> • <phase> • Run <run> • Next: loop-task
   ```
 
-- If file missing **or** `active_phase` is `0`: go to Step 3 (fresh start)
+- If file missing **or** phase field is the template placeholder: go to Step 3 (fresh start)
 
 ---
 
@@ -41,9 +43,9 @@ cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
 Use the question tool:
 
 ```
-question: "Loop in progress for <REPO>: '<loop_goal>' (Phase <N>/<total_phases>, Run <X>/<Y>). Resume or restart?"
+question: "Loop in progress for <REPO>: '<goal>' (<phase>, Run <run>). Resume or restart?"
 options:
-  - "Resume — continue from Phase <N>, Run <X>/<Y>" → skip to Step 4
+  - "Resume — continue from <phase>, Run <X>/<Y>" → skip to Step 4
   - "Restart — archive state and start fresh" → rename loop-state.md to loop-state-<YYYYMMDD>.md, go to Step 3
 ```
 
@@ -98,44 +100,66 @@ Record as `LOOP_GOAL`.
 
 ---
 
-## Step 5c: Confirm total phases
+## Step 5c: Set phase names
 
 Use the question tool:
 
 ```
-question: "How many phases does this loop have?"
+question: "What are the phases for this loop? (comma-separated)"
 options:
-  - "3 phases (Recommended)"
-  - "2 phases"
-  - "4 phases"
+  - "fix,backport  (workflow improvement — Recommended for workflow-improvement-loop)"
+  - "plan,execute,ship  (project work — Recommended for project-loop)"
+  - "audit,fix,backport  (full workflow improvement with audit phase)"
 ```
 
-Record as `TOTAL_PHASES`.
+Record as `PHASE_NAMES`. Derive `TOTAL_PHASES` from the count of comma-separated values.
+
+---
+
+## Step 5d: Subagent strategy for Phase 1
+
+Evaluate: does the first phase involve auditing or investigating **5 or more independent components**?
+
+- **Yes (5+ components):** Use parallel subagent dispatch (via `dispatching-parallel-agents`) in Phase 1 runs. Note this in loop-state.md as a comment.
+- **No (< 5 components):** Sequential loop-task runs. No subagents needed.
+
+This is a cost/efficiency decision — parallel subagents cut audit time but add overhead for small scopes.
 
 ---
 
 ## Step 6: Update loop-state.md
 
-Set these fields in `~/.config/opencode/plans/<REPO>/loop-state.md`:
+Write these fields to `~/.config/opencode/plans/<REPO>/loop-state.md`:
 
 ```
-active_phase: 1
-run_progress: 0/<N>
-last_action: loop-start complete
-next_action: invoke loop-task (Run 1)
-loop_goal: <LOOP_GOAL>
-total_phases: <TOTAL_PHASES>
+phase: <first_phase_name> 1/<TOTAL_PHASES>
+run: 0/<N>
+goal: <LOOP_GOAL>
 ```
 
-Use `Edit` or write the file directly — update each field in place.
+Use `Edit` to update each field in place. The `## Improvements` section stays unchanged.
 
 ---
 
 ## Step 7: Show ready state and offer to start
 
 ```
-Loop goal: <LOOP_GOAL>
-[ LOOP READY ] <REPO> • Phase 1/<TOTAL_PHASES> • Run 0/<N> • Next: loop-task (Run 1)
+Goal: <LOOP_GOAL>
+Pipeline: <phase bar> | Phase runs: ░░░░░ 0/<N>
+[ LOOP READY ] <REPO> • Next: loop-task (Run 1)
+```
+
+**Progress bar format:**
+
+Split `PHASE_NAMES` on commas. Map to filled/empty blocks:
+- Completed phases: `▓`
+- Current phase (first): `▓` with phase name
+- Future phases: `░`
+
+Example for phases="fix,backport", 2 total:
+```
+Goal: Improve loop system
+Pipeline: ▓░ fix 1/2 | Phase runs: ░░░░░ 0/5
 ```
 
 Use the question tool:
@@ -151,4 +175,4 @@ options:
 
 ## Cost note
 
-`loop-state.md` is < 20 lines. Reading it costs ~50 tokens. Always worth it — this is what prevents session restart confusion across machines and days.
+`loop-state.md` is 3 lines + improvements section. Reading it costs ~20 tokens. Always worth it — this is what prevents session restart confusion across machines and days.

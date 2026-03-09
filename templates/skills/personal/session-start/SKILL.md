@@ -23,19 +23,14 @@ If in a git repo, check for loop state:
 cat ~/.config/opencode/plans/${REPO}/loop-state.md 2>/dev/null || echo "NO_STATE"
 ```
 
-If file exists AND active_phase > 0: output this block at the TOP of the Step 5 report:
+If file exists AND `phase:` is set (not the template placeholder): output this block at the TOP of the Step 5 report:
 
 ```
-Loop goal: <loop_goal>
-Position: Phase <active_phase>/<total_phases> • Run <run_progress> • Next: <next_action>
+Goal: <goal>
+[ LOOP ACTIVE ] <REPO> • <phase> • Run <run> • Next: loop-task
 ```
 
-If `loop_goal` or `total_phases` fields are missing (old schema): fall back to:
-```
-[ LOOP ACTIVE ] <REPO> • Phase <active_phase> • Run <run_progress> • Next: <next_action>
-```
-
-If file missing or active_phase is 0: output nothing. Do not mention loops in the report if no loop is active.
+If file missing or `phase:` contains the template placeholder text: output nothing. Do not mention loops in the report if no loop is active.
 
 ---
 

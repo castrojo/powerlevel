@@ -13,23 +13,26 @@ Announce: "Using loop-end to close the loop."
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
+Parse `phase:` and `goal:`.
+
 Show:
 ```
-Loop goal: <loop_goal>
-[ LOOP END ] <REPO> • All <total_phases> phases complete • Closing loop
+Goal: <goal>
+Pipeline: <all phases ▓> | All phases complete
+[ LOOP END ] <REPO> • Closing loop
 ```
 
 ---
 
 ## Stage 1: Backport review
 
-### Step 1: Read systemic improvements
+### Step 1: Read improvements
 
 ```bash
 cat ~/.config/opencode/plans/<REPO>/loop-state.md
 ```
 
-Extract all items under ## Systemic improvements.
+Extract all items under ## Improvements.
 
 If no items: skip to Stage 2.
 
@@ -91,6 +94,27 @@ If no findings block exists: append one now:
 - Backported to powerlevel: <list or "none">
 ```
 
+**[ ] Skills-as-byproduct check**
+
+For each phase that ran: did at least one personal skill get created or improved?
+
+```bash
+# Quick check — any skill modified in this session?
+git -C ~/.config/opencode diff --name-only HEAD 2>/dev/null | grep "skills/personal"
+```
+
+If output is empty AND the loop produced non-trivial work: surface this:
+
+Use the question tool:
+```
+question: "No skills were updated this loop. Is that intentional?"
+options:
+  - "Yes — this was a trivial/administrative loop" → continue
+  - "No — identify a skill to create or improve now" → identify and update the skill before proceeding
+```
+
+This enforces AGENTS.md rule: "any task that involves a non-obvious process must produce or improve at least one personal skill before the task is marked complete."
+
 **[ ] opencode-config committed AND pushed**
 ```bash
 git -C ~/.config/opencode status --short
@@ -113,7 +137,7 @@ git -C ~/src/powerlevel status --short
 ```
 Must be clean if a backport occurred.
 
-**[ ] loop-state.md reset to active_phase: 0**
+**[ ] loop-state.md reset to clean template**
 
 Write the clean template state back:
 ```bash
@@ -128,7 +152,7 @@ Then commit and push this reset as part of the opencode-config commit above (or 
 
 Show:
 ```
-[ LOOP COMPLETE ] <REPO> • All <N> runs documented • State reset • Pushed to origin
+[ LOOP COMPLETE ] <REPO> • All phases done • State reset • Pushed to origin
 
 Next loop-start will find a clean slate on any machine.
 ```
@@ -136,6 +160,7 @@ Next loop-start will find a clean slate on any machine.
 Tell the user what was accomplished:
 - Runs completed
 - Systemic improvements processed
+- Skills created or updated (if any)
 - Backports (if any)
 - All state committed and pushed
 
@@ -143,6 +168,8 @@ Tell the user what was accomplished:
 
 ## Why the checklist is strict
 
-If loop-state.md is not reset to active_phase: 0, the next session-start (possibly on a different machine) will show "[ LOOP ACTIVE ]" with stale state. That is exactly the "lost in the process" problem this entire system was designed to solve.
+If loop-state.md is not reset to the clean template, the next session-start (possibly on a different machine) will show "[ LOOP ACTIVE ]" with stale state.
 
 Push (not just commit) is mandatory because loop-state.md lives in opencode-config for cross-machine sync. A local-only commit defeats the purpose.
+
+The skills-as-byproduct check prevents the common failure mode of completing work without capturing the knowledge gained. Every loop must leave a better skill behind — that is what makes the next loop faster.

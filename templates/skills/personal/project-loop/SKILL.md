@@ -1,0 +1,173 @@
+---
+name: project-loop
+description: Use when starting a new project improvement loop — wraps the full brainstorm→plan→execute→ship pipeline with loop-task iterations in the execute phase; devaipod is the execution environment
+---
+
+# Skill: project-loop
+
+Announce: "Using project-loop to start a structured project improvement loop."
+
+This skill drives a 3-phase loop for project work (features, bug fixes, refactors):
+- **Phase 1 (plan):** Brainstorm → write plan → review → confirm
+- **Phase 2 (execute):** loop-task iterations via devaipod — build, observe, fix
+- **Phase 3 (ship):** CI green, PR, merge, cleanup
+
+Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,ship`.
+
+---
+
+## Before You Start: Fork Check
+
+Work always happens in a local fork in `castrojo`, not on upstream directly.
+
+```bash
+git remote -v
+```
+
+Expected:
+```
+origin    git@github.com:castrojo/<repo>.git  (push here)
+upstream  git@github.com:<org>/<repo>.git     (fetch only)
+```
+
+If the remote layout is wrong: stop and run `onboarding-a-repository` first.
+If the repo is already owned by `castrojo` (no upstream): proceed directly.
+
+---
+
+## Phase 1: Plan
+
+**Goal:** Understand the problem, agree on the design, write a task-by-task plan. No code yet.
+
+### Step 1: Brainstorm
+
+Load and follow the `brainstorming` skill. Explore:
+- What problem are we solving?
+- What constraints apply (API compat, CI budget, no new deps without asking)?
+- What are the design options?
+- What are we deliberately NOT building?
+
+Produce a design summary. **Stop and confirm with user before proceeding.**
+
+### Step 2: Write the plan
+
+Load and follow the `writing-plans` skill.
+Save the plan to `~/.config/opencode/plans/<repo>/<date>-<feature>.md`.
+
+### Step 3: Review the plan
+
+Load and follow `plan-self-review` and `architecture-review` (as subagents if both apply).
+Resolve all critical/high severity issues inline in the plan before proceeding.
+
+### Step 4: Confirm and advance
+
+Use the question tool:
+```
+question: "Plan written and reviewed. Start execute phase?"
+options:
+  - "Yes — run loop-gate and advance to execute" → invoke loop-gate
+  - "Revise the plan first" → return to Step 2
+  - "Stop here — continue in a fresh session" → stop
+```
+
+**Do NOT write any code before loop-gate advances to Phase 2 (execute).**
+
+---
+
+## Phase 2: Execute
+
+**Goal:** Build. Each loop-task run = one devaipod invocation + observation.
+
+### Execution pattern
+
+Each run via `loop-task`:
+1. Run `just build` (or the project's validation command) via devaipod
+2. Observe: what passed, what failed, what's unexpected
+3. Append run summary to plan (loop-task Step 3)
+4. Update loop-state.md (loop-task Step 4)
+5. Park any systemic findings under ## Systemic improvements
+
+**Fixes happen after observation.** A run that produces a clear failure block is not wasted — it is the ralph wiggum property: the byproduct is the KNOWN ISSUES entry and journal.
+
+### Subagent strategy
+
+If the execute phase has 5+ independent tasks that can run in parallel:
+- Dispatch parallel subagents via `dispatching-parallel-agents`
+- Each subagent handles one independent component
+- Collect results before the next run
+
+If tasks are sequential (each depends on the previous): run loop-task serially.
+
+### devaipod invocation
+
+```bash
+~/.cargo/bin/devaipod run ~/src/<REPO> --host -c 'just build'
+```
+
+The devcontainer.json in the repo controls the container image. This must match CI — loop-gate will check this at phase transition.
+
+### Phase 2 ends when
+
+All planned tasks are implemented AND at least one full `just build` passes inside devaipod. Invoke `loop-gate` to advance to Phase 3 (ship).
+
+---
+
+## Phase 3: Ship
+
+**Goal:** CI green, PR created, merged. Clean up.
+
+### Step 1: Verify CI matches local
+
+The loop-gate CI parity check should have already surfaced any mismatch. If not:
+
+```bash
+# Local image
+cat .devcontainer/devcontainer.json | python3 -c "import sys,json; print(json.load(sys.stdin).get('image',''))"
+
+# CI image
+grep -r "image:" .github/workflows/*.yml 2>/dev/null | head -3
+```
+
+If they differ: fix before creating a PR.
+
+### Step 2: Create the PR
+
+Load and follow `finishing-a-development-branch`.
+
+The skill handles:
+- Squash to one commit
+- PR creation via `gh pr create --web`
+- Both confirmation dialogs
+- Gemini review reminder
+
+**Do NOT auto-submit.** The user always clicks "Create Pull Request" in the browser.
+
+### Step 3: Loop-end
+
+After PR is created (not merged — merged is out of scope for the loop):
+- Invoke `loop-end` for the state integrity checklist
+- Verify skills-as-byproduct: the execute phase must have produced or improved at least one skill
+- Reset loop-state.md
+
+---
+
+## Cross-machine note
+
+`loop-state.md` lives in `~/.config/opencode/plans/<repo>/` and syncs via `opencode-config`.
+Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
+```
+Loop goal: <goal>
+Pipeline: ▓▓░ execute 2/3 | Phase runs: ▓▓░░░ 2/5
+```
+No context is lost between machines as long as `session-start` runs `cd ~/.config/opencode && git pull` first.
+
+---
+
+## After each use: improve this skill
+
+At the end of every project-loop session, answer:
+> "Did this skill miss anything? Was any step unclear, wrong, or absent?"
+
+If yes: fix this SKILL.md inline before running loop-end. If the fix is generic, copy to powerlevel/templates/ too.
+
+This is the evolving prompt property — each use makes the next loop better.
