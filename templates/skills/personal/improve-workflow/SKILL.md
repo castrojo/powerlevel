@@ -5,7 +5,7 @@ description: Use when the user corrects you, repeats an instruction you should h
 
 # Improve Workflow
 
-Invoke the moment you notice a workflow gap. Do not defer.
+Invoke this skill the moment you notice a workflow gap. Do not defer to the end of the session.
 
 **Announce:** "Using improve-workflow to capture a correction."
 
@@ -15,45 +15,60 @@ Invoke the moment you notice a workflow gap. Do not defer.
 
 - The user corrects you on something you should have known
 - The user repeats an instruction for the second time in a session
-- A skill gave wrong or incomplete guidance
-- A mistake happened that a rule should have prevented
+- You discover a missing step in a skill or AGENTS.md
+- A skill gave you wrong or incomplete guidance
+- You make a mistake that a rule should have prevented
 
 ---
 
 ## Step 1: Classify the improvement
 
+Determine the right file to update:
+
 | Improvement type | File to update |
 |---|---|
-| Global workflow rule or ban | `~/.config/opencode/AGENTS.md` |
+| Global workflow rule, convention, or ban | `~/.config/opencode/AGENTS.md` |
 | Skill is missing a step or has wrong guidance | The skill's `SKILL.md` |
-| Project-specific convention | Project's `AGENTS.md` |
+| Project-specific convention or command | Project's `AGENTS.md` in the repo |
 | Agent behavioral style or human preference | `~/.config/opencode/memory/persona.md` or `human.md` |
+
+**Priority:** Always prefer updating the relevant skill over adding to AGENTS.md. Add to AGENTS.md only for cross-cutting conventions that no single skill owns (git protocol, remote naming, PR rules, commit standards). If in doubt: update the skill.
 
 ---
 
 ## Step 2: Draft the change
 
-Write 1-3 sentences. Show draft to user:
-> "I'm going to add the following to `<file>`: `<draft>`. Should I proceed?"
+Write 1–3 sentences that capture the correction precisely. Be surgical — add only what's missing. Do not rewrite surrounding content.
 
-Wait for confirmation.
+Show the draft to the user:
+
+> "I'm going to add the following to `<file>`: `<draft text>`. Should I proceed?"
+
+Wait for explicit confirmation. Do not edit the file without it.
 
 ---
 
 ## Step 3: Apply the edit
 
-Surgical edit only — do not rewrite surrounding content.
+Use the Edit tool to make the surgical change. Do not rewrite the file.
 
 ---
 
 ## Step 4: Commit
 
+Commit to the appropriate repo:
+
+- Global `AGENTS.md` or `memory/*.md` → `opencode-config`
+- Superpowers skill → `superpowers` fork (rebase on upstream before pushing)
+- Personal skill → `opencode-config`
+- Project `AGENTS.md` → that project's fork
+
 ```bash
-cd ~/.config/opencode
+cd <repo>
 git add <file>
 git commit -m "fix(workflow): <what was wrong and what was fixed>
 
-Assisted-by: <Model> via OpenCode"
+Assisted-by: <Model> via <Tool>"
 git push
 ```
 
@@ -64,11 +79,13 @@ git push
 ```
 journal_write(
   title: "Workflow correction: <topic>",
-  body: "Corrected <file>. Was: <old>. Now: <new>. Triggered by: <cause>.",
+  body: "Corrected <file>. Was missing: <old behavior>. Now: <new behavior>. Triggered by: <what caused the correction>.",
   tags: "workflow-learning"
 )
 ```
 
-## Step 6: Continue
+---
 
-Resume the original task.
+## Step 6: Continue work
+
+Resume the original task. The correction has been captured and committed — do not revisit it.

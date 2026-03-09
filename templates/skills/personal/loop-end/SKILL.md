@@ -96,10 +96,23 @@ If no findings block exists: append one now:
 
 **[ ] Skills-as-byproduct check**
 
-For each phase that ran: did at least one personal skill get created or improved?
+First, detect loop type:
 
 ```bash
-# Quick check — any skill modified in this session?
+# Check if this was a workflow-improvement or loop-session run
+grep -l "workflow-improvement-loop\|loop-session\|loop-task\|loop-gate\|loop-start\|loop-end" \
+  ~/.config/opencode/plans/<REPO>/<active-plan-file>.md 2>/dev/null | wc -l
+```
+
+**If count > 0 (plan references loop/workflow skills):** this is a workflow improvement loop — the work itself IS skill edits. Auto-pass this check. Show:
+
+```
+[ BYPRODUCT CHECK ] Auto-pass: workflow improvement loop — skill edits are the work.
+```
+
+**If count = 0 (project work):** run the original check:
+
+```bash
 git -C ~/.config/opencode diff --name-only HEAD 2>/dev/null | grep "skills/personal"
 ```
 
