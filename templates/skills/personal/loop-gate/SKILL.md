@@ -63,7 +63,7 @@ cd ~/.config/opencode
 git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml loop-state-template.md
 git commit -m "chore(config): loop-gate sync — Phase <N> complete
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
@@ -99,4 +99,22 @@ Phase transition next actions:
 Show:
 ```
 [ GATE PASSED ] <REPO> • Now in Phase <N+1> • Next: <next_action>
+```
+
+Then use the question tool to ask what to do next:
+
+**If advancing to Phase 2:**
+```
+question: "Phase 2 ready. Start Phase 2 Run 1 now?"
+options:
+  - "Yes — start Phase 2 Run 1 now" → invoke loop-task immediately
+  - "Stop here — I'll continue later" → stop
+```
+
+**If advancing to Phase 3:**
+```
+question: "Phase 3 ready. Run loop-end now?"
+options:
+  - "Yes — run loop-end now" → invoke loop-end immediately
+  - "Stop here — I'll run loop-end later" → stop
 ```

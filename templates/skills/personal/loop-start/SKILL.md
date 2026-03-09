@@ -37,17 +37,14 @@ cat ~/.config/opencode/plans/<REPO>/loop-state.md 2>/dev/null || echo "NO_STATE"
 
 ## Step 2b: Resume path
 
-Ask the user (use question tool or inline ask):
+Use the question tool:
 
 ```
-A loop is already in progress. Resume or restart?
-
-  1. Resume — continue from Phase <N>, Run <X>/<Y>
-  2. Restart — archive existing state and start fresh
+question: "A loop is already in progress for Phase <N> (Run <X>/<Y>). Resume or restart?"
+options:
+  - "Resume — continue from Phase <N>, Run <X>/<Y>" → skip to Step 4
+  - "Restart — archive state and start fresh" → rename loop-state.md to loop-state-<YYYYMMDD>.md, go to Step 3
 ```
-
-- **Resume** → skip to Step 4
-- **Restart** → rename `loop-state.md` to `loop-state-<YYYYMMDD>.md`, then go to Step 3
 
 ---
 
@@ -72,11 +69,17 @@ Read titles only. If a title is directly relevant to the current work, read that
 
 ## Step 5: Confirm run count with user
 
-Ask:
+Use the question tool:
 
-> "How many runs for this loop set? (default: 5)"
+```
+question: "How many runs for this loop set?"
+options:
+  - "5 runs (Recommended)"
+  - "3 runs"
+  - "10 runs"
+```
 
-Wait for answer. Record `N`.
+Record `N` from the answer.
 
 ---
 
@@ -95,13 +98,20 @@ Use `Edit` or write the file directly — update each field in place.
 
 ---
 
-## Step 7: Show ready state
+## Step 7: Show ready state and offer to start
 
 ```
-[ LOOP READY ] <REPO> • Phase 1 • Run 0/<N> • Next: invoke loop-task (Run 1)
+[ LOOP READY ] <REPO> • Phase 1 • Run 0/<N>
 ```
 
-Then **stop**. Do not start any runs. The user invokes `loop-task` to begin Run 1.
+Use the question tool:
+
+```
+question: "Loop ready. Start Run 1 now?"
+options:
+  - "Yes — start Run 1 now" → invoke loop-task immediately
+  - "Stop here — I'll start the loop later" → stop
+```
 
 ---
 

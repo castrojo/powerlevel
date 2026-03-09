@@ -1,6 +1,6 @@
 ---
 name: loop-end
-description: Use to close a completed loop — backport approved improvements to the bootstrap template repo, run state integrity checklist, reset loop-state.md so the next loop on any machine starts cleanly
+description: Use to close a completed loop — backport approved improvements to powerlevel, run state integrity checklist, reset loop-state.md so the next loop on any machine starts cleanly
 ---
 
 Announce: "Using loop-end to close the loop."
@@ -24,32 +24,32 @@ If no items: skip to Stage 2.
 For each item, use the question tool:
 
 ```
-question: "Systemic improvement: '<item description>'. Backport this to the bootstrap template repo?"
+question: "Systemic improvement: '<item description>'. Backport this to powerlevel templates?"
 options:
-  - "Yes — copy to ~/src/<bootstrap-repo>/templates/" → copy and commit
+  - "Yes — copy to powerlevel/templates/" → copy and commit
   - "No — opencode-config only" → skip backport for this item
 ```
 
-### Step 3: Copy approved items to bootstrap template repo
+### Step 3: Copy approved items to powerlevel
 
 For each approved item (skill changes):
 ```bash
 # Example: if the improvement is to loop-start/SKILL.md
 cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
-   ~/src/<bootstrap-repo>/templates/skills/personal/loop-start/SKILL.md
+   ~/src/powerlevel/templates/skills/personal/loop-start/SKILL.md
 ```
 
 After all copies:
 ```bash
-cd ~/src/<bootstrap-repo>
+cd ~/src/powerlevel
 git add templates/
 git commit -m "feat(templates): backport workflow improvements from <REPO> loop
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
-If no items approved for backport: skip the template repo commit.
+If no items approved for backport: skip the powerlevel commit.
 
 ---
 
@@ -74,7 +74,7 @@ If no findings block exists: append one now:
 
 - Runs completed: <N>/<N>
 - Systemic improvements: <list or "none">
-- Backported to template repo: <list or "none">
+- Backported to powerlevel: <list or "none">
 ```
 
 **[ ] opencode-config committed AND pushed**
@@ -87,15 +87,15 @@ cd ~/.config/opencode
 git add AGENTS.md skills/personal/ plans/ loop-state-template.md memory/
 git commit -m "chore(config): loop-end sync — <REPO> loop complete
 
-Assisted-by: <Model> via <Tool>"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 Verify push succeeded. "Committed" without push is not enough — cross-machine sync requires push.
 
-**[ ] Template repo committed AND pushed** (only if backport happened)
+**[ ] powerlevel committed AND pushed** (only if backport happened)
 Already done in Stage 1 Step 3 if applicable. Verify:
 ```bash
-git -C ~/src/<bootstrap-repo> status --short
+git -C ~/src/powerlevel status --short
 ```
 Must be clean if a backport occurred.
 

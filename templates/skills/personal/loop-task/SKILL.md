@@ -27,6 +27,8 @@ Parse X and N. This is Run X+1.
 **For workflow tasks** (when the loop goal involves writing skills, updating docs, etc.):
 Execute as described in the active plan or the user's instruction for this run. Do the work directly.
 
+**Improvement propagation rule:** When a run establishes a new pattern or convention (e.g., "use question tool for user interaction"), apply that pattern to ALL remaining interaction points across ALL affected skills in that same run — not just the point that was called out. Do not wait for the user to identify each instance. Scan forward and apply the convention completely before closing the run.
+
 Record: what ran, what succeeded, what failed, any observations.
 
 ---
@@ -77,18 +79,31 @@ If a notable non-workflow finding (gotcha, design decision, tool behavior): invo
 
 ---
 
-## Step 6: Report and suggest next action
+## Step 6: Report and offer next action via question tool
 
 Show:
 ```
 [ RUN <X+1> COMPLETE ] <REPO> • Run <X+1>/<N> • <pass/fail summary>
 ```
 
-If X+1 < N:
-> "Run <X+1> complete. Invoke loop-task for Run <X+2>, or loop-gate to advance phase early."
+Use the question tool to ask what to do next:
 
-If X+1 = N:
-> "All <N> runs complete. Invoke loop-gate to review findings and advance to the next phase."
+**If X+1 < N:**
+```
+question: "Run <X+1> complete. What next?"
+options:
+  - "Run <X+2> now" → invoke loop-task immediately
+  - "Advance phase early (loop-gate)" → invoke loop-gate immediately
+  - "Stop here — I'll continue later" → stop
+```
+
+**If X+1 = N:**
+```
+question: "All <N> runs complete. Advance to gate?"
+options:
+  - "Yes — run loop-gate now" → invoke loop-gate immediately
+  - "Stop here — I'll run loop-gate later" → stop
+```
 
 ---
 
@@ -98,3 +113,4 @@ If X+1 = N:
 - Invoking capture-loop (retired — this skill replaces it)
 - Starting the next run before journal_write is confirmed written
 - Fixing code/skills/AGENTS.md inline during a run (observation only; fixes happen at loop-gate/loop-end)
+- Using plain text to ask the user to type a skill name or command — always use the question tool for user interaction points in skills
