@@ -124,4 +124,4 @@ Types: `feat`, `fix`, `docs`, `ci`, `chore`, `refactor`
 - Multi-commit history in upstream PRs
 - Committing plans, session notes, or AGENTS.md into project repos
 - Claiming work is done without running verification commands
-- Reading workflow state from files (`cat`/`grep` on loop-state.md or plan files) — use DB tools
+- **Reading workflow state from files** — Never use `cat`, `head`, `tail`, `grep`, `sed`, `awk`, the `Read` tool, or any file or shell operation to read `loop-state.md`, plan files, skill sections, or workflow rules. Use DB tools exclusively: `workflow-state_get_session_context`, `workflow-state_get_plan_tasks`, `workflow-state_search_skill`, `workflow-state_search_rules`. File reads are only permitted when editing source files (AGENTS.md, SKILL.md, Justfile, code) or reading `opencode.json` for MCP/provider discovery — never for workflow state orientation or lookup.
