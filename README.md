@@ -22,7 +22,7 @@ This repo is a bootstrapper. You clone it once, run `setup.sh`, then move on. Yo
 
 ## What You Get
 
-- **Persistent memory** — the agent knows your preferences, project context, and what it discovered last session; memory blocks survive across machines via git sync
+- **Persistent memory** — the agent knows your preferences, project context, and what it discovered last session; memory blocks survive across machines via git sync and a postgres database run as part of the local dev stack. 
   - **Searchable journal** — discoveries, gotchas, and design decisions accumulate automatically and surface via semantic search before related tasks
   - **Token efficiency**: Querying the DB via MCP tools returns only the relevant rows/fields needed for the current task, rather than loading entire plan files or journal logs into context. Targeted SQL/MCP queries = fewer tokens consumed per session.
   -  Without the DB, the agent would need entire files injected into context to find relevant state. The MCP query returns only what's needed.
