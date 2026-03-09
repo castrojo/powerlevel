@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mark3labs/mcp-go/mcp"
@@ -74,10 +75,12 @@ func resolveState(phase, run string, pending int) bannerState {
 const innerWidth = 57
 
 func pad(s string, width int) string {
-	if len(s) >= width {
-		return s[:width]
+	n := utf8.RuneCountInString(s)
+	if n >= width {
+		runes := []rune(s)
+		return string(runes[:width])
 	}
-	return s + strings.Repeat(" ", width-len(s))
+	return s + strings.Repeat(" ", width-n)
 }
 
 func row(content string) string {
@@ -123,8 +126,8 @@ func renderBanner(panels []uiPanel, state bannerState, phase, run, lastRun, repo
 	// Last run row (optional)
 	if lastRun != "" {
 		lr := "Last: " + lastRun
-		if len(lr) > innerWidth {
-			lr = lr[:innerWidth-1] + "…"
+		if utf8.RuneCountInString(lr) > innerWidth {
+			lr = string([]rune(lr)[:innerWidth-1]) + "…"
 		}
 		b.WriteString(row(lr))
 	}
