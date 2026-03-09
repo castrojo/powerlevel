@@ -28,6 +28,7 @@ func RegisterSessionTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			Run          string  `json:"run"`
 			Goal         string  `json:"goal"`
 			PendingCount int     `json:"pending_tasks"`
+			ProgressBar  string  `json:"progress_bar,omitempty"`
 			LatestRun    *string `json:"latest_run_summary,omitempty"`
 		}
 
@@ -41,6 +42,9 @@ func RegisterSessionTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		).Scan(&sc.Phase, &sc.Run, &goal)
 		if goal != nil {
 			sc.Goal = *goal
+		}
+		if sc.Run != "" {
+			sc.ProgressBar = progressBar(sc.Run)
 		}
 
 		// pending task count
