@@ -13,7 +13,7 @@ add project-specific context but do not override these rules.
 cd ~/.config/opencode && git pull
 ```
 
-Then invoke the `session-start` skill before any other work.
+Then invoke the `session-start` skill before any other work. If the user's first message is a task rather than `session-start`, still call `get_welcome_banner(repo: "<REPO>")` and output the `banner` field verbatim as the first thing in your response, then proceed with the task.
 
 **End of every session:** invoke the `session-end` skill.
 
@@ -64,6 +64,8 @@ ls ~/.config/opencode/mcp/state/opencode-state-mcp
 ## Feature Workflow
 
 Non-trivial work follows three stages with mandatory stops between them:
+
+**Simple task fast path:** Single-file edits, content updates, and fixes with unambiguous scope — completable in 1–3 edits with no design decisions — skip all stages and execute directly. The three-stage workflow applies only when there are design decisions to make.
 
 ```
 Stage 1: Brainstorm  →  STOP, confirm  →  Stage 2: Plan  →  STOP, confirm  →  Stage 3: Execute

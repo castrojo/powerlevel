@@ -40,6 +40,46 @@ Adapt the default personas to your preferences:
 
 ---
 
+## What It Looks Like
+
+Every session opens with a banner showing your position in the 6-step workflow, current project state, and next action:
+
+```
+╭─ OpenCode Workflow ───────────────────────────────────────╮
+│ 1. ▶ Preflight   sync state, surface active work          │
+│ 2.   Design      explore requirements, define scope       │
+│ 3.   Plan        break into tasks, map dependencies       │
+│ 4.   Build       run iterations in container              │
+│ 5.   Gate        review output, advance phase             │
+│ 6.   Postflight  ship, backport, commit, sync             │
+├───────────────────────────────────────────────────────────┤
+│ powerlevel · no active work                               │
+│ Last: [13:01] Run 5/5 (coherence check) — all CI checks … │
+├───────────────────────────────────────────────────────────┤
+│ ▶  NEXT: "session-start" — sync state and orient          │
+╰───────────────────────────────────────────────────────────╯
+```
+
+When a loop is running, the banner shows an inline progress bar and last run summary:
+
+```
+╭─ OpenCode Workflow ───────────────────────────────────────╮
+│ 1.   Preflight   sync state, surface active work          │
+│ 2.   Design      explore requirements, define scope       │
+│ 3.   Plan        break into tasks, map dependencies       │
+│ 4. ▶ Build       run iterations in container              │
+│ 5.   Gate        review output, advance phase             │
+│ 6.   Postflight  ship, backport, commit, sync             │
+├───────────────────────────────────────────────────────────┤
+│ powerlevel · [██████░░░░░░░░░░] 2/5 · fix 1/1             │
+│ Last: [09:14] Run 1/5 — go build clean, tests pass        │
+├───────────────────────────────────────────────────────────┤
+│ ▶  NEXT: "loop-task" — run iteration 3 of 5               │
+╰───────────────────────────────────────────────────────────╯
+```
+
+---
+
 ## Architecture
 
 ```
