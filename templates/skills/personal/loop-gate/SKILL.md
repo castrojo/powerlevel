@@ -103,6 +103,8 @@ Loop goal: <loop_goal>
 [ GATE PASSED ] <REPO> • Now in Phase <N+1>/<total_phases> • Next: <next_action>
 ```
 
+**MUST: end with the question tool below. Do NOT substitute inline text or "say X to continue" instructions.**
+
 Then use the question tool to ask what to do next:
 
 **If advancing to a non-final phase:**
