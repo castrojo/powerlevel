@@ -1,10 +1,7 @@
-active_phase: 0
-run_progress: 0/0
-last_action: none
-next_action: invoke loop-start
-loop_goal: (set by loop-start)
-total_phases: 3
+phase: (set by loop-start — e.g. "audit 1/3")
+run: 0/0
+goal: (set by loop-start — one sentence)
 
-## Systemic improvements
+## Improvements
 
 <!-- Record improve-workflow candidates here during runs. Format: - [ ] <gap description> -->

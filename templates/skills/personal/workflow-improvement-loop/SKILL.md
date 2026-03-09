@@ -12,8 +12,8 @@ This skill drives a 3-phase loop over your personal workflow:
 - **Phase 2 (Fix):** Apply fixes directly — no devaipod, pure agent work
 - **Phase 3 (Backport):** Sync approved fixes to powerlevel/templates/, run CI lint, commit both repos
 
-Invoke `loop-start` first if no loop is active. Set `total_phases: 3`.
-Suggested `loop_goal`: "Audit and improve [specific aspect] of workflow"
+Invoke `loop-start` first if no loop is active.
+Suggested goal: "Audit and improve [specific aspect] of workflow"
 
 ---
 
@@ -52,7 +52,8 @@ Flag: missing files, stale descriptions, skills that exist but aren't in the tab
 cat ~/.config/opencode/loop-state-template.md
 ```
 
-Verify required fields are present: `active_phase`, `run_progress`, `last_action`, `next_action`, `loop_goal`, `total_phases`.
+Verify required fields are present: `phase`, `run`, `goal`.
+Also verify the `## Improvements` section exists.
 
 ### Step 4: Parallel subagent audit (optional, for large audits)
 
@@ -183,7 +184,7 @@ This is the "evolving prompt" property: each use produces a better skill for the
 `loop-state.md` lives in `~/.config/opencode/plans/<repo>/` and syncs via `opencode-config`.
 Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
 ```
-Loop goal: <loop_goal>
-Position: Phase 2/3 • Run 1/3 • Next: loop-task (Run 2)
+Goal: Audit and improve workflow skills
+Pipeline: ▓▓░ fix 2/3 | Phase runs: ▓░░ 1/3
 ```
 No context is lost between machines as long as `session-start` runs `cd ~/.config/opencode && git pull` first.
