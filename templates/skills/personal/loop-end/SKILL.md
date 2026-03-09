@@ -36,18 +36,22 @@ Extract all items under ## Improvements.
 
 If no items: skip to Stage 2.
 
-### Step 2: Present and decide per item
+### Step 2: Collect decisions for all items
 
-For each item, use the question tool:
+For each item, use the question tool — do NOT copy files yet:
 
 ```
 question: "Systemic improvement: '<item description>'. Backport this to powerlevel templates?"
 options:
-  - "Yes — copy to powerlevel/templates/" → copy and commit
-  - "No — opencode-config only" → skip backport for this item
+  - "Yes — approve for backport" → mark approved
+  - "No — opencode-config only" → skip
 ```
 
-### Step 3: Copy approved items to powerlevel
+Collect a list: `approved = [<item1>, <item2>, ...]`
+
+### Step 3: Copy all approved items and commit once
+
+After all decisions are collected:
 
 For each approved item (skill changes):
 ```bash
@@ -56,7 +60,7 @@ cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
    ~/src/powerlevel/templates/skills/personal/loop-start/SKILL.md
 ```
 
-After all copies:
+After ALL copies:
 ```bash
 cd ~/src/powerlevel
 git add templates/
@@ -66,7 +70,7 @@ Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
-If no items approved for backport: skip the powerlevel commit.
+If no items approved for backport: skip the powerlevel commit entirely.
 
 ---
 

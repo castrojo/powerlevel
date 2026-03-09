@@ -38,6 +38,7 @@ options:
   - "Workflow improvement — audit/fix skills, AGENTS.md, templates" → invoke workflow-improvement-loop
   - "Project work — build, test, ship a feature or fix in a repo" → invoke project-loop
   - "Resume active loop — loop-state.md shows an active loop" → invoke loop-start (resume path)
+  - "Workflow critique + improvement — systematic audit of the current design against a vision" → invoke workflow-improvement-loop (audit phases)
 ```
 
 ---
@@ -87,16 +88,18 @@ These apply to every loop session. Read them. They are not optional.
 3. **opencode-config syncs across machines via GitHub.** loop-state.md lives there. session-start pulls it. Start a loop on any machine; resume on any other.
 4. **devaipod is the local execution environment** for all build/test tasks. CI must use the same image as .devcontainer/devcontainer.json — loop-gate checks this.
 5. **Context efficiency is a hard constraint.** Subagent-per-run (loop-task) prevents parent context window exhaustion on multi-run loops.
-6. **Failures are data.** A failed run that adds KNOWN ISSUES entries is not wasted — it drives the next run. This is the virtuous feedback loop property.
+6. **Failures are data (Ralph Wiggum property).** A failed run that produces KNOWN ISSUES entries is never wasted — it makes the next run better. This is the ralph wiggum virtuous feedback loop: even "failure" produces a useful byproduct. The loop always produces output.
 7. **Skills as byproduct.** Every non-trivial loop must produce or improve at least one personal skill before loop-end is declared complete.
+8. **Two audiences, two repos.** powerlevel = generic bootstrap for any agent; opencode-config = accumulated deep knowledge for your synced future self. Skills backport to powerlevel when generic; stay in opencode-config when personal. The loop-end backport decision is the enforcement mechanism. powerlevel bootstraps once; opencode-config evolves continuously.
+9. **This skill is the design.** The loop-session skill IS the evolving prompt. It is the single source of truth for how the loop system works. Improve it in place — never annotate or append.
 
 ---
 
-## After each use: improve this skill
+## Living design — how to improve this skill
 
-At the end of every loop-session, answer:
-> "Did this skill orient the session correctly? Was routing clear? Did any step miss an edge case?"
+This skill IS the evolving prompt. When the design changes:
 
-If yes: fix this SKILL.md inline before running loop-end. Backport to powerlevel/templates/ if the fix is generic.
-
-This is the evolving prompt property — the skill improves itself each use, making every next session better.
+1. **Edit this file in place** — rewrite the relevant section to reflect the best current design. Never append amendments. Never log what changed. The skill always reads as if it was written for the current design.
+2. **Do not keep a changelog** — the git log of opencode-config is the history. The skill is the current truth.
+3. **After editing**: copy to `~/src/powerlevel/templates/skills/personal/loop-session/SKILL.md` if the change is generic (no castrojo-specific content).
+4. **When to trigger a rewrite**: at the end of every loop-session, answer: "Did routing work? Was any step wrong? Did a design invariant need updating?" — if yes, fix inline before loop-end.
