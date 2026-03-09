@@ -1,17 +1,8 @@
 # castrojo's OpenCode Setup
-__ This is designed to up your powerlevel ...__ 
 
-A structured AI agent workflow built on [OpenCode](https://opencode.ai).
+A structured [OpenCode](https://opencode.ai) workflow for developers who work across multiple repositories and sessions. Point your agent at this repo and it bootstraps persistent memory, a searchable journal, workflow discipline skills, a PostgreSQL-backed state database, and container-isolated build loops — all tracked in a private git repo you own.
 
-Point your agent at this repo and it sets up the full environment — persistent memory, a searchable journal, workflow discipline skills, and safe rails around git operations - no need to fork this repo, the intent is for you to get started and move on. 
-
-- Designed to use superpowers skills and expand on them by building a knowledge base of the projects you work on without polluting the project repos themselves with AI working state. "Let's start on a new feauture" or similar language will walk you through the process.
-- Tracks all your personal and system level skills and maintains them in the opencode config directory and synced in your private opencode-config repo. Hide your shame. 
-- Keeps project-level context outside of the project github repo for memory and context.
-- Designed to PR to upstream projects in the cleanest possible manner so your coworkers don't hate you. 
-
-We keep project specific state seperate from workflow state! Congrats, you've turned github into a real slow and crappy database. But it works. 
-
+This repo is a bootstrapper. You clone it once, run `setup.sh`, then move on. Your config lives in `yourname/opencode-config`.
 
 ---
 
@@ -21,74 +12,102 @@ We keep project specific state seperate from workflow state! Congrats, you've tu
 |---|---|
 | [OpenCode](https://opencode.ai) | AI coding agent (required) |
 | [opencode-agent-memory](https://github.com/opencode-ai/opencode-agent-memory) | Persistent memory blocks + append-only journal across sessions |
-| [devaipod](https://github.com/cgwalters/devaipod) | Container-based agent isolation for build/test loops (optional but recommended) |
-| [obra/superpowers](https://github.com/obra/superpowers) | Core workflow discipline skills (brainstorm → plan → execute, TDD, debugging, PR protocol) |
-| Personal skills | Session hygiene, repo onboarding, discovery capture, workflow self-correction |
-| `templates/` | Starting config for your private `opencode-config` repo |
+| workflow-state MCP (Go + PostgreSQL) | Loop state, task tracking, skill/rule search — all sessions, all projects, queryable via MCP tools |
+| [devaipod](https://github.com/cgwalters/devaipod) | Container-isolated build/test loops; credentials via podman secrets |
+| [obra/superpowers](https://github.com/obra/superpowers) | Workflow discipline skills (brainstorm → plan → execute, TDD, debugging, PR protocol) |
+| Personal skills | Session hygiene, repo onboarding, discovery capture, loop system, workflow self-correction |
+| `templates/` | Seeds your private `opencode-config` repo with AGENTS.md, opencode.json (MCP config pre-wired), memory stubs, devaipod config |
 
 ---
 
 ## What You Get
 
-- **Memory that persists** — the agent knows your preferences, your project context, and what it discovered last session
-- **A searchable journal** — discoveries, gotchas, and design decisions accumulate and surface automatically
-- **Workflow discipline** — structured stages for feature work (brainstorm → plan → execute) with mandatory stops between them
-- **Session hygiene** — every session starts with context verification and ends with config sync
-- **Git rails** — SSH-only remotes, upstream push protection, conventional commits enforced
+- **Persistent memory** — the agent knows your preferences, project context, and what it discovered last session; memory blocks survive across machines via git sync
+- **Searchable journal** — discoveries, gotchas, and design decisions accumulate automatically and surface via semantic search before related tasks
+- **Workflow discipline** — structured stages for feature work (brainstorm → plan → execute) with mandatory stops between them; plans live outside repos, never committed
+- **Loop system** — N-run iteration loops with plan import, per-task state, and run summaries stored in PostgreSQL; resumable across machines
+- **Container isolation** — every build/test loop runs in a fresh devaipod container; OpenCode config injected via bind_home; credentials via podman secrets, never committed
+- **Automatic devcontainer setup** — project onboarding includes a fitness assessment (standard vs privileged container) and commits `.devcontainer/devcontainer.json` to your fork
+- **Session hygiene** — `session-start` verifies MCP health, memory block, and active plans; `session-end` commits config and syncs across machines
+- **Git rails** — SSH-only remotes, upstream push protection, conventional commits, fork discipline enforced by skills
 
-Adapt the personas to your liking: 
-
-- https://github.com/castrojo/powerlevel/blob/main/templates/memory/human.md
-- https://github.com/castrojo/powerlevel/blob/main/templates/memory/persona.md
-
-## Tradeoffs
-
-**Works well:**
-- Straightforward, just use it and help it document your preferences and learn your projects, there's an onboarding projects skill. Ideally the more you use it the better it gets.
-- Context genuinely survives across sessions — the agent doesn't re-ask things already established
-- Guardrails prevent destructive git actions (force pushes, silent upstream PRs)
-- Journal ROI grows over time as discoveries accumulate
-
-**Costs:**
-- Overhead on simple tasks — the machinery exists for complex work, it's noise on trivial requests - I just use normal copilot for tasks like this. This is for long term maintenance. 
-- Requires maintenance — skills and AGENTS.md drift if you don't run `improve-workflow` consistently
-- OpenCode-specific — not portable to other agents without significant adaptation
+Adapt the default personas to your preferences:
+- [`templates/memory/human.md`](templates/memory/human.md)
+- [`templates/memory/persona.md`](templates/memory/persona.md)
 
 ---
 
-> [!TIP]
-> **Multi-Model Review:** Use Gemini or another model on your plans in your GitHub private `opencode-config` repo to get second opinions. This helps catch architectural gaps or "pattern mistakes" that a single model might miss. Setup the free gemini code review or run it locally. 
+## Architecture
+
+```
+~/.config/opencode/                  ← git-tracked in yourname/opencode-config
+  AGENTS.md                          ← global workflow rules (injected every session)
+  opencode.json                      ← plugins + workflow-state MCP config
+  memory/persona.md                  ← agent behavioral style
+  memory/human.md                    ← your preferences and conventions
+  agent-memory.json                  ← journal config (tags, retention)
+  skills/personal/                   ← your personal skills
+  skills/superpowers/                ← symlink → superpowers/ (read-only)
+  superpowers/                       ← obra/superpowers clone (push DISABLED)
+  plugins/superpowers.js             ← symlink → superpowers plugin
+  mcp/state/
+    opencode-state-mcp               ← Go MCP binary (built by setup.sh)
+    opencode-state-db.container      ← systemd quadlet for PostgreSQL
+    seed/                            ← DB seed scripts (rules, skills)
+  devaipod.toml                      ← devaipod config (bind_home paths)
+  plans/                             ← project notes and plans (not in any repo)
+
+~/.local/share/opencode-state-db/    ← PostgreSQL data (machine-local, never synced)
+~/.config/containers/systemd/        ← opencode-state-db.container (quadlet)
+```
+
+The MCP server runs as a local process in each OpenCode session. The PostgreSQL database runs as a systemd user service (quadlet). Neither is required to be synced — only the binary and quadlet file are tracked in `opencode-config`.
 
 ---
 
-## Review Workflow
+## Prerequisites
 
-To have a senior agent review your work or to see previous architectural guidance, tell your agent:
-> "Go through Gemini's recommendations in templates/plans/."
+**Required:**
+- [OpenCode](https://opencode.ai/install)
+- [GitHub CLI](https://cli.github.com/) authenticated with SSH (`gh auth login --git-protocol ssh`)
+- `git`
+- `npm` — for the opencode-agent-memory plugin
+- `go` — for building the workflow-state MCP binary
+- `podman` — for the PostgreSQL quadlet (workflow-state DB)
 
-The Senior Reviewer (Gemini CLI) documents decisions and identifies "pattern mistakes" in `templates/plans/`. Implementation agents MUST follow these plans to ensure architectural integrity.
+**Optional:**
+- `cargo` / Rust — for devaipod; setup.sh installs it if cargo is present, skips with a notice if not
 
 ---
 
 ## How to Get It
 
-**Prerequisites:** [OpenCode](https://opencode.ai/install), [GitHub CLI](https://cli.github.com/) authenticated with SSH, `git`, `npm`, Rust/cargo (for devaipod - optional)
-
 Tell your agent:
 
 > "Set up my OpenCode workflow. Read the AGENTS.md in castrojo/powerlevel and run setup.sh."
 
-The agent will:
-1. Detect your GitHub username
-2. Create a private `opencode-config` repo in your account
-3. Clone [obra/superpowers](https://github.com/obra/superpowers) as read-only (push disabled — no accidental upstream PRs)
-4. Wire up symlinks, install npm dependencies, configure global gitignore
+What the script does:
+1. Verifies GitHub CLI auth, SSH key, npm, podman, and go
+2. Creates a private `opencode-config` repo in your GitHub account, seeded from `templates/`
+3. Clones `obra/superpowers` as read-only (push URL set to `DISABLE` — no accidental upstream PRs)
+4. Builds the workflow-state MCP binary (`go build`)
+5. Installs the PostgreSQL quadlet (`opencode-state-db.container`), starts the DB, seeds rules and skill sections
+6. Installs devaipod if cargo is available; wires devaipod config symlink
+7. Wires plugin and skills symlinks, installs npm dependencies, configures global gitignore
 
-Then **in a new OpenCode session**, press `ctrl+p` and install these community skills:
+If the script fails, read the error — it reports exactly which prerequisite or step failed.
+
+---
+
+## After Setup
+
+**1. Open a new OpenCode session** in `~/.config/opencode/` and say `session-start`. The agent orients itself, verifies MCP health, and surfaces any active plans.
+
+**2. Install community skills** — in a new OpenCode session, press `ctrl+p` and install:
 
 | Skill | What it does | Source |
 |---|---|---|
-| `find-skills` | **Search [skills.sh](https://skills.sh) to discover and install more skills** — install this first | `vercel-labs/skills` |
+| `find-skills` | Search [skills.sh](https://skills.sh) for more skills — install first | `vercel-labs/skills` |
 | `gh-cli` | GitHub CLI operations (PRs, issues, releases) | `github/awesome-copilot` |
 | `code-review` | Thorough code review workflow | `supercent-io/skills-template` |
 | `container-debugging` | Debug Docker/Podman containers | `aj-geddes/useful-ai-prompts` |
@@ -99,58 +118,48 @@ Then **in a new OpenCode session**, press `ctrl+p` and install these community s
 | `bash-linux` | Bash/Linux terminal patterns | `sickn33/antigravity-awesome-skills` |
 | `fedora-linux-triage` | Fedora/dnf/systemd/SELinux triage | `github/awesome-copilot` |
 
-Once `find-skills` is installed, the agent can run `npx skills find <query>` to search for more skills at any time.
+Once `find-skills` is installed: `npx skills find <query>` searches for more.
 
-Your config lives in `yourname/opencode-config`. powerlevel stays here as a reference.
+**3. For each new project:** tell your agent "onboard this repository". It runs the `onboarding-a-repository` skill — verifies remote layout, sets up plans directory, runs a devaipod fitness assessment, creates `.devcontainer/devcontainer.json`, bootstraps loop state in the DB, and writes an initial journal entry.
 
----
-
-## After Setup
-
-Open a new OpenCode session in `~/.config/opencode/` and say "session-start". The agent orients itself, verifies the setup, and you're ready to work.
-
-For each new project: tell your agent "onboard this repository" and it runs the `onboarding-a-repository` skill — sets up remotes, plans directory, and project memory block.
-
-### Optional: Install devaipod
-
-For container-isolated build/test loops (recommended for complex projects):
-
+**4. Initialize devaipod secrets** (one-time per machine, if devaipod was installed):
 ```bash
-# Install Rust if not already present
-brew install rust  # or curl https://sh.rustup.rs -sSf | sh
-
-# Install devaipod
-cargo install --git https://github.com/cgwalters/devaipod
-
-# Link config
-ln -sf ~/.config/opencode/devaipod.toml ~/.config/devaipod.toml
-
-# Initialize podman secrets (GitHub token for private repos)
 ~/.cargo/bin/devaipod init --host
-# When prompted: use `gh auth token` output for GitHub token
-
-# Verify
-~/.cargo/bin/devaipod --version --host
-podman secret ls | grep gh_token
+# When prompted for GitHub token: gh auth token
 ```
-
-**What devaipod provides:**
-- Isolated container environment for build/test loops
-- Automatic injection of your OpenCode config (AGENTS.md, skills, memory)
-- Podman secrets management for credentials (never committed to repos)
-- Host-mode execution via `devaipod run ~/src/<repo> --host -c 'command'`
-
-See `~/.config/opencode/skills/personal/new-machine-setup` (Step 6b) for full details.
 
 ---
 
 ## Syncing Across Machines
 
 ```bash
-# On any new machine after setup
+# On any new machine after setup.sh
 cd ~/.config/opencode && git pull
 
 # After any session that changes config
 cd ~/.config/opencode
 git add . && git commit -m "chore(config): sync" && git push
 ```
+
+The workflow-state DB (`~/.local/share/opencode-state-db/`) is machine-local and not synced — it rebuilds from the seed scripts on each machine. Loop state (plan task status, run summaries) is also machine-local by design; the plan files in `plans/` are what get synced.
+
+---
+
+## Tradeoffs
+
+**Works well:**
+- Context genuinely survives across sessions — preferences, project state, and past discoveries are available from the first message
+- Loop system tracks N-run iteration series with task state in PostgreSQL; run summaries accumulate in the plan file and are resumable across machines
+- Container isolation via devaipod prevents environment drift — each build/test loop gets a clean container with injected config
+- Journal ROI grows over time as discoveries accumulate and surface automatically before related tasks
+
+**Costs / Reality check:**
+- More moving parts than a simple config file: PostgreSQL quadlet + Go binary + podman + devaipod; `setup.sh` handles installation but more components means more that can break
+- Overhead on simple tasks — this machinery exists for complex, long-running work across multiple sessions; it adds friction to one-off scripts
+- OpenCode-specific — the skills, memory blocks, and MCP tools are not portable to other AI agents without significant rework
+- Requires active maintenance — skills and AGENTS.md drift if you don't invoke `improve-workflow` when the agent gets something wrong
+
+---
+
+> [!TIP]
+> **Multi-Model Review:** Use Gemini or another model to review architectural plans in your private `opencode-config` repo. A second model catches pattern mistakes that a single model misses. The free Gemini Code Assist GitHub app auto-reviews PRs on your repos with no setup required.
