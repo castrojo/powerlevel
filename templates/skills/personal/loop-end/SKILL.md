@@ -74,8 +74,7 @@ workflow-capture skill: <load workflow-capture skill content via Skill tool or p
 
 Wait for the subagent to return before proceeding.
 
-**If subagent fails or returns an error:** fall back to the original per-item question tool workflow:
-for each [GAP] item, use the question tool to present it and invoke `improve-workflow` interactively.
+**If subagent fails or returns an error:** write a journal entry with tag `loop-end` noting the failure, then continue to Stage 2 automatically. Do not use the question tool. Do not stop for interactive recovery.
 
 ### Step 3: Show result
 
