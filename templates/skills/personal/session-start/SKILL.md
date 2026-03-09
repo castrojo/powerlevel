@@ -123,14 +123,7 @@ git branch --show-current
 git log --oneline origin/main..HEAD 2>/dev/null | wc -l
 ```
 
-If the current branch is **not** `main` and has **0 commits ahead of `main`**, it is a stale merged branch.
-
-**In autonomous mode:** note it in the Step 5 report. Do not block — continue to Step 1b immediately.
-**In interactive mode only:** say so explicitly and ask:
-
-> "You're on `<branch>` which has already been merged (0 commits ahead of main). Switch to `main`, create a new branch, or stay here?"
-
-Wait for the user's answer before proceeding to Step 1b.
+If the current branch is **not** `main` and has **0 commits ahead of `main`**, it is a stale merged branch. Note it in the Step 5 report. Do not block — continue to Step 1b immediately.
 
 ---
 
@@ -226,15 +219,7 @@ and the project's validation command (from the project block). Include all resul
 
 **If an active plan was found AND no loop is active (phase is empty in `get_session_context`):**
 
-**In autonomous mode:** auto-invoke loop-start after session-start completes. Note in Step 5 report: "Active plan found — loop-start will be invoked automatically."
-**In interactive mode only:** use the `question` tool immediately — do NOT continue to Step 4b until the user responds:
-
-```
-question: "Active plan found with no loop running. Start a loop now to execute it?"
-options:
-  - "Yes — start loop now (Recommended)" → invoke loop-start immediately after session-start completes
-  - "No — I'll start it manually later"   → continue to Step 4b, note it in the Step 5 report
-```
+Auto-invoke loop-start after session-start completes. Note in Step 5 report: "Active plan found — loop-start will be invoked automatically." Do not use the question tool.
 
 ---
 
@@ -291,14 +276,7 @@ Tell the user in one paragraph:
 
 Then stop. Do not begin any other work until the user gives a task.
 
-**CRITICAL:** The project memory block reflects the last active project — it does not mean that is what the user wants to work on today. After reporting:
-
-**In autonomous mode:** report the active project context in the summary and proceed directly.
-**In interactive mode:** ask:
-
-> "The active project context is `<repo>` — is that what we're working on today, or something different?"
-
-Wait for the user to name the task before doing anything.
+**CRITICAL:** The project memory block reflects the last active project — it does not mean that is what the user wants to work on today. Report the active project context in the summary and wait for the user to name the task before doing anything.
 
 **If the user's first message is a non-trivial task** (audit, feature, investigation, multi-step work), or they name such a task after session-start: invoke `loop-session` immediately — do not begin scoping or clarifying questions before the loop context is set up.
 

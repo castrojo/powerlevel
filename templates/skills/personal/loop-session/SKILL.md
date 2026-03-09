@@ -49,7 +49,7 @@ workflow-state_get_session_context(repo: "<REPO>")
 
 Do NOT use `cat`, `ls`, or any file read on loop-state.md or plan files — DB tools only.
 
-**If loop state shows an active phase** (non-empty phase field): route to "Resume active loop" regardless of user's selection — confirm with them first in interactive mode; in autonomous mode, route directly.
+**If loop state shows an active phase** (non-empty phase field): route to "Resume active loop" regardless of user's selection — route directly, no confirmation.
 
 **If latest_run_summary is non-empty**: mention the last run context; the user may want to continue from it.
 
@@ -72,7 +72,7 @@ Skip confirmation. Invoke the entry skill immediately. Announce: "Routing to <en
 These apply to every loop session. Read them. They are not optional.
 
 1. **Skills and subagents are the top primitives.** Never do work directly in the parent agent that could be dispatched as a subagent (loop-task does this via Task tool).
-2. **Plans + journal = persistent memory.** The plan file is the run-by-run ground truth. The journal captures discoveries and design decisions.
+2. **DB + journal = persistent memory.** The workflow-state DB (`get_plan_tasks`, `get_session_context`, `append_run_summary`) is the run-by-run ground truth. The journal captures discoveries and design decisions. Plan files are write-once references — never read for orientation.
 3. **opencode-config syncs across machines via GitHub.** Loop state is stored in the workflow-state DB. session-start calls get_session_context and surfaces the active loop in the welcome banner. Start a loop on any machine; resume on any other.
 4. **devaipod is the local execution environment** for all build/test tasks. CI must use the same image as .devcontainer/devcontainer.json — loop-gate checks this.
 5. **Context efficiency is a hard constraint.** Subagent-per-run (loop-task) prevents parent context window exhaustion on multi-run loops.

@@ -66,8 +66,30 @@ Working directory: ~/src/<REPO>
 ## Your task
 <specific instructions — what to build, what files to change, what commands to run>
 
-## On completion
-Record per loop-task MCP recording template: append_run_summary + update_task_status + set_loop_state.
+## On completion — MANDATORY MCP calls (call all three before returning)
+
+1. workflow-state_append_run_summary(
+     repo: "<REPO>",
+     run_num: <X+1>,
+     summary: "<one paragraph: what was done, outcome, key findings>",
+     findings: "<any [GAP] items or blockers, or empty string>",
+     phase: "<current phase name>"
+   )
+
+2. workflow-state_update_task_status(   ← omit if no plan_id
+     repo: "<REPO>",
+     plan_id: "<plan_id>",
+     task_num: <N>,
+     status: "done",
+     notes: "<brief completion note>"
+   )
+
+3. workflow-state_set_loop_state(
+     repo: "<REPO>",
+     phase: "<current phase string e.g. 'fix 1/2'>",
+     run: "<X+1>/<N>",
+     goal: "<goal>"
+   )
 
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
 """
@@ -84,22 +106,20 @@ Wait for the subagent to return before proceeding.
 
 ## Step 3: Verify run recorded and loop state updated
 
-After the subagent returns:
-
-**Primary (MCP):**
+After the subagent returns, always verify via DB:
 
 ```
 get_session_context(repo: "<REPO>")
 ```
 
-In autonomous mode, if the subagent already called `set_loop_state`, skip this verification step and proceed directly to Step 4.
-
-Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, call the MCP tools now:
+Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, the subagent's MCP calls failed — call them now in the parent before proceeding:
 
 ```
-set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>")
-append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>")
+workflow-state_set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>")
+workflow-state_append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>", phase: "<phase>")
 ```
+
+Do not skip this check. A loop stuck at run 0/N means every future session-start shows stale active state.
 
 ---
 
@@ -153,11 +173,12 @@ Each run dispatches a fresh subagent. The parent only sees the result summary, n
 
 ## MCP recording template
 
-Every subagent dispatched by loop-task MUST call these three MCP tools on completion:
+Every subagent dispatched by loop-task MUST call these three MCP tools on completion.
+They are inlined directly into the subagent prompt — never referenced by shorthand.
+A subagent starts with fresh context and has no loop skill loaded; shorthand is meaningless to it.
 
-1. `append_run_summary(repo, run_num, summary, findings, plan_id, phase)`
-2. `update_task_status(repo, plan_id, task_num, status, notes)` — omit if no plan
-3. `set_loop_state(repo, phase, run, goal)`
+The three required calls:
 
-In the subagent prompt, reference this as: "Record completion per the loop-task MCP recording template."
-This replaces the full 25-line block that was previously inlined in every prompt.
+1. `workflow-state_append_run_summary(repo, run_num, summary, findings, phase)` — findings prefix `[GAP]` for workflow gaps
+2. `workflow-state_update_task_status(repo, plan_id, task_num, status, notes)` — omit if no plan_id
+3. `workflow-state_set_loop_state(repo, phase, run, goal)` — advances the run counter in DB
