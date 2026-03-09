@@ -1,3 +1,8 @@
+---
+name: project-discovery
+description: Use when you need to learn how to build, validate, or test a project and the answer is not in memory or AGENTS.md
+---
+
 # Skill: project-discovery
 
 ## When to use
