@@ -27,6 +27,7 @@ Here's what a completed `human.md` looks like. Replace every section with your o
 
 - Conventional commits enforced (`type(scope): description`)
 - Skills system must be followed — invoke before acting
+- Strongly prefers workflow disciple and iteration.
 - YAGNI — minimal code, easy to maintain; strongly prefer simple solutions over engineered ones
 - Plans before implementation for non-trivial work
 - Verification before completion claims — run the commands, show the output
@@ -41,6 +42,7 @@ Here's what a completed `human.md` looks like. Replace every section with your o
 ### Languages and Frameworks
 
 - Primarily Go, shell scripts, and containerfiles
-- Fedora/RHEL ecosystem — prefer `dnf`, `systemd`, `podman`
+- Chainguard for container images
+- CNCF Projects for tech: podman, bootc, buildah
 
 ---
