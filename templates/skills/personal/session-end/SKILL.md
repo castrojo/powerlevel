@@ -1,6 +1,6 @@
 ---
 name: session-end
-description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to YOUR_USERNAME/opencode-config, and runs worktree hygiene in repos worked in during the session.
+description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to castrojo/opencode-config, and runs worktree hygiene in repos worked in during the session.
 ---
 
 # Session End
@@ -8,15 +8,6 @@ description: Use at the end of every session — prompts for any unsaved discove
 Run this before closing OpenCode. Takes under 2 minutes.
 
 **Announce:** "Using session-end to close out the session."
-
----
-
-## Step 0: Closing summary
-
-Call `get_session_summary()` and output the `rendered_box` field verbatim.
-Do not paraphrase or reformat — print it exactly as returned.
-
-Then continue to Step 1.
 
 ---
 
@@ -147,5 +138,7 @@ Report to the user:
 - Whether config was committed (or "no changes")
 - Which repos had worktree hygiene run
 - Any discoveries captured
+
+Finally, call `get_session_summary()` and output the `rendered_box` field verbatim. Do not paraphrase or reformat — this is the last thing the user sees.
 
 Session is closed.

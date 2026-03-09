@@ -189,6 +189,8 @@ Tell the user what was accomplished:
 - Backports (if any)
 - All state committed and pushed
 
+Then invoke `session-end` to complete the session. Proceed automatically — do not stop or ask.
+
 ---
 
 ## Why the checklist is strict
