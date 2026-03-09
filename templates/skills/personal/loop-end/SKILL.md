@@ -186,6 +186,18 @@ Tell the user what was accomplished:
 - Backports (if any)
 - All state committed and pushed
 
+**Final screen — MANDATORY TOOL CALL:**
+
+```
+workflow-state_get_welcome_banner(repo: "<REPO>")
+```
+
+Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool.
+This confirms the reset is reflected in the DB and shows "no active work" to the user.
+A banner that still shows an active loop means `set_loop_state` did not run — fix before closing.
+
+**CRITICAL: This tool call has a 0/7 success rate. It is skipped almost every time. Do not skip it.**
+
 Then invoke `session-end` to complete the session. Proceed automatically — do not stop or ask.
 
 ---
