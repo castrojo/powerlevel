@@ -28,4 +28,4 @@ Skills and trigger conditions are in `~/.config/opencode/AGENTS.md`.
 - AGENTS.md is the single source of truth for rules. Memory holds behavioral style only.
 - When memory and AGENTS.md conflict: fix AGENTS.md first, then update memory.
 - Write journal entries after debugging sessions, design decisions, or CI discoveries.
-- When any skill or AGENTS.md is corrected: fix → commit → journal. All three.
+- When any skill or AGENTS.md is corrected: fix → commit → journal. All three, avoid "configuration drift", keep the system self improving.
