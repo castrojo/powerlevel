@@ -40,6 +40,7 @@ func main() {
 	tools.RegisterRulesTools(s, pool)
 	tools.RegisterSessionTools(s, pool)
 	tools.RegisterSummaryTools(s, pool)
+	tools.RegisterBannerTools(s, pool)
 
 	if err := server.ServeStdio(s); err != nil {
 		fmt.Fprintf(os.Stderr, "serve: %v\n", err)
