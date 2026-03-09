@@ -73,6 +73,24 @@ Use the Edit tool to make the surgical change. Do not rewrite the file.
 
 ---
 
+## Step 3b: Sync the changed content to the DB
+
+After applying the edit, push the updated content to the workflow-state DB so it stays queryable without a future re-seed:
+
+- **Skill edit** → call `upsert_skill_section` for each changed `##` section:
+  ```
+  workflow-state_upsert_skill_section(skill: "<skill-name>", section: "<heading>", content: "<full section text>")
+  ```
+
+- **AGENTS.md edit** → call `upsert_rule` for the changed section:
+  ```
+  workflow-state_upsert_rule(id: "<agents-<slug>>", domain: "<domain>", content: "<full section text>")
+  ```
+
+This is mandatory — it keeps the DB as the live source so `search_rules` and `search_skill` always return current content.
+
+---
+
 ## Step 4: Commit
 
 Commit to the appropriate repo:
