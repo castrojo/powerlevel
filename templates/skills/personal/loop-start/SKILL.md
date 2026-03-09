@@ -62,7 +62,25 @@ options:
 
 ## Step 3: Fresh start
 
-**No action needed** — state is initialized in Step 6 via `set_loop_state`. Proceed to Step 4.
+**No action needed** — state is initialized in Step 6 via `set_loop_state`. Proceed to Step 3b.
+
+---
+
+## Step 3b: Seed plan tasks (if plan-based loop)
+
+If this loop tracks a specific plan, seed the plan tasks into the DB now so `get_plan_tasks` works during runs:
+
+```
+import_plan(repo: "<REPO>", plan_id: "<plan_id>", tasks: [
+  {"task_num": 1, "description": "<task 1>"},
+  {"task_num": 2, "description": "<task 2>"},
+  ...
+])
+```
+
+**Skip if:** no `plan_id` exists for this loop, or `get_plan_tasks(repo, plan_id)` already returns results (tasks already seeded).
+
+Proceed to Step 4.
 
 ---
 

@@ -52,10 +52,10 @@ ls ~/.config/opencode/mcp/state/opencode-state-mcp
 | `improve-workflow` | When the user corrects you or a skill/rule is wrong |
 | `onboarding-a-repository` | First time working in a new repo |
 | `loop-session` | When starting any loop work session — orients context, asks what type (workflow meta vs project work), routes to workflow-improvement-loop or project-loop |
-| `loop-start` | Before any N-run loop series — initialize or resume loop-state.md, orient context, confirm run count; also use when the user says "start a loop" |
-| `loop-task` | Each individual run — executes work, appends run summary to plan file, updates loop-state.md |
+| `loop-start` | Before any N-run loop series — initialize or resume loop state via DB, orient context via get_session_context, confirm run count; also use when the user says "start a loop" |
+| `loop-task` | Each individual run — executes work, records run summary via append_run_summary, updates loop state via set_loop_state |
 | `loop-gate` | After all runs in a phase — process systemic improvements, commit, gate phase transition |
-| `loop-end` | After final phase — backport review, state integrity checklist, reset loop-state.md |
+| `loop-end` | After final phase — backport review, state integrity checklist, reset loop state in DB so the next loop on any machine starts cleanly |
 | `workflow-improvement-loop` | Use when starting a workflow improvement session — audits skills/AGENTS.md/templates, fixes gaps, backports to powerlevel |
 | `project-loop` | Use when starting project work (features, bugs, refactors) — wraps brainstorm→plan→execute→ship pipeline with loop-task iterations; devaipod is the execution environment |
 
