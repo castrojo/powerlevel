@@ -24,19 +24,23 @@ Pipeline: <all phases ▓> | All phases complete
 [ LOOP END ] <REPO> • Closing loop
 ```
 
----
-
-## Stage 1: Dispatch workflow-capture subagent
-
-### Step 1: Check for [GAP] items
-
-**Primary (MCP):**
+Then immediately count [GAP] items:
 
 ```
 get_run_history(repo: "<REPO>", filter: "[GAP]")
 ```
 
-If no items: skip to Stage 2. Note "No workflow gaps this loop."
+Store the result as `gap_items`. If the result is empty (no [GAP] items), **skip Stage 1 entirely — do NOT dispatch workflow-capture.** Proceed directly to Stage 2.
+
+---
+
+## Stage 1: Dispatch workflow-capture subagent
+
+> **Gate:** Only enter Stage 1 if `gap_items` from Stage 0 is non-empty. If Stage 0 found zero [GAP] items, this entire stage is skipped. Note "No workflow gaps this loop." and continue to Stage 2.
+
+### Step 1: Confirm [GAP] items exist
+
+`gap_items` is already fetched in Stage 0. Verify it is non-empty before proceeding to Step 2. If it is empty, do NOT dispatch the subagent — skip to Stage 2 immediately.
 
 ### Step 2: Dispatch autonomous subagent
 
@@ -207,11 +211,7 @@ Must be clean if a backport occurred.
 
 **[ ] Record final run summary before reset**
 
-If `get_session_context` was not called recently (e.g., Stage 0 context is stale), call it now to get the current run number:
-
-```
-get_session_context(repo: "<REPO>")
-```
+Use the run number from the Stage 0 `get_session_context` call — it is already in-context. Do not re-fetch.
 
 Then record the final run completion:
 
