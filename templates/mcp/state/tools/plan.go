@@ -104,7 +104,7 @@ func RegisterPlanTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 
 		_, updErr := tx.Exec(ctx,
-			`UPDATE plan_tasks SET status='in_progress', claimed_by=$3, claimed_at=NOW()
+			`UPDATE plan_tasks SET status='in_progress', claimed_by=$3, claimed_at=NOW(), updated_at=NOW()
 			 WHERE repo=$1 AND plan_id=$2 AND task_num=$4`,
 			repo, planID, agentID, taskNum,
 		)
@@ -203,7 +203,7 @@ func RegisterPlanTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 		notes := req.GetString("notes", "")
 		_, qerr := pool.Exec(ctx,
-			`UPDATE plan_tasks SET status=$4, notes=NULLIF($5,'')
+			`UPDATE plan_tasks SET status=$4, notes=NULLIF($5,''), updated_at=NOW()
 			 WHERE repo=$1 AND plan_id=$2 AND task_num=$3`,
 			repo, planID, int(taskNumF), status, notes,
 		)

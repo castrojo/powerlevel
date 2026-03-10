@@ -34,10 +34,13 @@ CREATE TABLE IF NOT EXISTS plan_tasks (
     claimed_by  TEXT,
     claimed_at  TIMESTAMPTZ,
     notes       TEXT,
+    created_at  TIMESTAMPTZ DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (repo, plan_id, task_num)
 );
 CREATE INDEX IF NOT EXISTS plan_tasks_status_idx ON plan_tasks (repo, plan_id, status);
 CREATE INDEX IF NOT EXISTS idx_plan_tasks_created_at ON plan_tasks(created_at);
+CREATE INDEX IF NOT EXISTS idx_plan_tasks_updated_at ON plan_tasks(updated_at);
 
 CREATE TABLE IF NOT EXISTS loop_state (
     repo        TEXT PRIMARY KEY,
@@ -60,6 +63,12 @@ CREATE TABLE IF NOT EXISTS run_history (
 );
 CREATE INDEX IF NOT EXISTS run_history_repo_idx ON run_history (repo, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_run_history_repo_phase_created ON run_history(repo, phase, created_at);
+-- Full-text search: generated column + GIN index (same pattern as rules/skill_sections)
+ALTER TABLE run_history ADD COLUMN IF NOT EXISTS search_vec TSVECTOR
+    GENERATED ALWAYS AS (
+        to_tsvector('english', COALESCE(summary,'') || ' ' || COALESCE(findings,''))
+    ) STORED;
+CREATE INDEX IF NOT EXISTS run_history_search_idx ON run_history USING GIN (search_vec);
 
 CREATE TABLE IF NOT EXISTS ui_panels (
     panel_id    TEXT PRIMARY KEY,
@@ -78,4 +87,6 @@ CREATE TABLE IF NOT EXISTS memory_updates (
 CREATE INDEX IF NOT EXISTS memory_updates_created_idx ON memory_updates (created_at DESC);
 
 ALTER TABLE plan_tasks ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE plan_tasks ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
+CREATE INDEX IF NOT EXISTS idx_plan_tasks_updated_at ON plan_tasks(updated_at);
 ALTER TABLE skill_sections ADD COLUMN IF NOT EXISTS position INTEGER NOT NULL DEFAULT 0;

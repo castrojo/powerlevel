@@ -192,7 +192,7 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		// 2. UPDATE plan task status if plan_id provided
 		if planID != "" && taskNum > 0 {
 			_, qerr = tx.Exec(ctx,
-				`UPDATE plan_tasks SET status='done'
+				`UPDATE plan_tasks SET status='done', updated_at=NOW()
 				 WHERE repo=$1 AND plan_id=$2 AND task_num=$3`,
 				repo, planID, taskNum,
 			)
@@ -239,7 +239,7 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			 FROM run_history
 			 WHERE repo = $1
 			   AND ($2 = '' OR phase = $2)
-			   AND ($3 = '' OR to_tsvector('english', COALESCE(summary,'') || ' ' || COALESCE(findings,'')) @@ plainto_tsquery('english', $3))
+			   AND ($3 = '' OR search_vec @@ plainto_tsquery('english', $3))
 			 ORDER BY created_at DESC
 			 LIMIT 20`,
 			repo, phase, filter)
