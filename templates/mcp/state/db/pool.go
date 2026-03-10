@@ -16,7 +16,7 @@ func NewPool(ctx context.Context) (*pgxpool.Pool, error) {
 	password := getenv("PGPASSWORD", "workflow_local_only")
 
 	dsn := fmt.Sprintf(
-		"host=%s port=%s dbname=%s user=%s password=%s sslmode=disable pool_max_conns=2",
+		"host=%s port=%s dbname=%s user=%s password=%s sslmode=disable pool_max_conns=10",
 		host, port, dbname, user, password,
 	)
 	pool, err := pgxpool.New(ctx, dsn)

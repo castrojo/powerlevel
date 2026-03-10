@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	uiPanelsCache     []uiPanel
-	uiPanelsCacheOnce sync.Once
+	uiPanelsMu     sync.RWMutex
+	uiPanelsCache  []uiPanel // nil until successfully loaded
+	uiPanelsLoaded bool
 )
 
 // uiPanel mirrors a row in the ui_panels table.
@@ -161,30 +162,51 @@ func RegisterBannerTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			).Scan(&repo)
 		}
 
-		// Fetch step panels (cached — ui_panels never changes at runtime)
-		var panelsErr error
-		uiPanelsCacheOnce.Do(func() {
-			rows, err := pool.Query(ctx,
-				`SELECT panel_id, title, content, sort_order
-				 FROM ui_panels ORDER BY sort_order`)
-			if err != nil {
-				panelsErr = fmt.Errorf("get_welcome_banner panels: %w", err)
-				return
-			}
-			defer rows.Close()
-			for rows.Next() {
-				var p uiPanel
-				if scanErr := rows.Scan(&p.ID, &p.Title, &p.Content, &p.SortOrder); scanErr != nil {
-					panelsErr = scanErr
-					return
+		// Fetch step panels (cached — ui_panels never changes at runtime).
+		// Uses mutex-protected lazy init: only caches on success, retries on error.
+		uiPanelsMu.RLock()
+		loaded := uiPanelsLoaded
+		cached := uiPanelsCache
+		uiPanelsMu.RUnlock()
+
+		var panels []uiPanel
+		if loaded {
+			panels = cached
+		} else {
+			uiPanelsMu.Lock()
+			if uiPanelsLoaded { // double-check after acquiring write lock
+				panels = uiPanelsCache
+				uiPanelsMu.Unlock()
+			} else {
+				rows, err := pool.Query(ctx,
+					`SELECT panel_id, title, content, sort_order
+					 FROM ui_panels ORDER BY sort_order`)
+				if err != nil {
+					uiPanelsMu.Unlock()
+					return nil, fmt.Errorf("get_welcome_banner panels: %w", err)
 				}
-				uiPanelsCache = append(uiPanelsCache, p)
+				var fetched []uiPanel
+				scanErr := func() error {
+					defer rows.Close()
+					for rows.Next() {
+						var p uiPanel
+						if e := rows.Scan(&p.ID, &p.Title, &p.Content, &p.SortOrder); e != nil {
+							return e
+						}
+						fetched = append(fetched, p)
+					}
+					return rows.Err()
+				}()
+				if scanErr != nil {
+					uiPanelsMu.Unlock()
+					return nil, scanErr
+				}
+				uiPanelsCache = fetched
+				uiPanelsLoaded = true
+				panels = fetched
+				uiPanelsMu.Unlock()
 			}
-		})
-		if panelsErr != nil {
-			return nil, panelsErr
 		}
-		panels := uiPanelsCache
 
 		// Fetch live loop state
 		var phase, run string
