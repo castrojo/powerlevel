@@ -11,6 +11,8 @@ Announce: "Using loop-task for Run X of N."
 
 The parent agent (not subagent) shows the progress bar using context already available from loop-start. Do NOT call `get_session_context` at the start of each run — the parent has this context from loop-start orientation.
 
+**Session-resume fallback:** If `get_session_context` returns empty or null for phase/run fields (e.g. after an interrupted session), call `workflow-state_get_run_history(repo: "<REPO>")` to find the last completed run and orient context. Do not block — continue with whatever context is available.
+
 **Show progress at the start of every response (before any work):**
 
 ```
@@ -33,10 +35,10 @@ Next: implement feed parser
 
 ## Step 2: Determine task and dispatch subagent
 
-If a `plan_id` is known from loop-start context, fire `get_plan_tasks` immediately — no prerequisite calls needed.
+If a `plan_id` is known from loop-start context, claim the next task atomically.
 
 Identify the task for this run from:
-1. `workflow-state_get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — claim the next pending task
+1. `workflow-state_claim_task(repo: "<REPO>", plan_id: "<plan_id>", agent_id: "<agent_id>")` — atomically claims and marks in_progress the next pending task (safe for parallel subagents)
 2. The user's instruction for this run if no plan exists
 
 **Dispatch via Task tool** (subagent type: `general`):
@@ -74,9 +76,33 @@ workflow-state_record_run_complete(
 )
 ```
 
-**For build/validation tasks**: include `Run: ~/.cargo/bin/devaipod run ~/src/<REPO> --host -c 'just build'` and capture output.
+**Default execution context — devaipod:** Unless the task is pure config/skill/doc editing (no compilation needed), the subagent must run build commands via devaipod:
 
-**For workflow tasks** (skill writing, doc updates): describe the files to edit and the changes to make. No devaipod needed.
+```
+Run: ~/.cargo/bin/devaipod run ~/src/<REPO> --host -c 'just build'
+```
+
+Capture stdout/stderr. Devaipod is not optional for build tasks — it is the default.
+
+**Exception — workflow tasks** (skill writing, doc updates, AGENTS.md edits): describe the files to edit and the changes to make. No devaipod needed.
+
+---
+
+### Build-iteration model (project-loop execute phase)
+
+A run in project-loop Phase 2 = one full build-fix cycle. The subagent is expected to attempt the task, observe failures, fix them, and commit — all within one run:
+
+1. Run `just build` via devaipod
+2. Observe failures
+3. Fix the failures (edit source files directly)
+4. Commit the fix
+5. Record the run summary (what failed, what was fixed, what remains)
+
+This is **NOT** "observe and defer." The subagent fixes and commits within the same run.
+
+> **Scope note:** The "fix impulse → KNOWN ISSUES" pattern applies only to the **workflow-improvement-loop audit phase** (where the goal is observation without mutation). In project-loop execute phase, fixing inline is correct and expected.
+
+---
 
 Wait for the subagent to return before proceeding.
 
@@ -90,15 +116,22 @@ After the subagent returns, always verify via DB:
 get_session_context(repo: "<REPO>")
 ```
 
-Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, the subagent's `record_run_complete` call failed — call the three individual tools now in the parent before proceeding:
+Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, the subagent's `record_run_complete` call failed — call the atomic tool now in the parent before proceeding:
 
 ```
-workflow-state_set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>")
-workflow-state_append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>", phase: "<phase>")
-workflow-state_update_task_status(repo: "<REPO>", plan_id: "<plan_id>", task_num: <task_num>, status: "done", notes: "<note>")
+workflow-state_record_run_complete(
+  repo: "<REPO>",
+  run_num: <X+1>,
+  summary: "<summary from subagent>",
+  phase: "<phase>",
+  goal: "<goal>",
+  findings: "<[GAP] items or empty string>",
+  plan_id: "<plan_id>",    ← optional: omit if no plan
+  task_num: <task_num>,    ← optional: include if plan_id provided
+)
 ```
 
-Use the subagent's return text as the summary. If the subagent returned nothing useful, write a one-line summary of what the run attempted. Leave findings as empty string if no [GAP] items were raised. For `update_task_status`: use the `plan_id` and `task_num` from Step 2's claim. If no `plan_id` exists, omit the call.
+Use the subagent's return text as the summary. If the subagent returned nothing useful, write a one-line summary of what the run attempted. Leave findings as empty string if no [GAP] items were raised. For `task_num`: use the value from Step 2's claim. If no `plan_id` exists, omit both `plan_id` and `task_num`.
 
 After backfill, re-check with `get_session_context` to confirm `run` now shows `<X+1>/<N>`. This is the hard guarantee that the next session-start sees correct state.
 
@@ -138,7 +171,7 @@ Pipeline: <pipeline_bar> <phase_name> <current>/<total> | Phase runs: <run_bar> 
 - If X+1 < N and pending_tasks = 0: skip remaining runs and invoke `loop-gate` immediately, noting early exit.
 - If X+1 = N: invoke `loop-gate` immediately.
 
-No confirmation needed. The user can interrupt at any time by typing.
+No confirmation needed. The user can interrupt at any time by typing. **The `question` tool is banned in auto-proceed — auto-proceed is unconditional.**
 
 ---
 
@@ -148,6 +181,24 @@ No confirmation needed. The user can interrupt at any time by typing.
 - Starting the next run before subagent result is received and plan append verified
 - Doing the work directly in the parent agent instead of dispatching a subagent
 - Using the question tool for run-to-run navigation (auto-proceed is unconditional)
+- Using the question tool for any decision within a run — loop-task runs fully autonomously; all decisions must be made without user input
+
+---
+
+## Container-First Rule
+
+For any build, test, install, lint, or investigation command that does not need to modify host state directly, prefer running it in the session container:
+
+```bash
+POD=$(cat /tmp/devaipod-pod-$(basename $PWD))
+podman exec ${POD}-workspace bash -c '<command>'
+```
+
+stdout is captured directly. Journal significant findings with `journal_write`.
+
+This applies to: `just build`, `just check`, `npm install`, `cargo test`, any upstream repo investigation.
+
+**Does NOT apply to:** git operations, memory/journal writes, skill edits.
 
 ---
 

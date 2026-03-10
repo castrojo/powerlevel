@@ -445,7 +445,7 @@ Never read plan files to determine resume state — the DB is the primary. Confi
 - Populating KNOWN ISSUES with authoring revision history — it is executor notes only (issues to resolve as you reach each task), never a log of what was wrong during plan writing
 - Skipping the N-loop devaipod build series before implementing plan tasks — loops are mandatory, not optional
 - Mapping "N loops" to N plan phases or pipeline stages — loops always mean N local build iterations
-- Fixing code inline during the loop series — findings go to `journal_write` per run; plan append and skill updates happen once per set; all fixes happen after the executive report
+- Fixing code inline during the loop series — all fixes happen after the executive report (workflow-improvement-loop audit phase only)
 
 ---
 
@@ -511,9 +511,9 @@ Hard stops. No user instruction overrides these.
 - **Referencing "the MCP recording template" in a subagent prompt** — subagents start fresh with no loop skill loaded; the three MCP calls must be inlined verbatim in every subagent prompt or they will not run
 - Configuring or debugging an unfamiliar tool without reading its source code first — docs can be wrong or incomplete; source cannot
 - Making a second attempt to fix a tool failure without first reading the source to find the actual root cause
-- **Implementing fixes during a loop series** — loops are observation-only; every fix impulse becomes a KNOWN ISSUES entry; fixes happen only in the designated fix section between loop sets
+- **Implementing fixes during a loop series** — applies to workflow-improvement-loop audit phase only; the audit phase is observation-only. In project-loop execute phase, build→observe→fix→commit per run IS the correct iteration model.
 - **Terminating a loop or labeling fix-phase items "deferred" without completing loop-gate Step 7** — never advance from audit→fix or fix→loop-end without completing the gate; "deferred" does not mean done, it means the item needs a new loop-task run or explicit user dismissal
-- **Burning more than one loop iteration on the same issue** — one observation, written to KNOWN ISSUES, then move to the next pipeline area; re-probing is banned
+- **Burning more than one loop iteration on the same issue** — applies to workflow-improvement-loop audit phase only; one observation per skill/component. In project-loop execute phase, multiple build attempts on the same failing target ARE expected and correct.
 - **Re-investigating any issue marked STATUS: RESOLVED in a skill** — if a skill section says RESOLVED, it is closed; do not observe, report, or mention it in any loop run
 - `gh pr create` to upstream without `--web`
 - Any upstream PR without both confirmation dialogs completed

@@ -18,7 +18,7 @@ Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,s
 
 ## Before You Start: Fork Check
 
-Work always happens in a local fork in your account (`YOUR_USERNAME`), not on upstream directly.
+Work always happens in a local fork in `YOUR_GITHUB_USERNAME`, not on upstream directly.
 
 ```bash
 git remote -v
@@ -26,12 +26,12 @@ git remote -v
 
 Expected:
 ```
-origin    git@github.com:YOUR_USERNAME/<repo>.git  (push here)
-upstream  git@github.com:<org>/<repo>.git          (fetch only)
+origin    git@github.com:YOUR_GITHUB_USERNAME/<repo>.git  (push here)
+upstream  git@github.com:<org>/<repo>.git                 (fetch only)
 ```
 
 If the remote layout is wrong: stop and run `onboarding-a-repository` first.
-If the repo is already owned by you (no upstream): proceed directly.
+If the repo is already owned by `YOUR_GITHUB_USERNAME` (no upstream): proceed directly.
 
 Sync the fork to upstream before starting (skip silently for owner repos):
 
@@ -100,21 +100,21 @@ Auto-advance. After plan review completes, invoke `loop-gate` immediately to adv
 
 Each run via `loop-task`:
 1. Run `just build` (or the project's validation command) via devaipod
-2. Observe: what passed, what failed, what's unexpected
-3. Append run summary to plan (loop-task Step 3)
-4. Update loop state via set_loop_state MCP (loop-task Step 4)
-5. Park any systemic findings under ## Systemic improvements
+2. Observe: what failed, what the error is, where it is in the code
+3. Fix the failures — edit source files, apply the minimal surgical fix
+4. Commit the fix: `git add -p && git commit -m "fix: <description>"`
+5. Append run summary: what failed, what was fixed, what remains
+6. Update loop state via set_loop_state MCP
 
-**Fixes happen after observation.** A run that produces a clear failure block is not wasted — it is the ralph wiggum property: the byproduct is the KNOWN ISSUES entry and journal.
+**N = max build attempts.** Default N=5. Loop terminates early when `just build` passes clean. If N is exceeded without a clean build, surface remaining failures and escalate to the user.
+
+**One failure category per run.** If the build has multiple error categories, fix the most fundamental one (root of the dependency chain) first, then re-run. Do not fix all error categories in one run — that leads to tangled commits.
 
 ### Subagent strategy
 
-If the execute phase has 5+ independent tasks that can run in parallel:
-- Dispatch parallel subagents via `dispatching-parallel-agents`
-- Each subagent handles one independent component
-- Collect results before the next run
+Build-iteration runs are always sequential — each run depends on the fixes from the previous run. Dispatch loop-task serially. Do NOT parallelize execute-phase runs.
 
-If tasks are sequential (each depends on the previous): run loop-task serially.
+If the plan has truly independent parallel tasks (e.g., implement unrelated features with no shared code), use the `dispatching-parallel-agents` skill BEFORE starting the build-iteration loop to split the work.
 
 ### devaipod invocation
 
@@ -124,9 +124,32 @@ If tasks are sequential (each depends on the previous): run loop-task serially.
 
 The devcontainer.json in the repo controls the container image. This must match CI — loop-gate will check this at phase transition.
 
+### devaipod Gotchas
+
+**bind_home paths:** Use granular subpaths — do NOT list `.config/opencode` itself. The agent startup script pre-creates `.config/opencode` before files are copied; `podman cp` of a directory into an existing directory nests the source inside it. Use: `.config/opencode/AGENTS.md`, `.config/opencode/skills`, `.config/opencode/memory`, `.config/opencode/agents`.
+
+**Do NOT bind_home `opencode.json`** — devaipod writes its own version; overwriting it breaks the agent's model/provider configuration.
+
+**devcontainer.json resolution:** `--devcontainer-json` flag > `.devcontainer/devcontainer.json` > `--image` flag > `default-image` in `devaipod.toml`. The `mounts` field is silently ignored — use `bind_home` for config delivery.
+
+**Container-building repos** (build uses `podman build`, `flatpak-builder`) need additional devcontainer.json fields:
+```json
+"capAdd": ["SYS_ADMIN"],
+"runArgs": ["--security-opt", "label=disable", "--security-opt", "unmask=/proc/*", "--device", "/dev/net/tun", "--device", "/dev/kvm"]
+```
+
+**Shell quoting in `bash -c`:** Never use Python f-strings with single quotes inside a `bash -c '...'` string — inner single quotes terminate the outer shell string. Use `grep` or `jq` to parse output instead.
+
+**Capturing command output from a running container:**
+```bash
+POD=$(cat /tmp/devaipod-pod-$(basename $PWD))
+podman exec ${POD}-workspace bash -c '<command>'
+```
+(`devaipod run` launches an AI agent — it does NOT pipe shell stdout back to the caller.)
+
 ### Phase 2 ends when
 
-All planned tasks are implemented AND at least one full `just build` passes inside devaipod. Invoke `loop-gate` to advance to Phase 3 (ship).
+The most recent `just build` passes clean inside devaipod. Invoke `loop-gate` immediately.
 
 ---
 

@@ -13,6 +13,11 @@ Run this at the beginning of every session, before any other action. Takes under
 
 ## Step 0: Opening banner
 
+Pull latest config first:
+```bash
+cd ~/.config/opencode && git pull
+```
+
 Identify repo name:
 ```bash
 REPO=$(basename $(git rev-parse --show-toplevel 2>/dev/null) 2>/dev/null || echo "")
@@ -119,6 +124,10 @@ If the current branch is **not** `main` and has **0 commits ahead of `main`**, i
 ---
 
 ## Step 1b: Check for uncommitted opencode-config changes
+
+```bash
+cd ~/.config/opencode && git pull --rebase
+```
 
 ```bash
 git -C ~/.config/opencode status --short

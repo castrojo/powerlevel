@@ -38,7 +38,7 @@ List what was accomplished this phase using the results already fetched in Step 
 
 ---
 
-## Step 3: Scan AGENTS.md for conflicts — MANDATORY
+## Step 3: Check DB for workflow gaps — MANDATORY
 
 This step catches stale references, retired tool names, and broken cross-references that accumulate over time.
 
@@ -57,33 +57,24 @@ append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] skill missing fr
 
 ---
 
-## Step 4: CI parity check — MANDATORY
+## Step 4: CI parity — human judgment only
 
-Verify the project's local devcontainer matches the CI workflow image.
+CI parity is the developer's responsibility and is not a bot-executable check.
 
-```bash
-# Get local image
-LOCAL_IMAGE=$(cat .devcontainer/devcontainer.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('image','NOT_FOUND'))" 2>/dev/null || echo "NO_DEVCONTAINER")
+Automated bash parsing of `.devcontainer/devcontainer.json` always passes silently when the file is absent and provides near-zero signal — it is removed.
 
-echo "Local: $LOCAL_IMAGE"
-```
-
-> CI image grep against `.github/workflows/*.yml` removed — this was a file-system scan that produced unreliable results (workflows may use matrix images, reusable actions, or no image at all). CI parity is validated in the devcontainer.json → CI alignment review done per-project during onboarding, not at gate time.
-
-**If devcontainer is missing:** note it (do not block gate — some repos intentionally lack devcontainer).
-
-**If images differ:** surface as a systemic improvement via MCP:
+**Instead:** if you observed a devcontainer image mismatch during any run this phase, note it as a `[GAP]` item:
 
 ```
 append_run_summary(
   repo: "<REPO>",
   run_num: 0,
-  findings: "[GAP] CI parity: local uses <LOCAL_IMAGE>, CI uses <CI_IMAGE> — align them",
+  findings: "[GAP] CI parity: devcontainer image differs from CI — align them",
   phase: "<current_phase_name>"
 )
 ```
 
-**If images match or are compatible:** note "CI parity OK" and continue.
+If no mismatch was observed, skip this step entirely. This is not a blocking gate condition.
 
 ---
 
@@ -117,9 +108,7 @@ git push
 
 ## Step 7: Advance phase — auto
 
-Auto-advance to Step 8. No confirmation needed.
-
-If the user explicitly says "stop" or "wait" before loop-gate runs, stop. Otherwise proceed.
+Auto-advance to Step 8. No confirmation needed. The loop is always autonomous — no stop, no gate, no user prompt.
 
 ---
 
@@ -127,15 +116,17 @@ If the user explicitly says "stop" or "wait" before loop-gate runs, stop. Otherw
 
 **Primary (MCP):** Determine Y (run count for next phase):
 
-Derive Y from `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — count tasks in the next phase, or default to 5 if no plan tasks exist. Never ask.
+Derive Y from `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — count tasks in the next phase. Never use a default run count like 5 — a banner showing "0/5" is actively misleading.
 
-**Primary (MCP):** Update DB state — advance phase name and reset run count:
+**Primary (MCP):** Update DB state — advance phase name and reset run count.
+
+**CRITICAL: Always call `set_loop_state` before invoking `loop-end`, even when Y=0.** Skipping this call leaves the DB in a stale mid-phase state and causes the next session's banner to show the wrong phase.
 
 ```
 set_loop_state(
   repo: "<REPO>",
   phase: "<next_phase_name> <N+1>/<total_phases>",
-  run: "0/<Y>",
+  run: "0/<Y>",   ← use 0/0 when Y=0 (no pending tasks)
   goal: "<goal>"
 )
 ```
@@ -148,5 +139,5 @@ Pipeline: <updated pipeline_bar> <next_phase_name> <N+1>/<total_phases> | Phase 
 ```
 
 Auto-invoke the next action immediately:
-- Non-final phase → invoke `loop-task Run 1`
-- Final phase → invoke `loop-end`
+- Y > 0 (non-final phase with pending tasks) → invoke `loop-task Run 1`
+- Y = 0 or final phase → invoke `loop-end`

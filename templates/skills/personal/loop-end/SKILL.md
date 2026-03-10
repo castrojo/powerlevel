@@ -60,16 +60,13 @@ Repo: <REPO>
 The following [GAP] items were recorded during this loop:
 <paste [GAP] items from run history>
 
----
+## Your task: process every [GAP] item without asking for confirmation.
 
-Step 0: Early exit if no [GAP] items
-
+### Step 0: Early exit if no [GAP] items
 If the list above is empty, write a journal entry and stop:
   journal_write(title: "workflow-capture: no gaps — <REPO> loop", body: "No [GAP] items found.", tags: "workflow-capture")
 
----
-
-Step 1: For each [GAP] item, work through these sub-steps completely before moving to the next:
+### Step 1: For each [GAP] item, work through these sub-steps completely before moving to the next:
 
 **1a — Classify target file:**
 | Gap type | File |
@@ -91,14 +88,18 @@ Use the Edit tool. Do NOT rewrite the file. Add only what is missing or fix only
 The post-commit hook in opencode-config runs the seeder on every commit that touches a SKILL.md. No manual upsert_skill_section calls needed.
 
 **1e — Decide powerlevel backport:**
-Ask: "Is this fix generic enough for any user bootstrapping from scratch, with no personal refs, no specific repo names?"
-- Yes → copy updated SKILL.md to ~/src/powerlevel/templates/skills/personal/<skill>/SKILL.md — stage but do NOT commit yet
+Ask: "Is this fix generic enough for any user bootstrapping from scratch, with no personal refs, no specific repo names, no Bluefin/Flatpak specifics?"
+
+**Two-audiences principle:**
+- **powerlevel** (`~/src/powerlevel/templates/`) — infrastructure bootstrap for any agent. Must be fully generic: no castrojo refs, no personal usernames, no specific repo names, no Bluefin/Flatpak specifics.
+- **opencode-config** (`~/.config/opencode/`) — accumulated deep knowledge for the author's synced future self. This is where gotchas, patterns, design decisions, and castrojo-specific state live.
+
+Decision rule: "Would this be useful to anyone bootstrapping from scratch?" If yes → powerlevel. If it contains personal context, specific repo patterns, or Bluefin/Flatpak knowledge → opencode-config only. Note: powerlevel doesn't need updating every session — it bootstraps the initial setup; opencode-config is the living document.
+
+- Yes → copy updated SKILL.md to ~/src/powerlevel/templates/skills/personal/<skill>/SKILL.md — stage but do NOT commit yet (batch in Step 3)
 - No → opencode-config only
 
----
-
-Step 2: Commit all edits to opencode-config:
-
+### Step 2: Commit all edits to opencode-config (always, if any edits were made):
 ```bash
 cd ~/.config/opencode
 git add AGENTS.md skills/personal/ memory/
@@ -106,37 +107,29 @@ git commit -m "fix(workflow): automated capture from <REPO> loop — <N> improve
 
 <bullet list of what was fixed>
 
-Assisted-by: [Model Name] via [Tool Name]"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
 
----
-
-Step 3: Commit powerlevel backports (only if any approved in Step 1e):
-
+### Step 3: Commit powerlevel backports (only if any backports were approved in Step 1e):
 ```bash
 cd ~/src/powerlevel
 git add templates/
 git commit -m "feat(templates): backport <N> workflow improvements from <REPO> loop
 
-Assisted-by: [Model Name] via [Tool Name]"
+Assisted-by: Claude Sonnet 4.6 via OpenCode"
 git push
 ```
+If no backports: skip this step.
 
----
-
-Step 4: Write journal entry:
-
+### Step 4: Write journal entry:
 journal_write(
   title: "Workflow capture: <REPO> loop — <N> improvements",
   body: "Processed <N> [GAP] items from <REPO> loop. Fixed: <list>. Backported: <list or 'none'>.",
   tags: "workflow-learning, workflow-capture"
 )
 
----
-
-Step 5: Return summary:
-
+### Step 5: Return summary:
 Return a one-paragraph summary: N items processed, which files were edited, N backported to powerlevel, commit hash(es).
 """
 )
@@ -162,6 +155,8 @@ get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")
 
 If any tasks are still `pending` or `in_progress`: list them in the output, mark them `skipped` in the DB, and continue. The loop end is authoritative — leftover tasks are deferred to the next loop, not a blocker.
 
+**For any task marked skipped:** call `workflow-state_append_run_summary` with a findings entry: `[GAP] Task <N> skipped: <reason>`. This ensures skipped work is visible to the next session and processed by the workflow-capture subagent.
+
 **[ ] Skills-as-byproduct check**
 
 First, detect loop type:
@@ -170,11 +165,9 @@ First, detect loop type:
 
 **Fallback** (if goal is ambiguous):
 
-```
-get_session_context(repo: "<REPO>")
-```
+Check `latest_run_summary` (already returned by Stage 0's `get_session_context`) for keywords: "loop", "skill", "workflow". If found, auto-pass.
 
-Check `latest_run_summary` for keywords: "loop", "skill", "workflow". If found, auto-pass.
+**Note:** Context from Stage 0 `get_session_context` is still valid — do not re-fetch.
 
 **If auto-pass:** Show:
 
@@ -197,7 +190,7 @@ git -C ~/.config/opencode status --short
 If anything uncommitted:
 ```bash
 cd ~/.config/opencode
-git add AGENTS.md skills/personal/ plans/ memory/
+git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
 git commit -m "chore(config): loop-end sync — <REPO> loop complete
 
 Assisted-by: Claude Sonnet 4.6 via OpenCode"
@@ -211,6 +204,27 @@ Already done by the subagent in Stage 1 Step 2 if applicable. Verify:
 git -C ~/src/powerlevel status --short
 ```
 Must be clean if a backport occurred.
+
+**[ ] Record final run summary before reset**
+
+If `get_session_context` was not called recently (e.g., Stage 0 context is stale), call it now to get the current run number:
+
+```
+get_session_context(repo: "<REPO>")
+```
+
+Then record the final run completion:
+
+```
+workflow-state_append_run_summary(
+  repo: "<REPO>",
+  run_num: <current_run_from_get_session_context>,
+  summary: "Loop complete. All phases finished. Final state: <brief summary of what was accomplished this loop>.",
+  phase: "<current_phase>"
+)
+```
+
+This ensures the final run is visible in DB history. Without this call, the last run is invisible to future sessions and `get_run_history` will not reflect it.
 
 **[ ] loop state reset to clean template**
 
@@ -250,7 +264,7 @@ Then call `get_welcome_banner` last. Its output is the final screen the user see
 workflow-state_get_welcome_banner(repo: "<REPO>")
 ```
 
-Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool. If the banner shows an active loop, re-run `set_loop_state(repo: "<REPO>", phase: "", run: "0/0", goal: "")` and call the banner tool again.
+Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool. If the banner shows an active loop after `record_run_complete` completed successfully, this is a bug — do NOT silently correct it with another `set_loop_state` call. Instead surface it as a [GAP] in a journal entry: `journal_write(title: "loop-end [GAP]: banner shows active loop after reset", ...)`. Silent correction masks failures.
 
 ---
 
