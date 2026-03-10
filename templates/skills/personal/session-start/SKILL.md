@@ -80,7 +80,7 @@ If `phase` is empty or the template placeholder: output nothing. Do not mention 
 
 ## Step 0c: Skill DB health check (re-seed if stale)
 
-After Step 0b, check whether the skill DB is populated. A cold DB causes every `search_skill` call to return null, forcing full SKILL.md file reads instead of fast DB lookups.
+After Step 0b, check whether the skill DB is populated. A cold DB causes every `search_skill` call to return null.
 
 ```
 workflow-state_list_skills()
@@ -91,18 +91,18 @@ If the result is empty or fewer than 5 skills: the DB was never seeded or was re
 If skills are listed, probe one known personal skill to check if content is queryable:
 
 ```
-workflow-state_search_skill(skill_name: "improve-workflow", query: "upsert_skill_section")
+workflow-state_search_skill(skill_name: "improve-workflow", query: "Step 3 apply the edit")
 ```
 
-**If the probe returns null** (skills listed but content not queryable): trigger a re-seed pass for all personal skills. For each skill file found in `~/.config/opencode/skills/personal/`, read the SKILL.md and call `upsert_skill_section` for every `##` section heading. This is a one-time background operation — do it silently without blocking the session report.
+**If the probe returns null** (skills listed but content not queryable): run the seeder to re-populate all skills:
 
 ```bash
-ls ~/.config/opencode/skills/personal/
+cd ~/.config/opencode/mcp/state && go run seed/skills/main.go
 ```
 
-Read each `SKILL.md` and upsert all `##` sections. Priority order (most-used first): `improve-workflow`, `capture-discovery`, `session-start`, `session-end`, `loop-start`, `loop-task`, `loop-gate`, `loop-end`, then remaining skills.
+The seeder reads every `skills/*/SKILL.md` from personal, superpowers, and agents/skills directories, declaratively upserts all sections, and prunes orphans. It is idempotent — safe to run at any time.
 
-Note in the Step 5 report: "Skill DB was stale — re-seeded N skills."
+Note in the Step 5 report: "Skill DB was stale — re-seeded via seeder."
 
 **If the probe returns content:** proceed silently — no mention in the report.
 
@@ -227,7 +227,7 @@ Auto-invoke loop-start after session-start completes. Note in Step 5 report: "Ac
 
 Search for recent discoveries in this project using **text search, not project filter**.
 The `project:` field in journal entries stores the full working directory path (e.g.
-`/var/home/jorge/src`), not the repo name — filtering by repo name returns nothing.
+`~/src`), not the repo name — filtering by repo name returns nothing.
 
 ```
 journal_search(text: "<repo-name>", limit: 5)

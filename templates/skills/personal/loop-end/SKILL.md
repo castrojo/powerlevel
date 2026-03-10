@@ -61,7 +61,7 @@ The following [GAP] items were recorded during this loop:
 <paste [GAP] items from run history>
 
 Follow the workflow-capture skill instructions exactly:
-1. For each item: classify target file, read current content (DB-first via search_skill or search_rules; fallback Read only if DB returns nothing), apply surgical edit, sync DB, decide powerlevel backport
+1. For each item: classify target file, read current content (DB-first via search_skill or search_rules; if search_skill returns null, the section is missing from DB — run the seeder: `go run ~/.config/opencode/mcp/state/seed/skills/main.go` — NEVER fall back to reading files), apply surgical edit, sync DB via commit (the post-commit hook seeds automatically), decide powerlevel backport
 2. One opencode-config commit covering all edits
 3. One powerlevel commit if any backports
 4. One journal entry summarizing all fixes
@@ -142,7 +142,7 @@ git -C ~/.config/opencode status --short
 If anything uncommitted:
 ```bash
 cd ~/.config/opencode
-git add AGENTS.md skills/personal/ plans/ loop-state-template.md memory/
+git add AGENTS.md skills/personal/ plans/ memory/
 git commit -m "chore(config): loop-end sync — <REPO> loop complete
 
 Assisted-by: Claude Sonnet 4.6 via OpenCode"
@@ -185,19 +185,17 @@ Tell the user what was accomplished:
 - Backports (if any)
 - All state committed and pushed
 
-**Final screen — MANDATORY TOOL CALL:**
+### Final verification: confirm state reset in DB
+
+Invoke `session-end` to complete session housekeeping. Proceed automatically — do not stop or ask.
+
+Then call `get_welcome_banner` last. Its output is the final screen the user sees — nothing follows it.
 
 ```
 workflow-state_get_welcome_banner(repo: "<REPO>")
 ```
 
-Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool.
-This confirms the reset is reflected in the DB and shows "no active work" to the user.
-A banner that still shows an active loop means `set_loop_state` did not run — fix before closing.
-
-**CRITICAL: This tool call has a 0/7 success rate. It is skipped almost every time. Do not skip it.**
-
-Then invoke `session-end` to complete the session. Proceed automatically — do not stop or ask.
+Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool. If the banner shows an active loop, re-run `set_loop_state(repo: "<REPO>", phase: "", run: "0/0", goal: "")` and call the banner tool again.
 
 ---
 

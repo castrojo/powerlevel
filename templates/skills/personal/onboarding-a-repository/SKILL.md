@@ -1,6 +1,6 @@
 ---
 name: onboarding-a-repository
-description: Use when starting work on any repository for the first time — sets up remotes, plans directory, fork AGENTS.md, project memory block, and validation baseline
+description: Use when starting work on any repository for the first time — sets up remotes, fork AGENTS.md, project memory block, and validation baseline
 ---
 
 # Onboarding a Repository
@@ -99,16 +99,6 @@ git push origin main --force
 
 ---
 
-### Step 2: Create plans directory
-
-```bash
-mkdir -p ~/.config/opencode/plans/<repo-name>/
-```
-
-This is where all project plans, architecture notes, and LLM session artifacts live. **Nothing from this directory ever goes inside the repo.**
-
----
-
 ### Step 2c: Initialize loop state
 
 Initialize a clean loop state for this repo in the DB:
@@ -188,7 +178,7 @@ cat package.json 2>/dev/null | grep -A20 '"scripts"' || echo "no package.json"
 ls Cargo.toml go.mod pyproject.toml 2>/dev/null
 ```
 
-Record the validation command (e.g. `just check && just lint`, `make test`, `npm test`). You will need it in Step 5 and Step 8.
+Record the validation command (e.g. `just check && just lint`, `make test`, `npm test`). You will need it in Step 4 and Step 8.
 
 **Container-building projects:** If the build/validation command uses `podman run` or `docker run`
 internally (i.e., the build script itself launches containers), the Container-First Rule exception
@@ -215,10 +205,10 @@ print(list(mcps.keys()) if mcps else 'no MCPs configured')
 If MCPs are configured:
 - Identify what domain each covers (from the project's `AGENTS.md` MCP section)
 - Do a test query for each to verify connectivity — note any that fail
-- Record working MCPs in project-notes.md (Step 4) under a `## MCP Servers` section
+- Record working MCPs in the project memory block (Step 7) under a `## MCP Servers` section
 - If an MCP fails to respond, note it — do not silently assume it works; broken MCPs produce stale data with no build error
 
-If no `opencode.json` or no MCPs: note "no MCPs configured" in project-notes.md.
+If no `opencode.json` or no MCPs: note "no MCPs configured" in the project memory block.
 
 Additionally, verify the **always-present** global workflow-state MCP is healthy before
 any loop work:
@@ -233,31 +223,26 @@ until the MCP is healthy — loop state and plan imports will silently fail.
 
 ---
 
-### Step 4: Write initial project notes
+### Step 4: Initialize project memory block
 
-Create `~/.config/opencode/plans/<repo-name>/project-notes.md` with:
+Use `memory_set` (scope: project) to write a durable quick-reference for this repo. Keep the total content under 500 chars:
 
-```markdown
-# <Repo Name> — Project Notes
+```
+memory_set(
+  label: "project",
+  scope: "project",
+  description: "Durable, high-signal information about <repo-name>: remotes, branch model, conventions, and gotchas.",
+  value: "# <Repo Name>
 
-## Quick Reference
-
-- **Upstream:** git@github.com:<org>/<repo>.git
-- **Fork:** git@github.com:YOUR_USERNAME/<repo>.git
-- **Target branch:** main (or lts, stable — identify from upstream)
-- **Validation:** <exact command discovered in Step 3>
-- **Build tool:** just / make / npm / cargo / ...
-
-## What This Project Is
-
-<1-2 sentences describing the project>
-
-## Key Directories
-
-- `<dir>/` — <purpose>
+- Upstream: git@github.com:<org>/<repo>.git
+- Fork: git@github.com:YOUR_USERNAME/<repo>.git
+- Target branch: <main/lts/stable>
+- Validation: <exact command from Step 3>
+- Architecture: <1-2 sentence summary>"
+)
 ```
 
-Update this file over time as you learn the project.
+Keep it under 500 chars. If the project has a well-populated AGENTS.md, skip fields already covered there.
 
 ---
 
@@ -305,16 +290,14 @@ git push origin main
 
 ### Step 7: Update `project` memory block
 
-Use `memory_set` (scope: project) to write a quick reference for the session:
+The project memory block was initialized in Step 4. By Step 7 you have completed Steps 5–6 (AGENTS.md, fork setup). Revisit the memory block and add any details discovered since Step 4 — devaipod category, AGENTS.md status, MCP status:
 
 ```
-# <Repo Name>
-
-- Validation: <command>
-- Build tool: <just/make/npm/...>
-- Target branch: <main/lts/...>
-- Plans: ~/.config/opencode/plans/<repo-name>/
-- Upstream: <org>/<repo>
+memory_replace(
+  label: "project",
+  oldText: "- Architecture: <1-2 sentence summary>",
+  newText: "- Architecture: <actual description>\n- AGENTS.md: <exists/created>\n- MCPs: <none/list>"
+)
 ```
 
 ---
@@ -325,7 +308,7 @@ Use `memory_set` (scope: project) to write a quick reference for the session:
 <validation command from Step 3>
 ```
 
-If it passes: note that in the project-notes.md.
+If it passes: note that in the project memory block.
 If it fails: investigate before starting any work. Do not skip this.
 
 ---
@@ -453,7 +436,7 @@ automatically — loop-task runs inside containers can call workflow-state tools
 ```
 journal_write(
   title: "Onboarded <repo-name>",
-  body: "Set up remote layout, plans directory, AGENTS.md. Validation: <pass/fail>. Notes: <anything unexpected>.",
+  body: "Set up remote layout, project memory block, AGENTS.md. Validation: <pass/fail>. Notes: <anything unexpected>.",
   tags: "workflow-learning"
 )
 ```
@@ -487,7 +470,7 @@ import_plan(
   tasks: [
     {"task_num": 1, "description": "Run validation baseline inside devaipod"},
     {"task_num": 2, "description": "Verify container has all required tools"},
-    {"task_num": 3, "description": "Document build time and gotchas in project-notes.md"}
+    {"task_num": 3, "description": "Document build time and gotchas in project memory block"}
   ]
 )
 ```
@@ -552,7 +535,7 @@ A fork's project-level AGENTS.md is **context for AI agents working in this spec
 | Repository structure | Key directories and important files only |
 | Common commands reference | Short copy-paste block for daily use |
 | Critical project-specific reminders | Anything unique to this codebase the agent must not forget |
-| Lazy-load references | If any section would be >100 lines, extract to `~/.config/opencode/plans/<repo>/` and add a one-line reference |
+| Lazy-load references | If any section would be >100 lines, extract to a DB-backed reference doc and add a one-line reference in AGENTS.md |
 
 ### What to omit (already in global `~/.config/opencode/AGENTS.md`)
 
@@ -569,11 +552,11 @@ A fork's project-level AGENTS.md is **context for AI agents working in this spec
 
 When a section is large (CI/CD architecture, build failure reference, etc.), do not embed it inline. Instead:
 
-1. Extract to `~/.config/opencode/plans/<repo>/<section-name>.md`
+1. Extract to a journal entry or project memory block addendum
 2. Replace the section with one line in AGENTS.md:
 
 ```markdown
-> CI/CD architecture details: see `~/.config/opencode/plans/<repo-name>/ci-architecture.md`
+> CI/CD architecture details: see project memory block or journal entry tagged "ci-cd"
 ```
 
 The agent reads it on demand. This keeps AGENTS.md under ~150 lines (target: ~1,000 tokens).
@@ -581,8 +564,8 @@ The agent reads it on demand. This keeps AGENTS.md under ~150 lines (target: ~1,
 ### Canonical example
 
 A well-structured fork AGENTS.md is 100–150 lines. It lazy-loads deeper reference docs
-(CI architecture, build notes, development tasks) from `~/.config/opencode/plans/<repo>/`
-on demand. It contains only project-specific content — no global workflow rules.
+via journal entries or the project memory block on demand. It contains only project-specific
+content — no global workflow rules.
 
 ### Never-commit rule
 
@@ -610,9 +593,6 @@ git rebase upstream/main && git push origin main --force-with-lease
 git reset --hard upstream/main
 # ...re-apply AGENTS.md commit, then force-push
 
-# Step 2: Plans directory
-mkdir -p ~/.config/opencode/plans/<repo>/
-
 # Step 2b: Worktree setup (one-time global, then per-repo)
 grep -q "\.worktrees" ~/.config/git/ignore 2>/dev/null || { mkdir -p ~/.config/git && echo ".worktrees" >> ~/.config/git/ignore && git config --global core.excludesFile ~/.config/git/ignore; }
 mkdir -p .worktrees   # creates dir so using-git-worktrees skill finds it
@@ -623,6 +603,9 @@ just --list || make help
 
 # Step 3b: Check for MCPs
 cat opencode.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(list(d.get('mcp',{}).keys()))"
+
+# Step 4: Initialize project memory block
+# (Use memory_set with scope: project — repo URL, fork, validation, build tool, what it is, key dirs)
 
 # Step 6: Commit fork AGENTS.md + .gitattributes
 echo "AGENTS.md export-ignore" >> .gitattributes

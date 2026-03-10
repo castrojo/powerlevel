@@ -1,6 +1,6 @@
 ---
 name: session-end
-description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to castrojo/opencode-config, and runs worktree hygiene in repos worked in during the session.
+description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to YOUR_USERNAME/opencode-config, and runs worktree hygiene in repos worked in during the session.
 ---
 
 # Session End
@@ -77,7 +77,7 @@ Dispatch a background Task subagent with the following instructions — do NOT w
 
 Report to the user: "Config commit dispatched in background — push running async."
 
-**Why async:** This is a push to a personal config repo (castrojo/opencode-config). There is no downstream dependency. Blocking the session close on a network push wastes time.
+**Why async:** This is a push to a personal config repo (YOUR_USERNAME/opencode-config). There is no downstream dependency. Blocking the session close on a network push wastes time.
 
 ---
 

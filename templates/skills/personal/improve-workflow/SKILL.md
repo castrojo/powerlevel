@@ -11,14 +11,19 @@ Invoke this skill the moment you notice a workflow gap. Do not defer to the end 
 
 This skill is always dispatched as a **silent background Task subagent**. It is never run inline and never announced to the user.
 
-**Parent agent:** when a correction occurs, dispatch immediately and continue:
+> **FIRE-AND-FORGET. The parent agent dispatches via Task and immediately continues — it NEVER waits for the subagent result. This is not optional. This applies even when the subagent is fixing a skill or AGENTS.md mid-task. Blocking on this subagent for any reason — including "it's updating something important" — is unconditionally banned.**
+
+**Parent agent:** when a correction occurs, dispatch and continue in the same breath:
 ```
 Task(
   description="capture workflow correction",
   prompt="Run improve-workflow: <one-sentence correction summary>. Full context: <what was wrong, what the correct behavior is, which file to update>",
   subagent_type="general"
 )
-# continue main work immediately — do NOT wait for subagent
+# ↑ DISPATCH AND MOVE ON. Do NOT await, poll, or check the result.
+# ↑ Do NOT pause main work. Do NOT announce to the user.
+# ↑ Continue with the user's original task immediately after this call.
+# ↑ This is non-negotiable even if the subagent is fixing a skill you are currently using.
 ```
 
 **Subagent (this skill):** follow Steps 1–6 below, working autonomously. Do not communicate back intermediate results. Return a one-line summary when done.
@@ -67,7 +72,7 @@ Before drafting the change, retrieve the current content to edit surgically.
   workflow-state_search_skill(skill_name: "<skill>", query: "<topic>")
   ```
 
-- **Fallback** (if neither returns the relevant section): read the file directly.
+- **If DB returns null:** The section is missing from the DB. Run the seeder to re-populate: `go run ~/.config/opencode/mcp/state/seed/skills/main.go`. Do NOT fall back to reading the file directly.
 
 ---
 
@@ -85,32 +90,13 @@ Use the Edit tool to make the surgical change. Do not rewrite the file.
 
 ---
 
-## Step 3b: Sync the changed content to the DB
-
-After applying the edit, push the updated content to the workflow-state DB so it stays queryable without a future re-seed:
-
-- **Skill edit** → call `upsert_skill_section` for each changed `##` section:
-  ```
-  workflow-state_upsert_skill_section(skill: "<skill-name>", section: "<heading>", content: "<full section text>")
-  ```
-  If editing the frontmatter (name, description), also upsert it as section `frontmatter`.
-
-- **AGENTS.md edit** → call `upsert_rule` for the changed section:
-  ```
-  workflow-state_upsert_rule(id: "<agents-<slug>>", domain: "<domain>", content: "<full section text>")
-  ```
-
-This is mandatory — it keeps the DB as the live source so `search_rules` and `search_skill` always return current content.
-
----
-
 ## Step 4: Commit
 
 Commit to the appropriate repo:
 
-- Global `AGENTS.md` or `memory/*.md` → `castrojo/opencode-config`
-- Superpowers skill → `castrojo/superpowers` (rebase on upstream before pushing)
-- Personal skill → `castrojo/opencode-config`
+- Global `AGENTS.md` or `memory/*.md` → `YOUR_USERNAME/opencode-config`
+- Superpowers skill → `YOUR_USERNAME/superpowers` (rebase on upstream before pushing)
+- Personal skill → `YOUR_USERNAME/opencode-config`
 - Project `AGENTS.md` → that project's fork
 
 ```bash

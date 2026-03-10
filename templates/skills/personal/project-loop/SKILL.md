@@ -18,7 +18,7 @@ Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,s
 
 ## Before You Start: Fork Check
 
-Work always happens in a local fork in `castrojo`, not on upstream directly.
+Work always happens in a local fork in `YOUR_USERNAME`, not on upstream directly.
 
 ```bash
 git remote -v
@@ -26,18 +26,45 @@ git remote -v
 
 Expected:
 ```
-origin    git@github.com:castrojo/<repo>.git  (push here)
-upstream  git@github.com:<org>/<repo>.git     (fetch only)
+origin    git@github.com:YOUR_USERNAME/<repo>.git  (push here)
+upstream  git@github.com:<org>/<repo>.git          (fetch only)
 ```
 
 If the remote layout is wrong: stop and run `onboarding-a-repository` first.
-If the repo is already owned by `castrojo` (no upstream): proceed directly.
+If the repo is already owned by `YOUR_USERNAME` (no upstream): proceed directly.
+
+Sync the fork to upstream before starting (skip silently for owner repos):
+
+```bash
+if git remote get-url upstream &>/dev/null; then
+  git fetch upstream
+  git rebase upstream/main
+  echo "Fork synced to upstream/main"
+fi
+```
+
+If rebase conflicts, resolve before starting the loop. A dirty fork produces messy PRs.
 
 ---
 
 ## Phase 1: Plan
 
 **Goal:** Understand the problem, agree on the design, write a task-by-task plan. No code yet.
+
+### Step 0: Pre-flight local fork sync
+
+Ensure the local repository is up to date with upstream before planning begins, preventing conflicts later.
+
+```bash
+# Check if upstream remote exists
+git remote -v
+```
+
+If an `upstream` remote exists, sync it:
+```bash
+git fetch upstream
+git rebase upstream/main
+```
 
 ### Step 1: Brainstorm
 
@@ -52,7 +79,7 @@ Produce a design summary. **Stop and confirm with user before proceeding.**
 ### Step 2: Write the plan
 
 Load and follow the `writing-plans` skill.
-Save the plan to `~/.config/opencode/plans/<repo>/<date>-<feature>.md`.
+Seed the plan to the DB via `import_plan` — no .md file is created. Task data enters the DB exclusively via `import_plan`.
 
 ### Step 3: Review the plan
 
