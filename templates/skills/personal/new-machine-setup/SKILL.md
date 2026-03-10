@@ -137,9 +137,10 @@ Verify:
 ```bash
 git config --global core.excludesFile
 # Expected: /var/home/<user>/.config/git/ignore
-cat ~/.config/git/ignore
-# Expected: .worktrees  (and any other entries)
 ```
+
+**Agent:** Use `Read` tool on `~/.config/git/ignore` — verify `.worktrees` entry is present. Do not run `cat`.
+**Human in terminal:** `cat ~/.config/git/ignore` — expected: `.worktrees` (and any other entries).
 
 This step is idempotent — safe to re-run. If `~/.config/git/ignore` already exists, `cp` will update it with any new entries added to `opencode-config`.
 
@@ -334,15 +335,9 @@ Personal skills (`~/.config/opencode/skills/personal/`) are restored by the open
 gh auth status                                      # GitHub CLI authenticated, SSH protocol
 just --version                                      # just available
 ssh -T git@github.com                               # SSH key working (exits 1 on success — normal)
-head -3 ~/.config/opencode/AGENTS.md               # global rules present
-ls ~/.config/opencode/memory/                       # memory blocks present
-cat ~/.config/opencode/agent-memory.json            # journal config present
 git config --global core.excludesFile               # global gitignore path set
-cat ~/.config/git/ignore                            # .worktrees entry present
 ls ~/.config/opencode/plugins/superpowers.js        # superpowers plugin symlink
 ls ~/.config/opencode/skills/superpowers            # superpowers skills symlink
-ls ~/.config/opencode/skills/personal/              # personal skills present
-ls ~/.agents/skills/                                # installed skills present
 ~/.cargo/bin/devaipod --version --host             # devaipod installed
 ls ~/.config/devaipod.toml                         # devaipod config symlink present
 podman secret ls | grep gh_token                   # gh_token secret present
@@ -363,6 +358,14 @@ git -C ~/.config/opencode/superpowers log --oneline upstream/main..main
 ```
 
 All checks must pass before starting any development work, **including** the workflow-state DB and MCP binary.
+
+**Agent verification substitutions (do not run `cat`/`ls`/`head` via Bash for content reads):**
+- `head -3 ~/.config/opencode/AGENTS.md` → Use `Read` tool on `~/.config/opencode/AGENTS.md` with `limit: 3`
+- `cat ~/.config/opencode/agent-memory.json` → Use `Read` tool on `~/.config/opencode/agent-memory.json`
+- `cat ~/.config/git/ignore` → Use `Read` tool on `~/.config/git/ignore`
+- `ls ~/.config/opencode/memory/` → Use `Glob` tool: `~/.config/opencode/memory/*`
+- `ls ~/.config/opencode/skills/personal/` → Use `Glob` tool: `~/.config/opencode/skills/personal/*/`
+- `ls ~/.agents/skills/` → Use `Glob` tool: `~/.agents/skills/*/`
 
 ---
 
