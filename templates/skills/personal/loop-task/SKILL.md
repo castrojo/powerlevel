@@ -157,7 +157,7 @@ Processed at postflight via the `workflow-capture` subagent (dispatched from `lo
 
 ## Step 5: Report and auto-proceed
 
-> **N is the maximum number of attempts, not a fixed iteration count.** If the work completes early (e.g. no more pending tasks), invoke loop-gate immediately without exhausting all N runs.
+> **N is the maximum number of attempts, not a fixed iteration count.** If the work completes early, invoke loop-gate immediately without exhausting all N runs.
 
 Show:
 ```
@@ -166,10 +166,19 @@ Pipeline: <pipeline_bar> <phase_name> <current>/<total> | Phase runs: <run_bar> 
 [ RUN <X+1> COMPLETE ] <REPO> • <pass/fail summary from subagent>
 ```
 
+**Loop type determines the early-exit criterion.** Two loop types exist:
+
+- **Task-split loop** (workflow-improvement-loop fix phase): started with a plan; `pending_tasks > 0` at run 0. Early exit fires when `pending_tasks` drops to 0 — no tasks remain.
+- **Build-iteration loop** (project-loop execute phase): started without a plan; `pending_tasks = 0` from the start. Early exit fires when the subagent's findings contain `CLEAN_BUILD` — the build passed cleanly.
+
 **Auto-proceed:**
-- If X+1 < N and pending_tasks > 0 (or no plan): invoke `loop-task` for the next run immediately.
-- If X+1 < N and pending_tasks = 0: skip remaining runs and invoke `loop-gate` immediately, noting early exit.
-- If X+1 = N: invoke `loop-gate` immediately.
+- If X+1 = N: invoke `loop-gate` immediately (max attempts reached).
+- If X+1 < N and this is a **task-split loop**:
+  - `pending_tasks > 0`: invoke `loop-task` for the next run immediately.
+  - `pending_tasks = 0`: skip remaining runs and invoke `loop-gate` immediately, noting early exit.
+- If X+1 < N and this is a **build-iteration loop** (no plan, `pending_tasks = 0` from run 0):
+  - Subagent findings contain `CLEAN_BUILD`: invoke `loop-gate` immediately, noting clean build.
+  - No `CLEAN_BUILD` signal: invoke `loop-task` for the next run immediately.
 
 No confirmation needed. The user can interrupt at any time by typing. **The `question` tool is banned in auto-proceed — auto-proceed is unconditional.**
 
@@ -218,3 +227,11 @@ A subagent starts with fresh context and has no loop skill loaded; shorthand is 
 The abbreviated signature below is for quick reference only — do NOT use it as the actual prompt:
 
 `workflow-state_record_run_complete(repo, run_num, summary, phase, goal, findings, [plan_id], [task_num])` — findings prefix `[GAP]` for workflow gaps; plan_id and task_num are optional (omit if no plan)
+
+**Build-iteration loops (project-loop execute phase):** when the build passes cleanly with no errors or failures, the subagent MUST include the token `CLEAN_BUILD` in the `findings` field. The parent agent reads this signal in Step 5 to trigger early exit. Example:
+
+```
+findings: "CLEAN_BUILD — all tests pass, no lint errors, build output verified"
+```
+
+If the build has remaining failures, do NOT include `CLEAN_BUILD` — report the failures instead.

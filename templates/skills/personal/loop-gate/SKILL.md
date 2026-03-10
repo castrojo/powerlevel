@@ -116,7 +116,17 @@ Auto-advance to Step 8. No confirmation needed. The loop is always autonomous �
 
 **Primary (MCP):** Determine Y (run count for next phase):
 
-Derive Y from `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — count tasks in the next phase. Never use a default run count like 5 — a banner showing "0/5" is actively misleading.
+Read N from the `run` field of `get_session_context` — it is in `"X/N"` format; parse N from the right side of the slash. This N was set at loop-start and is authoritative. **Do NOT re-derive N from pending task count** — that recalculates the wrong value for build-iteration loops (which have no plan tasks) and can silently produce a misleading banner like "0/5".
+
+- **Task-split loop** (has a plan): Y = count of `get_plan_tasks(status: "pending")` for the next phase.
+- **Build-iteration loop** (no plan, project-loop execute phase): Y = N from the loop_state run field (same as current phase — each phase has the same max attempts unless the loop is ending).
+- When transitioning to the **final phase or loop-end**: Y = 0 is valid; use `0/0`.
+
+Never use an arbitrary default like 5 — a banner showing "0/5" is actively misleading.
+
+**Loop-type early-exit notes (for the `set_loop_state` call below):**
+- Task-split loop: if `pending_tasks` just dropped to 0 mid-loop and loop-gate was invoked early, the next action is `loop-end` (no more work remains).
+- Build-iteration loop: if loop-gate was invoked because the subagent returned `CLEAN_BUILD`, the next action is also `loop-end`.
 
 **Primary (MCP):** Update DB state — advance phase name and reset run count.
 
@@ -126,7 +136,7 @@ Derive Y from `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pen
 set_loop_state(
   repo: "<REPO>",
   phase: "<next_phase_name> <N+1>/<total_phases>",
-  run: "0/<Y>",   ← use 0/0 when Y=0 (no pending tasks)
+  run: "0/<Y>",   ← use 0/0 when Y=0 (no pending tasks or clean build)
   goal: "<goal>"
 )
 ```
@@ -139,5 +149,5 @@ Pipeline: <updated pipeline_bar> <next_phase_name> <N+1>/<total_phases> | Phase 
 ```
 
 Auto-invoke the next action immediately:
-- Y > 0 (non-final phase with pending tasks) → invoke `loop-task Run 1`
+- Y > 0 (non-final phase with pending tasks or remaining attempts) → invoke `loop-task Run 1`
 - Y = 0 or final phase → invoke `loop-end`
