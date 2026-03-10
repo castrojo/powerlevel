@@ -41,8 +41,13 @@ func RegisterPlanTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		if err := json.Unmarshal([]byte(tasksJSON), &tasks); err != nil {
 			return nil, fmt.Errorf("import_plan: parse tasks: %w", err)
 		}
+		tx, txErr := pool.Begin(ctx)
+		if txErr != nil {
+			return nil, fmt.Errorf("import_plan begin: %w", txErr)
+		}
+		defer tx.Rollback(ctx)
 		for _, t := range tasks {
-			_, qerr := pool.Exec(ctx,
+			_, qerr := tx.Exec(ctx,
 				`INSERT INTO plan_tasks (repo, plan_id, task_num, description, status)
 				 VALUES ($1, $2, $3, $4, 'pending')
 				 ON CONFLICT (repo, plan_id, task_num) DO UPDATE
@@ -52,6 +57,9 @@ func RegisterPlanTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			if qerr != nil {
 				return nil, fmt.Errorf("import_plan task %d: %w", t.TaskNum, qerr)
 			}
+		}
+		if commitErr := tx.Commit(ctx); commitErr != nil {
+			return nil, fmt.Errorf("import_plan commit: %w", commitErr)
 		}
 		return mcp.NewToolResultText(fmt.Sprintf("imported %d tasks", len(tasks))), nil
 	})

@@ -5,12 +5,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
+)
+
+var (
+	uiPanelsCache     []uiPanel
+	uiPanelsCacheOnce sync.Once
 )
 
 // uiPanel mirrors a row in the ui_panels table.
@@ -155,23 +161,30 @@ func RegisterBannerTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			).Scan(&repo)
 		}
 
-		// Fetch step panels
-		rows, err := pool.Query(ctx,
-			`SELECT panel_id, title, content, sort_order
-			 FROM ui_panels ORDER BY sort_order`)
-		if err != nil {
-			return nil, fmt.Errorf("get_welcome_banner panels: %w", err)
-		}
-		var panels []uiPanel
-		for rows.Next() {
-			var p uiPanel
-			if scanErr := rows.Scan(&p.ID, &p.Title, &p.Content, &p.SortOrder); scanErr != nil {
-				rows.Close()
-				return nil, scanErr
+		// Fetch step panels (cached — ui_panels never changes at runtime)
+		var panelsErr error
+		uiPanelsCacheOnce.Do(func() {
+			rows, err := pool.Query(ctx,
+				`SELECT panel_id, title, content, sort_order
+				 FROM ui_panels ORDER BY sort_order`)
+			if err != nil {
+				panelsErr = fmt.Errorf("get_welcome_banner panels: %w", err)
+				return
 			}
-			panels = append(panels, p)
+			defer rows.Close()
+			for rows.Next() {
+				var p uiPanel
+				if scanErr := rows.Scan(&p.ID, &p.Title, &p.Content, &p.SortOrder); scanErr != nil {
+					panelsErr = scanErr
+					return
+				}
+				uiPanelsCache = append(uiPanelsCache, p)
+			}
+		})
+		if panelsErr != nil {
+			return nil, panelsErr
 		}
-		rows.Close()
+		panels := uiPanelsCache
 
 		// Fetch live loop state
 		var phase, run string
