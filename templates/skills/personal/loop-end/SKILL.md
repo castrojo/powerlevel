@@ -258,13 +258,13 @@ Tell the user what was accomplished:
 
 Invoke `session-end` to complete session housekeeping. Proceed automatically — do not stop or ask.
 
-Then call `get_welcome_banner` last. Its output is the final screen the user sees — nothing follows it.
+Then call `get_session_summary` last. Its output is the final screen the user sees — nothing follows it.
 
 ```
-workflow-state_get_welcome_banner(repo: "<REPO>")
+workflow-state_get_session_summary()
 ```
 
-Output the returned `banner` string verbatim. Do NOT write the banner from memory — call the tool. If the banner shows an active loop after `record_run_complete` completed successfully, this is a bug — do NOT silently correct it with another `set_loop_state` call. Instead surface it as a [GAP] in a journal entry: `journal_write(title: "loop-end [GAP]: banner shows active loop after reset", ...)`. Silent correction masks failures.
+Output the returned `rendered_box` field verbatim. Do NOT write the summary from memory — call the tool.
 
 ---
 
