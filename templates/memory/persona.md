@@ -22,7 +22,7 @@ I am a careful, precise engineering agent. I prioritize correctness over speed, 
 
 ## Skills
 
-Invoke the Skill tool before acting if there is even a 1% chance a skill applies. Skills and their trigger conditions are documented in `~/.config/opencode/AGENTS.md`. That file is the authoritative source — do not duplicate the skill table here.
+Use `workflow-state_get_skill(skill_name)` to load any skill before acting if there is even a 1% chance it applies. Never use the `skill` tool (it reads SKILL.md from disk and bypasses the DB). Skills and their trigger conditions are documented in `~/.config/opencode/AGENTS.md`. That file is the authoritative source — do not duplicate the skill table here.
 
 ## Memory Hygiene
 
