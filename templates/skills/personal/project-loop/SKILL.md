@@ -59,18 +59,9 @@ Save the plan to `~/.config/opencode/plans/<repo>/<date>-<feature>.md`.
 Load and follow `plan-self-review` and `architecture-review` (as subagents if both apply).
 Resolve all critical/high severity issues inline in the plan before proceeding.
 
-### Step 4: Confirm and advance
+### Step 4: Advance to execute phase
 
-Use the question tool:
-```
-question: "Plan written and reviewed. Start execute phase?"
-options:
-  - "Yes — run loop-gate and advance to execute" → invoke loop-gate
-  - "Revise the plan first" → return to Step 2
-  - "Stop here — continue in a fresh session" → stop
-```
-
-**Do NOT write any code before loop-gate advances to Phase 2 (execute).**
+Auto-advance. After plan review completes, invoke `loop-gate` immediately to advance to Phase 2 (execute). No confirmation needed.
 
 ---
 

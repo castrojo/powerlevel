@@ -61,7 +61,16 @@ Auto-resume. Output the resume block and skip to Step 4.
 
 ## Step 3b: Seed plan tasks (if plan-based loop)
 
-If this loop tracks a specific plan, seed the plan tasks into the DB now so `get_plan_tasks` works during runs:
+If this loop tracks a specific plan, seed the plan tasks into the DB now so `get_plan_tasks` works during runs.
+
+**`import_plan` is the ONLY way task data enters the DB — there is no plan file to read.**
+
+**When to call `import_plan`:**
+
+- **NEW loop:** Always call `import_plan` to seed the tasks. The tasks list is provided by the user in their opening message or defined in the skill/workflow being followed. Call it here, before Step 6.
+- **RESUMING a loop:** Tasks already exist in the DB from the original `import_plan` call — do NOT re-import. `get_plan_tasks(repo, plan_id)` will return the existing tasks. Proceed to Step 4.
+
+To determine whether to import: call `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>")` — if it returns tasks, skip; if empty, import now.
 
 ```
 import_plan(repo: "<REPO>", plan_id: "<plan_id>", tasks: [
@@ -71,7 +80,9 @@ import_plan(repo: "<REPO>", plan_id: "<plan_id>", tasks: [
 ])
 ```
 
-**Skip if:** no `plan_id` exists for this loop, or `get_plan_tasks(repo, plan_id)` already returns results (tasks already seeded).
+**`plan_id` convention:** `YYYY-MM-DD-<slug>` — e.g. `2026-03-09-workflow-db-complete`. Use today's date and a short kebab-case description of the plan goal.
+
+**Skip entirely if:** this loop has no associated plan (ad-hoc audit or investigation loops).
 
 Proceed to Step 4.
 

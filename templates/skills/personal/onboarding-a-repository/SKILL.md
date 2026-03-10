@@ -476,24 +476,7 @@ set_loop_state(
 )
 ```
 
-**If the project has a non-trivial validation command or build pipeline**, create a starter plan file:
-
-```bash
-mkdir -p ~/.config/opencode/plans/<repo-name>
-cat > ~/.config/opencode/plans/<repo-name>/project-loop-starter.md << 'EOF'
-# <Repo Name> — Loop Starter Plan
-
-## Goal
-
-First loop: verify the project builds and tests pass in devaipod containers. Establish baseline.
-
-## Tasks
-
-- [ ] Task 1: Run validation baseline inside devaipod (just check / make test / cargo test)
-- [ ] Task 2: Verify devaipod container has all required tools (missing tools → add postCreateCommand)
-- [ ] Task 3: Document build time and any environment gotchas in project-notes.md
-EOF
-```
+**If the project has a non-trivial validation command or build pipeline**, seed a starter plan directly into the DB:
 
 **Import the starter plan into the DB:**
 
@@ -517,8 +500,12 @@ get_plan_tasks(repo: "<repo-name>", plan_id: "onboarding-starter")
 
 Expected: 3 tasks with status `pending`.
 
-When ready to run the project's first loop:
-> "Say **'start a loop'** in this repo to run `loop-start` and begin iterating on the onboarding-starter plan."
+**The DB is ready for loop work:**
+- Loop state: clean (`phase=""`, `run="0/0"`) — `loop-start` will initialize
+- Plan `"onboarding-starter"`: 3 tasks seeded, all `status=pending`
+- `session-start` will show no active loop (clean state)
+
+To begin: invoke `loop-start` with goal `"Establish build baseline and devaipod environment for <repo-name>"`
 
 ---
 

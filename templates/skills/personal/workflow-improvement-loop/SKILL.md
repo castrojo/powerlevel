@@ -108,7 +108,7 @@ Each run targets one of:
 2. Record run summary via MCP: `append_run_summary(repo, run_num, summary, findings, phase)`
 3. If notable discovery: invoke `capture-discovery`
 4. Update DB state via MCP: `set_loop_state(repo, phase, run, goal)`
-5. Report via question tool (loop-task Step 6)
+5. Auto-proceed to next run via loop-task Step 5.
 
 ### Banned in Phase 2
 
@@ -144,6 +144,9 @@ cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
 # In powerlevel:
 cd ~/src/powerlevel
 # Run the lint workflow locally if available, or manually verify:
+# NOTE: bash grep on local SKILL.md files is ALLOWED — these are actual source files
+# being linted, not workflow state files (loop-state.md, plan files). Banned reads are
+# only for loop-state.md, plan files, and skill sections that should use search_skill.
 for f in templates/skills/personal/*/SKILL.md; do
   grep -q "^name:" "$f" || echo "MISSING name: in $f"
   grep -q "^description:" "$f" || echo "MISSING description: in $f"
@@ -165,7 +168,7 @@ git push
 
 # opencode-config
 cd ~/.config/opencode
-git add AGENTS.md skills/personal/ plans/ loop-state-template.md memory/
+git add AGENTS.md skills/personal/ plans/ memory/
 git commit -m "chore(config): workflow improvement loop complete
 
 Assisted-by: Claude Sonnet 4.6 via OpenCode"
