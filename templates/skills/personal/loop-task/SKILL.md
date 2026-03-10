@@ -9,17 +9,7 @@ Announce: "Using loop-task for Run X of N."
 
 ## Step 1: Show position and orient
 
-**Primary:** Call the workflow-state MCP tool:
-
-```
-get_session_context(repo: "<REPO>")
-```
-
-Parse the JSON response:
-- `phase` → `<name> <current>/<total>`
-- `run` → `<X>/<N>` (X = runs done, this run is X+1)
-- `goal` → loop goal text
-- `pending_tasks` → pending task count
+The parent agent (not subagent) shows the progress bar using context already available from loop-start. Do NOT call `get_session_context` at the start of each run — the parent has this context from loop-start orientation.
 
 **Show progress at the start of every response (before any work):**
 
@@ -43,7 +33,7 @@ Next: implement feed parser
 
 ## Step 2: Determine task and dispatch subagent
 
-If a `plan_id` is known from loop-start context, fire `get_plan_tasks` in parallel with the `get_session_context` call in Step 1 — they have no dependencies on each other. Do not wait for `get_session_context` to complete before issuing `get_plan_tasks`.
+If a `plan_id` is known from loop-start context, fire `get_plan_tasks` immediately — no prerequisite calls needed.
 
 Identify the task for this run from:
 1. `workflow-state_get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` — claim the next pending task
@@ -66,30 +56,18 @@ Working directory: ~/src/<REPO>
 ## Your task
 <specific instructions — what to build, what files to change, what commands to run>
 
-## On completion — MANDATORY MCP calls (call all three before returning)
+## On completion — MANDATORY MCP call (call before returning)
 
-1. workflow-state_append_run_summary(
-     repo: "<REPO>",
-     run_num: <X+1>,
-     summary: "<one paragraph: what was done, outcome, key findings>",
-     findings: "<any [GAP] items or blockers, or empty string>",
-     phase: "<current phase name>"
-   )
-
-2. workflow-state_update_task_status(   ← omit if no plan_id
-     repo: "<REPO>",
-     plan_id: "<plan_id>",
-     task_num: <N>,
-     status: "done",
-     notes: "<brief completion note>"
-   )
-
-3. workflow-state_set_loop_state(
-     repo: "<REPO>",
-     phase: "<current phase string e.g. 'fix 1/2'>",
-     run: "<X+1>/<N>",
-     goal: "<goal>"
-   )
+workflow-state_record_run_complete(
+  repo: "<REPO>",
+  run_num: <X+1>,
+  summary: "<one paragraph: what was done, outcome, key findings>",
+  phase: "<current phase string e.g. 'fix 1/2'>",
+  goal: "<goal>",
+  findings: "<any [GAP] items or blockers, or empty string>",
+  plan_id: "<plan_id>",    ← optional: omit if no plan
+  task_num: <task_num>,    ← optional: include if plan_id provided
+)
 
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
 """
@@ -112,12 +90,17 @@ After the subagent returns, always verify via DB:
 get_session_context(repo: "<REPO>")
 ```
 
-Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, the subagent's MCP calls failed — call them now in the parent before proceeding:
+Confirm `run` field shows `<X+1>/<N>`. If it still shows `<X>/<N>`, the subagent's `record_run_complete` call failed — call the three individual tools now in the parent before proceeding:
 
 ```
 workflow-state_set_loop_state(repo: "<REPO>", phase: "<phase>", run: "<X+1>/<N>", goal: "<goal>")
 workflow-state_append_run_summary(repo: "<REPO>", run_num: <X+1>, summary: "<summary from subagent>", phase: "<phase>")
+workflow-state_update_task_status(repo: "<REPO>", plan_id: "<plan_id>", task_num: <task_num>, status: "done", notes: "<note>")
 ```
+
+Use the subagent's return text as the summary. If the subagent returned nothing useful, write a one-line summary of what the run attempted. Leave findings as empty string if no [GAP] items were raised. For `update_task_status`: use the `plan_id` and `task_num` from Step 2's claim. If no `plan_id` exists, omit the call.
+
+After backfill, re-check with `get_session_context` to confirm `run` now shows `<X+1>/<N>`. This is the hard guarantee that the next session-start sees correct state.
 
 Do not skip this check. A loop stuck at run 0/N means every future session-start shows stale active state.
 
@@ -141,6 +124,8 @@ Processed at postflight via the `workflow-capture` subagent (dispatched from `lo
 
 ## Step 5: Report and auto-proceed
 
+> **N is the maximum number of attempts, not a fixed iteration count.** If the work completes early (e.g. no more pending tasks), invoke loop-gate immediately without exhausting all N runs.
+
 Show:
 ```
 Goal: <goal>
@@ -149,7 +134,8 @@ Pipeline: <pipeline_bar> <phase_name> <current>/<total> | Phase runs: <run_bar> 
 ```
 
 **Auto-proceed:**
-- If X+1 < N: invoke `loop-task` for the next run immediately.
+- If X+1 < N and pending_tasks > 0 (or no plan): invoke `loop-task` for the next run immediately.
+- If X+1 < N and pending_tasks = 0: skip remaining runs and invoke `loop-gate` immediately, noting early exit.
 - If X+1 = N: invoke `loop-gate` immediately.
 
 No confirmation needed. The user can interrupt at any time by typing.
@@ -173,12 +159,11 @@ Each run dispatches a fresh subagent. The parent only sees the result summary, n
 
 ## MCP recording template
 
-Every subagent dispatched by loop-task MUST call these three MCP tools on completion.
-They are inlined directly into the subagent prompt — never referenced by shorthand.
+Every subagent dispatched by loop-task MUST call `record_run_complete` on completion.
+It is inlined directly into the subagent prompt — never referenced by shorthand.
 A subagent starts with fresh context and has no loop skill loaded; shorthand is meaningless to it.
 
-The three required calls:
+**The full verbatim template is in Step 2** (the `Task(...)` prompt block). Copy it as-is.
+The abbreviated signature below is for quick reference only — do NOT use it as the actual prompt:
 
-1. `workflow-state_append_run_summary(repo, run_num, summary, findings, phase)` — findings prefix `[GAP]` for workflow gaps
-2. `workflow-state_update_task_status(repo, plan_id, task_num, status, notes)` — omit if no plan_id
-3. `workflow-state_set_loop_state(repo, phase, run, goal)` — advances the run counter in DB
+`workflow-state_record_run_complete(repo, run_num, summary, phase, goal, findings, [plan_id], [task_num])` — findings prefix `[GAP]` for workflow gaps; plan_id and task_num are optional (omit if no plan)

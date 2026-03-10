@@ -23,9 +23,14 @@ Suggested goal: "Audit and improve [specific aspect] of workflow"
 
 ### Step 1: Inventory personal skills
 
+```
+workflow-state_list_skills()
+```
+
+Cross-reference against powerlevel templates by listing that directory:
+
 ```bash
-ls ~/.config/opencode/skills/personal/  # file discovery for audit — not a workflow state read
-ls ~/src/powerlevel/templates/skills/personal/  # file discovery for audit — not a workflow state read
+ls ~/src/powerlevel/templates/skills/personal/  # cross-repo comparison only — not workflow state
 ```
 
 For each skill, classify:
@@ -64,11 +69,11 @@ Do NOT gate on a confirmation before dispatching. Send all subagents simultaneou
 **Dispatch pattern (send all in one message):**
 
 ```
-Task(description: "Audit: loop-start", prompt: "Read ~/.config/opencode/skills/personal/loop-start/SKILL.md. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. Return findings as bullets.")
-Task(description: "Audit: session-start", prompt: "Read ~/.config/opencode/skills/personal/session-start/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
-Task(description: "Audit: loop-task", prompt: "Read ~/.config/opencode/skills/personal/loop-task/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
-Task(description: "Audit: loop-gate", prompt: "Read ~/.config/opencode/skills/personal/loop-gate/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
-Task(description: "Audit: loop-end", prompt: "Read ~/.config/opencode/skills/personal/loop-end/SKILL.md. Check for: (1) blocking question calls, (2) stale file-read patterns, (3) non-parallel sequential steps. Return findings as bullets.")
+Task(description: "Audit: loop-start", prompt: "Use workflow-state_search_skill(skill_name: \"loop-start\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
+Task(description: "Audit: session-start", prompt: "Use workflow-state_search_skill(skill_name: \"session-start\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
+Task(description: "Audit: loop-task", prompt: "Use workflow-state_search_skill(skill_name: \"loop-task\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
+Task(description: "Audit: loop-gate", prompt: "Use workflow-state_search_skill(skill_name: \"loop-gate\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
+Task(description: "Audit: loop-end", prompt: "Use workflow-state_search_skill(skill_name: \"loop-end\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
 # Dispatch all simultaneously — no gate before dispatch
 ```
 
@@ -92,6 +97,12 @@ Sort by impact. Findings with impact=high go first in Phase 2.
 
 **Goal:** Apply fixes. Each loop-task run = one component.
 
+> **NOTE — Phase 2 (fix) is a task-splitter phase, NOT a build phase:**
+> - Tasks are: edit SKILL.md files, update DB via `upsert_skill_section`, commit
+> - There is **NO devaipod build step**, NO `just build`, NO compilation
+> - Loop iterations map to individual skill fix tasks
+> - Treat each run as: read skill → apply surgical edit → upsert to DB → commit
+
 ### Execution pattern
 
 Each run targets one of:
@@ -100,7 +111,7 @@ Each run targets one of:
 - An AGENTS.md change (global or project)
 - A templates cleanup (remove/add one file from powerlevel/templates/)
 
-**No devaipod.** Workflow improvement is pure agent work: read files, identify gaps, edit, verify with `grep` or `cat` if needed.
+**No devaipod.** Workflow improvement is pure agent work: edit files, commit to opencode-config (the post-commit hook seeds the DB automatically). Verify with `workflow-state_search_skill()` after the commit to confirm the change is reflected.
 
 ### Per-run discipline (via loop-task)
 
@@ -144,12 +155,15 @@ cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
 # In powerlevel:
 cd ~/src/powerlevel
 # Run the lint workflow locally if available, or manually verify:
-# NOTE: bash grep on local SKILL.md files is ALLOWED — these are actual source files
-# being linted, not workflow state files (loop-state.md, plan files). Banned reads are
-# only for loop-state.md, plan files, and skill sections that should use search_skill.
+# NOTE: bash grep on local SKILL.md files is ALLOWED in this step ONLY — these are
+# actual template source files being validated for:
+#   (1) required frontmatter presence (name:, description:)
+#   (2) personal reference cleanliness (no castrojo, jorge, bluefin-lts, ublue-os, etc.)
+# This carve-out does NOT extend to loop-state.md, plan files, or skill DB lookups.
 for f in templates/skills/personal/*/SKILL.md; do
   grep -q "^name:" "$f" || echo "MISSING name: in $f"
   grep -q "^description:" "$f" || echo "MISSING description: in $f"
+  grep -qiE "castrojo|jorge|bluefin-lts|ublue-os|projectbluefin" "$f" && echo "PERSONAL REF in $f"
 done
 echo "Lint complete"
 ```

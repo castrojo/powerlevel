@@ -98,14 +98,14 @@ Proceed to Step 4.
 
 ## Step 4b: Execution mode
 
-Always autonomous. All phase gates and confirmation prompts are skipped by default.
-User can say "interactive mode" at any point to enable question-tool confirmations.
+Always autonomous. All phase gates and confirmation prompts are unconditionally skipped. The question tool is banned in all loop skills without exception.
 
 ---
 
 ## Step 5: Run count
 
 Default `N=5`. Use `N=3` for quick validation loops, `N=10` for deep fix phases.
+N is the **maximum** number of attempts — the loop exits early via success-exit if all work completes before N runs.
 Derive from user's opening message if they specified a count. Otherwise use 5.
 
 ---
@@ -128,12 +128,18 @@ Infer `PHASE_NAMES` from context:
 
 ## Step 5d: Subagent strategy for Phase 1
 
-Evaluate: does the first phase involve auditing or investigating **5 or more independent components**?
+Choose the run strategy based on task dependencies:
 
-- **Yes (5+ components):** Use parallel subagent dispatch (via `dispatching-parallel-agents`) in Phase 1 runs. Note this in `append_run_summary` findings for the phase.
-- **No (< 5 components):** Sequential loop-task runs. No subagents needed.
+**Parallel subagent dispatch** (via `dispatching-parallel-agents`) is appropriate when:
+- N independent components can be audited simultaneously, AND
+- Components have no sequential dependencies (each produces standalone findings)
 
-This is a cost/efficiency decision — parallel subagents cut audit time but add overhead for small scopes.
+**Sequential runs** are appropriate when:
+- Tasks have a dependency chain (e.g. build → test → verify), OR
+- Each run's findings inform the next run's scope, OR
+- This is a **plan-based loop** where each run maps to one plan task — always sequential; task ordering matters
+
+This is a cost/efficiency decision — parallel subagents cut audit time but add overhead for small scopes and are never correct when ordering matters.
 
 ---
 
@@ -160,10 +166,12 @@ Pipeline: ▓░ <first_phase> 1/<TOTAL_PHASES> | Phase runs: ░░░░░ 0/
 [ LOOP READY ] <REPO> • Next: loop-task (Run 1)
 ```
 
+Note: subagents use `workflow-state_record_run_complete` (single call) — not the three-call pattern.
+
 Invoke loop-task immediately. Do not wait for confirmation.
 
 ---
 
 ## Cost note
 
-`get_session_context` returns loop state + pending task count + latest run summary in a single DB round-trip (~100 tokens). This replaces loading `loop-state.md` (~20 tokens) **and** scanning the plan file for pending tasks (potentially hundreds of tokens on large plans). Always call MCP first; fall back to the file read only if MCP is unavailable.
+`get_session_context` returns loop state + pending task count + latest run summary in a single DB round-trip (~100 tokens). This replaces loading `loop-state.md` (~20 tokens) **and** scanning the plan file for pending tasks (potentially hundreds of tokens on large plans). Always call MCP. File reads for loop state are unconditionally banned — no fallback.

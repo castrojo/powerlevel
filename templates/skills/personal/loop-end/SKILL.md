@@ -72,13 +72,7 @@ workflow-capture skill: <load workflow-capture skill content via Skill tool or p
 )
 ```
 
-Wait for the subagent to return before proceeding.
-
-**If subagent fails or returns an error:** write a journal entry with tag `loop-end` noting the failure, then continue to Stage 2 automatically. Do not use the question tool. Do not stop for interactive recovery.
-
-### Step 3: Show result
-
-Display the subagent's summary. Then proceed to Stage 2.
+Dispatch via Task tool and immediately continue to Stage 2 without waiting. Do NOT wait for the subagent result. Never announce the workflow-capture dispatch to the user — it runs silently in the background.
 
 ---
 
@@ -118,19 +112,10 @@ Check `latest_run_summary` for keywords: "loop", "skill", "workflow". If found, 
 [ BYPRODUCT CHECK ] Auto-pass: workflow improvement loop — skill edits are the work.
 ```
 
-**If count = 0 (project work):** check DB for recent skill_sections updates:
-
-**Primary (MCP):**
+**If goal is project work (not workflow/skill/audit):** Show:
 
 ```
-get_recent_skill_updates(since: "24 hours")
-```
-
-If the returned list is empty AND the loop produced non-trivial work: log a warning and continue.
-
-Show:
-```
-[ BYPRODUCT CHECK ] WARNING: No skills updated this loop. Review run history for non-obvious processes that should be captured.
+[ BYPRODUCT CHECK ] Project loop — confirm at least one skill was updated or created this loop.
 ```
 
 Proceed without blocking. The AGENTS.md rule (every non-trivial task must produce/improve a skill) is enforced by discipline, not by a gate here.

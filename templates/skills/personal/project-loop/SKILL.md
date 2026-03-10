@@ -18,7 +18,7 @@ Invoke `loop-start` first if no loop is active. Set `phase_names: plan,execute,s
 
 ## Before You Start: Fork Check
 
-Work always happens in a local fork in `YOUR_USERNAME`, not on upstream directly.
+Work always happens in a local fork in your account (`YOUR_USERNAME`), not on upstream directly.
 
 ```bash
 git remote -v
@@ -31,7 +31,7 @@ upstream  git@github.com:<org>/<repo>.git          (fetch only)
 ```
 
 If the remote layout is wrong: stop and run `onboarding-a-repository` first.
-If the repo is already owned by `YOUR_USERNAME` (no upstream): proceed directly.
+If the repo is already owned by you (no upstream): proceed directly.
 
 Sync the fork to upstream before starting (skip silently for owner repos):
 
@@ -136,17 +136,15 @@ All planned tasks are implemented AND at least one full `just build` passes insi
 
 ### Step 1: Verify CI matches local
 
-The loop-gate CI parity check should have already surfaced any mismatch. If not:
+The loop-gate CI parity check should have already surfaced any mismatch. If not, run the project's validation command:
 
 ```bash
-# Local image
-grep '"image"' .devcontainer/devcontainer.json | head -1
-
-# CI image
-grep -r "image:" .github/workflows/*.yml 2>/dev/null | head -3
+just check
 ```
 
-If they differ: fix before creating a PR.
+CI workflow verification is done by running the project's validation command — not by grepping CI files. If `just check` is not defined, check the project's `opencode.json` for the correct validation command.
+
+If local and CI diverge: fix before creating a PR.
 
 ### Step 2: Create the PR
 

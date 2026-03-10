@@ -74,27 +74,20 @@ Goal: <goal>
 
 If `phase` is empty or the template placeholder: output nothing. Do not mention loops in the report if no loop is active.
 
-**Parallel batch:** Steps 0b (MCP health + get_session_context), Step 1 (git identity), Step 1b (opencode-config status), Step 1c (devcontainer check), and Step 4b (journal_search) are all independent. Fire them as one parallel tool call group — do not wait for each before starting the next.
+**Parallel batch:** Steps 0b (MCP health + get_session_context), Step 1 (git identity), Step 1b (opencode-config status), and Step 1c (devcontainer check) are all independent. Fire them as one parallel tool call group — do not wait for each before starting the next.
 
 ---
 
 ## Step 0c: Skill DB health check (re-seed if stale)
 
-After Step 0b, check whether the skill DB is populated. A cold DB causes every `search_skill` call to return null.
-
-```
-workflow-state_list_skills()
-```
-
-If the result is empty or fewer than 5 skills: the DB was never seeded or was reset. Skip the probe step and go directly to re-seed.
-
-If skills are listed, probe one known personal skill to check if content is queryable:
+After Step 0b, probe the skill DB with a single call:
 
 ```
 workflow-state_search_skill(skill_name: "improve-workflow", query: "Step 3 apply the edit")
 ```
 
-**If the probe returns null** (skills listed but content not queryable): run the seeder to re-populate all skills:
+- **If the probe returns content:** DB is healthy. Proceed silently — no mention in the report.
+- **If the probe returns null:** the DB was never seeded or was reset. Run the seeder:
 
 ```bash
 cd ~/.config/opencode/mcp/state && go run seed/skills/main.go
@@ -103,8 +96,6 @@ cd ~/.config/opencode/mcp/state && go run seed/skills/main.go
 The seeder reads every `skills/*/SKILL.md` from personal, superpowers, and agents/skills directories, declaratively upserts all sections, and prunes orphans. It is idempotent — safe to run at any time.
 
 Note in the Step 5 report: "Skill DB was stale — re-seeded via seeder."
-
-**If the probe returns content:** proceed silently — no mention in the report.
 
 ---
 
@@ -223,20 +214,6 @@ Auto-invoke loop-start after session-start completes. Note in Step 5 report: "Ac
 
 ---
 
-## Step 4b: Surface relevant journal entries
-
-Search for recent discoveries in this project using **text search, not project filter**.
-The `project:` field in journal entries stores the full working directory path (e.g.
-`~/src`), not the repo name — filtering by repo name returns nothing.
-
-```
-journal_search(text: "<repo-name>", limit: 5)
-```
-
-If results exist, read the titles and note any that are directly relevant to known active work. Do not read the full bodies unless a title is directly relevant — the goal is a quick recall check, not a full review.
-
----
-
 ## Step 4c: Spin up container pod (optional)
 
 Only run if the user explicitly asks for container work this session, or if an active plan
@@ -270,7 +247,6 @@ Tell the user in one paragraph:
 - Which repo/project is loaded
 - Whether the project block was correct, corrected, or newly written
 - Any active plans found, including working tree state and validation result if a plan was active (or "no active plans")
-- Any journal entries surfaced worth noting (or "no recent entries")
 - devcontainer status: present or missing (if missing, include the reminder to run Step 9)
 - Pod status (if Step 4c ran)
 
@@ -284,4 +260,4 @@ Then stop. Do not begin any other work until the user gives a task.
 
 ## Cost note
 
-This skill injects ~0 extra tokens into ongoing messages. The memory block write is a one-time cost of ~200 tokens. The plan scan and journal search add ~0 tokens to the system prompt.
+This skill injects ~0 extra tokens into ongoing messages. The memory block write is a one-time cost of ~200 tokens. The plan scan adds ~0 tokens to the system prompt.

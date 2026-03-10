@@ -1,6 +1,6 @@
 ---
 name: loop-gate
-description: Use after all loop-task runs complete — shows progress, parks [GAP] items for postflight capture, commits, and gates the phase transition on human confirmation
+description: Use after all loop-task runs complete — shows progress, parks [GAP] items for postflight capture, commits, and auto-advances the phase transition
 ---
 
 Announce: "Using loop-gate to confirm phase transition."
@@ -42,38 +42,18 @@ List what was accomplished this phase using the results already fetched in Step 
 
 This step catches stale references, retired tool names, and broken cross-references that accumulate over time.
 
-**Primary (MCP):** Use `search_rules` to detect stale content — do NOT grep the file:
-
-```
-search_rules(query: "capture-loop", domain: "loop")
-```
-If results return: flag as `STALE: capture-loop reference found`
-
-```
-search_rules(query: "devaipod loop capture loop batch-append")
-```
-If results return: flag as `STALE: old loop terminology found`
-
-**Primary (MCP):** Verify all skills in DB have a SKILL.md on disk:
+**Primary (MCP):** Verify all skills present in the DB using `list_skills()`. Skill presence is verified by the DB — `search_skill` returns null for missing skills; no disk scan needed.
 
 ```
 list_skills()
 ```
 
-For each skill returned, verify `~/.config/opencode/skills/personal/<skill>/SKILL.md` exists:
-```bash
-# Only use bash for file existence check — not for DB queries
-for skill in <list from list_skills>; do
-  [ ! -f "$HOME/.config/opencode/skills/personal/${skill}/SKILL.md" ] && echo "MISSING: $skill"
-done
+**If any expected skill is absent from DB:** park as a `[GAP]` item — run the seeder to re-populate:
+```
+append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] skill missing from DB: <skill_name> — run seeder", phase: "<current_phase_name>")
 ```
 
-**If conflicts found:** Auto-park all conflicts as `[GAP]` items — no question needed:
-```
-append_run_summary(repo: "<REPO>", run_num: 0, findings: "[GAP] <conflict description>", phase: "<current_phase_name>")
-```
-
-**If no conflicts:** note "AGENTS.md clean" and continue.
+**If all skills present:** note "skills DB clean" and continue.
 
 ---
 
@@ -85,12 +65,10 @@ Verify the project's local devcontainer matches the CI workflow image.
 # Get local image
 LOCAL_IMAGE=$(cat .devcontainer/devcontainer.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('image','NOT_FOUND'))" 2>/dev/null || echo "NO_DEVCONTAINER")
 
-# Get CI image (check common locations)
-CI_IMAGE=$(grep -r "image:\|container:\|FROM " .github/workflows/*.yml 2>/dev/null | grep -v "^Binary" | head -3 || echo "NO_CI")
-
 echo "Local: $LOCAL_IMAGE"
-echo "CI: $CI_IMAGE"
 ```
+
+> CI image grep against `.github/workflows/*.yml` removed — this was a file-system scan that produced unreliable results (workflows may use matrix images, reusable actions, or no image at all). CI parity is validated in the devcontainer.json → CI alignment review done per-project during onboarding, not at gate time.
 
 **If devcontainer is missing:** note it (do not block gate — some repos intentionally lack devcontainer).
 
@@ -128,7 +106,7 @@ git -C ~/.config/opencode status --short
 If any uncommitted changes remain:
 ```bash
 cd ~/.config/opencode
-git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml loop-state-template.md
+git add AGENTS.md opencode.json memory/ agent-memory.json skills/personal/ agents/ plans/ devaipod.toml
 git commit -m "chore(config): loop-gate sync — Phase <current_phase_name> complete
 
 Assisted-by: Claude Sonnet 4.6 via OpenCode"
