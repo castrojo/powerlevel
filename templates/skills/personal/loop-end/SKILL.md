@@ -40,8 +40,8 @@ If no items: skip to Stage 2. Note "No workflow gaps this loop."
 
 ### Step 2: Dispatch autonomous subagent
 
-Dispatch a subagent with the full content of the `workflow-capture` skill as the prompt.
-Pass the repo name, loop goal, and the list of [GAP] items as context.
+Dispatch a self-contained subagent to process all [GAP] items.
+Pass the repo name, loop goal, and the [GAP] item list inline in the prompt — the subagent is fully self-contained and does not load any external skill.
 
 > **Note:** The invocation form below is conceptual pseudocode. In OpenCode, dispatch a
 > subagent via the Task tool with subagent_type: "general". The prompt content below is
@@ -60,14 +60,84 @@ Repo: <REPO>
 The following [GAP] items were recorded during this loop:
 <paste [GAP] items from run history>
 
-Follow the workflow-capture skill instructions exactly:
-1. For each item: classify target file, read current content (DB-first via search_skill or search_rules; if search_skill returns null, the section is missing from DB — run the seeder: `go run ~/.config/opencode/mcp/state/seed/skills/main.go` — NEVER fall back to reading files), apply surgical edit, sync DB via commit (the post-commit hook seeds automatically), decide powerlevel backport
-2. One opencode-config commit covering all edits
-3. One powerlevel commit if any backports
-4. One journal entry summarizing all fixes
-5. Return a summary: N items, N backported, commit hash(es)
+---
 
-workflow-capture skill: <load workflow-capture skill content via Skill tool or paste inline>
+Step 0: Early exit if no [GAP] items
+
+If the list above is empty, write a journal entry and stop:
+  journal_write(title: "workflow-capture: no gaps — <REPO> loop", body: "No [GAP] items found.", tags: "workflow-capture")
+
+---
+
+Step 1: For each [GAP] item, work through these sub-steps completely before moving to the next:
+
+**1a — Classify target file:**
+| Gap type | File |
+|---|---|
+| Skill missing a step or wrong guidance | ~/.config/opencode/skills/personal/<skill>/SKILL.md |
+| Cross-cutting convention (git, PR, commit, session) | ~/.config/opencode/AGENTS.md |
+| Project-specific pattern | Project AGENTS.md in repo root |
+| Agent behavioral style or human preference | ~/.config/opencode/memory/persona.md or human.md |
+
+**1b — Read current content (DB-first, NO file reads):**
+- Skill edit → workflow-state_search_skill(skill_name: "<skill>", query: "<gap topic>")
+- AGENTS.md edit → workflow-state_search_rules(query: "<gap topic>", domain: "<domain>")
+- If DB returns nothing: run the seeder `go run ~/.config/opencode/mcp/state/seed/skills/main.go` — NEVER fall back to reading files
+
+**1c — Apply surgical edit:**
+Use the Edit tool. Do NOT rewrite the file. Add only what is missing or fix only what is wrong. 1–3 sentences maximum.
+
+**1d — DB sync is automatic:**
+The post-commit hook in opencode-config runs the seeder on every commit that touches a SKILL.md. No manual upsert_skill_section calls needed.
+
+**1e — Decide powerlevel backport:**
+Ask: "Is this fix generic enough for any user bootstrapping from scratch, with no personal refs, no specific repo names?"
+- Yes → copy updated SKILL.md to ~/src/powerlevel/templates/skills/personal/<skill>/SKILL.md — stage but do NOT commit yet
+- No → opencode-config only
+
+---
+
+Step 2: Commit all edits to opencode-config:
+
+```bash
+cd ~/.config/opencode
+git add AGENTS.md skills/personal/ memory/
+git commit -m "fix(workflow): automated capture from <REPO> loop — <N> improvements
+
+<bullet list of what was fixed>
+
+Assisted-by: [Model Name] via [Tool Name]"
+git push
+```
+
+---
+
+Step 3: Commit powerlevel backports (only if any approved in Step 1e):
+
+```bash
+cd ~/src/powerlevel
+git add templates/
+git commit -m "feat(templates): backport <N> workflow improvements from <REPO> loop
+
+Assisted-by: [Model Name] via [Tool Name]"
+git push
+```
+
+---
+
+Step 4: Write journal entry:
+
+journal_write(
+  title: "Workflow capture: <REPO> loop — <N> improvements",
+  body: "Processed <N> [GAP] items from <REPO> loop. Fixed: <list>. Backported: <list or 'none'>.",
+  tags: "workflow-learning, workflow-capture"
+)
+
+---
+
+Step 5: Return summary:
+
+Return a one-paragraph summary: N items processed, which files were edited, N backported to powerlevel, commit hash(es).
 """
 )
 ```
