@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mark3labs/mcp-go/mcp"
@@ -35,32 +34,47 @@ func RegisterSessionTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		var sc sessionCtx
 		sc.Repo = repo
 
-		// loop state — ignore error (no row = empty state)
-		var goal *string
-		pool.QueryRow(ctx,
-			`SELECT phase, run, goal FROM loop_state WHERE repo=$1`, repo,
-		).Scan(&sc.Phase, &sc.Run, &goal)
+		// Single CTE: fetch loop state, pending task count, and latest run in one round-trip.
+		var phase, run, goal, pending, latestSummary, latestCreatedAt *string
+		_ = pool.QueryRow(ctx, `
+			WITH loop AS (
+				SELECT phase, run, goal FROM loop_state WHERE repo = $1
+			),
+			pending AS (
+				SELECT COUNT(*)::text AS cnt FROM plan_tasks
+				WHERE repo = $1 AND status = 'pending'
+			),
+			latest_run AS (
+				SELECT summary, created_at::text FROM run_history
+				WHERE repo = $1 ORDER BY created_at DESC LIMIT 1
+			)
+			SELECT
+				l.phase, l.run, l.goal,
+				p.cnt,
+				r.summary, r.created_at
+			FROM (SELECT 1) AS dummy
+			LEFT JOIN loop l ON TRUE
+			LEFT JOIN pending p ON TRUE
+			LEFT JOIN latest_run r ON TRUE
+		`, repo).Scan(&phase, &run, &goal, &pending, &latestSummary, &latestCreatedAt)
+
+		if phase != nil {
+			sc.Phase = *phase
+		}
+		if run != nil {
+			sc.Run = *run
+		}
 		if goal != nil {
 			sc.Goal = *goal
 		}
 		if sc.Run != "" {
 			sc.ProgressBar = progressBar(sc.Run)
 		}
-
-		// pending task count
-		pool.QueryRow(ctx,
-			`SELECT COUNT(*) FROM plan_tasks WHERE repo=$1 AND status='pending'`, repo,
-		).Scan(&sc.PendingCount)
-
-		// latest run summary
-		var summary string
-		var createdAt time.Time
-		runErr := pool.QueryRow(ctx,
-			`SELECT summary, created_at FROM run_history WHERE repo=$1
-			 ORDER BY created_at DESC LIMIT 1`, repo,
-		).Scan(&summary, &createdAt)
-		if runErr == nil {
-			s := fmt.Sprintf("[%s] %s", createdAt.Format("15:04"), summary)
+		if pending != nil {
+			fmt.Sscanf(*pending, "%d", &sc.PendingCount)
+		}
+		if latestSummary != nil && latestCreatedAt != nil {
+			s := fmt.Sprintf("[%s] %s", (*latestCreatedAt)[:16], *latestSummary)
 			sc.LatestRun = &s
 		}
 

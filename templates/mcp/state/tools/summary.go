@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
+	"golang.org/x/sync/errgroup"
 )
 
 // relAge returns a human-readable relative age string for a past time.
@@ -104,136 +106,187 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			LoopRuns:       []loopRun{},
 		}
 
-		// 1. Skills updated in window (kept in JSON payload, not rendered in box)
-		skillRows, err := pool.Query(ctx,
-			`SELECT skill, COUNT(section) AS sections, MAX(updated_at) AS last_updated
-			 FROM skill_sections
-			 WHERE updated_at > NOW() - $1::interval
-			 GROUP BY skill ORDER BY last_updated DESC`,
-			since)
-		if err != nil {
-			return nil, fmt.Errorf("get_session_summary skills: %w", err)
-		}
-		for skillRows.Next() {
-			var su skillUpdate
-			var t time.Time
-			if scanErr := skillRows.Scan(&su.Skill, &su.Sections, &t); scanErr != nil {
-				skillRows.Close()
-				return nil, scanErr
-			}
-			su.LastUpdated = t.Format(time.RFC3339)
-			result.SkillsUpdated = append(result.SkillsUpdated, su)
-		}
-		skillRows.Close()
-
-		// 2. Rules updated in window — include first 160 chars of content as description
-		ruleRows, err := pool.Query(ctx,
-			`SELECT id, domain, LEFT(content, 160) AS description, updated_at FROM rules
-			 WHERE updated_at > NOW() - $1::interval
-			 ORDER BY updated_at DESC`,
-			since)
-		if err != nil {
-			return nil, fmt.Errorf("get_session_summary rules: %w", err)
-		}
-		for ruleRows.Next() {
-			var ru ruleUpdate
-			if scanErr := ruleRows.Scan(&ru.ID, &ru.Domain, &ru.Description, &ru.ts); scanErr != nil {
-				ruleRows.Close()
-				return nil, scanErr
-			}
-			ru.UpdatedAt = ru.ts.Format(time.RFC3339)
-			result.RulesUpdated = append(result.RulesUpdated, ru)
-		}
-		ruleRows.Close()
-
-		// 3. Memory updates in window
-		memRows, err := pool.Query(ctx,
-			`SELECT block, summary, created_at FROM memory_updates
-			 WHERE created_at > NOW() - $1::interval
-			 ORDER BY created_at DESC`,
-			since)
-		if err != nil {
-			return nil, fmt.Errorf("get_session_summary memory: %w", err)
-		}
-		for memRows.Next() {
-			var mu memoryUpdate
-			if scanErr := memRows.Scan(&mu.Block, &mu.Summary, &mu.ts); scanErr != nil {
-				memRows.Close()
-				return nil, scanErr
-			}
-			mu.CreatedAt = mu.ts.Format(time.RFC3339)
-			result.MemoryUpdates = append(result.MemoryUpdates, mu)
-		}
-		memRows.Close()
-
-		// 4. Tasks completed in window
-		taskRows, err := pool.Query(ctx,
-			`SELECT repo, plan_id, COUNT(*) AS count
-			 FROM plan_tasks
-			 WHERE status = 'done' AND claimed_at > NOW() - $1::interval
-			 GROUP BY repo, plan_id ORDER BY repo`,
-			since)
-		if err != nil {
-			return nil, fmt.Errorf("get_session_summary tasks: %w", err)
-		}
-		for taskRows.Next() {
-			var tc taskCompleted
-			if scanErr := taskRows.Scan(&tc.Repo, &tc.PlanID, &tc.Count); scanErr != nil {
-				taskRows.Close()
-				return nil, scanErr
-			}
-			result.TasksCompleted = append(result.TasksCompleted, tc)
-		}
-		taskRows.Close()
-
-		// 5. Loop runs in window
-		runRows, err := pool.Query(ctx,
-			`SELECT repo, COUNT(*) AS count
-			 FROM run_history
-			 WHERE created_at > NOW() - $1::interval
-			 GROUP BY repo ORDER BY repo`,
-			since)
-		if err != nil {
-			return nil, fmt.Errorf("get_session_summary runs: %w", err)
-		}
-		for runRows.Next() {
-			var lr loopRun
-			if scanErr := runRows.Scan(&lr.Repo, &lr.Count); scanErr != nil {
-				runRows.Close()
-				return nil, scanErr
-			}
-			result.LoopRuns = append(result.LoopRuns, lr)
-		}
-		runRows.Close()
-
-		// 6. Totals with trends: current count vs count that existed before the window
+		// Run all 7 queries concurrently using errgroup.
+		// Each goroutine gets its own connection from the pool.
+		var mu sync.Mutex
 		var (
 			rulesNow, rulesPrev int
 			secNow, secPrev     int
 			tasksNow, tasksPrev int
 			runsNow, runsPrev   int
 		)
-		pool.QueryRow(ctx, `
-			SELECT
-				(SELECT COUNT(*) FROM rules),
-				(SELECT COUNT(*) FROM rules WHERE updated_at < NOW() - $1::interval),
-				(SELECT COUNT(*) FROM skill_sections),
-				(SELECT COUNT(*) FROM skill_sections WHERE updated_at < NOW() - $1::interval),
-				(SELECT COUNT(*) FROM plan_tasks),
-				(SELECT COUNT(*) FROM plan_tasks WHERE created_at < NOW() - $1::interval),
-				(SELECT COUNT(*) FROM run_history),
-				(SELECT COUNT(*) FROM run_history WHERE created_at < NOW() - $1::interval)
-		`, since).Scan(&rulesNow, &rulesPrev, &secNow, &secPrev, &tasksNow, &tasksPrev, &runsNow, &runsPrev)
+
+		g, gctx := errgroup.WithContext(ctx)
+
+		// 1. Skills updated in window
+		g.Go(func() error {
+			rows, err := pool.Query(gctx,
+				`SELECT skill, COUNT(section) AS sections, MAX(updated_at) AS last_updated
+				 FROM skill_sections
+				 WHERE updated_at > NOW() - $1::interval
+				 GROUP BY skill ORDER BY last_updated DESC`,
+				since)
+			if err != nil {
+				return fmt.Errorf("get_session_summary skills: %w", err)
+			}
+			defer rows.Close()
+			var skills []skillUpdate
+			for rows.Next() {
+				var su skillUpdate
+				var t time.Time
+				if scanErr := rows.Scan(&su.Skill, &su.Sections, &t); scanErr != nil {
+					return scanErr
+				}
+				su.LastUpdated = t.Format(time.RFC3339)
+				skills = append(skills, su)
+			}
+			mu.Lock()
+			result.SkillsUpdated = skills
+			mu.Unlock()
+			return nil
+		})
+
+		// 2. Rules updated in window
+		g.Go(func() error {
+			rows, err := pool.Query(gctx,
+				`SELECT id, domain, LEFT(content, 160) AS description, updated_at FROM rules
+				 WHERE updated_at > NOW() - $1::interval
+				 ORDER BY updated_at DESC`,
+				since)
+			if err != nil {
+				return fmt.Errorf("get_session_summary rules: %w", err)
+			}
+			defer rows.Close()
+			var rules []ruleUpdate
+			for rows.Next() {
+				var ru ruleUpdate
+				if scanErr := rows.Scan(&ru.ID, &ru.Domain, &ru.Description, &ru.ts); scanErr != nil {
+					return scanErr
+				}
+				ru.UpdatedAt = ru.ts.Format(time.RFC3339)
+				rules = append(rules, ru)
+			}
+			mu.Lock()
+			result.RulesUpdated = rules
+			mu.Unlock()
+			return nil
+		})
+
+		// 3. Memory updates in window
+		g.Go(func() error {
+			rows, err := pool.Query(gctx,
+				`SELECT block, summary, created_at FROM memory_updates
+				 WHERE created_at > NOW() - $1::interval
+				 ORDER BY created_at DESC`,
+				since)
+			if err != nil {
+				return fmt.Errorf("get_session_summary memory: %w", err)
+			}
+			defer rows.Close()
+			var mems []memoryUpdate
+			for rows.Next() {
+				var mu2 memoryUpdate
+				if scanErr := rows.Scan(&mu2.Block, &mu2.Summary, &mu2.ts); scanErr != nil {
+					return scanErr
+				}
+				mu2.CreatedAt = mu2.ts.Format(time.RFC3339)
+				mems = append(mems, mu2)
+			}
+			mu.Lock()
+			result.MemoryUpdates = mems
+			mu.Unlock()
+			return nil
+		})
+
+		// 4. Tasks completed in window
+		g.Go(func() error {
+			rows, err := pool.Query(gctx,
+				`SELECT repo, plan_id, COUNT(*) AS count
+				 FROM plan_tasks
+				 WHERE status = 'done' AND claimed_at > NOW() - $1::interval
+				 GROUP BY repo, plan_id ORDER BY repo`,
+				since)
+			if err != nil {
+				return fmt.Errorf("get_session_summary tasks: %w", err)
+			}
+			defer rows.Close()
+			var tasks []taskCompleted
+			for rows.Next() {
+				var tc taskCompleted
+				if scanErr := rows.Scan(&tc.Repo, &tc.PlanID, &tc.Count); scanErr != nil {
+					return scanErr
+				}
+				tasks = append(tasks, tc)
+			}
+			mu.Lock()
+			result.TasksCompleted = tasks
+			mu.Unlock()
+			return nil
+		})
+
+		// 5. Loop runs in window
+		g.Go(func() error {
+			rows, err := pool.Query(gctx,
+				`SELECT repo, COUNT(*) AS count
+				 FROM run_history
+				 WHERE created_at > NOW() - $1::interval
+				 GROUP BY repo ORDER BY repo`,
+				since)
+			if err != nil {
+				return fmt.Errorf("get_session_summary runs: %w", err)
+			}
+			defer rows.Close()
+			var runs []loopRun
+			for rows.Next() {
+				var lr loopRun
+				if scanErr := rows.Scan(&lr.Repo, &lr.Count); scanErr != nil {
+					return scanErr
+				}
+				runs = append(runs, lr)
+			}
+			mu.Lock()
+			result.LoopRuns = runs
+			mu.Unlock()
+			return nil
+		})
+
+		// 6. Totals with trends
+		g.Go(func() error {
+			return pool.QueryRow(gctx, `
+				SELECT
+					(SELECT COUNT(*) FROM rules),
+					(SELECT COUNT(*) FROM rules WHERE updated_at < NOW() - $1::interval),
+					(SELECT COUNT(*) FROM skill_sections),
+					(SELECT COUNT(*) FROM skill_sections WHERE updated_at < NOW() - $1::interval),
+					(SELECT COUNT(*) FROM plan_tasks),
+					(SELECT COUNT(*) FROM plan_tasks WHERE created_at < NOW() - $1::interval),
+					(SELECT COUNT(*) FROM run_history),
+					(SELECT COUNT(*) FROM run_history WHERE created_at < NOW() - $1::interval)
+			`, since).Scan(&rulesNow, &rulesPrev, &secNow, &secPrev, &tasksNow, &tasksPrev, &runsNow, &runsPrev)
+		})
+
+		// 7. DB size
+		g.Go(func() error {
+			var dbSize string
+			if err := pool.QueryRow(gctx,
+				`SELECT pg_size_pretty(pg_database_size(current_database()))`,
+			).Scan(&dbSize); err != nil {
+				return err
+			}
+			mu.Lock()
+			result.DBSize = dbSize
+			mu.Unlock()
+			return nil
+		})
+
+		if err := g.Wait(); err != nil {
+			return nil, err
+		}
 
 		result.Totals.Rules = rulesNow
 		result.Totals.SkillSections = secNow
 		result.Totals.PlanTasks = tasksNow
 		result.Totals.RunHistory = runsNow
-
-		// 7. DB size
-		pool.QueryRow(ctx,
-			`SELECT pg_size_pretty(pg_database_size(current_database()))`,
-		).Scan(&result.DBSize)
 
 		// --- Build rendered_box ---
 		var box strings.Builder
@@ -268,13 +321,13 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 				ts:     ru.ts,
 			})
 		}
-		for _, mu := range result.MemoryUpdates {
+		for _, mu2 := range result.MemoryUpdates {
 			improvements = append(improvements, improvement{
-				age:  relAge(mu.ts),
+				age:  relAge(mu2.ts),
 				kind: "memory",
-				id:   mu.Block,
-				desc: mu.Summary,
-				ts:   mu.ts,
+				id:   mu2.Block,
+				desc: mu2.Summary,
+				ts:   mu2.ts,
 			})
 		}
 		// Sort most-recent first

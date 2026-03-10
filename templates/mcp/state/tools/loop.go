@@ -154,9 +154,16 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			newPhase = phase
 		}
 
-		// Determine run string: read current total from loop_state, then write "<run_num>/<total>"
+		tx, txErr := pool.Begin(ctx)
+		if txErr != nil {
+			return nil, fmt.Errorf("record_run_complete begin: %w", txErr)
+		}
+		defer tx.Rollback(ctx)
+
+		// Determine run string inside the transaction to avoid phantom read.
+		// Read the current total from loop_state, then write "<run_num>/<total>".
 		var currentRun string
-		_ = pool.QueryRow(ctx, `SELECT run FROM loop_state WHERE repo = $1`, repo).Scan(&currentRun)
+		_ = tx.QueryRow(ctx, `SELECT run FROM loop_state WHERE repo = $1`, repo).Scan(&currentRun)
 		total := runNum // fallback: total = runNum if no existing state
 		if currentRun != "" {
 			parts := strings.SplitN(currentRun, "/", 2)
@@ -167,12 +174,6 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			}
 		}
 		newRun := fmt.Sprintf("%d/%d", runNum, total)
-
-		tx, txErr := pool.Begin(ctx)
-		if txErr != nil {
-			return nil, fmt.Errorf("record_run_complete begin: %w", txErr)
-		}
-		defer tx.Rollback(ctx)
 
 		// 1. INSERT run summary
 		_, qerr := tx.Exec(ctx,
@@ -234,7 +235,7 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			 FROM run_history
 			 WHERE repo = $1
 			   AND ($2 = '' OR phase = $2)
-			   AND ($3 = '' OR summary ILIKE '%' || $3 || '%' OR findings ILIKE '%' || $3 || '%')
+			   AND ($3 = '' OR to_tsvector('english', COALESCE(summary,'') || ' ' || COALESCE(findings,'')) @@ plainto_tsquery('english', $3))
 			 ORDER BY created_at DESC
 			 LIMIT 20`,
 			repo, phase, filter)

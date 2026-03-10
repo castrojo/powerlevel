@@ -73,9 +73,16 @@ func seedSkill(ctx context.Context, pool *pgxpool.Pool, skillName, path string) 
 		liveHeadings = append(liveHeadings, sec.heading)
 	}
 
+	// Wrap all DB operations for this skill in a single transaction.
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin tx %s: %w", skillName, err)
+	}
+	defer tx.Rollback(ctx)
+
 	// Delete any DB rows whose section heading is no longer in the SKILL.md.
 	// This is what makes the seeder declarative: DB state = disk state after every run.
-	tag, err := pool.Exec(ctx,
+	tag, err := tx.Exec(ctx,
 		`DELETE FROM skill_sections WHERE skill=$1 AND NOT (section = ANY($2))`,
 		skillName, liveHeadings,
 	)
@@ -88,7 +95,7 @@ func seedSkill(ctx context.Context, pool *pgxpool.Pool, skillName, path string) 
 
 	// Upsert all live sections.
 	for i, sec := range sections {
-		_, qerr := pool.Exec(ctx,
+		_, qerr := tx.Exec(ctx,
 			`INSERT INTO skill_sections (skill, section, content, position, updated_at)
 			 VALUES ($1, $2, $3, $4, NOW())
 			 ON CONFLICT (skill, section) DO UPDATE
@@ -99,6 +106,10 @@ func seedSkill(ctx context.Context, pool *pgxpool.Pool, skillName, path string) 
 			return fmt.Errorf("upsert %s/%s: %w", skillName, sec.heading, qerr)
 		}
 		fmt.Printf("seeded:  %s / %s\n", skillName, sec.heading)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit tx %s: %w", skillName, err)
 	}
 	return nil
 }

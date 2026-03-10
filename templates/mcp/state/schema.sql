@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS skill_sections (
     PRIMARY KEY (skill, section)
 );
 CREATE INDEX IF NOT EXISTS skill_sections_search_idx ON skill_sections USING GIN (search_vec);
+CREATE INDEX IF NOT EXISTS idx_skill_sections_skill ON skill_sections(skill);
+CREATE INDEX IF NOT EXISTS idx_skill_sections_updated_at ON skill_sections(updated_at);
 
 CREATE TABLE IF NOT EXISTS plan_tasks (
     repo        TEXT NOT NULL,
