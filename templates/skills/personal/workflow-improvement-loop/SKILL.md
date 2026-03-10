@@ -60,24 +60,41 @@ Use `workflow-state_search_skill(skill: "loop-start", query: "loop state fields"
 
 Verify required fields are present: `phase`, `run`, `goal`. Also verify the `## Improvements` section exists.
 
-### Step 4: Parallel subagent audit
+### Step 4: Inline audit
 
-**Threshold: 5+ components → dispatch in parallel batches of 5. Fewer than 5 → sequential is fine.**
+Run all checks inline in the parent agent — no subagents. Subagents cost ~3-4k tokens of context overhead each; these are simple DB lookups that cost ~100 tokens apiece.
 
-Do NOT gate on a confirmation before dispatching. Send all subagents simultaneously, then collect results.
+**Skills to audit:** loop-start, loop-task, loop-gate, loop-end, loop-session, session-start, workflow-improvement-loop
 
-**Dispatch pattern (send all in one message):**
+For each skill, run these checks in sequence:
 
+**Check 1: Disk-read violations**
 ```
-Task(description: "Audit: loop-start", prompt: "Use workflow-state_search_skill(skill_name: \"loop-start\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
-Task(description: "Audit: session-start", prompt: "Use workflow-state_search_skill(skill_name: \"session-start\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
-Task(description: "Audit: loop-task", prompt: "Use workflow-state_search_skill(skill_name: \"loop-task\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
-Task(description: "Audit: loop-gate", prompt: "Use workflow-state_search_skill(skill_name: \"loop-gate\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
-Task(description: "Audit: loop-end", prompt: "Use workflow-state_search_skill(skill_name: \"loop-end\", query: \"blocking question calls stale file-read patterns non-parallel steps\") to retrieve the skill content. Review all returned sections. Check for: (1) blocking question calls that should be removed, (2) stale file-read patterns (cat/grep instead of DB tools), (3) non-parallel sequential steps that could be parallelized. If search_skill returns null for any section, note it as a [GAP] in your findings — do NOT fall back to reading the SKILL.md file. Return findings as bullets.")
-# Dispatch all simultaneously — no gate before dispatch
+workflow-state_search_skill(skill_name: X, query: "cat skill read disk Skill tool SKILL.md")
 ```
+Flag any section referencing: `cat SKILL.md`, `cp SKILL.md`, `grep SKILL.md`, `skill(`, `Skill tool`, `Read tool on SKILL.md`
 
-Collect all subagent results, then compile into the Step 5 findings list. The gate (loop-gate) comes after findings are compiled, not before dispatch.
+**Check 2: Question tool in loop skills**
+```
+workflow-state_search_skill(skill_name: X, query: "question tool confirmation stop wait")
+```
+For loop skills (loop-task, loop-gate, loop-end, loop-session, loop-start): flag any section with question tool usage not clearly in a non-loop context.
+
+**Check 3: Non-atomic task claims (loop-task only)**
+```
+workflow-state_search_skill(skill_name: "loop-task", query: "get_plan_tasks claim task")
+```
+Flag if `get_plan_tasks` + manual status update is used instead of `claim_task`.
+
+**Check 4: Missing auto-proceed / question tool ban**
+```
+workflow-state_search_skill(skill_name: X, query: "auto-proceed question tool banned")
+```
+Flag loop skills missing explicit bans on the question tool and explicit auto-proceed language.
+
+**AGENTS.md holistic analysis (optional):** If contradictions in AGENTS.md are suspected, dispatch **one** subagent (not five) with scope: "AGENTS.md contradiction analysis only." This is the only case where a subagent is appropriate in Phase 1 — because it requires reading a large file holistically, not just targeted DB lookups.
+
+Compile all inline findings, then proceed to Step 5.
 
 ### Step 5: Compile findings
 
