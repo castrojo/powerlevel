@@ -203,9 +203,8 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			rows, err := pool.Query(gctx,
 				`SELECT repo, plan_id, COUNT(*) AS count
 				 FROM plan_tasks
-				 WHERE status = 'done' AND claimed_at > NOW() - $1::interval
-				 GROUP BY repo, plan_id ORDER BY repo`,
-				since)
+				 WHERE status = 'done'
+				 GROUP BY repo, plan_id ORDER BY repo`)
 			if err != nil {
 				return fmt.Errorf("get_session_summary tasks: %w", err)
 			}
