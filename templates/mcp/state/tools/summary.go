@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -11,6 +12,35 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
+
+// relAge returns a human-readable relative age string for a past time.
+func relAge(t time.Time) string {
+	d := time.Since(t)
+	switch {
+	case d < 2*time.Minute:
+		return "just now"
+	case d < 60*time.Minute:
+		return fmt.Sprintf("%dm ago", int(d.Minutes()))
+	case d < 24*time.Hour:
+		return fmt.Sprintf("%dh ago", int(d.Hours()))
+	default:
+		return fmt.Sprintf("%dd ago", int(d.Hours()/24))
+	}
+}
+
+// trendArrow returns an arrow + delta string for a DB total trend.
+// current is the live count; prev is the count that existed before the window.
+func trendArrow(current, prev int) string {
+	delta := current - prev
+	switch {
+	case delta > 0:
+		return fmt.Sprintf("↑%d", delta)
+	case delta < 0:
+		return fmt.Sprintf("↓%d", -delta)
+	default:
+		return "→"
+	}
+}
 
 func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 	s.AddTool(mcp.NewTool("get_session_summary",
@@ -26,9 +56,17 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			LastUpdated string `json:"last_updated"`
 		}
 		type ruleUpdate struct {
-			ID        string `json:"id"`
-			Domain    string `json:"domain"`
-			UpdatedAt string `json:"updated_at"`
+			ID          string `json:"id"`
+			Domain      string `json:"domain"`
+			Description string `json:"description"`
+			UpdatedAt   string `json:"updated_at"`
+			ts          time.Time
+		}
+		type memoryUpdate struct {
+			Block     string `json:"block"`
+			Summary   string `json:"summary"`
+			CreatedAt string `json:"created_at"`
+			ts        time.Time
 		}
 		type taskCompleted struct {
 			Repo   string `json:"repo"`
@@ -49,6 +87,7 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			Window         string          `json:"window"`
 			SkillsUpdated  []skillUpdate   `json:"skills_updated"`
 			RulesUpdated   []ruleUpdate    `json:"rules_updated"`
+			MemoryUpdates  []memoryUpdate  `json:"memory_updates"`
 			TasksCompleted []taskCompleted `json:"tasks_completed"`
 			LoopRuns       []loopRun       `json:"loop_runs"`
 			Totals         totals          `json:"totals"`
@@ -60,11 +99,12 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			Window:         since,
 			SkillsUpdated:  []skillUpdate{},
 			RulesUpdated:   []ruleUpdate{},
+			MemoryUpdates:  []memoryUpdate{},
 			TasksCompleted: []taskCompleted{},
 			LoopRuns:       []loopRun{},
 		}
 
-		// 1. Skills updated in window
+		// 1. Skills updated in window (kept in JSON payload, not rendered in box)
 		skillRows, err := pool.Query(ctx,
 			`SELECT skill, COUNT(section) AS sections, MAX(updated_at) AS last_updated
 			 FROM skill_sections
@@ -86,9 +126,9 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 		skillRows.Close()
 
-		// 2. Rules updated in window
+		// 2. Rules updated in window — include first 160 chars of content as description
 		ruleRows, err := pool.Query(ctx,
-			`SELECT id, domain, updated_at FROM rules
+			`SELECT id, domain, LEFT(content, 160) AS description, updated_at FROM rules
 			 WHERE updated_at > NOW() - $1::interval
 			 ORDER BY updated_at DESC`,
 			since)
@@ -97,17 +137,36 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 		for ruleRows.Next() {
 			var ru ruleUpdate
-			var t time.Time
-			if scanErr := ruleRows.Scan(&ru.ID, &ru.Domain, &t); scanErr != nil {
+			if scanErr := ruleRows.Scan(&ru.ID, &ru.Domain, &ru.Description, &ru.ts); scanErr != nil {
 				ruleRows.Close()
 				return nil, scanErr
 			}
-			ru.UpdatedAt = t.Format(time.RFC3339)
+			ru.UpdatedAt = ru.ts.Format(time.RFC3339)
 			result.RulesUpdated = append(result.RulesUpdated, ru)
 		}
 		ruleRows.Close()
 
-		// 3. Tasks completed in window (claimed_at approximates completion time)
+		// 3. Memory updates in window
+		memRows, err := pool.Query(ctx,
+			`SELECT block, summary, created_at FROM memory_updates
+			 WHERE created_at > NOW() - $1::interval
+			 ORDER BY created_at DESC`,
+			since)
+		if err != nil {
+			return nil, fmt.Errorf("get_session_summary memory: %w", err)
+		}
+		for memRows.Next() {
+			var mu memoryUpdate
+			if scanErr := memRows.Scan(&mu.Block, &mu.Summary, &mu.ts); scanErr != nil {
+				memRows.Close()
+				return nil, scanErr
+			}
+			mu.CreatedAt = mu.ts.Format(time.RFC3339)
+			result.MemoryUpdates = append(result.MemoryUpdates, mu)
+		}
+		memRows.Close()
+
+		// 4. Tasks completed in window
 		taskRows, err := pool.Query(ctx,
 			`SELECT repo, plan_id, COUNT(*) AS count
 			 FROM plan_tasks
@@ -127,7 +186,7 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 		taskRows.Close()
 
-		// 4. Loop runs in window
+		// 5. Loop runs in window
 		runRows, err := pool.Query(ctx,
 			`SELECT repo, COUNT(*) AS count
 			 FROM run_history
@@ -147,22 +206,36 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		}
 		runRows.Close()
 
-		// 5. Table row counts (no window — always current totals)
-		pool.QueryRow(ctx,
-			`SELECT
+		// 6. Totals with trends: current count vs count that existed before the window
+		var (
+			rulesNow, rulesPrev int
+			secNow, secPrev     int
+			tasksNow, tasksPrev int
+			runsNow, runsPrev   int
+		)
+		pool.QueryRow(ctx, `
+			SELECT
 				(SELECT COUNT(*) FROM rules),
+				(SELECT COUNT(*) FROM rules WHERE updated_at < NOW() - $1::interval),
 				(SELECT COUNT(*) FROM skill_sections),
+				(SELECT COUNT(*) FROM skill_sections WHERE updated_at < NOW() - $1::interval),
 				(SELECT COUNT(*) FROM plan_tasks),
-				(SELECT COUNT(*) FROM run_history)`,
-		).Scan(&result.Totals.Rules, &result.Totals.SkillSections,
-			&result.Totals.PlanTasks, &result.Totals.RunHistory)
+				(SELECT COUNT(*) FROM plan_tasks WHERE created_at < NOW() - $1::interval),
+				(SELECT COUNT(*) FROM run_history),
+				(SELECT COUNT(*) FROM run_history WHERE created_at < NOW() - $1::interval)
+		`, since).Scan(&rulesNow, &rulesPrev, &secNow, &secPrev, &tasksNow, &tasksPrev, &runsNow, &runsPrev)
 
-		// 6. DB size
+		result.Totals.Rules = rulesNow
+		result.Totals.SkillSections = secNow
+		result.Totals.PlanTasks = tasksNow
+		result.Totals.RunHistory = runsNow
+
+		// 7. DB size
 		pool.QueryRow(ctx,
 			`SELECT pg_size_pretty(pg_database_size(current_database()))`,
 		).Scan(&result.DBSize)
 
-		// Build rendered_box
+		// --- Build rendered_box ---
 		var box strings.Builder
 		headerSuffix := innerWidth - 24 - len(since)
 		if headerSuffix < 0 {
@@ -171,41 +244,106 @@ func RegisterSummaryTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		box.WriteString("╭─ Session Summary (last " + since + ") " +
 			strings.Repeat("─", headerSuffix) + "╮\n")
 
-		if len(result.SkillsUpdated) > 0 {
-			names := make([]string, len(result.SkillsUpdated))
-			for i, su := range result.SkillsUpdated {
-				names[i] = su.Skill
+		// WORKFLOW IMPROVEMENTS section
+		box.WriteString(row("WORKFLOW IMPROVEMENTS"))
+		box.WriteString(row(""))
+
+		// Merge rules + memory into a single chronological slice
+		type improvement struct {
+			age    string
+			kind   string // "rule" or "memory"
+			id     string
+			domain string
+			desc   string
+			ts     time.Time
+		}
+		var improvements []improvement
+		for _, ru := range result.RulesUpdated {
+			improvements = append(improvements, improvement{
+				age:    relAge(ru.ts),
+				kind:   "rule",
+				id:     ru.ID,
+				domain: ru.Domain,
+				desc:   ru.Description,
+				ts:     ru.ts,
+			})
+		}
+		for _, mu := range result.MemoryUpdates {
+			improvements = append(improvements, improvement{
+				age:  relAge(mu.ts),
+				kind: "memory",
+				id:   mu.Block,
+				desc: mu.Summary,
+				ts:   mu.ts,
+			})
+		}
+		// Sort most-recent first
+		sort.Slice(improvements, func(i, j int) bool {
+			return improvements[i].ts.After(improvements[j].ts)
+		})
+
+		descWidth := innerWidth - 14 // indent "             " = 13 chars + 1 space
+
+		if len(improvements) == 0 {
+			box.WriteString(row("  No workflow changes recorded this session."))
+		} else {
+			for _, imp := range improvements {
+				var header string
+				if imp.kind == "rule" {
+					header = fmt.Sprintf("  %-8s  [rule]    %s  [%s]", imp.age, imp.id, imp.domain)
+				} else {
+					header = fmt.Sprintf("  %-8s  [memory]  %s", imp.age, imp.id)
+				}
+				box.WriteString(row(header))
+				if imp.desc != "" {
+					desc := imp.desc
+					// Truncate to fit
+					runes := []rune(desc)
+					if len(runes) > descWidth {
+						desc = string(runes[:descWidth-1]) + "…"
+					}
+					box.WriteString(row(fmt.Sprintf("             %s", desc)))
+				}
+				box.WriteString(row(""))
 			}
-			box.WriteString(row(fmt.Sprintf("Skills:  %d updated  (%s)",
-				len(result.SkillsUpdated), strings.Join(names, ", "))))
-		}
-		if len(result.RulesUpdated) > 0 {
-			ids := make([]string, len(result.RulesUpdated))
-			for i, ru := range result.RulesUpdated {
-				ids[i] = ru.ID
-			}
-			box.WriteString(row(fmt.Sprintf("Rules:   %d updated  (%s)",
-				len(result.RulesUpdated), strings.Join(ids, ", "))))
-		}
-		for _, tc := range result.TasksCompleted {
-			box.WriteString(row(fmt.Sprintf("Tasks:   %d completed  (%s/%s)",
-				tc.Count, tc.Repo, tc.PlanID)))
-		}
-		for _, lr := range result.LoopRuns {
-			box.WriteString(row(fmt.Sprintf("Runs:    %d loop runs  (%s)", lr.Count, lr.Repo)))
 		}
 
-		allEmpty := len(result.SkillsUpdated) == 0 && len(result.RulesUpdated) == 0 &&
-			len(result.TasksCompleted) == 0 && len(result.LoopRuns) == 0
-		if allEmpty {
-			box.WriteString(row("No workflow changes in the last " + since + "."))
-		}
-
+		// ACTIVITY section
 		box.WriteString(divider())
-		box.WriteString(row(fmt.Sprintf("DB:  %d rules · %d skill_sections · %d tasks · %d runs",
-			result.Totals.Rules, result.Totals.SkillSections,
-			result.Totals.PlanTasks, result.Totals.RunHistory)))
-		box.WriteString(row("     " + result.DBSize))
+		totalRuns := 0
+		for _, lr := range result.LoopRuns {
+			totalRuns += lr.Count
+		}
+		totalTasks := 0
+		for _, tc := range result.TasksCompleted {
+			totalTasks += tc.Count
+		}
+		box.WriteString(row(fmt.Sprintf("ACTIVITY  %d tasks · %d runs across %d repos",
+			totalTasks, totalRuns, len(result.LoopRuns))))
+
+		// Per-repo run breakdown — top 4, then "+N more"
+		const maxRepos = 4
+		runParts := make([]string, 0, maxRepos+1)
+		for i, lr := range result.LoopRuns {
+			if i >= maxRepos {
+				runParts = append(runParts, fmt.Sprintf("+%d more", len(result.LoopRuns)-maxRepos))
+				break
+			}
+			runParts = append(runParts, fmt.Sprintf("%s: %d", lr.Repo, lr.Count))
+		}
+		if len(runParts) > 0 {
+			box.WriteString(row("  " + strings.Join(runParts, "  ")))
+		}
+
+		// DB STATS with trend indicators
+		box.WriteString(divider())
+		box.WriteString(row(fmt.Sprintf("DB  %d rules %s · %d sections %s · %d tasks %s · %d runs %s · %s",
+			rulesNow, trendArrow(rulesNow, rulesPrev),
+			secNow, trendArrow(secNow, secPrev),
+			tasksNow, trendArrow(tasksNow, tasksPrev),
+			runsNow, trendArrow(runsNow, runsPrev),
+			result.DBSize,
+		)))
 		box.WriteString("╰" + strings.Repeat("─", innerWidth+2) + "╯\n")
 
 		result.RenderedBox = box.String()

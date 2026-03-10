@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS skill_sections (
     section     TEXT NOT NULL,
     content     TEXT NOT NULL,
     tags        TEXT[] DEFAULT '{}',
+    position    INTEGER NOT NULL DEFAULT 0,
     search_vec  TSVECTOR GENERATED ALWAYS AS (to_tsvector('english', content)) STORED,
     updated_at  TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (skill, section)
@@ -62,3 +63,14 @@ CREATE TABLE IF NOT EXISTS ui_panels (
     sort_order  INT  NOT NULL DEFAULT 0,
     updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS memory_updates (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    block       TEXT NOT NULL,
+    summary     TEXT NOT NULL,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS memory_updates_created_idx ON memory_updates (created_at DESC);
+
+ALTER TABLE plan_tasks ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE skill_sections ADD COLUMN IF NOT EXISTS position INTEGER NOT NULL DEFAULT 0;

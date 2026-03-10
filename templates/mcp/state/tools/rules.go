@@ -258,4 +258,62 @@ func RegisterRulesTools(s *server.MCPServer, pool *pgxpool.Pool) {
 		b, _ := json.Marshal(skills)
 		return mcp.NewToolResultText(string(b)), nil
 	})
+
+	s.AddTool(mcp.NewTool("get_skill",
+		mcp.WithDescription("Retrieve all sections of a skill from the DB in document order. DB-first replacement for reading SKILL.md files. Returns the full skill content as assembled markdown."),
+		mcp.WithString("skill_name", mcp.Required(), mcp.Description("Skill name, e.g. 'session-start', 'loop-task'")),
+		mcp.WithReadOnlyHintAnnotation(true),
+	), func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		skillName, err := req.RequireString("skill_name")
+		if err != nil {
+			return nil, err
+		}
+
+		rows, qerr := pool.Query(ctx,
+			`SELECT section, content
+			 FROM skill_sections
+			 WHERE skill = $1
+			 ORDER BY position ASC, section ASC`,
+			skillName)
+		if qerr != nil {
+			return nil, fmt.Errorf("get_skill: %w", qerr)
+		}
+		defer rows.Close()
+
+		var parts []string
+		for rows.Next() {
+			var section, content string
+			if scanErr := rows.Scan(&section, &content); scanErr != nil {
+				return nil, scanErr
+			}
+			parts = append(parts, content)
+		}
+		if len(parts) == 0 {
+			return mcp.NewToolResultText(""), nil
+		}
+		return mcp.NewToolResultText(strings.Join(parts, "\n\n---\n\n")), nil
+	})
+
+	s.AddTool(mcp.NewTool("record_memory_update",
+		mcp.WithDescription("Record a memory block update. Call immediately after memory_set or memory_replace with a one-line summary of what changed and why."),
+		mcp.WithString("block", mcp.Required(), mcp.Description("Memory block name, e.g. 'persona.md', 'human.md'")),
+		mcp.WithString("summary", mcp.Required(), mcp.Description("One-line description of what changed, e.g. 'Added: fire-and-forget rule for improve-workflow'")),
+	), func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		block, err := req.RequireString("block")
+		if err != nil {
+			return nil, err
+		}
+		summary, err := req.RequireString("summary")
+		if err != nil {
+			return nil, err
+		}
+		_, qerr := pool.Exec(ctx,
+			`INSERT INTO memory_updates (block, summary) VALUES ($1, $2)`,
+			block, summary,
+		)
+		if qerr != nil {
+			return nil, fmt.Errorf("record_memory_update: %w", qerr)
+		}
+		return mcp.NewToolResultText("ok"), nil
+	})
 }

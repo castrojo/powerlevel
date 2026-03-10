@@ -71,8 +71,8 @@ func resolveState(phase, run string, pending int) bannerState {
 }
 
 // innerWidth is the number of content characters between the box borders.
-// Box total width = innerWidth + 2 (for "│ " and " │") = 59 chars.
-const innerWidth = 57
+// Box total width = innerWidth + 2 (for "│ " and " │") = 82 chars.
+const innerWidth = 80
 
 func pad(s string, width int) string {
 	n := utf8.RuneCountInString(s)
