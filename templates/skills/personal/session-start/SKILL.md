@@ -77,6 +77,18 @@ Goal: <goal>
 [ LOOP ACTIVE ] <REPO> • <phase> • Run <run> • Next: loop-task
 ```
 
+**Stale-plan safeguard:** If `run` starts with `0/` (no runs completed in this plan yet), call `get_run_history(repo: "<REPO>")` immediately. If the most recent run summary contains "loop-end" or "All phases complete", this plan was set up in a prior session that ended before any work began — the conversation context summary may be describing already-completed work from a different loop. Add this WARNING to the Step 5 report instead of the normal LOOP ACTIVE banner:
+
+```
+[ WARNING ] Active plan at run 0/N — previous session ended with loop-end.
+This plan may be stale (set up but never started). Confirm before invoking loop-task.
+Last completed run: <latest_run_summary first 100 chars>
+```
+
+Do NOT auto-proceed to loop-task in this case. Wait for explicit user confirmation.
+
+If `run` is NOT `0/N` (at least one run completed), or the most recent run is not a loop-end: treat as a genuine active loop and show the normal LOOP ACTIVE banner.
+
 If `phase` is empty or the template placeholder: output nothing. Do not mention loops in the report if no loop is active.
 
 **Parallel batch:** Steps 0b (MCP health + get_session_context), Step 1 (git identity), Step 1b (opencode-config status), and Step 1c (devcontainer check) are all independent. Fire them as one parallel tool call group — do not wait for each before starting the next.
