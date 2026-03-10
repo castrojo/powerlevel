@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -154,13 +155,16 @@ func RegisterLoopTools(s *server.MCPServer, pool *pgxpool.Pool) {
 			newPhase = phase
 		}
 
-		tx, txErr := pool.Begin(ctx)
+		// REPEATABLE READ gives a consistent snapshot at transaction start,
+		// preventing another transaction from modifying loop_state between
+		// our read of the current run total and our write of the new run string.
+		tx, txErr := pool.BeginTx(ctx, pgx.TxOptions{IsoLevel: pgx.RepeatableRead})
 		if txErr != nil {
 			return nil, fmt.Errorf("record_run_complete begin: %w", txErr)
 		}
 		defer tx.Rollback(ctx)
 
-		// Determine run string inside the transaction to avoid phantom read.
+		// Determine run string inside the transaction.
 		// Read the current total from loop_state, then write "<run_num>/<total>".
 		var currentRun string
 		_ = tx.QueryRow(ctx, `SELECT run FROM loop_state WHERE repo = $1`, repo).Scan(&currentRun)
