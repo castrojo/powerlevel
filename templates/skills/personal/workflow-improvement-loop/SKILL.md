@@ -158,25 +158,31 @@ For each fix applied in Phase 2, answer: does this belong in the public template
 
 Generic = yes. castrojo-specific = no.
 
-### Step 2: Copy approved skills
+### Step 2: Sync approved skills to templates
 
-```bash
-# Example:
-cp ~/.config/opencode/skills/personal/loop-start/SKILL.md \
-   ~/src/powerlevel/templates/skills/personal/loop-start/SKILL.md
-```
+**Do NOT use `cp` to copy SKILL.md files.** The DB version may differ from disk if edits were made via `upsert_skill_section` without a subsequent file write. The post-commit hook syncs disk→DB, not DB→disk. Always use the DB as the source of truth.
+
+For each approved skill:
+
+1. Get the current skill content from DB:
+   ```
+   workflow-state_get_skill(skill_name: "<skill>")
+   ```
+2. Read the current template file to compare:
+   ```
+   Read: ~/src/powerlevel/templates/skills/personal/<skill>/SKILL.md
+   ```
+3. If the template differs from the DB version, apply changes using the Edit or Write tool on the template file.
+
+This ensures the template reflects the authoritative DB version, not a potentially stale disk copy.
 
 ### Step 3: Run CI lint
+
+**Deliberate carve-out from DB-first discipline:** This step runs `grep` on local SKILL.md template files. This is the correct tool for this check — we are validating the commit target (filesystem), not querying workflow state. The grep checks template files *before* they are committed to ensure they are clean. This carve-out does NOT extend to loop-state.md, plan files, or skill DB lookups.
 
 ```bash
 # In powerlevel:
 cd ~/src/powerlevel
-# Run the lint workflow locally if available, or manually verify:
-# NOTE: bash grep on local SKILL.md files is ALLOWED in this step ONLY — these are
-# actual template source files being validated for:
-#   (1) required frontmatter presence (name:, description:)
-#   (2) personal reference cleanliness (no castrojo, jorge, bluefin-lts, ublue-os, etc.)
-# This carve-out does NOT extend to loop-state.md, plan files, or skill DB lookups.
 for f in templates/skills/personal/*/SKILL.md; do
   grep -q "^name:" "$f" || echo "MISSING name: in $f"
   grep -q "^description:" "$f" || echo "MISSING description: in $f"

@@ -85,7 +85,9 @@ If `phase` is empty or the template placeholder: output nothing. Do not mention 
 
 ## Step 0c: Skill DB health check (re-seed if stale)
 
-After Step 0b, probe the skill DB with a single call:
+**Skip this step entirely if `get_session_context` in Step 0b returned non-empty data** (non-empty `phase`, `latest_run_summary`, or `pending_tasks`). A non-null response from `get_session_context` proves DB health — the probe below is redundant and costs ~100-300 tokens per session for no benefit.
+
+Only run the probe if Step 0b returned null or all fields were empty (edge case: DB just started, no loop context yet):
 
 ```
 workflow-state_search_skill(skill_name: "improve-workflow", query: "Step 3 apply the edit")
