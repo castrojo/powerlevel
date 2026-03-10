@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS plan_tasks (
     PRIMARY KEY (repo, plan_id, task_num)
 );
 CREATE INDEX IF NOT EXISTS plan_tasks_status_idx ON plan_tasks (repo, plan_id, status);
+CREATE INDEX IF NOT EXISTS idx_plan_tasks_created_at ON plan_tasks(created_at);
 
 CREATE TABLE IF NOT EXISTS loop_state (
     repo        TEXT PRIMARY KEY,
@@ -45,6 +46,7 @@ CREATE TABLE IF NOT EXISTS loop_state (
     goal        TEXT,
     updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS idx_loop_state_updated_at ON loop_state(updated_at DESC);
 
 CREATE TABLE IF NOT EXISTS run_history (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -57,6 +59,7 @@ CREATE TABLE IF NOT EXISTS run_history (
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS run_history_repo_idx ON run_history (repo, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_run_history_repo_phase_created ON run_history(repo, phase, created_at);
 
 CREATE TABLE IF NOT EXISTS ui_panels (
     panel_id    TEXT PRIMARY KEY,
