@@ -222,16 +222,7 @@ If `latest_run_summary` is non-empty, report it:
 
 > "Found active plan context: `<latest_run_summary>`"
 
-**If `pending_tasks` > 0 or `latest_run_summary` is non-empty**, also run:
-
-```bash
-git status --short
-git worktree list
-```
-
-and the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
-
-**If `pending_tasks` > 0: identify the plan immediately.**
+**If `pending_tasks` > 0: identify the plan FIRST — before git status, worktrees, or validation.**
 
 Run a DB query to find which plan(s) have pending tasks for this repo:
 
@@ -242,7 +233,22 @@ podman exec systemd-opencode-state-db psql -h 127.0.0.1 -U workflow -d workflow_
 
 Then call `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` for each plan found.
 
-Include the task descriptions in the Step 5 report. This allows immediate verification of whether tasks are genuine (unstarted work) or stale (already completed by a prior loop under a different plan tracker).
+Include the task descriptions in the initial report — this establishes what work is pending before looking at git state. It allows immediate verification of whether tasks are genuine (unstarted work) or stale (already completed by a prior loop under a different plan tracker).
+
+**Then**, if `pending_tasks` > 0 or `latest_run_summary` is non-empty, also run:
+
+```bash
+git status --short
+```
+
+```bash
+WORKTREES=$(git worktree list 2>/dev/null | wc -l)
+[ "$WORKTREES" -gt 1 ] && git worktree list
+```
+
+(Only show worktree list if there is more than 1 worktree — the main worktree is always present. Skip the worktree list entirely if there is only one worktree.)
+
+Then run the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees (if any) + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
 
 **If an active plan was found AND no loop is active (phase is empty in `get_session_context`):**
 
