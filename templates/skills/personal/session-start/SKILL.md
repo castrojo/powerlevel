@@ -231,6 +231,19 @@ git worktree list
 
 and the project's validation command (from the project block). Include all results in the Step 5 report so the user has a full ready-to-resume picture: plan state + working tree state + active worktrees + validation state. If a worktree exists for the active feature branch, note it explicitly — the user may need to switch there before starting work.
 
+**If `pending_tasks` > 0: identify the plan immediately.**
+
+Run a DB query to find which plan(s) have pending tasks for this repo:
+
+```bash
+podman exec systemd-opencode-state-db psql -h 127.0.0.1 -U workflow -d workflow_state \
+  -c "SELECT plan_id, count(*) as pending FROM plan_tasks WHERE repo='<REPO>' AND status='pending' GROUP BY plan_id ORDER BY plan_id;"
+```
+
+Then call `get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")` for each plan found.
+
+Include the task descriptions in the Step 5 report. This allows immediate verification of whether tasks are genuine (unstarted work) or stale (already completed by a prior loop under a different plan tracker).
+
 **If an active plan was found AND no loop is active (phase is empty in `get_session_context`):**
 
 Auto-invoke loop-start after session-start completes. Note in Step 5 report: "Active plan found — loop-start will be invoked automatically." Do not use the question tool.
