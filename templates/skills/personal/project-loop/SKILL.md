@@ -192,7 +192,9 @@ After PR is created (not merged — merged is out of scope for the loop):
 
 ## Cross-machine note
 
-Loop state is stored in the workflow-state DB. Start Phase 1 on one machine, continue Phase 2 on another — session-start calls get_session_context automatically and surfaces the active loop in the banner. No file sync needed.
+**The workflow-state DB is machine-local.** The PostgreSQL quadlet container (`opencode-state-db`) runs on the local machine only — it does not sync via Git. Loop state (phase, run count, task status) does NOT survive machine boundaries.
+
+**Cross-machine resume:** Note the `plan_id` from the active loop. On the new machine, pull `opencode-config` (skills and memory sync via Git), then run `loop-start` with the same `plan_id` to re-seed tasks and resume from the correct phase.
 
 ---
 

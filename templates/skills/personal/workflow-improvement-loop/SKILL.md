@@ -231,9 +231,6 @@ This is the "evolving prompt" property: each use produces a better skill for the
 
 ## Cross-machine note
 
-Loop state lives in the workflow-state DB. `get_session_context` returns current state in a single round-trip. Start Phase 1 on one machine, continue Phase 2 on another — `session-start` will show:
-```
-Goal: Audit and improve workflow skills
-Pipeline: ▓▓░ fix 2/3 | Phase runs: ▓░░ 1/3
-```
-No context is lost between machines as long as the DB is running (`systemctl --user is-active opencode-state-db`).
+**The workflow-state DB is machine-local.** The PostgreSQL quadlet container (`opencode-state-db`) runs on the local machine only — it does not sync via Git. Loop state (phase, run count, task status) does NOT survive machine boundaries.
+
+**Cross-machine resume:** Note the `plan_id` from the active loop. On the new machine, pull `opencode-config` (skills and memory sync via Git), then run `loop-start` with the same `plan_id` to re-seed tasks and resume from the correct phase.
