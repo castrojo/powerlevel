@@ -151,7 +151,9 @@ Every item is required. Do not declare loop complete until all are checked.
 
 **[ ] All plan tasks are done or skipped in DB**
 
-**Primary (MCP):**
+**Skip this check if `pending_tasks` from Stage 0's `get_session_context` is already 0 — the data is already in context and no DB call is needed.**
+
+If `pending_tasks` > 0 (from Stage 0 context), call:
 
 ```
 get_plan_tasks(repo: "<REPO>", plan_id: "<plan_id>", status: "pending")
