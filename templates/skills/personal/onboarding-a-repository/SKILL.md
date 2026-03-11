@@ -193,14 +193,13 @@ explicitly in the project's `AGENTS.md` under Critical Notes:
 
 ### Step 3b: Check for MCP servers
 
+Use the Read tool to inspect `opencode.json` if it exists:
+
 ```bash
-cat opencode.json 2>/dev/null | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-mcps = d.get('mcp', {})
-print(list(mcps.keys()) if mcps else 'no MCPs configured')
-" || echo "no opencode.json"
+ls opencode.json 2>/dev/null && echo "opencode.json present — use Read tool to inspect MCP config" || echo "no opencode.json"
 ```
+
+Then use the Read tool on `opencode.json` to inspect the `mcp` keys and identify configured servers.
 
 If MCPs are configured:
 - Identify what domain each covers (from the project's `AGENTS.md` MCP section)
@@ -220,6 +219,50 @@ ls ~/.config/opencode/mcp/state/opencode-state-mcp && echo "binary: ok"
 
 If either fails: see new-machine-setup Step 6c to fix it. Do not proceed with loop work
 until the MCP is healthy — loop state and plan imports will silently fail.
+
+---
+
+### Step 3c: Create Justfile (web and CLI projects)
+
+Every web or CLI project must have a `Justfile` at the repo root. Check first:
+
+```bash
+ls Justfile 2>/dev/null && echo "exists" || echo "MISSING"
+```
+
+If missing, create it with at minimum:
+
+```justfile
+set shell := ["bash", "-euo", "pipefail", "-c"]
+
+default:
+    @just --list
+
+build:
+    <install deps command>
+    <build command>
+
+serve:
+    xdg-open http://localhost:<port> & sleep 1 && <server command> --host 0.0.0.0
+```
+
+Rules:
+- `set shell` declaration at the top always
+- `default` recipe runs `just --list`
+- `just build` must work on a clean host — install deps as the first step (e.g. `npm install` before `npm run build`)
+- `just serve` must open the browser via `xdg-open` **and** run the server on a **single recipe line** (multi-line breaks `&` backgrounding since each line runs in a separate shell)
+- The URL passed to `xdg-open` must match the server's actual listen URL
+- Recipes stay ≤5 lines; split into composable sub-recipes if longer
+
+Commit the Justfile:
+
+```bash
+git add Justfile
+git commit -m "chore: add Justfile for standardized build/serve interface
+
+Assisted-by: <Model> via OpenCode"
+git push origin main
+```
 
 ---
 
@@ -601,8 +644,8 @@ git check-ignore -v .worktrees   # should print: ~/.config/git/ignore:1:.worktre
 # Step 3: Discover validation
 just --list || make help
 
-# Step 3b: Check for MCPs
-cat opencode.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(list(d.get('mcp',{}).keys()))"
+  # Step 3b: Check for MCPs
+  ls opencode.json 2>/dev/null && echo "present — use Read tool to inspect mcp keys" || echo "no opencode.json"
 
 # Step 4: Initialize project memory block
 # (Use memory_set with scope: project — repo URL, fork, validation, build tool, what it is, key dirs)

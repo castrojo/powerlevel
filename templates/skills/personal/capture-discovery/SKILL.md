@@ -45,6 +45,8 @@ Examples of non-stable facts: a specific bug's root cause, a one-time fix, a tra
 
 **If stable:** call `memory_replace` (scope: project) to add the line surgically. No announcement, no confirmation gate — act directly. Then call `workflow-state_record_memory_update(block: "project", summary: "<one-line description of what changed and why>")` immediately after.
 
+If a backup file exists at `~/.config/opencode/memory/project-<label>.md` (where `<label>` matches the memory block label used in `memory_replace`), overwrite it with the full updated memory block content using the Write tool.
+
 **If not stable:** skip Step 2. The journal entry is sufficient.
 
 ---
