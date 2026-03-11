@@ -119,6 +119,12 @@ echo "Installing npm dependencies"
 cd "$CONFIG_DIR" && npm install --silent
 cd - >/dev/null
 
+# --- Install post-commit hook (syncs skill DB on every AGENTS.md / SKILL.md commit) ---
+echo "Installing post-commit hook"
+mkdir -p "$CONFIG_DIR/.git/hooks"
+cp "$CONFIG_DIR/mcp/state/post-commit.hook" "$CONFIG_DIR/.git/hooks/post-commit"
+chmod +x "$CONFIG_DIR/.git/hooks/post-commit"
+
 # --- Build workflow-state MCP binary ---
 echo "Building workflow-state MCP server"
 cd "$CONFIG_DIR/mcp/state" && go build -o opencode-state-mcp . && cd - >/dev/null
@@ -182,6 +188,7 @@ FAILED=0
 systemctl --user is-active opencode-state-db 2>/dev/null | grep -q "^active" \
                                                           && ok "workflow-state DB running"     || fail "workflow-state DB not running"
 [[ -f "$CONFIG_DIR/mcp/state/opencode-state-mcp" ]]      && ok "MCP binary present"            || fail "MCP binary missing"
+[[ -x "$CONFIG_DIR/.git/hooks/post-commit" ]]             && ok "post-commit hook installed"     || fail "post-commit hook missing"
 
 echo ""
 if [[ "$FAILED" -eq 0 ]]; then

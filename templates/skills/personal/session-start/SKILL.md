@@ -214,6 +214,35 @@ Keep under 500 chars. If the project has a well-populated `AGENTS.md`, skip fiel
 
 ---
 
+## Step 3b: Check global memory blocks (persona + human)
+
+Read both global memory blocks. This step always runs — it is not conditional on Step 2/3.
+
+Check two things:
+1. `global:persona` — first line should be `# Agent Persona`
+2. `global:human` — first line should be `# Human Preferences`
+
+**If both blocks are non-empty and correct: proceed silently. No mention in the report.**
+
+**If either block is empty or missing**, restore it from the git-tracked source in opencode-config:
+
+```bash
+cat ~/.config/opencode/memory/persona.md
+cat ~/.config/opencode/memory/human.md
+```
+
+Call `memory_set` with the file contents:
+- scope: `global`, label: `persona` — paste contents of `persona.md`
+- scope: `global`, label: `human` — paste contents of `human.md`
+
+After each `memory_set`, call `workflow-state_record_memory_update(block, summary)` immediately.
+
+Note in the Step 5 report: "Restored global memory blocks from opencode-config: persona.md, human.md" (list only the blocks that were actually restored).
+
+**Why this matters:** Global memory blocks are stored only in the OpenCode DB on the current machine. They are not automatically restored on a new machine or after an OpenCode reset. The git-tracked `memory/*.md` files are the authoritative source of truth.
+
+---
+
 ## Step 4: Check for active plans
 
 `get_session_context` (Step 0) already returns `latest_run_summary` and `pending_tasks` — no additional file lookups needed. If a plan was active, these fields will be non-empty.

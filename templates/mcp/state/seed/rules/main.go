@@ -53,16 +53,17 @@ func main() {
 		id := strings.ToLower(strings.ReplaceAll(sec.heading, " ", "-"))
 		id = regexp.MustCompile(`[^a-z0-9-]`).ReplaceAllString(id, "")
 		domain := inferDomain(sec.heading)
+		tags := inferTags(sec.heading)
 		_, qerr := pool.Exec(ctx,
-			`INSERT INTO rules (id, domain, content, updated_at)
-			 VALUES ($1, $2, $3, NOW())
-			 ON CONFLICT (id) DO UPDATE SET domain=$2, content=$3, updated_at=NOW()`,
-			id, domain, sec.heading+"\n\n"+sec.content,
+			`INSERT INTO rules (id, domain, content, tags, updated_at)
+			 VALUES ($1, $2, $3, $4, NOW())
+			 ON CONFLICT (id) DO UPDATE SET domain=$2, content=$3, tags=$4, updated_at=NOW()`,
+			id, domain, sec.heading+"\n\n"+sec.content, tags,
 		)
 		if qerr != nil {
 			fmt.Fprintf(os.Stderr, "upsert %s: %v\n", id, qerr)
 		} else {
-			fmt.Printf("seeded: %s (%s)\n", id, domain)
+			fmt.Printf("seeded: %s (%s) tags=%v\n", id, domain, tags)
 		}
 	}
 }
@@ -85,4 +86,40 @@ func inferDomain(heading string) string {
 	default:
 		return "general"
 	}
+}
+
+func inferTags(heading string) []string {
+	h := strings.ToLower(heading)
+	var tags []string
+	if strings.Contains(h, "git") || strings.Contains(h, "commit") || strings.Contains(h, "branch") || strings.Contains(h, "remote") {
+		tags = append(tags, "git")
+	}
+	if strings.Contains(h, "pr") || strings.Contains(h, "pull request") {
+		tags = append(tags, "pr")
+	}
+	if strings.Contains(h, "loop") {
+		tags = append(tags, "loop")
+	}
+	if strings.Contains(h, "mcp") {
+		tags = append(tags, "mcp")
+	}
+	if strings.Contains(h, "session") {
+		tags = append(tags, "session")
+	}
+	if strings.Contains(h, "container") || strings.Contains(h, "devaipod") {
+		tags = append(tags, "container")
+	}
+	if strings.Contains(h, "skill") || strings.Contains(h, "workflow") {
+		tags = append(tags, "workflow")
+	}
+	if strings.Contains(h, "memory") || strings.Contains(h, "journal") {
+		tags = append(tags, "memory")
+	}
+	if strings.Contains(h, "ban") {
+		tags = append(tags, "banned")
+	}
+	if len(tags) == 0 {
+		tags = append(tags, "general")
+	}
+	return tags
 }
