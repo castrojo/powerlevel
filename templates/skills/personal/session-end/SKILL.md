@@ -1,6 +1,6 @@
 ---
 name: session-end
-description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to YOUR_USERNAME/opencode-config, and runs worktree hygiene in repos worked in during the session.
+description: Use at the end of every session — prompts for any unsaved discoveries, commits config changes to castrojo/opencode-config, and runs worktree hygiene in repos worked in during the session.
 ---
 
 # Session End
@@ -52,6 +52,18 @@ If this session dispatched work to a container via `podman exec devaipod-...-wor
 
 ## Step 2: Check config changes
 
+### Step 2a — Back up project memory block
+
+Identify the current repo: run `basename $(git rev-parse --show-toplevel 2>/dev/null)` or use the REPO name from session context.
+
+Read the current project memory block value from the `<project>` block visible in the system prompt. Write that content to `~/.config/opencode/memory/project-${REPO}.md` using the Write tool.
+
+This file will be picked up by `git add memory/` in Step 3 and committed to opencode-config, enabling restoration on new machines via session-start.
+
+If not currently in a project repo (e.g., session was in `~/.config/opencode/` itself), skip this sub-step.
+
+### Step 2b — Check for modified files
+
 ```bash
 git -C ~/.config/opencode status --short
 ```
@@ -77,7 +89,7 @@ Dispatch a background Task subagent with the following instructions — do NOT w
 
 Report to the user: "Config commit dispatched in background — push running async."
 
-**Why async:** This is a push to a personal config repo (YOUR_USERNAME/opencode-config). There is no downstream dependency. Blocking the session close on a network push wastes time.
+**Why async:** This is a push to a personal config repo (castrojo/opencode-config). There is no downstream dependency. Blocking the session close on a network push wastes time.
 
 ---
 
@@ -118,6 +130,19 @@ If any worktree path is outside the repo root (`.worktrees/<branch>` is the corr
 git worktree remove <path>      # if the branch work is done
 git worktree remove --force <path>   # if truly stale
 ```
+
+**gh-pages worktree check:** If any listed worktree tracks the `gh-pages` branch, verify it has no
+uncommitted work:
+
+```bash
+git -C <gh-pages-worktree-path> status --short
+git -C <gh-pages-worktree-path> stash list
+```
+
+If there is uncommitted work or stashed changes in the gh-pages worktree:
+- Either commit and push it now, or explicitly discard it (`git checkout -- .` / `git stash drop`)
+- **Never** leave a gh-pages worktree in a dirty state between sessions — on resume the stash
+  will be on a diverged HEAD and rebasing will produce duplicate JSON entries in `index/static`
 
 ---
 

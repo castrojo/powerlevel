@@ -181,17 +181,27 @@ If the directory is not a git repo (e.g. working in `~/src`): skip this check.
 
 ---
 
+## Step 1d: Read `opencode.json`
+
+Read the file at `<repo-root>/opencode.json` (or `~/.config/opencode/opencode.json` if not in a project repo). Identify any MCPs configured beyond the global `workflow-state` MCP. Note project-specific MCPs — these must be queried before touching code in their domain. Include them in the Step 5 orientation report.
+
+---
+
 ## Step 2: Check the project memory block
 
 Read the current `project` memory block. It is correct if **all three** hold:
 
 1. First line is `# <RepoName>` matching the repo you just verified
 2. It contains the validation command for this repo
-3. It is under 500 chars
+3. It is under 1000 chars
 
 **If all three are true: skip Step 3 entirely.** No write needed.
 
 **If empty, wrong repo name, or missing the validation command:** rewrite it now using Step 3. Do not proceed with stale or wrong context.
+
+**Step 2b — File-based fallback:** If the project memory block is empty AND the file `~/.config/opencode/memory/project-<REPO>.md` exists, restore the block from that file: read its contents and call `memory_set(label: "project", scope: "project", value: <contents>)` followed immediately by `record_memory_update(block: "project", summary: "Restored from file backup")`. Skip Step 3 reconstruction for this repo.
+
+**Step 2c — Write backup after reconstruction:** After any `memory_set` call in Step 3 (full reconstruction), also write the same content to `~/.config/opencode/memory/project-<REPO>.md` using the Write tool, so future sessions can restore without full reconstruction.
 
 ---
 
@@ -210,7 +220,7 @@ Call `memory_set` with scope `project`:
 - Architecture: <1-2 sentence summary>
 ```
 
-Keep under 500 chars. If the project has a well-populated `AGENTS.md`, skip fields already covered there.
+Keep under 1000 chars. If the project has a well-populated `AGENTS.md`, skip fields already covered there.
 
 ---
 

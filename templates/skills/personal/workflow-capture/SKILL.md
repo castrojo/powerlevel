@@ -60,6 +60,8 @@ Determine which file to edit:
 - AGENTS.md edit → `workflow-state_search_rules(query: "<gap topic>", domain: "<domain if known>")`
 - **If DB returns nothing:** The section is missing from the DB. Run the seeder to re-populate: `go run ~/.config/opencode/mcp/state/seed/skills/main.go`. NEVER fall back to reading the file directly.
 
+**File-edit exception:** When Step 2c requires the Edit tool on a SKILL.md file, a prior Read of that file is required and permitted — editing a source file is the explicit carve-out in the Banned Behaviors file-read rule. The DB lookup in Step 2b gives you the reference content; the Read is the Edit tool's mechanical requirement.
+
 ### 2c: Apply a surgical edit
 
 Use the Edit tool. Do NOT rewrite the file. Add only what is missing or fix only what is wrong. 1–3 sentences maximum.

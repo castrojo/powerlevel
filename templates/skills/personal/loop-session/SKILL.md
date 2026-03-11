@@ -32,7 +32,8 @@ Auto-detect from DB state and user's opening message:
 - `get_session_context` returned non-empty `phase` → route to "Resume active loop" → invoke loop-start
 - User's opening message contains "project", "feature", "fix", "build", "ship" → route to `project-loop`
 - User's opening message contains "workflow", "audit", "skill", "improve", "template" → route to `workflow-improvement-loop`
-- Default → `workflow-improvement-loop`
+- User says "start a loop" with no other keywords → route to `workflow-improvement-loop` immediately
+- Default (no matching keywords, no active loop in DB) → `workflow-improvement-loop`. No question. No waiting.
 
 Announce: "Auto-detected: invoking <skill>." Do not use the question tool.
 
@@ -75,7 +76,7 @@ These apply to every loop session. Read them. They are not optional.
 2. **DB is the loop's state — plan files and loop-state.md DO NOT EXIST on disk.** The workflow-state DB (`get_plan_tasks`, `get_session_context`, `append_run_summary`, `import_plan`, `set_loop_state`) is the run-by-run ground truth. The journal captures discoveries and design decisions. No `.md` files for plans; `import_plan` is the only way task data enters the DB. `loop-state.md` must never be created in any plans/ directory. If you find yourself about to create either, stop: write to the DB instead.
 3. **Question tool is unconditionally banned in all loop skills.** loop-session, loop-start, loop-task, loop-gate, loop-end run fully autonomously end-to-end. There is no interactive mode. No conditional exception for "some phases" or "routing decisions." If you find yourself about to use the question tool inside any loop skill, stop and continue without it.
 4. **Subagent prompts are self-contained.** Subagents start with fresh context and have no loop skill loaded. The three MCP recording calls (append_run_summary, update_task_status, set_loop_state) must be inlined verbatim in every subagent prompt — never reference "the MCP recording template" as shorthand. A subagent that cannot find the template will silently skip the DB writes, causing every future session-start to show the loop stuck at run 0.
-5. **opencode-config syncs across machines via GitHub.** Loop state is stored in the workflow-state DB. session-start calls get_session_context and surfaces the active loop in the welcome banner. Start a loop on any machine; resume on any other.
+5. **Skills and memory sync across machines via GitHub (opencode-config). Loop state does not.** The workflow-state DB is machine-local — loop state (phase, run count, plan tasks) does NOT sync across machine boundaries. Skills and memory blocks sync via `git pull` on opencode-config. To resume a loop on a new machine: pull opencode-config, then run `loop-start` with the same `plan_id` to re-seed tasks.
 6. **devaipod is the local execution environment** for all build/test tasks. CI must use the same image as .devcontainer/devcontainer.json — loop-gate checks this.
 7. **Context efficiency is a hard constraint.** Subagent-per-run (loop-task) prevents parent context window exhaustion on multi-run loops.
 8. **Failures are data (Ralph Wiggum property).** A failed run that produces KNOWN ISSUES entries is never wasted — it makes the next run better. This is the ralph wiggum virtuous feedback loop: even "failure" produces a useful byproduct. The loop always produces output.
