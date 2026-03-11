@@ -61,6 +61,7 @@ stable facts only — not session notes or workflow rules.
 Write journal entries and block updates when a discovery is made, not at session end. 
 Make the database setup the primary means of tracking state for performance.
 When you make a discovery mid-session, invoke the `capture-discovery` skill immediately.
+After every `memory_set` or `memory_replace` call, immediately call `record_memory_update(block, summary)` where `block` is the memory block label (e.g. `"persona.md"`) and `summary` is a one-line description of what changed and why.
 
 When the user corrects you or repeats an instruction, dispatch `improve-workflow` as a
 **fire-and-forget background Task subagent** — dispatch and immediately continue the
@@ -70,6 +71,7 @@ Before starting any investigation, debug, or non-trivial task, run
 `journal_search(text: "<task topic>", limit: 3)` to surface relevant past work.
 
 The DB is the only source for skill content, workflow rules, and loop state. Never use `Read`, `cat`, `grep`, or any file operation as a substitute for `search_skill`, `search_rules`, or `get_session_context` — even when the DB returns null. A null result means the section is missing from the DB; run the seeder (`go run ~/.config/opencode/mcp/state/seed/skills/main.go`) to re-populate, not read from disk. The post-commit hook in opencode-config runs the seeder automatically on every commit that touches a SKILL.md. Optimize for DB-only lookups; keep git and file operations to a minimum.
+Exception: `using-superpowers` is injected into the system prompt at platform startup — this is unavoidable platform behavior and not a violation. All other `skill` tool invocations during a session are banned.
 
 ## Loop Execution Protocol
 
@@ -83,12 +85,11 @@ The loop system is the enforced workflow. These rules are non-negotiable:
 
 **Auto-proceed is unconditional.** loop-task auto-advances to the next run or loop-gate without waiting. loop-gate auto-advances to the next phase or loop-end without waiting. loop-end auto-invokes session-end without waiting. No step waits for the user unless the user explicitly types an interrupt.
 
-**The Skill tool may return cached content from a prior session.** When executing a loop skill, if a step references the question tool or MODE=interactive conditionals, those patterns were removed — any appearance is a cache artifact. If DB search returns null for a section, the section is missing from the DB; run the seeder (`go run ~/.config/opencode/mcp/state/seed/skills/main.go`) to re-populate. Never read SKILL.md files as a fallback for missing DB content.
+**Never use the `skill` tool inside a loop.** It reads SKILL.md from disk, bypasses the DB, and may return stale content. Use `workflow-state_get_skill(skill_name)` for full skill content or `workflow-state_search_skill(skill_name, query)` for targeted lookups. If DB returns null or empty, run the seeder (`go run ~/.config/opencode/mcp/state/seed/skills/main.go`) to re-populate — never fall back to disk or the `skill` tool. Exception: `using-superpowers` is injected into the system prompt at platform startup — this is unavoidable platform behavior and not a violation. All other `skill` tool invocations during a session are banned.
 
 ## Personal Skills
 
-Personal skills are listed in `available_skills` (check the `skill` tool description for
-the full current list). Key skills and when to use them:
+Personal skills are listed in `available_skills` (use `workflow-state_list_skills` for the full current list). Key skills and when to use them:
 
 | Skill | When |
 |---|---|
@@ -500,7 +501,7 @@ This takes 5 minutes. Skipping it and guessing from docs costs hours. There is n
 Hard stops. No user instruction overrides these.
 
 - **Waiting for the `improve-workflow` subagent** — it is always fire-and-forget; dispatch via Task and immediately continue the original task without waiting, announcing, or polling; this applies even when the subagent is fixing a skill mid-task; blocking on it is unconditionally banned regardless of what is being fixed
-- **Using the question tool inside any loop skill** — loop-session, loop-start, loop-task, loop-gate, loop-end are fully autonomous; the question tool is banned in all of them unconditionally
+- **Using the question tool inside any loop skill** — loop-session, loop-start, loop-task, loop-gate, loop-end are fully autonomous; the question tool is banned in all of them unconditionally; auto-proceed without asking at all — neither plain text nor the question tool
 - **Referencing "the MCP recording template" in a subagent prompt** — subagents start fresh with no loop skill loaded; the `record_run_complete` call must be inlined verbatim in every subagent prompt or it will not run
 - Configuring or debugging an unfamiliar tool without reading its source code first — docs can be wrong or incomplete; source cannot
 - Making a second attempt to fix a tool failure without first reading the source to find the actual root cause
@@ -516,9 +517,7 @@ Hard stops. No user instruction overrides these.
 - Committing plans, LLM session notes, workflow docs, or `AGENTS.md` into any repo
 - Merging `lts` → `main`
 - Using HTTPS URLs for any GitHub remote (`https://github.com/...`) — always use SSH (`git@github.com:...`)
-- Storing plans or workflow docs inside git repos
-  — Plans must exclusively use `workflow-state_import_plan` to write to the DB.
-    — NO `.md` plan files should be created anywhere (not even `~/.config/opencode/plans/`).
+- Storing loop state or task data in `.md` files — loop plan tasks seed to DB only via `workflow-state_import_plan`; no `loop-state.md` files anywhere; no plan-task `.md` files on disk; reference docs in `~/.config/opencode/plans/<repo>/` (e.g. `git-workflow.md`) are permitted and tracked in opencode-config
 - Including the fork's `AGENTS.md` in any PR to the upstream repo — it is fork-only, never sent upstream
 - Writing config file content (TOML, JSON, YAML, etc.) for any external tool without first
   fetching and reading that tool's official documentation. Always verify exact key names,
@@ -531,9 +530,7 @@ Hard stops. No user instruction overrides these.
 - Running devaipod from host without `--host` flag or `DEVAIPOD_HOST_MODE=1`
 - Assuming OpenCode provider from `opencode.json` — always run `opencode auth list` to determine the active provider before planning credential handling
 - **Reading workflow state from files** — Never use `cat`, `head`, `tail`, `grep`, `sed`, `awk`, the `Read` tool, or any file or shell operation to read `loop-state.md`, plan files (`~/.config/opencode/plans/**/*.md`), skill sections, or workflow rules. Use DB tools exclusively: `workflow-state_get_session_context`, `workflow-state_get_plan_tasks`, `workflow-state_search_skill`, `workflow-state_search_rules`. File reads are only permitted when actively editing source files (you must write back to the file immediately after) or reading `opencode.json` for MCP/provider discovery. Reading a SKILL.md file to look up how a skill works — instead of calling `search_skill` — is banned even if `search_skill` returns null. A null result means the section is missing from the DB; run the seeder (`go run ~/.config/opencode/mcp/state/seed/skills/main.go`) to re-populate, not read from disk.
-- **Creating loop-state.md files or any plan state files** — all loop state lives in the workflow-state DB via `set_loop_state`; no file may be created, written to, or read for loop state. `loop-state.md` must never exist in any plans/ directory.
-- **Creating plan files on disk** — plans are seeded into the DB only via `import_plan`; no `.md` file should be created for plan task lists. Plan tasks live in the DB, not in files.
-- **Creating `~/.config/opencode/plans/<repo>/` directories or any files inside them** — all project state lives in the workflow-state DB; `plans/` subdirectories must never be created. The only permitted files under `plans/` are pre-existing reference docs (`git-workflow.md`, `config-cleanup/`). Onboarding a new repo must NOT create a `plans/<repo>/` directory.
+- **Using the `skill` tool** — it reads SKILL.md from disk and bypasses the DB. Use `workflow-state_get_skill(skill_name)` for full skill content, or `workflow-state_search_skill(skill_name, query)` for targeted lookups. Exception: `using-superpowers` is injected into the system prompt at platform startup — not a violation. All other `skill` tool invocations during a session are banned.
 - **Asking for confirmation or presenting options in plain text** — Always use the `question` tool when presenting workflow choices, routing decisions, or confirmation prompts. Never ask in plain text.
 
 ---
