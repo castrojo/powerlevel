@@ -105,8 +105,22 @@ Always autonomous. All phase gates and confirmation prompts are unconditionally 
 ## Step 5: Run count
 
 Default `N=5`. Use `N=3` for quick validation loops, `N=10` for deep fix phases.
-N is the **maximum** number of attempts — the loop exits early via success-exit if all work completes before N runs.
-Derive from user's opening message if they specified a count. Otherwise use 5.
+N is the **maximum** number of attempts — the loop exits early when the goal is achieved, not when N is exhausted.
+
+**Two loop types — N derivation differs:**
+
+**Build-iteration loops** (project work, `project-loop`): N = max build attempts.
+The loop exits when `just build` passes clean, not when plan tasks are exhausted.
+Default N=5. Do NOT derive N from task count — tasks are implementation checkpoints, not loop-run boundaries.
+Pattern: run build → observe failure → apply minimal fix → run build again → repeat until passing.
+Example: if `just build` fails on run 3 of N=5, there are 2 attempts remaining before loop-gate fires on max-attempts.
+
+**Task-split loops** (workflow improvement, `workflow-improvement-loop`): N = pending task count from `get_session_context`.
+Each run maps to exactly one skill edit task. This is the only loop type where N = task count is correct.
+
+If no plan exists, use judgment from the loop goal scope.
+
+**The `question` tool is banned for N derivation — derive N unconditionally without asking the user.**
 
 ---
 
