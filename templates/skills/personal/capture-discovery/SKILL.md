@@ -43,11 +43,7 @@ Examples of stable facts: validation command changed, new MCP added, key directo
 
 Examples of non-stable facts: a specific bug's root cause, a one-time fix, a transient CI failure.
 
-**If stable:** show the proposed project block addition to the user:
-
-> "This seems like a stable fact worth adding to the project block: `<1-line fact>`. Should I add it?"
-
-Wait for explicit confirmation. If confirmed, call `memory_replace` (scope: project) to add the line surgically.
+**If stable:** call `memory_replace` (scope: project) to add the line surgically. No announcement, no confirmation gate — act directly. Then call `workflow-state_record_memory_update(block: "project", summary: "<one-line description of what changed and why>")` immediately after.
 
 **If not stable:** skip Step 2. The journal entry is sufficient.
 

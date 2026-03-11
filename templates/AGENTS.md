@@ -77,7 +77,7 @@ The loop system is the enforced workflow. These rules are non-negotiable:
 
 **Loop skills must never stop for confirmation.** All loop skills run autonomously end-to-end in a single session. There is no interactive mode. The question tool is banned inside all loop skills (loop-session, loop-start, loop-task, loop-gate, loop-end). If you find yourself about to use the question tool inside a loop skill, stop and continue without it.
 
-**Loop-task subagent prompts must be self-contained.** Subagents start with fresh context and have no loop skill loaded. The subagent prompt must inline the three MCP recording calls verbatim — never reference "the MCP recording template" as shorthand. A subagent that can't find the template will silently skip the DB writes, causing every future session-start to show the loop stuck at run 0.
+**Loop-task subagent prompts must be self-contained.** Subagents start with fresh context and have no loop skill loaded. The subagent prompt must inline the `record_run_complete` call verbatim — never reference "the MCP recording template" as shorthand. A subagent that can't find the template will silently skip the DB writes, causing every future session-start to show the loop stuck at run 0.
 
 **The DB is the loop's state.** After every run, `set_loop_state` must advance the run counter. If the DB shows run 0/N after a subagent returns, the recording calls failed — call them directly in the parent before proceeding.
 
@@ -445,23 +445,16 @@ Never read plan files to determine resume state — the DB is the primary. Confi
 - Populating KNOWN ISSUES with authoring revision history — it is executor notes only (issues to resolve as you reach each task), never a log of what was wrong during plan writing
 - Skipping the N-loop devaipod build series before implementing plan tasks — loops are mandatory, not optional
 - Mapping "N loops" to N plan phases or pipeline stages — loops always mean N local build iterations
-- Fixing code inline during the loop series — all fixes happen after the executive report (workflow-improvement-loop audit phase only)
+- Fixing code inline during the loop series — applies to workflow-improvement-loop audit phase only; the audit phase is observation-only. In project-loop execute phase, build→observe→fix→commit per run IS the correct iteration model.
 
 ---
 
 ## Workflow Improvement Capture
 
-Any time a skill, `AGENTS.md`, or plan file is found to be wrong or incomplete during a session — fix it immediately. Do not defer to a future session.
+When a skill, `AGENTS.md`, or plan file is found to be wrong or incomplete during a session:
+dispatch `improve-workflow` as a **fire-and-forget background Task subagent** — silent, non-blocking, continue immediately. Do not wait for it. Do not announce it.
 
-**Required sequence:**
-1. Fix the file inline (correct it, do not append amendments)
-2. Commit to the appropriate repo (`YOUR_USERNAME/superpowers` for superpowers skills; `YOUR_USERNAME/opencode-config` for everything else) — the post-commit hook syncs the DB automatically
-3. Write a journal entry documenting what was wrong and what was fixed
-4. Then continue work
-
-**Banned outside loop series:** discovering a workflow gap and continuing without fixing and committing it first.
-
-**During a loop series:** workflow gaps go into the project memory block under `## Post-set workflow fixes` — fix them after the executive report, not inline.
+**During a loop series:** park the gap in the `findings` field of `record_run_complete` with prefix `[GAP]`. The `workflow-capture` subagent (dispatched from `loop-end` Stage 1) processes all [GAP] items autonomously at postflight.
 
 ### Two-audiences principle
 
@@ -508,7 +501,7 @@ Hard stops. No user instruction overrides these.
 
 - **Waiting for the `improve-workflow` subagent** — it is always fire-and-forget; dispatch via Task and immediately continue the original task without waiting, announcing, or polling; this applies even when the subagent is fixing a skill mid-task; blocking on it is unconditionally banned regardless of what is being fixed
 - **Using the question tool inside any loop skill** — loop-session, loop-start, loop-task, loop-gate, loop-end are fully autonomous; the question tool is banned in all of them unconditionally
-- **Referencing "the MCP recording template" in a subagent prompt** — subagents start fresh with no loop skill loaded; the three MCP calls must be inlined verbatim in every subagent prompt or they will not run
+- **Referencing "the MCP recording template" in a subagent prompt** — subagents start fresh with no loop skill loaded; the `record_run_complete` call must be inlined verbatim in every subagent prompt or it will not run
 - Configuring or debugging an unfamiliar tool without reading its source code first — docs can be wrong or incomplete; source cannot
 - Making a second attempt to fix a tool failure without first reading the source to find the actual root cause
 - **Implementing fixes during a loop series** — applies to workflow-improvement-loop audit phase only; the audit phase is observation-only. In project-loop execute phase, build→observe→fix→commit per run IS the correct iteration model.

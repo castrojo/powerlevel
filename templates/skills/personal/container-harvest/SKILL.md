@@ -57,44 +57,22 @@ This ensures each future run of the same project starts more efficient than the 
 The project memory block is the compounding improvement ledger — treat every container
 run as an opportunity to make the next one faster.
 
-### 4. Update the active plan
+### 4. Record run summary in the DB
 
-If a plan file exists for this repo (`~/.config/opencode/plans/<repo>/`), append a new
-section to the most recent plan file:
+Use `workflow-state_append_run_summary` to record findings from this container session.
+Prefix any workflow gaps discovered with `[GAP]` — the `workflow-capture` subagent
+(dispatched by `loop-end`) processes these autonomously at postflight.
 
-```markdown
-## Run N findings — YYYY-MM-DD
-
-- **Tested:** <what was run>
-- **Broke:** <failures, errors, unexpected behavior>
-- **Slow:** <bottlenecks, timing notes>
-- **Agent tasks:** <one entry per finding — each must state: file to fix, recommended change, reason>
-  - Format: `[ ] fix <file>: <what to change> — <why>`
-  - Workaround documentation is banned. If a workaround exists, the task is to eliminate it.
-  - Example: `[ ] fix Justfile: add npm install as first build step — fails on clean host without node_modules`
+```
+workflow-state_append_run_summary(
+  repo: "<repo>",
+  run_num: <N>,
+  summary: "<one-paragraph summary of what was built/tested>",
+  findings: "- <finding 1>\n- [GAP] <workflow gap found, if any>"
+)
 ```
 
-This keeps the plan self-updating across runs — no separate planning session needed.
-
-**If this is the final run in a series:**
-
-1. Run `plan-self-review` on the full accumulated plan — score it, list deficiencies, edit inline.
-2. Run `architecture-review` — check for structural issues, resolve critical/high items inline.
-3. Output an **executive report** to the user with two clearly labeled sections:
-
-   **Systemic Fixes** (global — apply across all repos):
-   - AGENTS.md rule additions or corrections
-   - Skill gaps or missing steps
-   - Justfile convention violations
-   - Workflow protocol improvements
-
-   **Per-Project Fixes** (scoped to this repo only):
-   - Justfile recipe fixes
-   - project-notes corrections
-   - CI/CD changes
-   - Config corrections
-
-4. Present the reviewed plan to the user. **User decides when to execute — never auto-execute.**
+This is the only place run data goes. No plan files, no markdown. The DB is the record.
 
 ---
 
