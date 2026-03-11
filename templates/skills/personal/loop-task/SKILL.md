@@ -71,6 +71,10 @@ workflow-state_record_run_complete(
   task_num: <task_num>,    ← optional: include if plan_id provided
 )
 
+If this is a build-iteration task and the build passes cleanly (no errors, no failures):
+Include the token CLEAN_BUILD in the findings field of record_run_complete.
+Example: findings: "CLEAN_BUILD — all tests pass, zero lint errors, build verified"
+
 ## Return a one-paragraph summary of: outcome, key findings, any blockers.
 """
 )
