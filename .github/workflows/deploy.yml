@@ -2,11 +2,14 @@ name: Export + Deploy
 
 on:
   schedule:
-    - cron: '0 6 * * *'   # daily 6am UTC
+    - cron: '0 6 * * *'
   workflow_dispatch:
   push:
     paths:
       - 'data/**'
+      - 'src/**'
+      - 'cmd/**'
+      - 'internal/**'
 
 jobs:
   export-and-deploy:
@@ -15,6 +18,9 @@ jobs:
       contents: write
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -25,10 +31,10 @@ jobs:
       - name: Export powerlevel data
         run: go run ./cmd/exporter/
 
-      - name: Commit if changed
+      - name: Commit exported data if changed
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
           git add src/data/powerlevel.json
           git diff --cached --quiet || git commit -m "chore: auto-export powerlevel data [skip ci]"
           git push
@@ -40,10 +46,18 @@ jobs:
           cache-dependency-path: src/package-lock.json
 
       - run: cd src && npm ci
-      - run: cd src && npm run build
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Build Astro site
+        run: cd src && npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: src/dist/
 
-      - uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
