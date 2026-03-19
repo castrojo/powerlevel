@@ -621,6 +621,16 @@
       "super": "GLACIAL QUAKE",
       "level": 1,
       "icon_path": "/icons/weapons/cryosthesia-77k.png"
+    },
+    "bluefin-security": {
+      "weapon": "Hollow Denial",
+      "element": "void",
+      "level": 1,
+      "aspect": "BASTION",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "Sentinel Shield / Ward of Dawn",
+      "primary": false
     }
   },
   "stats": {

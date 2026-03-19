@@ -31,4 +31,11 @@ test.describe('Arsenal', () => {
     const count = await bars.count();
     expect(count).toBeGreaterThan(10);
   });
+
+  test('all weapons rendered including bluefin-security', async ({ page }) => {
+    const cards = page.locator('.weapon-card');
+    await expect(cards.first()).toBeVisible();
+    const count = await cards.count();
+    expect(count).toBeGreaterThan(64);
+  });
 });
