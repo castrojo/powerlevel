@@ -80,8 +80,14 @@ func SubclassAvg(element string, weapons map[string]Weapon) int {
 }
 
 // StatScale converts a raw count to a 0-100 score.
-// Linear to 75 at softCap, log curve from 75 to 100 between softCap and pinnacle.
+// Linear to 75 at softCap, then linear from 75 to 100 between softCap and pinnacle.
 func StatScale(raw, softCap, pinnacle int) int {
+	if softCap <= 0 {
+		return 0
+	}
+	if pinnacle <= softCap {
+		return 100
+	}
 	if raw <= 0 {
 		return 0
 	}
@@ -92,7 +98,7 @@ func StatScale(raw, softCap, pinnacle int) int {
 		return int(math.Round(float64(raw) / float64(softCap) * 75))
 	}
 	t := float64(raw-softCap) / float64(pinnacle-softCap)
-	return int(math.Round(75 + 25*math.Log(1+t*(math.E-1))))
+	return int(math.Round(75 + t*25))
 }
 
 // LevelTier returns the tier title for a weapon level (minimum 1).

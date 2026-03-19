@@ -21,8 +21,9 @@ type Seal = {
 };
 
 function progressRing(earned: number, total: number, r = 40) {
+  const safeEarned = Math.max(0, Math.min(earned, total));
   const circ = 2 * Math.PI * r;
-  const pct = total > 0 ? earned / total : 0;
+  const pct = total > 0 ? safeEarned / total : 0;
   const dash = pct * circ;
   return { circ, dash, gap: circ - dash };
 }

@@ -1,11 +1,11 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
-import { computePL, getRank, activeSupers, levelTier, statScale } from '../lib/compute';
+import { computePL, getRank, activeSupers, levelTier, statScale, type Weapon } from '../lib/compute';
 
-const pl = computePL(rawData.weapons as any);
+const pl = computePL(rawData.weapons as Record<string, Weapon>);
 const rank = getRank(pl);
-const supers = activeSupers(rawData.weapons as any);
+const supers = activeSupers(rawData.weapons as Record<string, Weapon>);
 const season = rawData.season;
 const weapons = rawData.weapons;
 const stats = rawData.stats;
@@ -47,7 +47,7 @@ const statsMap = Object.fromEntries(
   }])
 ) as Record<StatKey, { score: number; label: string }>;
 
-const primaryWeapons = Object.entries(weapons).filter(([, w]) => (w as any).primary);
+const primaryWeapons = Object.entries(weapons).filter(([, w]) => (w as unknown as Weapon).primary);
 const plFill = Math.min(100, Math.max(0, pl));
 ---
 
@@ -107,7 +107,7 @@ const plFill = Math.min(100, Math.max(0, pl));
     <div class="equipped">
       <h2>Primary Weapon</h2>
       {primaryWeapons.map(([id, w]) => {
-        const weapon = w as any;
+        const weapon = w as unknown as Weapon;
         return (
           <div class={`weapon-card primary-weapon ${weapon.element}`}>
             <div class="weapon-name">{weapon.weapon}</div>

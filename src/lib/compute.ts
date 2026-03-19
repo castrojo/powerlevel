@@ -1,10 +1,12 @@
 export interface Weapon {
-  name: string;
+  weapon: string;
+  weapon_type: string;
   element: string;
   subclass: string;
   super: string;
   level: number;
-  icon_path: string;
+  aspect: string;
+  icon_path?: string;
   primary?: boolean;
 }
 
@@ -78,13 +80,13 @@ export function activeSupers(weapons: Record<string, Weapon>): string[] {
 }
 
 export function statScale(raw: number, softCap: number, pinnacle: number): number {
+  if (softCap <= 0) return 0;
+  if (pinnacle <= softCap) return 100;
   if (raw <= 0) return 0;
   if (raw >= pinnacle) return 100;
   if (raw <= softCap) {
-    // Linear to 75 at softCap
     return Math.round((raw / softCap) * 75);
   }
-  // Log curve from 75 to 100 between softCap and pinnacle
   const t = (raw - softCap) / (pinnacle - softCap);
-  return Math.round(75 + 25 * Math.log(1 + t * (Math.E - 1)));
+  return Math.round(75 + t * 25);
 }

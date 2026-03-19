@@ -31,8 +31,8 @@ test.describe('Guardian Card', () => {
 
   test('all 10 supers listed', async ({ page }) => {
     const supers = [
-      'Thundercrash', 'Hammer of Sol', 'Burning Maul',
-      'Sentinel Shield', 'Ward of Dawn', 'Bladefury', 'Glacial Quake',
+      'THUNDERCRASH', 'HAMMER OF SOL', 'BURNING MAUL',
+      'SENTINEL SHIELD', 'WARD OF DAWN', 'BLADEFURY', 'GLACIAL QUAKE',
     ];
     for (const s of supers) {
       await expect(page.getByText(s)).toBeVisible();

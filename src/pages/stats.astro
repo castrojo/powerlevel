@@ -1,9 +1,9 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
-import { statScale, computePL, getRank } from '../lib/compute';
+import { statScale, computePL, getRank, type Weapon } from '../lib/compute';
 
-const pl = computePL(rawData.weapons as any);
+const pl = computePL(rawData.weapons as Record<string, Weapon>);
 const rank = getRank(pl);
 const rawStats = rawData.stats;
 

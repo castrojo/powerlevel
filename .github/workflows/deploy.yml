@@ -9,9 +9,37 @@ on:
       - 'data/**'
       - 'src/**'
       - 'internal/**'
+      - 'cmd/**'
 
 jobs:
+  validate-and-test:
+    name: Validate + E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - run: cd src && npm ci
+
+      - name: Build Astro site (schema validation)
+        run: cd src && npm run build
+
+      - name: Install Playwright
+        run: cd src && npx playwright install chromium --with-deps
+
+      - name: E2E tests
+        run: cd src && npx playwright test
+        env:
+          CI: true
+
   deploy:
+    name: Deploy to GitHub Pages
+    needs: validate-and-test
     runs-on: ubuntu-latest
     permissions:
       contents: write
