@@ -17,6 +17,16 @@ function isActive(href: string): boolean {
   <title>{title} · Powerlevel</title>
   <meta name="description" content={description} />
   <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+  <!-- Anti-flash: must be is:inline so Astro doesn't defer it as type="module" -->
+  <script is:inline>
+    (function() {
+      try {
+        var stored = localStorage.getItem('pl-theme'); // null | 'light' | 'dark' (never 'system')
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = stored || (prefersDark ? 'dark' : 'light');
+      } catch (_) { /* localStorage blocked (private browsing) — stay dark */ }
+    })();
+  </script>
 </head>
 <body>
   <nav class="d2-nav">
@@ -30,6 +40,11 @@ function isActive(href: string): boolean {
       <a href={`${base}lore`} aria-current={isActive(`${base}lore`) ? "page" : undefined}>Lore</a>
       <a href={`${base}loadout`} aria-current={isActive(`${base}loadout`) ? "page" : undefined}>Loadout</a>
     </div>
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <button data-theme-btn="system" aria-label="System theme" title="Follow OS">🖥</button>
+      <button data-theme-btn="light"  aria-label="Light theme"  title="Light">☀️</button>
+      <button data-theme-btn="dark"   aria-label="Dark theme"   title="Dark">🌙</button>
+    </div>
   </nav>
   <main>
     <slot />
@@ -38,6 +53,104 @@ function isActive(href: string): boolean {
     <p>Fan site. Destiny artwork © Bungie, Inc. Used in accordance with Bungie's Community Content Policy. Not affiliated with or endorsed by Bungie.</p>
     <p>Powered by GitHub Copilot · <a href="https://github.com/castrojo/powerlevel">source</a></p>
   </footer>
+
+  <script>
+    // Theme logic — 3-state: system (localStorage absent) | light | dark
+    // Mode = user's choice; effective theme = what CSS gets via data-theme on <html>
+
+    type Mode = 'system' | 'light' | 'dark';
+
+    let mqListener: ((e: MediaQueryListEvent) => void) | null = null;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function getMode(): Mode {
+      try {
+        const v = localStorage.getItem('pl-theme');
+        if (v === 'light' || v === 'dark') return v;
+      } catch (_) {}
+      return 'system';
+    }
+
+    function applyTheme(effective: 'light' | 'dark') {
+      document.documentElement.dataset.theme = effective;
+    }
+
+    function detachMQ() {
+      if (mqListener) {
+        mq.removeEventListener('change', mqListener);
+        mqListener = null;
+      }
+    }
+
+    function attachMQ() {
+      detachMQ();
+      mqListener = (e: MediaQueryListEvent) => {
+        // Guard: only act if still in system mode
+        if (getMode() === 'system') {
+          const effective = e.matches ? 'dark' : 'light';
+          applyTheme(effective);
+          dispatch('system', effective);
+        }
+      };
+      mq.addEventListener('change', mqListener);
+    }
+
+    function dispatch(mode: Mode, effective: 'light' | 'dark') {
+      window.dispatchEvent(new CustomEvent('pl:themechange', { detail: { mode, effective } }));
+    }
+
+    function setMode(mode: Mode) {
+      let effective: 'light' | 'dark';
+      if (mode === 'system') {
+        try { localStorage.removeItem('pl-theme'); } catch (_) {}
+        effective = mq.matches ? 'dark' : 'light';
+        attachMQ();
+      } else {
+        try { localStorage.setItem('pl-theme', mode); } catch (_) {}
+        effective = mode;
+        detachMQ();
+      }
+      applyTheme(effective);
+      updateButtons(mode);
+      dispatch(mode, effective);
+    }
+
+    function updateButtons(mode: Mode) {
+      document.querySelectorAll<HTMLButtonElement>('[data-theme-btn]').forEach(btn => {
+        btn.dataset.active = btn.dataset.themeBtn === mode ? 'true' : 'false';
+      });
+    }
+
+    // Init
+    const initialMode = getMode();
+    if (initialMode === 'system') attachMQ();
+    updateButtons(initialMode);
+
+    // Wire clicks
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-btn]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const m = btn.dataset.themeBtn as Mode;
+        if (m) setMode(m);
+      });
+    });
+
+    // Cross-tab sync
+    window.addEventListener('storage', (e: StorageEvent) => {
+      if (e.key === 'pl-theme') {
+        const newMode = getMode();
+        if (newMode === 'system') {
+          const effective = mq.matches ? 'dark' : 'light';
+          applyTheme(effective);
+          attachMQ();
+          updateButtons('system');
+        } else {
+          applyTheme(newMode);
+          detachMQ();
+          updateButtons(newMode);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
 
@@ -72,6 +185,38 @@ function isActive(href: string): boolean {
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--d2-text-bright); }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  display: flex;
+  border: 1px solid var(--d2-border);
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.theme-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--d2-text-dim);
+  padding: 0.3rem 0.65rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--trans), color var(--trans);
+  line-height: 1;
+}
+.theme-toggle button:hover {
+  background: var(--d2-highlight);
+  color: var(--d2-text-bright);
+}
+.theme-toggle button[data-active="true"] {
+  background: var(--d2-exotic);
+  color: #0a0a0f;
+  font-weight: 700;
+}
+/* Separator lines between buttons */
+.theme-toggle button + button {
+  border-left: 1px solid var(--d2-border);
+}
 main {
   max-width: 1400px;
   margin: 0 auto;

@@ -1,4 +1,7 @@
-/* d2.css — Destiny 2 design tokens for castrojo/powerlevel */
+/* d2.css — Destiny 2 design tokens for castrojo/powerlevel
+   Theme: data-theme="light" on <html> for light mode; dark is the :root default.
+   Selector html[data-theme="light"] has specificity (0,1,1) which beats :root (0,1,0)
+   regardless of source order. */
 
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Roboto+Condensed:wght@300;400;700&display=swap');
 
@@ -47,6 +50,65 @@
 
   /* Transitions */
   --trans: 0.2s ease;
+
+  /* Surface hover / highlight */
+  --d2-highlight: #1e1e2e;
+
+  /* Chart tokens (reused by Chart.js via getComputedStyle) */
+  --d2-chart-grid:   #2a2a3a;
+  --d2-chart-1:      #79c8e2;   /* arc */
+  --d2-chart-2:      #f4934f;   /* solar */
+  --d2-chart-3:      #b47be0;   /* void */
+  --d2-chart-4:      #49de8b;   /* strand */
+  --d2-chart-5:      #4d9bd6;   /* stasis */
+
+  /* Native controls follow dark theme */
+  color-scheme: dark;
+}
+
+/* ── Light theme — "The Reef" aesthetic ── */
+html[data-theme="light"] {
+  --d2-bg:          #f2f0f8;
+  --d2-surface:     #ffffff;
+  --d2-surface-2:   #f7f5fd;
+  --d2-highlight:   #ebe8f8;
+  --d2-border:      #ccc8e0;
+  --d2-border-dim:  #e5e2f5;
+
+  --d2-text:        #1e1a2e;
+  --d2-text-dim:    #7268a0;
+  --d2-text-bright: #0d0b18;
+
+  /* Element colors — deeper for light-bg contrast */
+  --d2-arc:         #1e78a8;
+  --d2-solar:       #b85020;
+  --d2-void:        #7030b0;
+  --d2-strand:      #0e8e48;
+  --d2-stasis:      #1868a8;
+
+  /* Rarity */
+  --d2-common:      #6a6a6a;
+  --d2-uncommon:    #2a6a2a;
+  --d2-rare:        #2a50a0;
+  --d2-legendary:   #5a2878;
+  --d2-exotic:      #a07818;
+  --d2-masterwork:  #b89010;
+
+  /* PL tiers */
+  --pl-newlight:    #aa2222;
+  --pl-soft:        #907010;
+  --pl-hard:        #0e8e48;
+  --pl-pinnacle:    #a07818;
+
+  /* Charts */
+  --d2-chart-grid:  #d8d4ec;
+  --d2-chart-1:     #1e78a8;
+  --d2-chart-2:     #b85020;
+  --d2-chart-3:     #7030b0;
+  --d2-chart-4:     #0e8e48;
+  --d2-chart-5:     #1868a8;
+
+  color-scheme: light;
 }
 
 /* ── Reset ── */
