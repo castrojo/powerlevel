@@ -142,3 +142,35 @@ h1, h2, h3 { font-family: var(--font-lore); font-weight: 400; letter-spacing: 0.
 @media (max-width: 768px) {
   :root { font-size: 14px; }
 }
+
+/* ── Nav active underline ── */
+.d2-nav .nav-links a[aria-current="page"] {
+  color: var(--d2-text-bright);
+  border-bottom: 2px solid var(--d2-exotic);
+  padding-bottom: 2px;
+}
+
+/* ── Item grid ── */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px;
+  background: var(--d2-border-dim);
+}
+.item-grid > * {
+  background: var(--d2-surface);
+}
+
+/* ── Weapon rarity labels ── */
+.exotic-label   { color: var(--d2-exotic); }
+.legendary-label { color: var(--d2-void); }
+
+/* ── Soft cap marker ── */
+.soft-cap-marker {
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  background: var(--pl-soft);
+  vertical-align: middle;
+  margin: 0 4px;
+}

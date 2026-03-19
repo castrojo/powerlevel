@@ -29,6 +29,12 @@ jobs:
       - run: cd src && npm ci
       - run: cd src && npx astro check
       - run: cd src && npm run build
+      - name: Install Playwright browsers
+        run: cd src && npx playwright install chromium --with-deps
+      - name: Run Playwright E2E tests
+        run: cd src && npx playwright test
+        env:
+          CI: true
       - uses: actions/upload-artifact@v4
         with:
           name: dist

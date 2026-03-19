@@ -1,7 +1,13 @@
 ---
 import '../styles/d2.css';
-const { title = 'Powerlevel', description = 'castrojo Copilot stats' } = Astro.props;
+const { title = 'Powerlevel', description = 'castrojo Copilot stats — Season of the Powerlevel' } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname.replace(base, '').replace(/\/$/, '') || '/';
+
+function isActive(href: string): boolean {
+  const h = href.replace(base, '').replace(/\/$/, '') || '/';
+  return path === h || (h !== '/' && path.startsWith(h));
+}
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +22,10 @@ const base = import.meta.env.BASE_URL;
   <nav class="d2-nav">
     <a href={base} class="nav-brand">🔆 @castrojo</a>
     <div class="nav-links">
-      <a href={`${base}arsenal`}>Arsenal</a>
-      <a href={`${base}triumphs`}>Triumphs</a>
-      <a href={`${base}seals`}>Seals</a>
-      <a href={`${base}stats`}>Stats</a>
+      <a href={`${base}arsenal`} aria-current={isActive(`${base}arsenal`) ? "page" : undefined}>Arsenal</a>
+      <a href={`${base}triumphs`} aria-current={isActive(`${base}triumphs`) ? "page" : undefined}>Triumphs</a>
+      <a href={`${base}seals`} aria-current={isActive(`${base}seals`) ? "page" : undefined}>Seals</a>
+      <a href={`${base}stats`} aria-current={isActive(`${base}stats`) ? "page" : undefined}>Stats</a>
     </div>
   </nav>
   <main>

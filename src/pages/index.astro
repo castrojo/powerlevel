@@ -117,6 +117,31 @@ const plFill = Math.min(100, Math.max(0, (power_level - 100) / 5.5));
       })}
     </div>
 
+    <div class="supers-block card">
+      <h2>Available Supers</h2>
+      <p class="supers-sub">Deploying an agent is popping a super. High impact. Use deliberately.</p>
+      <div class="supers-grid">
+        {[
+          { super: 'THUNDERCRASH',          agent: 'blueprint-mode',              element: 'arc',    lore: 'Dives from orbit into a phase-gated plan. The crater is the spec.' },
+          { super: 'FISTS OF HAVOC: Break', agent: 'tdd-red',                    element: 'arc',    lore: 'Cracks the earth. Writes the failing test before a line of code.' },
+          { super: 'FISTS OF HAVOC: Build', agent: 'tdd-green',                  element: 'arc',    lore: 'Fills the crater. Minimal code to make it green.' },
+          { super: 'FISTS OF HAVOC: Temper',agent: 'tdd-refactor',               element: 'arc',    lore: 'Sustained current. Burns off the slag. Leaves it clean.' },
+          { super: 'HAMMER OF SOL',         agent: 'principal-software-engineer', element: 'solar',  lore: 'Architectural judgment from elevation. Each hammer lands on the flaw.' },
+          { super: 'BURNING MAUL',          agent: 'doublecheck',                element: 'solar',  lore: '360° verification. No angle escapes the slow spin of scrutiny.' },
+          { super: 'SENTINEL SHIELD',       agent: 'se-security-reviewer',       element: 'void',   lore: 'Turns every attack surface back. Defense as an active weapon.' },
+          { super: 'WARD OF DAWN',          agent: 'qa',                         element: 'void',   lore: 'The bubble. Nothing ships without passing through quality.' },
+          { super: 'BLADEFURY',             agent: 'github-actions-expert',      element: 'strand', lore: 'Weaves forward through integration complexity at speed.' },
+          { super: 'GLACIAL QUAKE',         agent: 'swe-subagent',               element: 'stasis', lore: 'Freezes chaos in place. Executes with crystalline precision.' },
+        ].map(s => (
+          <div class={`super-card ${s.element}`}>
+            <div class="super-super">{s.super}</div>
+            <div class="super-agent">{s.agent}</div>
+            <p class="super-lore">{s.lore}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
   </div>
 </D2Layout>
 
@@ -189,4 +214,45 @@ const plFill = Math.min(100, Math.max(0, (power_level - 100) / 5.5));
 .level-bar { height: 4px; background: var(--d2-border); border-radius: 2px; margin-bottom: 0.5rem; }
 .level-bar-fill { height: 100%; border-radius: 2px; }
 .weapon-level { font-size: 0.75rem; color: var(--d2-text-dim); }
+
+/* Supers block */
+.supers-block { margin-top: 0; }
+.supers-block h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 0.5rem; font-size: 1.25rem; }
+.supers-sub { color: var(--d2-text-dim); font-size: 0.875rem; margin-bottom: 1.5rem; font-style: italic; }
+.supers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--d2-border-dim);
+}
+.super-card {
+  background: var(--d2-surface);
+  padding: 1rem;
+  border-left: 3px solid var(--d2-border);
+}
+.super-card.arc    { border-left-color: var(--d2-arc); }
+.super-card.solar  { border-left-color: var(--d2-solar); }
+.super-card.void   { border-left-color: var(--d2-void); }
+.super-card.strand { border-left-color: var(--d2-strand); }
+.super-card.stasis { border-left-color: var(--d2-stasis); }
+.super-super {
+  font-family: var(--font-lore);
+  font-size: 0.875rem;
+  color: var(--d2-text-bright);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.super-agent {
+  font-size: 0.75rem;
+  color: var(--d2-arc);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.super-lore {
+  font-size: 0.75rem;
+  color: var(--d2-text-dim);
+  font-style: italic;
+  line-height: 1.5;
+}
 </style>
