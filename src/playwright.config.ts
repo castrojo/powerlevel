@@ -1,19 +1,22 @@
 import { defineConfig } from '@playwright/test';
 
 const isCI = !!process.env.CI;
+const PORT = 4322;
+const BASE = isCI ? `/powerlevel` : '/powerlevel';
 
 export default defineConfig({
   testDir: '../tests',
   forbidOnly: isCI,
   retries: isCI ? 1 : 0,
   use: {
-    baseURL: isCI ? 'http://localhost:4322' : 'http://localhost:4321/powerlevel',
+    baseURL: `http://localhost:${PORT}${BASE}`,
     trace: 'on-first-retry',
   },
   webServer: {
-    command: isCI ? 'npm run preview -- --port 4322' : 'npm run dev',
-    url: isCI ? 'http://localhost:4322' : 'http://localhost:4321',
+    command: `npx astro preview --port ${PORT} --host 0.0.0.0`,
+    url: `http://localhost:${PORT}${BASE}`,
     reuseExistingServer: !isCI,
+    timeout: 120_000,
     cwd: process.cwd(),
   },
 });
