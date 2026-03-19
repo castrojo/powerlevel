@@ -22,15 +22,17 @@ func Load(path string) (*PowerlevelData, error) {
 	return &d, nil
 }
 
-// ComputePL returns 100 + sum(all weapon levels) / 8.
-// Calibrated for 55 weapons over a 2-3 year growth arc.
-// Soft cap ~250, hard cap ~450, pinnacle ~650.
+// ComputePL returns round(mean(weapon levels)).
+// Calibrated for 1-100 range.
 func ComputePL(weapons map[string]Weapon) int {
+	if len(weapons) == 0 {
+		return 1
+	}
 	sum := 0
 	for _, w := range weapons {
 		sum += w.Level
 	}
-	return 100 + sum/8
+	return int(math.Round(float64(sum) / float64(len(weapons))))
 }
 
 // Ranks maps PL thresholds to titles.
@@ -38,17 +40,17 @@ var Ranks = []struct {
 	Threshold int
 	Name      string
 }{
-	{100, "New Light"},
-	{130, "Brave"},
-	{160, "Seasoned"},
-	{190, "Hardened"},
-	{220, "Battle-Tested"},
-	{250, "Veteran"},    // soft cap
-	{300, "Forged"},
-	{350, "Unbroken"},
-	{400, "Ascendant"},
-	{450, "Gilded"},     // hard cap
-	{650, "Mastercrafted ★"}, // pinnacle
+	{1, "New Light"},
+	{10, "Brave"},
+	{20, "Seasoned"},
+	{30, "Hardened"},
+	{40, "Battle-Tested"},
+	{50, "Veteran"},
+	{60, "Forged"},
+	{70, "Unbroken"},
+	{80, "Ascendant"},
+	{90, "Gilded"},
+	{100, "Mastercrafted ★"},
 }
 
 // GetRank returns the rank title for a given PL.
@@ -77,28 +79,25 @@ func SubclassAvg(element string, weapons map[string]Weapon) int {
 	return sum / count
 }
 
-// StatScale converts a raw count to a 0-100 score using a log curve.
-// softCap → score 67, pinnacle → score 100.
-func StatScale(raw, softCap int) int {
+// StatScale converts a raw count to a 0-100 score.
+// Linear to 75 at softCap, log curve from 75 to 100 between softCap and pinnacle.
+func StatScale(raw, softCap, pinnacle int) int {
 	if raw <= 0 {
 		return 0
 	}
-	score := 67 * math.Log(1+float64(raw)) / math.Log(1+float64(softCap))
-	return min(100, int(math.Round(score)))
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
+	if raw >= pinnacle {
+		return 100
 	}
-	return b
+	if raw <= softCap {
+		return int(math.Round(float64(raw) / float64(softCap) * 75))
+	}
+	t := float64(raw-softCap) / float64(pinnacle-softCap)
+	return int(math.Round(75 + 25*math.Log(1+t*(math.E-1))))
 }
 
-// LevelTier returns the tier title for a weapon level.
+// LevelTier returns the tier title for a weapon level (minimum 1).
 func LevelTier(level int) string {
 	switch {
-	case level == 0:
-		return "Unequipped"
 	case level < 10:
 		return "New Light"
 	case level < 20:

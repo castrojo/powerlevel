@@ -67,14 +67,14 @@ func StatBar(score, width int) string {
 	return Bar(score, width)
 }
 
-// PLColor returns the ANSI color for a PL value.
+// PLColor returns the ANSI color for a PL value (1-100 scale).
 func PLColor(pl int) string {
 	switch {
-	case pl >= 650:
+	case pl >= 100:
 		return Gold
-	case pl >= 450:
+	case pl >= 80:
 		return G
-	case pl >= 250:
+	case pl >= 50:
 		return Y
 	default:
 		return R

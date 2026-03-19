@@ -1,18 +1,12 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
-import plData from '../data/powerlevel.json';
+import rawData from '../../data/powerlevel-data.json';
+import { levelTier } from '../lib/compute';
 
-const { weapons } = plData;
-
-function levelTier(level: number): string {
-  const tiers = ['Unequipped','New Light','Brave','Seasoned','Hardened','Battle-Tested','Veteran','Forged','Unbroken','Ascendant','Gilded','Mastercrafted ★'];
-  if (level === 0) return tiers[0];
-  if (level === 100) return tiers[11];
-  return tiers[Math.floor(level / 10) + 1] ?? tiers[1];
-}
+const weapons = rawData.weapons;
 
 function levelColor(level: number): string {
-  if (level === 100) return 'var(--d2-masterwork)';
+  if (level >= 100) return 'var(--d2-masterwork)';
   if (level >= 67) return 'var(--pl-hard)';
   if (level >= 34) return 'var(--pl-soft)';
   return 'var(--d2-text-dim)';

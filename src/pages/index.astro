@@ -1,29 +1,20 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
-import plData from '../data/powerlevel.json';
+import rawData from '../../data/powerlevel-data.json';
+import { computePL, getRank, activeSupers, levelTier, statScale } from '../lib/compute';
 
-const { power_level, rank, season, stats, active_supers, weapons } = plData;
+const pl = computePL(rawData.weapons as any);
+const rank = getRank(pl);
+const supers = activeSupers(rawData.weapons as any);
+const season = rawData.season;
+const weapons = rawData.weapons;
+const stats = rawData.stats;
 
 function plColor(pl: number): string {
-  if (pl >= 650) return 'var(--d2-exotic)';
-  if (pl >= 450) return 'var(--pl-hard)';
-  if (pl >= 250) return 'var(--pl-soft)';
+  if (pl >= 100) return 'var(--d2-exotic)';
+  if (pl >= 80) return 'var(--pl-hard)';
+  if (pl >= 50) return 'var(--pl-soft)';
   return 'var(--pl-newlight)';
-}
-
-function levelTier(level: number): string {
-  if (level === 0) return 'Unequipped';
-  if (level < 10) return 'New Light';
-  if (level < 20) return 'Brave';
-  if (level < 30) return 'Seasoned';
-  if (level < 40) return 'Hardened';
-  if (level < 50) return 'Battle-Tested';
-  if (level < 60) return 'Veteran';
-  if (level < 70) return 'Forged';
-  if (level < 80) return 'Unbroken';
-  if (level < 90) return 'Ascendant';
-  if (level < 100) return 'Gilded';
-  return 'Mastercrafted ★';
 }
 
 const elemIcons: Record<string, string> = { arc: '⚡', solar: '🔥', void: '🟣', strand: '🟢', stasis: '🔵' };
@@ -39,10 +30,25 @@ const statList = [
 ] as const;
 
 type StatKey = typeof statList[number]['key'];
-const statsMap = stats as Record<StatKey, { score: number; label: string }>;
+
+const statScores: Record<StatKey, number> = {
+  endurance: statScale(stats.endurance.raw, stats.endurance.softCap, stats.endurance.pinnacle),
+  synthesis: statScale(stats.synthesis.raw, stats.synthesis.softCap, stats.synthesis.pinnacle),
+  breadth:   statScale(stats.breadth.raw,   stats.breadth.softCap,   stats.breadth.pinnacle),
+  foresight: statScale(stats.foresight.raw, stats.foresight.softCap, stats.foresight.pinnacle),
+  output:    statScale(stats.output.raw,    stats.output.softCap,    stats.output.pinnacle),
+  recall:    statScale(stats.recall.raw,    stats.recall.softCap,    stats.recall.pinnacle),
+};
+
+const statsMap = Object.fromEntries(
+  statList.map(({ key }) => [key, {
+    score: statScores[key],
+    label: `${(stats as any)[key].raw} ${(stats as any)[key].unit}`,
+  }])
+) as Record<StatKey, { score: number; label: string }>;
 
 const primaryWeapons = Object.entries(weapons).filter(([, w]) => (w as any).primary);
-const plFill = Math.min(100, Math.max(0, (power_level - 100) / 5.5));
+const plFill = Math.min(100, Math.max(0, pl));
 ---
 
 <D2Layout title="Guardian Card">
@@ -51,26 +57,26 @@ const plFill = Math.min(100, Math.max(0, (power_level - 100) / 5.5));
     <div class="guardian-hero">
       <div class="guardian-identity">
         <h1 class="guardian-name">@castrojo</h1>
-        <p class="guardian-class">Titan · <span class="guardian-rank" style={`color: ${plColor(power_level)}`}>{rank}</span></p>
+        <p class="guardian-class">Titan · <span class="guardian-rank" style={`color: ${plColor(pl)}`}>{rank}</span></p>
         <p class="guardian-season">{season.name}</p>
         <p class="guardian-lore">{season.lore}</p>
       </div>
       <div class="pl-gauge">
-        <div class="pl-number" style={`color: ${plColor(power_level)}`}>◆ {power_level}</div>
+        <div class="pl-number" style={`color: ${plColor(pl)}`}>◆ {pl}</div>
         <div class="pl-label">POWER LEVEL</div>
         <div class="pl-caps">
-          <span>Soft ◆250</span>
-          <span>Hard ◆450</span>
-          <span>Pinnacle ◆650</span>
+          <span>New Light ◆1</span>
+          <span>Veteran ◆50</span>
+          <span>Mastercrafted ◆100</span>
         </div>
         <div class="pl-bar-track">
-          <div class="pl-bar-fill" style={`width: ${plFill}%; background: ${plColor(power_level)}`}></div>
+          <div class="pl-bar-fill" style={`width: ${plFill}%; background: ${plColor(pl)}`}></div>
         </div>
       </div>
     </div>
 
     <div class="active-supers">
-      {active_supers.map((elem: string) => (
+      {supers.map((elem: string) => (
         <div class={`super-panel ${elem}`}>
           <div class="super-icon">{elemIcons[elem]}</div>
           <div class="super-name">{elemNames[elem]}</div>

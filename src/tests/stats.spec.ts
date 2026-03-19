@@ -28,7 +28,7 @@ test.describe('Stats', () => {
     await expect(page.locator('.soft-cap-marker').first()).toBeVisible();
   });
 
-  test('export timestamp shown', async ({ page }) => {
-    await expect(page.getByText(/Last exported/)).toBeVisible();
+  test('last updated shown', async ({ page }) => {
+    await expect(page.getByText(/Last updated/)).toBeVisible();
   });
 });

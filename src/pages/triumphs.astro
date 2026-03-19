@@ -1,9 +1,9 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
 import triumphs from '../../data/triumphs.json';
-import plData from '../data/powerlevel.json';
+import rawData from '../../data/powerlevel-data.json';
 
-const { stats } = plData;
+const stats = rawData.stats;
 type StatBlock = { raw: number };
 const statsMap = stats as Record<string, StatBlock>;
 

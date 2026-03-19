@@ -1,8 +1,29 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
-import plData from '../data/powerlevel.json';
+import rawData from '../../data/powerlevel-data.json';
+import { statScale, computePL, getRank } from '../lib/compute';
 
-const { stats, power_level, rank, exported_at } = plData;
+const pl = computePL(rawData.weapons as any);
+const rank = getRank(pl);
+const rawStats = rawData.stats;
+
+// Build statsMap compatible with the template (score, label, raw, soft_cap, pinnacle)
+const statKeys = ['recall','endurance','synthesis','breadth','foresight','output'] as const;
+type StatKey = typeof statKeys[number];
+
+const statsMap = Object.fromEntries(statKeys.map(key => {
+  const s = (rawStats as any)[key];
+  const score = statScale(s.raw, s.softCap, s.pinnacle);
+  return [key, {
+    score,
+    label: `${s.raw} ${s.unit}`,
+    raw: s.raw,
+    soft_cap: s.softCap,
+    pinnacle: s.pinnacle,
+  }];
+})) as Record<StatKey, { score: number; label: string; raw: number; soft_cap: number; pinnacle: number }>;
+
+const power_level = pl;
 
 const statList = [
   { key: 'recall',    label: 'RECALL',    d2: 'Mobility',    desc: 'How deep your knowledge base runs',            icon: '🧠' },
@@ -13,10 +34,6 @@ const statList = [
   { key: 'output',    label: 'OUTPUT',    d2: 'Strength',    desc: 'Work made real — commits and PRs shipped',     icon: '⚡' },
 ] as const;
 
-type StatKey = typeof statList[number]['key'];
-type StatBlock = { score: number; label: string; raw: number; soft_cap: number; pinnacle: number };
-const statsMap = stats as Record<StatKey, StatBlock>;
-
 function statColor(score: number): string {
   if (score >= 80) return 'var(--d2-exotic)';
   if (score >= 60) return 'var(--pl-hard)';
@@ -24,8 +41,7 @@ function statColor(score: number): string {
   if (score >= 20) return 'var(--pl-soft)';
   return 'var(--d2-text-dim)';
 }
-
-const exportedDate = new Date(exported_at).toLocaleString();
+const buildDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 ---
 
 <D2Layout title="Stats">
@@ -112,7 +128,7 @@ const exportedDate = new Date(exported_at).toLocaleString();
     </div>
 
     <div class="export-info">
-      Last exported: {exportedDate}
+      Season: {rawData.season.name} · {rawData.season.quarter} · Last updated: {buildDate}
     </div>
   </div>
 </D2Layout>

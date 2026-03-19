@@ -9,7 +9,7 @@
     "workflow": {
       "weapon": "Trustee",
       "element": "arc",
-      "level": 0,
+      "level": 1,
       "aspect": "KNOCKOUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -20,7 +20,7 @@
     "cicd-learning": {
       "weapon": "Outbreak Perfected",
       "element": "arc",
-      "level": 0,
+      "level": 1,
       "aspect": "KNOCKOUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -30,7 +30,7 @@
     "github": {
       "weapon": "The Chaperone",
       "element": "arc",
-      "level": 0,
+      "level": 1,
       "aspect": "JUGGERNAUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -40,7 +40,7 @@
     "bluefin-ci": {
       "weapon": "The Lament",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "JUGGERNAUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -50,7 +50,7 @@
     "github-actions-expert": {
       "weapon": "Hothead",
       "element": "arc",
-      "level": 0,
+      "level": 1,
       "aspect": "JUGGERNAUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -60,7 +60,7 @@
     "knowledge": {
       "weapon": "Gjallarhorn",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "SOL INVICTUS",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -70,7 +70,7 @@
     "find-skills": {
       "weapon": "Ager's Scepter",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "SOL INVICTUS",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -80,7 +80,7 @@
     "cncf-community": {
       "weapon": "Two-Tailed Fox",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "ROARING FLAMES",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -90,7 +90,7 @@
     "bluefin-docs": {
       "weapon": "Trinity Ghoul",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "ROARING FLAMES",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -100,7 +100,7 @@
     "flatpak-appstream": {
       "weapon": "Jotunn",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "ROARING FLAMES",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -110,7 +110,7 @@
     "second-opinion": {
       "weapon": "Dead Man's Tale",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "BASTION",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -120,7 +120,7 @@
     "se-security-reviewer": {
       "weapon": "Leviathan's Breath",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "BASTION",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -130,7 +130,7 @@
     "doublecheck": {
       "weapon": "Eriana's Vow",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "BASTION",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -140,7 +140,7 @@
     "tdd-red": {
       "weapon": "Izanagi's Burden",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "OFFENSIVE BULWARK",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -150,7 +150,7 @@
     "tdd-green": {
       "weapon": "MIDA Multi-Tool",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "OFFENSIVE BULWARK",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -160,7 +160,7 @@
     "tdd-refactor": {
       "weapon": "Vex Mythoclast",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "OFFENSIVE BULWARK",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -170,7 +170,7 @@
     "qa": {
       "weapon": "Riskrunner",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "OFFENSIVE BULWARK",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -180,7 +180,7 @@
     "oci-images": {
       "weapon": "Divinity",
       "element": "void",
-      "level": 0,
+      "level": 1,
       "aspect": "BASTION",
       "weapon_type": "Legendary Weapon",
       "subclass": "void",
@@ -190,7 +190,7 @@
     "cncf-dev": {
       "weapon": "Sleeper Simulant",
       "element": "solar",
-      "level": 0,
+      "level": 1,
       "aspect": "DRENGR'S LASH",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -200,7 +200,7 @@
     "blueprint-mode": {
       "weapon": "Symmetry",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "DRENGR'S LASH",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -210,7 +210,7 @@
     "principal-software-engineer": {
       "weapon": "Edge Transit",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "DRENGR'S LASH",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -220,7 +220,7 @@
     "homebrew-tap": {
       "weapon": "Graviton Lance",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "INTO THE FRAY",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -230,7 +230,7 @@
     "dakota-buildstream": {
       "weapon": "Anarchy",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "INTO THE FRAY",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -240,7 +240,7 @@
     "bluefin-packages": {
       "weapon": "Fighting Lion",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "INTO THE FRAY",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -250,7 +250,7 @@
     "swe-subagent": {
       "weapon": "Monte Carlo",
       "element": "strand",
-      "level": 0,
+      "level": 1,
       "aspect": "INTO THE FRAY",
       "weapon_type": "Legendary Weapon",
       "subclass": "strand",
@@ -260,7 +260,7 @@
     "bluefin-build": {
       "weapon": "Ace of Spades",
       "element": "stasis",
-      "level": 0,
+      "level": 1,
       "aspect": "HOWL OF THE STORM",
       "weapon_type": "Legendary Weapon",
       "subclass": "stasis",
@@ -270,7 +270,7 @@
     "linux-desktop": {
       "weapon": "Xenophage",
       "element": "stasis",
-      "level": 0,
+      "level": 1,
       "aspect": "DIAMOND LANCE",
       "weapon_type": "Legendary Weapon",
       "subclass": "stasis",
@@ -280,7 +280,7 @@
     "bluefin-lts": {
       "weapon": "The Fourth Horseman",
       "element": "stasis",
-      "level": 0,
+      "level": 1,
       "aspect": "DIAMOND LANCE",
       "weapon_type": "Legendary Weapon",
       "subclass": "stasis",
@@ -290,7 +290,7 @@
     "bluefin-release": {
       "weapon": "Hawkmoon",
       "element": "stasis",
-      "level": 0,
+      "level": 1,
       "aspect": "DIAMOND LANCE",
       "weapon_type": "Legendary Weapon",
       "subclass": "stasis",
@@ -300,7 +300,7 @@
     "bluefin-variants": {
       "weapon": "Sunshot",
       "element": "stasis",
-      "level": 0,
+      "level": 1,
       "aspect": "HOWL OF THE STORM",
       "weapon_type": "Legendary Weapon",
       "subclass": "stasis",
@@ -313,7 +313,7 @@
       "element": "arc",
       "subclass": "arc",
       "super": "FISTS OF HAVOC",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/vigilance-wing.png"
     },
     "homebrew-taps": {
@@ -322,7 +322,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/the-wardcliff-coil.png"
     },
     "homebrew-tap-casks": {
@@ -331,7 +331,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/sleeper-simulant.png"
     },
     "homebrew-tap-formulas": {
@@ -340,7 +340,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/witherhoard.png"
     },
     "homebrew-packaging": {
@@ -349,7 +349,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/lorentz-driver.png"
     },
     "homebrew-stats": {
@@ -358,7 +358,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/tractor-cannon.png"
     },
     "bluefin-renovate": {
@@ -367,7 +367,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/wavesplitter.png"
     },
     "podman": {
@@ -376,7 +376,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/prometheus-lens.png"
     },
     "skill-improver": {
@@ -385,7 +385,7 @@
       "element": "void",
       "subclass": "void",
       "super": "SENTINEL SHIELD",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/wish-ender.png"
     },
     "cncf-gaps": {
@@ -394,7 +394,7 @@
       "element": "void",
       "subclass": "void",
       "super": "SENTINEL SHIELD",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/thorn.png"
     },
     "cncf-testing": {
@@ -403,7 +403,7 @@
       "element": "void",
       "subclass": "void",
       "super": "SENTINEL SHIELD",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/vex-mythoclast.png"
     },
     "firehose": {
@@ -412,7 +412,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "HAMMER OF SOL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/forerunner.png"
     },
     "people-website": {
@@ -421,7 +421,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/graviton-lance.png"
     },
     "endusers-website": {
@@ -430,7 +430,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/the-colony.png"
     },
     "cncf-heroes": {
@@ -439,7 +439,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/polaris-lance.png"
     },
     "cncf-layout": {
@@ -448,7 +448,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/sunshot.png"
     },
     "cncf-data": {
@@ -457,7 +457,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/whisper-of-the-worm.png"
     },
     "cncf-gobackend": {
@@ -466,7 +466,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/coldheart.png"
     },
     "trilogy-dev": {
@@ -475,7 +475,7 @@
       "element": "solar",
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/ace-of-spades.png"
     },
     "bluefin-iso": {
@@ -484,7 +484,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/truth.png"
     },
     "dakota-add-package": {
@@ -493,7 +493,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/agers-scepter.png"
     },
     "dakota-bst-overrides": {
@@ -502,7 +502,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/stasis-grenade.png"
     },
     "dakota-ci": {
@@ -511,7 +511,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/leviatans-breath.png"
     },
     "dakota-debugging": {
@@ -520,7 +520,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/izanagis-burden.png"
     },
     "dakota-local-ota": {
@@ -529,7 +529,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/cloudstrike.png"
     },
     "dakota-oci-layers": {
@@ -538,7 +538,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/stormchaser.png"
     },
     "dakota-overview": {
@@ -547,7 +547,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/cold-front.png"
     },
     "dakota-package-binaries": {
@@ -556,7 +556,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/dead-messenger.png"
     },
     "dakota-package-gnome-extensions": {
@@ -565,7 +565,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/wicked-implement.png"
     },
     "dakota-package-go": {
@@ -574,7 +574,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/verglas-curve.png"
     },
     "dakota-package-rust": {
@@ -583,7 +583,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/the-fourth-horseman.png"
     },
     "dakota-package-zig": {
@@ -592,7 +592,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/revision-zero.png"
     },
     "dakota-patch-junctions": {
@@ -601,7 +601,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/final-warning.png"
     },
     "dakota-remove-package": {
@@ -610,7 +610,7 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/osteo-striga.png"
     },
     "dakota-update-refs": {
@@ -619,8 +619,46 @@
       "element": "stasis",
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "level": 0,
+      "level": 1,
       "icon_path": "/icons/weapons/cryosthesia-77k.png"
+    }
+  },
+  "stats": {
+    "endurance": {
+      "raw": 11,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions"
+    },
+    "recall": {
+      "raw": 108,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns"
+    },
+    "synthesis": {
+      "raw": 6,
+      "softCap": 50,
+      "pinnacle": 500,
+      "unit": "entries"
+    },
+    "breadth": {
+      "raw": 3,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos"
+    },
+    "foresight": {
+      "raw": 6,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints"
+    },
+    "output": {
+      "raw": 24,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits"
     }
   }
 }

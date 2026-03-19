@@ -31,11 +31,6 @@ widget:
 json:
     go run ./cmd/pl/ --json
 
-# Export sanitized JSON for website
-export:
-    go run ./cmd/exporter/
-    @echo "✓ src/data/powerlevel.json updated"
-
 # Start Astro dev server
 dev:
     cd src && npm run dev
@@ -69,14 +64,13 @@ fmt:
     gofmt -w .
     cd src && npx prettier --write src/
 
-# Update weapon levels (opens data file, then exports)
+# Update weapon levels (opens data file, no export needed — push to deploy)
 level-up:
     $EDITOR data/powerlevel-data.json
-    just export
-    @echo "✓ Levels updated and exported"
+    @echo "✓ Levels updated — push to deploy"
 
-# Full deploy: export + build + push
-deploy: export build-site
+# Full deploy: build + push
+deploy: build-site
     git add -A
     git commit -m "chore: deploy $(date -u +%Y-%m-%d)"
     git push

@@ -76,16 +76,16 @@ func TestLevelStr_Masterwork(t *testing.T) {
 }
 
 func TestPLColor(t *testing.T) {
-	if PLColor(100) != R {
-		t.Error("PLColor(100) should be red (new light range)")
+	if PLColor(1) != R {
+		t.Error("PLColor(1) should be red (new light range)")
 	}
-	if PLColor(250) != Y {
-		t.Error("PLColor(250) should be yellow (soft cap)")
+	if PLColor(50) != Y {
+		t.Error("PLColor(50) should be yellow (veteran range)")
 	}
-	if PLColor(450) != G {
-		t.Error("PLColor(450) should be green (hard cap)")
+	if PLColor(80) != G {
+		t.Error("PLColor(80) should be green (ascendant range)")
 	}
-	if PLColor(650) != Gold {
-		t.Error("PLColor(650) should be gold (pinnacle)")
+	if PLColor(100) != Gold {
+		t.Error("PLColor(100) should be gold (mastercrafted)")
 	}
 }
