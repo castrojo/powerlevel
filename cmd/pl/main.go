@@ -36,7 +36,14 @@ func main() {
 	}
 
 	if showLink {
-		fmt.Println("https://castrojo.github.io/powerlevel/")
+		d, err := data.Load(dataPath())
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "pl: %v\n", err)
+			os.Exit(1)
+		}
+		pl := data.ComputePL(d.Weapons)
+		rank := data.GetRank(pl)
+		fmt.Printf("🔆 ◆ %d %s — https://castrojo.github.io/powerlevel/\n", pl, rank)
 		os.Exit(0)
 	}
 
