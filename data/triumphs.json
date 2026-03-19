@@ -4,7 +4,7 @@
       "id": "velocity",
       "name": "VELOCITY",
       "element": "arc",
-      "icon": "\u26a1",
+      "icon": "⚡",
       "triumphs": [
         {
           "id": "first_session",
@@ -20,7 +20,7 @@
         {
           "id": "tdd_first",
           "name": "RED BEFORE GREEN",
-          "description": "Complete a full TDD red\u2192green\u2192refactor cycle using tdd-red, tdd-green, tdd-refactor agents",
+          "description": "Complete a full TDD red→green→refactor cycle using tdd-red, tdd-green, tdd-refactor agents",
           "flavor": "You did not build before you broke.",
           "points": 50,
           "earned": false,
@@ -56,7 +56,7 @@
       "id": "community",
       "name": "COMMUNITY",
       "element": "solar",
-      "icon": "\ud83d\udd25",
+      "icon": "🔥",
       "triumphs": [
         {
           "id": "first_knowledge",
@@ -75,7 +75,7 @@
         {
           "id": "ten_knowledge",
           "name": "THE LIBRARY",
-          "description": "Accumulate 10 knowledge entries (SYNTHESIS \u2265 10)",
+          "description": "Accumulate 10 knowledge entries (SYNTHESIS ≥ 10)",
           "flavor": "The knowledge base has weight now.",
           "points": 50,
           "earned": false,
@@ -101,7 +101,7 @@
           "id": "pr_merged",
           "name": "TORCH PASSED",
           "description": "Ship a merged PR to any open source project using Copilot assistance",
-          "flavor": "The Solar Guardian does not hoard light \u2014 they emit it.",
+          "flavor": "The Solar Guardian does not hoard light — they emit it.",
           "points": 50,
           "earned": false,
           "earned_at": null,
@@ -117,7 +117,7 @@
       "id": "mastery",
       "name": "MASTERY",
       "element": "void",
-      "icon": "\ud83d\udfe3",
+      "icon": "🟣",
       "triumphs": [
         {
           "id": "new_skill",
@@ -158,7 +158,7 @@
       "id": "distribution",
       "name": "DISTRIBUTION",
       "element": "strand",
-      "icon": "\ud83d\udfe2",
+      "icon": "🟢",
       "triumphs": [
         {
           "id": "first_package",
@@ -199,7 +199,7 @@
       "id": "stability",
       "name": "STABILITY",
       "element": "stasis",
-      "icon": "\ud83d\udd35",
+      "icon": "🔵",
       "triumphs": [
         {
           "id": "first_build",
@@ -226,10 +226,10 @@
       ]
     },
     {
-      "id": "seasonal",
+      "id": "seasonal_general",
       "name": "SEASON OF THE POWERLEVEL",
       "element": "cross",
-      "icon": "\ud83d\udd06",
+      "icon": "🔆",
       "triumphs": [
         {
           "id": "site_launched",
@@ -256,7 +256,7 @@
         {
           "id": "fifty_sessions",
           "name": "FIFTY LIGHTS",
-          "description": "Reach ENDURANCE 50 \u2014 fifty completed Copilot sessions",
+          "description": "Reach ENDURANCE 50 — fifty completed Copilot sessions",
           "flavor": "Fifty sessions. The Traveler noticed.",
           "points": 100,
           "earned": false,
@@ -266,6 +266,930 @@
             "stat": "endurance",
             "value": 50
           }
+        }
+      ]
+    },
+    {
+      "id": "conqueror",
+      "name": "CONQUEROR",
+      "element": "cross",
+      "icon": "🔆",
+      "triumphs": [
+        {
+          "id": "seal_blacksmith",
+          "name": "IRON TEMPERED",
+          "description": "Complete the BLACKSMITH seal — forge at least one merged upstream Bluefin PR using bluefin-build skill",
+          "flavor": "The forge is behind you. The Blacksmith remembers.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_cursebreaker",
+          "name": "THE CURSE LIFTED",
+          "description": "Complete the CURSEBREAKER seal — fix a CI failure using gha-expert or bluefin-ci and close the loop with cicd-learning",
+          "flavor": "The pipeline runs clean. The logs are quiet. You made that happen.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_dredgen",
+          "name": "DARK ARTS MASTERED",
+          "description": "Complete the DREDGEN seal — identify a real vulnerability with se-security-reviewer and remediate it",
+          "flavor": "You looked into the darkness and named what you found there.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_flawless",
+          "name": "NEVER BROKE",
+          "description": "Complete the FLAWLESS seal — run 3 consecutive TDD red→green→refactor cycles with zero test failures",
+          "flavor": "The Lighthouse has no record of your failures.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_chronicler",
+          "name": "LORE COMPLETE",
+          "description": "Complete the CHRONICLER seal — execute the full knowledge loop 10 verified times across sessions",
+          "flavor": "The light that is forgotten is still light. You chose not to forget.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_rivensbane",
+          "name": "THE VOICE HEARD",
+          "description": "Complete the RIVENSBANE seal — submit a PR to a CNCF governance or community repo",
+          "flavor": "Riven is silent. The community spoke.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_deadeye",
+          "name": "DEADEYE'S OATH",
+          "description": "Complete the DEADEYE seal — ship a new package as cask, flatpak, or RPM using the appropriate skill",
+          "flavor": "One shot. Clean delivery. The package lands where you aimed it.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "seal_queensguard",
+          "name": "THE QUEEN'S SERVICE",
+          "description": "Complete the QUEENSGUARD seal — complete a full bluefin-lts PR gate cycle without force pushes",
+          "flavor": "The throne was never undefended.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "pinnacle_reached",
+          "name": "PINNACLE REACHED",
+          "description": "Reach Powerlevel 1,800 — all subclass averages at or above 1,650, artifact bonus included",
+          "flavor": "1,800. The number does not lie.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "agent_of_every_order",
+          "name": "AGENT OF EVERY ORDER",
+          "description": "In a single session, successfully deploy at least 5 distinct agent types: blueprint-mode, swe-subagent, tdd-red, se-security-reviewer, and qa — each completing a real task",
+          "flavor": "Five agents. One session. No gaps.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "chronicler",
+      "name": "CHRONICLER",
+      "element": "solar",
+      "icon": "🔥",
+      "triumphs": [
+        {
+          "id": "whispers_library",
+          "name": "WHISPER'S LIBRARY",
+          "description": "Execute the complete knowledge loop (knowledge-search → act → knowledge-store) 10 verified times across any sessions, as confirmed by session history",
+          "flavor": "Ten iterations. The loop holds its shape.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "oracles_pivot",
+          "name": "THE ORACLE'S PIVOT",
+          "description": "Use knowledge-search to surface a prior-session result that materially changes your planned approach — document the pivot in the knowledge store",
+          "flavor": "The past spoke. You listened before you typed.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "keeper_of_codex",
+          "name": "KEEPER OF THE CODEX",
+          "description": "Store 5 distinct, actionable knowledge entries in a single season using knowledge-store, each with tags and project attribution",
+          "flavor": "Five entries. Five futures spared.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "voices_of_archive",
+          "name": "VOICES OF THE ARCHIVE",
+          "description": "Document at least 3 CNCF community events, governance patterns, or contributor ladder entries using the cncf-community skill",
+          "flavor": "The community's patterns, encoded.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "pages_unburned",
+          "name": "PAGES UNBURNED",
+          "description": "Write or substantially update a page in bluefin-docs — PR merged to the upstream repo",
+          "flavor": "The documentation outlasts the session.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "found_in_dark",
+          "name": "FOUND IN THE DARK",
+          "description": "Use find-skills to discover a skill you have never loaded before, then complete a real task with it in the same session",
+          "flavor": "The skill was always there. You found it.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "full_record",
+          "name": "THE FULL RECORD",
+          "description": "Author or meaningfully update 3 or more SKILL.md files in a single season, each reducing friction for future sessions",
+          "flavor": "Three files. Three fewer repeated mistakes.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "cursebreaker",
+      "name": "CURSEBREAKER",
+      "element": "arc",
+      "icon": "⚡",
+      "triumphs": [
+        {
+          "id": "first_fracture",
+          "name": "FIRST FRACTURE",
+          "description": "Fix a failing GitHub Actions workflow — diagnose the failure, apply the fix, verify the run passes — using gha-expert or bluefin-ci skill",
+          "flavor": "The CI was red. Now it is not. You did that.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "loop_holds",
+          "name": "THE LOOP HOLDS",
+          "description": "Complete the cicd-learning canonical cycle end-to-end: SEARCH → LOAD → ACT → CAPTURE → STORE → SYNC — all steps verified in a single session",
+          "flavor": "Search. Load. Act. Capture. Store. Sync. The cycle completes.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "workflow_clean",
+          "name": "WORKFLOW CLEAN",
+          "description": "Push a PR that passes all CI checks on the first attempt, with no re-runs, no force pushes, no 'fix typo' commits",
+          "flavor": "First push. All green. Nothing to explain.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "friction_remembered",
+          "name": "FRICTION REMEMBERED",
+          "description": "Complete a session where observed friction results in a new rule added to cicd-learning/SKILL.md or workflow/SKILL.md",
+          "flavor": "The pain was real. The rule ensures it doesn't repeat.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "curse_lifted",
+          "name": "THE CURSE LIFTED",
+          "description": "Diagnose and resolve a CI failure that has been open for more than 48 hours, referencing the gha-expert or bluefin-ci skill explicitly in the fix",
+          "flavor": "The corruption has been cleansed. The pipeline breathes.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "blacksmith",
+      "name": "BLACKSMITH",
+      "element": "stasis",
+      "icon": "🔵",
+      "triumphs": [
+        {
+          "id": "first_forge",
+          "name": "FIRST FORGE",
+          "description": "Build and locally validate a Bluefin OCI image using the bluefin-build skill — all variant checks pass",
+          "flavor": "The first layer. The Blacksmith's mark.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "tempered_steel",
+          "name": "TEMPERED STEEL",
+          "description": "Submit a PR to projectbluefin/bluefin or ublue-os/base that is merged upstream",
+          "flavor": "The PR is merged. The upstream remembers.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "full_matrix",
+          "name": "THE FULL MATRIX",
+          "description": "Build an image that passes cosign signature verification and all variant matrix checks, referencing oci-images skill",
+          "flavor": "All variants. All checks. All green.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "variant_mastery",
+          "name": "VARIANT MASTERY",
+          "description": "Work with at least 4 distinct image variants defined in bluefin-vars in a single season — aurora, bluefin, hwe, framework, etc.",
+          "flavor": "Four faces of the same image. All valid.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "iron_in_fire",
+          "name": "IRON IN THE FIRE",
+          "description": "Have 3 or more open PRs simultaneously across bluefin, aurora, or base repos — all CI green",
+          "flavor": "Three PRs. Three furnaces running.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "release_bell",
+          "name": "THE RELEASE BELL",
+          "description": "Complete a full release cycle using bluefin-rel skill — stream tag management, changelog, promotion",
+          "flavor": "The stream advances. The changelog is written.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "masters_mark",
+          "name": "MASTER'S MARK",
+          "description": "Reach bluefin-build power level 1,700+ in the system dashboard — sustained skill mastery across seasons",
+          "flavor": "1,700. The forge is hot and has been for a while.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "dredgen",
+      "name": "DREDGEN",
+      "element": "void",
+      "icon": "🟣",
+      "triumphs": [
+        {
+          "id": "shadows_gaze",
+          "name": "SHADOW'S GAZE",
+          "description": "Run se-security-reviewer on a PR or code change and surface a real, actionable security finding — not a false positive",
+          "flavor": "The finding was real. Not a false alarm. Not a guess.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "worms_teeth",
+          "name": "THE WORM'S TEETH",
+          "description": "Identify and remediate an OWASP Top 10 vulnerability using se-security-reviewer — document the finding and fix",
+          "flavor": "OWASP-10. Named, documented, remediated.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "erianas_promise",
+          "name": "ERIANA'S PROMISE",
+          "description": "Run doublecheck on 5 distinct AI-generated outputs in a single season — three-layer pipeline (self-audit, source verification, adversarial review) completed each time",
+          "flavor": "Five outputs. Fifteen checks. Zero assumptions.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "second_truth",
+          "name": "THE SECOND TRUTH",
+          "description": "Use 2nd-opinion (Dead Man's Tale) to reverse or materially change a design decision — document what changed and why",
+          "flavor": "The first opinion was wrong. The record shows what changed.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "adversarial_mind",
+          "name": "ADVERSARIAL MIND",
+          "description": "The qa agent finds a bug in a feature where tdd-green had declared the implementation complete — document the gap",
+          "flavor": "tdd-green said complete. qa said otherwise. qa was right.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "hand_of_darkness",
+          "name": "HAND OF DARKNESS",
+          "description": "On the same PR, run both doublecheck and se-security-reviewer in tandem — all findings documented and addressed",
+          "flavor": "Both agents. Same PR. All findings addressed.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "fall_remembered",
+          "name": "THE FALL REMEMBERED",
+          "description": "Document a security incident, near-miss, or discovered vulnerability in the knowledge base with full context for future sessions",
+          "flavor": "The incident is recorded. Future sessions will know.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "dredgens_burden",
+          "name": "DREDGEN'S BURDEN",
+          "description": "All four SENTINEL weapons — 2nd-opinion, se-security, doublecheck, and qa — reach or exceed 1,300 power level in the dashboard",
+          "flavor": "All four SENTINEL weapons sharpened.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "flawless",
+      "name": "FLAWLESS",
+      "element": "void",
+      "icon": "🟣",
+      "triumphs": [
+        {
+          "id": "flawless_red_before_green",
+          "name": "RED BEFORE GREEN",
+          "description": "Use tdd-red to write failing tests before any implementation in 5 consecutive tasks — no implementation-first shortcuts",
+          "flavor": "Five tasks. Not one started with implementation.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "minimal_passing",
+          "name": "MINIMAL PASSING",
+          "description": "Use tdd-green to produce an implementation that tdd-refactor subsequently approves with zero structural changes required — just style and polish",
+          "flavor": "The minimum was enough. The refactor agreed.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "refactor_holds",
+          "name": "THE REFACTOR HOLDS",
+          "description": "Use tdd-refactor to clean an implementation while all tests remain green — qa agent confirms no regressions",
+          "flavor": "The tests stayed green. Every one.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "full_cycle",
+          "name": "FULL CYCLE",
+          "description": "Complete the full red → green → refactor TDD cycle for a feature using all three agents (tdd-red, tdd-green, tdd-refactor) — delivered in a single session",
+          "flavor": "Red. Green. Refactor. One session. No breaks.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "no_regressions",
+          "name": "NO REGRESSIONS",
+          "description": "After a tdd-refactor pass, a qa agent finds zero new bugs and zero broken tests — clean bill of health",
+          "flavor": "qa found nothing. That is the goal.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "perfect_run",
+          "name": "THE PERFECT RUN",
+          "description": "Complete 3 consecutive sessions where all code changes are TDD-driven using the full red→green→refactor cycle with no test failures across any session",
+          "flavor": "Three sessions. All cycles complete. All tests green.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "rivensbane",
+      "name": "RIVENSBANE",
+      "element": "strand",
+      "icon": "🟢",
+      "triumphs": [
+        {
+          "id": "voice_thousand_commits",
+          "name": "VOICE OF A THOUSAND COMMITS",
+          "description": "Contribute a merged PR to any of the CNCF trilogy sites (people-website, projects-website, endusers-website) using the cncf-dev skill",
+          "flavor": "A merged PR. The CNCF trilogy heard it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "dragons_hoard",
+          "name": "THE DRAGON'S HOARD",
+          "description": "Use the cncf-landscape MCP server (query_projects, get_project_details) to answer 10 distinct project queries in a season — no manual full.json fetching",
+          "flavor": "Ten queries. The Landscape answered each one.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "community_herald",
+          "name": "COMMUNITY HERALD",
+          "description": "Submit a merged PR to a CNCF governance document (contributor ladder, security policy, project health file) using cncf-community skill",
+          "flavor": "Governance is a living document. You wrote into it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "thousand_voices",
+          "name": "THOUSAND VOICES",
+          "description": "Complete a cncf-dev session that meaningfully touches all three trilogy sites — a shared layout fix, cross-site test, or SiteSwitcher change",
+          "flavor": "All three sites. One session. The mesh is real.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "keeper_of_law",
+          "name": "KEEPER OF THE LAW",
+          "description": "Add to or materially update the cncf-community skill with a new governance pattern or anti-pattern observed in practice",
+          "flavor": "A new pattern added. Future Guardians will find it.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "wishing_wall",
+          "name": "THE WISHING WALL",
+          "description": "Complete a CNCF-tagged feature using blueprint-mode for planning and cncf-dev for implementation — both agents in the same session",
+          "flavor": "Blueprint-mode planned it. cncf-dev built it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "riven_silent",
+          "name": "RIVEN SILENT",
+          "description": "Fix a bug in any cncf-dev site that appears in the session store in 2 or more prior sessions — the long-standing issue finally resolved",
+          "flavor": "The bug appeared in two prior sessions. It will not appear in a third.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "deadeye",
+      "name": "DEADEYE",
+      "element": "solar",
+      "icon": "🔥",
+      "triumphs": [
+        {
+          "id": "first_shot",
+          "name": "FIRST SHOT",
+          "description": "Package a new Homebrew cask or formula using the homebrew-tap skill — PR merged to ublue-os/homebrew-tap or castrojo/tap",
+          "flavor": "A new formula. A new cask. A clean merge.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "precision_load",
+          "name": "PRECISION LOAD",
+          "description": "Submit a Flatpak AppStream metainfo file that passes appstreamcli validate with zero warnings and zero errors using the flatpak skill",
+          "flavor": "appstreamcli says zero warnings. Zero errors.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "clean_sights",
+          "name": "CLEAN SIGHTS",
+          "description": "Submit a PR using bluefin-pkgs skill that passes all CI checks on first push — no fixup commits, no re-runs",
+          "flavor": "First push. All checks pass. No excuses.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "triple_tap",
+          "name": "TRIPLE TAP",
+          "description": "Package the same software in two distinct formats (e.g., cask + flatpak, or formula + RPM/COPR) in a single season using the appropriate skills",
+          "flavor": "One piece of software. Two formats. Both delivered.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "steady_hand",
+          "name": "STEADY HAND",
+          "description": "Maintain 3 packages across a full season — no regression PRs required, no breakage reported",
+          "flavor": "Three packages. A full season. No breakage.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "queensguard",
+      "name": "QUEENSGUARD",
+      "element": "stasis",
+      "icon": "🔵",
+      "triumphs": [
+        {
+          "id": "throne_of_deep",
+          "name": "THRONE OF THE DEEP",
+          "description": "Complete a full bluefin-lts workflow: PR gate triggers → draft PR created → squash-merge approved — no manual interventions",
+          "flavor": "The LTS gate opened. The squash-merge closed it. No exceptions.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "taken_shore",
+          "name": "THE TAKEN SHORE",
+          "description": "Resolve a linux-desktop issue (Flatpak, Wayland, GNOME, bootc, atomic) using the linux-desktop skill — PR merged or issue closed",
+          "flavor": "The linux-desktop issue is resolved. The desktop is stable.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "court_of_blades",
+          "name": "COURT OF BLADES",
+          "description": "Successfully test a bootc upgrade using the local OTA registry workflow (zot registry on host, QEMU VM pulls from it) without pushing to GHCR",
+          "flavor": "The VM pulled from zot. GHCR never needed.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "pale_heart_intact",
+          "name": "PALE HEART INTACT",
+          "description": "Complete an LTS session that makes changes to the bluefin-lts branch with zero regressions to the LTS user base — no hotfix required",
+          "flavor": "LTS users noticed nothing. That is the measure of success.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "silent_vanguard",
+          "name": "SILENT VANGUARD",
+          "description": "Run oci-images cosign verification across all active variants — all pass, all checksums verified",
+          "flavor": "All variants. All checksums. All verified.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "queens_promise",
+          "name": "THE QUEEN'S PROMISE",
+          "description": "Submit a PR that was correctly triaged by the create-lts-pr.yml gate workflow and merged via the squash-merge approval flow",
+          "flavor": "Gate triggered. PR squash-merged. The workflow held.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "undying_watch",
+          "name": "UNDYING WATCH",
+          "description": "Over a full season, maintain the LTS branch health: all PRs gated, no force pushes, no emergency hotfixes",
+          "flavor": "A full season. All PRs gated. No hotfixes required.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "gilded_ghost",
+      "name": "GILDED GHOST",
+      "element": "cross",
+      "icon": "🔆",
+      "triumphs": [
+        {
+          "id": "ghosts_light",
+          "name": "THE GHOST'S LIGHT",
+          "description": "Create a new skill (SKILL.md) that is subsequently loaded and used across 3 or more distinct sessions — verified in session history",
+          "flavor": "Three sessions. Three times the skill was loaded without prompting.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "light_bearer",
+          "name": "LIGHT BEARER",
+          "description": "Create a new custom agent (.agent.md) that resolves a real, documented problem — not a duplicate, not theoretical",
+          "flavor": "A new agent. A real problem. Not theoretical.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "shell_upgrade",
+          "name": "SHELL UPGRADE",
+          "description": "Improve an existing SKILL.md to meaningfully reduce token cost (trim to target line count) while preserving all utility — no capability loss",
+          "flavor": "Fewer tokens. Same capability. The ghost remembers what matters.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "resurrection",
+          "name": "RESURRECTION",
+          "description": "Use a knowledge-search result to avoid repeating a past mistake — the prior session documented the exact pattern that would have been re-introduced",
+          "flavor": "Prior context surfaced. The mistake was not repeated.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "pattern_encoded",
+          "name": "PATTERN ENCODED",
+          "description": "Add a new session-derived rule to AGENTS.md under Observed Friction — must be based on something that actually went wrong, not anticipation",
+          "flavor": "The friction was real. The rule ensures it is not repeated.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "travelers_gift",
+          "name": "THE TRAVELER'S GIFT",
+          "description": "Complete a full agent audit — at minimum: audit phase (parallel review agents) + fix phase (parallel swe-subagents) — identifying and resolving 5+ actionable issues",
+          "flavor": "Five issues. Identified. Resolved. The system is better.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "beyond_the_pale",
+          "name": "BEYOND THE PALE",
+          "description": "Accumulate 10 total gild counts across all seals combined — mastery across the entire system",
+          "flavor": "Ten gilded seals. The Ghost has seen everything.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ghost_remembers",
+          "name": "THE GHOST REMEMBERS",
+          "description": "Have knowledge-search surface a prior session context that demonstrably saves substantial work — the result changes your approach before you've written a single line",
+          "flavor": "Prior context surfaced. Substantial work spared.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "iron_lord",
+      "name": "IRON LORD",
+      "element": "cross",
+      "icon": "🔆",
+      "triumphs": [
+        {
+          "id": "great_reckoning",
+          "name": "THE GREAT RECKONING",
+          "description": "Complete a 4-agent parallel audit (token-auditor, coverage-analyst, design-critic, bug-hunter) that identifies 10+ bugs and architectural issues across the agent and skill fleet",
+          "flavor": "Thirteen bugs. Eight architectural issues. Named and numbered.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "iron_wave",
+          "name": "IRON WAVE",
+          "description": "Deploy 6 parallel swe-subagent instances in a single session to resolve all critical and high-severity bugs surfaced by the reckoning",
+          "flavor": "Six subagents. One session. All critical bugs resolved.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "reborn_trio",
+          "name": "THE REBORN TRIO",
+          "description": "Rewrite all three TDD agents (tdd-red, tdd-green, tdd-refactor) for a new language or framework — plus create a new companion agent that defends the system",
+          "flavor": "Three agents, reborn. Go, TypeScript, Playwright. The forge was worth it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "dashboard_born",
+          "name": "THE DASHBOARD BORN",
+          "description": "Design and commit the canonical Powerlevel system dashboard — subclasses, weapons, caps, open issues, fleet section, agents registry",
+          "flavor": "The system can see itself now.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "iron_codex",
+          "name": "THE IRON CODEX",
+          "description": "Design the complete Seal + Title system for the Powerlevel framework — 10 permanent seals, 1 seasonal seal, full triumph tables, title display integration",
+          "flavor": "Eleven seals. Seventy-six triumphs. The framework is complete.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "iron_lords_memory",
+          "name": "IRON LORD'S MEMORY",
+          "description": "Store a knowledge-store session summary for Season of the Iron Lord — capturing what was built, what was learned, and what comes next",
+          "flavor": "The season is recorded. Future sessions will know what was built here.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     }
