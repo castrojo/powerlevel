@@ -1,0 +1,126 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import rawData from '../../data/powerlevel-data.json';
+
+const season = rawData.season;
+
+const ghostMessages = [
+  "Guardian, you've started a session without running knowledge-search first. I'm not angry. Just disappointed.",
+  "The workflow skill is loaded. The test suite is green. The Traveler smiles upon you. Or maybe that's just the arc energy.",
+  "You deployed without tests. Again. The Darkness grows stronger every time you do that.",
+  "SYNTHESIS score: rising. You are becoming something the Cosmodrome has never seen — an engineer who actually writes knowledge-store entries.",
+  "I've analyzed your commit history. You type 'fix: typo' more than any Guardian in recorded history. I've reported this to the Vanguard.",
+  "The CI is green. The site is deployed. This is what it feels like to win, Guardian.",
+];
+
+const bio = {
+  class: "Titan",
+  subclass: "Arc · Striker",
+  title: "New Light",
+  background: `Jorge O. Castro. Open source advocate. Formerly of Canonical and Red Hat. 
+    Now maintaining the Bluefin project — an immutable Linux desktop built on Fedora Silverblue and Universal Blue. 
+    Fights entropy with declarative systems and automated workflows. 
+    The Ghost companion reports he has committed to more repos than any Guardian should be allowed to access.`,
+  specialization: "Workflow automation, community tooling, container image engineering",
+  quote: "The best time to plant a tree was twenty years ago. The second best time is to automate it.",
+};
+
+const subclassElements = [
+  { element: 'arc',    icon: '⚡', name: 'VELOCITY',     color: '#79c8e2', lore: 'Speed of thought. Speed of deploy. The arc flows through every automated pipeline.' },
+  { element: 'solar',  icon: '🔥', name: 'COMMUNITY',    color: '#f4934f', lore: 'The warmth of open source. Every contribution a flame against the cold void of proprietary lock-in.' },
+  { element: 'void',   icon: '🟣', name: 'MASTERY',      color: '#b47be0', lore: 'Into the void of unknown requirements. Mastery is knowing which questions to ask before writing a line.' },
+  { element: 'strand', icon: '🟢', name: 'DISTRIBUTION', color: '#49de8b', lore: 'All things connected. The skill web is a living organism, each thread a dependency on the next.' },
+  { element: 'stasis', icon: '🔵', name: 'STABILITY',    color: '#4d9bd6', lore: 'Freeze the chaos. Immutable systems. Reproducible builds. The Behemoth does not drift.' },
+];
+---
+
+<!-- bray.tech imagery: hotlinking deferred pending local cache strategy — see plan.md -->
+<D2Layout title="Lore">
+  <div class="lore-page">
+
+    <!-- Season Story -->
+    <section class="lore-section season-section">
+      <div class="lore-eyebrow">SEASON OF THE POWERLEVEL</div>
+      <h1 class="lore-title">{season.name}</h1>
+      <p class="lore-body">{season.lore}</p>
+    </section>
+
+    <!-- Guardian Bio -->
+    <section class="lore-section bio-section">
+      <div class="lore-eyebrow">GUARDIAN RECORD</div>
+      <h2 class="lore-title">@castrojo</h2>
+      <div class="bio-stats">
+        <span class="bio-stat"><span class="bio-label">CLASS</span> {bio.class}</span>
+        <span class="bio-stat"><span class="bio-label">SUBCLASS</span> {bio.subclass}</span>
+        <span class="bio-stat"><span class="bio-label">TITLE</span> {bio.title}</span>
+      </div>
+      <p class="lore-body">{bio.background}</p>
+      <div class="bio-spec">
+        <span class="bio-label">SPECIALIZATION</span>
+        <span class="spec-val">{bio.specialization}</span>
+      </div>
+      <blockquote class="lore-quote">"{bio.quote}"</blockquote>
+    </section>
+
+    <!-- Subclass Lore -->
+    <section class="lore-section elements-section">
+      <div class="lore-eyebrow">SUBCLASS DISCIPLINES</div>
+      <h2 class="lore-title">The Five Elements</h2>
+      <div class="elements-grid">
+        {subclassElements.map(el => (
+          <div class={`element-card ${el.element}`} style={`border-left-color: ${el.color}`}>
+            <div class="element-header">
+              <span class="element-icon">{el.icon}</span>
+              <span class="element-name" style={`color: ${el.color}`}>{el.name}</span>
+            </div>
+            <p class="element-lore">{el.lore}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Ghost Messages -->
+    <section class="lore-section ghost-section">
+      <div class="lore-eyebrow">GHOST TRANSMISSION LOG</div>
+      <h2 class="lore-title">From Your Ghost</h2>
+      <div class="ghost-messages">
+        {ghostMessages.map((msg) => (
+          <div class="ghost-msg">
+            <span class="ghost-icon">👻</span>
+            <p class="ghost-text">"{msg}"</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</D2Layout>
+
+<style>
+.lore-page { max-width: 860px; margin: 0 auto; }
+.lore-section { margin-bottom: 4rem; padding: 2rem; background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; }
+.season-section { border-top: 2px solid var(--d2-exotic); background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%); }
+.bio-section { border-top: 2px solid var(--d2-arc); }
+.elements-section { background: transparent; border: none; padding: 0; }
+.ghost-section { border-top: 2px solid var(--d2-void); }
+.lore-eyebrow { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--d2-text-dim); text-transform: uppercase; margin-bottom: 0.5rem; }
+.lore-title { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); margin-bottom: 1rem; }
+.lore-body { color: var(--d2-text); line-height: 1.8; font-size: 1rem; }
+.bio-stats { display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.bio-stat { display: flex; flex-direction: column; gap: 0.25rem; }
+.bio-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--d2-text-dim); }
+.bio-spec { margin-top: 1rem; display: flex; gap: 1rem; align-items: center; }
+.spec-val { color: var(--d2-arc); font-size: 0.85rem; }
+.lore-quote { border-left: 2px solid var(--d2-exotic); margin: 1.5rem 0 0; padding: 0.5rem 1rem; color: var(--d2-text-dim); font-style: italic; font-size: 0.95rem; }
+.elements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; border: 1px solid var(--d2-border); border-radius: 4px; overflow: hidden; }
+.element-card { background: var(--d2-surface); padding: 1.25rem; border-left: 3px solid; }
+.element-card:hover { background: var(--d2-surface-2); }
+.element-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.element-icon { font-size: 1.5rem; }
+.element-name { font-family: var(--font-lore); font-size: 1rem; font-weight: 700; }
+.element-lore { color: var(--d2-text-dim); font-size: 0.85rem; line-height: 1.6; margin: 0; }
+.ghost-messages { display: flex; flex-direction: column; gap: 1rem; }
+.ghost-msg { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--d2-surface-2); border-radius: 4px; border: 1px solid var(--d2-border); }
+.ghost-icon { font-size: 1.5rem; flex-shrink: 0; }
+.ghost-text { color: var(--d2-text); font-style: italic; margin: 0; line-height: 1.6; }
+</style>
