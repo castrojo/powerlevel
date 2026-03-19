@@ -31,4 +31,22 @@ test.describe('Stats', () => {
   test('last updated shown', async ({ page }) => {
     await expect(page.getByText(/Last updated/)).toBeVisible();
   });
+
+  test('radar chart renders', async ({ page }) => {
+    await expect(page.locator('svg.radar-chart')).toBeVisible();
+    const polygon = page.locator('svg.radar-chart polygon').last();
+    await expect(polygon).toBeVisible();
+  });
+
+  test('stat values are non-zero', async ({ page }) => {
+    const fills = page.locator('.stat-fill');
+    const count = await fills.count();
+    expect(count).toBeGreaterThan(0);
+    let hasNonZero = false;
+    for (let i = 0; i < count; i++) {
+      const style = await fills.nth(i).getAttribute('style');
+      if (style && !style.includes('width: 0')) { hasNonZero = true; break; }
+    }
+    expect(hasNonZero).toBe(true);
+  });
 });

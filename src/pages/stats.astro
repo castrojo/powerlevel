@@ -57,10 +57,61 @@ const buildDate = new Date().toLocaleDateString("en-US", { year: "numeric", mont
       </div>
     </div>
 
+    <!-- Radar Chart -->
+    <div class="radar-section">
+      <h2>Guardian Profile</h2>
+      <svg class="radar-chart" viewBox="-150 -150 300 300" width="300" height="300">
+        <!-- Grid rings at 25%, 50%, 75%, 100% -->
+        {[25, 50, 75, 100].map(pct => {
+          const r = (pct / 100) * 120;
+          const pts = statList.map((_, i) => {
+            const angle = (i * 60 - 90) * Math.PI / 180;
+            return `${r * Math.cos(angle)},${r * Math.sin(angle)}`;
+          }).join(' ');
+          return <polygon points={pts} fill="none" stroke="var(--d2-border)" stroke-width="0.5" opacity="0.5" />;
+        })}
+        <!-- Axes and labels -->
+        {statList.map((s, i) => {
+          const angle = (i * 60 - 90) * Math.PI / 180;
+          const x = 120 * Math.cos(angle);
+          const y = 120 * Math.sin(angle);
+          const lx = 145 * Math.cos(angle);
+          const ly = 145 * Math.sin(angle);
+          return <>
+            <line x1="0" y1="0" x2={x} y2={y} stroke="var(--d2-border)" stroke-width="0.5" />
+            <text x={lx} y={ly} text-anchor="middle" dominant-baseline="middle"
+                  fill="var(--d2-text-dim)" font-size="8" font-family="var(--font-lore)">{s.label}</text>
+          </>;
+        })}
+        <!-- Data polygon -->
+        <polygon
+          points={statList.map((s, i) => {
+            const score = statsMap[s.key].score;
+            const r = (score / 100) * 120;
+            const angle = (i * 60 - 90) * Math.PI / 180;
+            return `${r * Math.cos(angle)},${r * Math.sin(angle)}`;
+          }).join(' ')}
+          fill="var(--d2-arc)"
+          fill-opacity="0.15"
+          stroke="var(--d2-arc)"
+          stroke-width="1.5"
+        />
+        <!-- Data points -->
+        {statList.map((s, i) => {
+          const score = statsMap[s.key].score;
+          const r = (score / 100) * 120;
+          const angle = (i * 60 - 90) * Math.PI / 180;
+          return <circle cx={r * Math.cos(angle)} cy={r * Math.sin(angle)} r="3" fill="var(--d2-arc)" />;
+        })}
+      </svg>
+    </div>
+
     <div class="stat-cards">
       {statList.map(({ key, label, d2, desc, icon }) => {
         const s = statsMap[key];
         const color = statColor(s.score);
+        const hist = (rawStats as any)[key]?.history;
+        const hasHistory = hist && Array.isArray(hist) && hist.length >= 2;
         return (
           <div class="stat-card">
             <div class="stat-card-header">
@@ -70,6 +121,19 @@ const buildDate = new Date().toLocaleDateString("en-US", { year: "numeric", mont
                 <div class="stat-d2">≈ D2 {d2}</div>
               </div>
               <div class="stat-score-big" style={`color: ${color}`}>{s.score}</div>
+              {hasHistory && (() => {
+                const max = Math.max(...hist);
+                const min = Math.min(...hist);
+                const range = max - min || 1;
+                const pts = hist.map((v: number, i: number) => {
+                  const x = (i / (hist.length - 1)) * 40;
+                  const y = 16 - ((v - min) / range) * 14;
+                  return `${x},${y}`;
+                }).join(' ');
+                return <svg class="sparkline" viewBox="0 0 40 16" width="40" height="16">
+                  <polyline points={pts} fill="none" stroke="var(--d2-arc)" stroke-width="1.2" />
+                </svg>;
+              })()}
             </div>
             <div class="stat-track">
               <div class="stat-fill" style={`width: ${s.score}%; background: ${color}`}></div>
@@ -163,4 +227,7 @@ h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 1rem
 .milestone-req { font-size: 0.7rem; color: var(--d2-exotic); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
 .milestone-flavor { font-size: 0.75rem; font-style: italic; font-family: var(--font-lore); color: var(--d2-text-dim); }
 .export-info { font-size: 0.75rem; color: var(--d2-text-dim); text-align: right; }
+.radar-section { text-align: center; margin-bottom: 2rem; }
+.radar-chart { overflow: visible; }
+.sparkline { margin-left: 0.5rem; vertical-align: middle; opacity: 0.7; }
 </style>
