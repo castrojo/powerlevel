@@ -12,39 +12,39 @@
       "pinnacle": 100,
       "unit": "repos",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "endurance": {
-      "raw": 16,
+      "raw": 18,
       "softCap": 200,
       "pinnacle": 1000,
       "unit": "sessions",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "foresight": {
-      "raw": 14,
+      "raw": 15,
       "softCap": 50,
       "pinnacle": 300,
       "unit": "checkpoints",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "output": {
-      "raw": 50,
+      "raw": 57,
       "softCap": 100,
       "pinnacle": 500,
       "unit": "commits",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "recall": {
-      "raw": 203,
+      "raw": 222,
       "softCap": 2000,
       "pinnacle": 10000,
       "unit": "turns",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "synthesis": {
       "raw": 4,
@@ -52,7 +52,7 @@
       "pinnacle": 500,
       "unit": "entries",
       "history": null,
-      "exported_at": "2026-03-19T21:02:44Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     }
   },
   "weapons": {
