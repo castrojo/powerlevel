@@ -5,6 +5,56 @@
     "quarter": "Q1 2026",
     "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark."
   },
+  "stats": {
+    "breadth": {
+      "raw": 4,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    },
+    "endurance": {
+      "raw": 16,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    },
+    "foresight": {
+      "raw": 13,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    },
+    "output": {
+      "raw": 49,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    },
+    "recall": {
+      "raw": 199,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    },
+    "synthesis": {
+      "raw": 4,
+      "softCap": 50,
+      "pinnacle": 500,
+      "unit": "entries",
+      "history": null,
+      "exported_at": "2026-03-19T20:17:14Z"
+    }
+  },
   "weapons": {
     "workflow": {
       "weapon": "Trustee",
@@ -631,44 +681,6 @@
       "subclass": "void",
       "super": "Sentinel Shield / Ward of Dawn",
       "primary": false
-    }
-  },
-  "stats": {
-    "endurance": {
-      "raw": 11,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions"
-    },
-    "recall": {
-      "raw": 108,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns"
-    },
-    "synthesis": {
-      "raw": 6,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries"
-    },
-    "breadth": {
-      "raw": 3,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos"
-    },
-    "foresight": {
-      "raw": 6,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints"
-    },
-    "output": {
-      "raw": 24,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits"
     }
   }
 }

@@ -69,7 +69,11 @@ level-up:
     $EDITOR data/powerlevel-data.json
     @echo "✓ Levels updated — push to deploy"
 
-# Full deploy: build + push
+# Export stats and feed from session_store (run locally before deploy)
+export-stats:
+    go run ./cmd/exporter/ --data-dir data
+
+# Full deploy: build + push (run just export-stats first if updating stats)
 deploy: build-site
     git add -A
     git commit -m "chore: deploy $(date -u +%Y-%m-%d)"
