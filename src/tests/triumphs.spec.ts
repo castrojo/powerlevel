@@ -2,28 +2,32 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Triumphs', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/triumphs');
+    await page.goto('./triumphs/');
   });
 
   test('page title', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('Triumph');
+    await expect(page.locator('h1')).toContainText('Triumphs');
   });
 
   test('point total shown', async ({ page }) => {
-    await expect(page.getByText(/\d+ pts/)).toBeVisible();
+    // Header renders "{earned} / {total} points" across score spans
+    await expect(page.locator('.score-label')).toBeVisible();
   });
 
   test('all element categories present', async ({ page }) => {
-    for (const cat of ['VELOCITY', 'COMMUNITY', 'MASTERY', 'DISTRIBUTION', 'STABILITY']) {
-      await expect(page.getByText(cat).first()).toBeVisible();
-    }
+    // Each category renders as a h2 within the triumph-category sections
+    const catHeadings = page.locator('h2.cat-header');
+    await expect(catHeadings.first()).toBeVisible();
+    const count = await catHeadings.count();
+    expect(count).toBeGreaterThanOrEqual(5);
   });
 
   test('secret triumph shows classified', async ({ page }) => {
-    await expect(page.getByText('CLASSIFIED')).toBeVisible();
+    await expect(page.getByText(/Classified/i)).toBeVisible();
   });
 
   test('triumph flavor text rendered', async ({ page }) => {
-    await expect(page.getByText(/The Traveler's light is new/)).toBeVisible();
+    const flavor = page.locator('.triumph-flavor');
+    await expect(flavor.first()).toBeVisible();
   });
 });

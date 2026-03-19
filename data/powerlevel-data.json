@@ -14,7 +14,8 @@
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
       "super": "THUNDERCRASH",
-      "icon_path": "/icons/weapons/trustee.png"
+      "icon_path": "/icons/weapons/trustee.png",
+      "primary": true
     },
     "cicd-learning": {
       "weapon": "Outbreak Perfected",

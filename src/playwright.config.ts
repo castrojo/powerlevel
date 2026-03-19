@@ -2,7 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 const isCI = !!process.env.CI;
 const PORT = 4322;
-const BASE = '/powerlevel';
+const BASE = '/powerlevel/';
 
 export default defineConfig({
   testDir: './tests',

@@ -3,3 +3,4 @@ src/dist/
 src/.astro/
 *.test.db
 pl
+src/test-results/

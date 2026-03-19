@@ -589,7 +589,8 @@
       "subclass": "arc",
       "super": "THUNDERCRASH",
       "level": 0,
-      "icon_path": "/icons/weapons/trustee.png"
+      "icon_path": "/icons/weapons/trustee.png",
+      "primary": true
     }
   },
   "stats": {
@@ -648,5 +649,5 @@
     "arc",
     "solar"
   ],
-  "exported_at": "2026-03-19T04:16:08Z"
+  "exported_at": "2026-03-19T04:26:49Z"
 }
