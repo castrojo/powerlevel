@@ -2,5 +2,5 @@ src/node_modules/
 src/dist/
 src/.astro/
 *.test.db
-pl
+/pl
 src/test-results/
