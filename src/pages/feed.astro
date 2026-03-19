@@ -1,0 +1,89 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+
+// Handle missing feed.json gracefully
+let feedData: { generated_at: string; entries: any[] } = { generated_at: '', entries: [] };
+try {
+  const raw = await import('../../data/feed.json');
+  feedData = raw.default as { generated_at: string; entries: any[] };
+} catch {
+  // feed.json not yet generated — show empty state
+}
+
+function timeAgo(iso: string): string {
+  if (!iso) return '';
+  const diff = Date.now() - new Date(iso).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return `${days}d ago`;
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function xpColor(xp: number): string {
+  if (xp > 200) return 'var(--d2-exotic)';
+  if (xp > 100) return 'var(--pl-hard)';
+  return 'var(--d2-text-dim)';
+}
+---
+
+<D2Layout title="Activity Feed">
+  <div class="feed-page">
+    <div class="feed-header">
+      <h1>Activity Feed</h1>
+      <p class="page-sub">Recent sessions — last 10 operations logged.</p>
+      {feedData.generated_at && (
+        <p class="export-stamp">Exported: <span class="stamp-val">{feedData.generated_at}</span></p>
+      )}
+    </div>
+
+    {feedData.entries.length === 0 ? (
+      <div class="empty-state">
+        <p>No sessions recorded yet. Run <code>just export-stats</code> to generate feed data.</p>
+      </div>
+    ) : (
+      <ul class="feed-list">
+        {feedData.entries.map((entry) => (
+          <li class="feed-item">
+            <div class="feed-meta">
+              <span class="feed-repo">{entry.repository || 'local'}</span>
+              {entry.branch && <span class="feed-branch">/{entry.branch}</span>}
+              <span class="feed-date">{timeAgo(entry.created_at)}</span>
+              <span class="feed-turns">{entry.turns} turns</span>
+              <span class="feed-xp" style={`color: ${xpColor(entry.xp)}`}>+{entry.xp} XP</span>
+            </div>
+            <p class="feed-summary">{entry.summary || 'Session recorded.'}</p>
+            {entry.prs && entry.prs.length > 0 && (
+              <div class="feed-refs">
+                {entry.prs.map((ref: string) => (
+                  <span class="feed-ref">#{ref}</span>
+                ))}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</D2Layout>
+
+<style>
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); margin-bottom: 0.5rem; }
+.page-sub { color: var(--d2-text-dim); margin-bottom: 0.25rem; }
+.export-stamp { font-size: 0.7rem; color: var(--d2-text-dim); margin-bottom: 2rem; }
+.stamp-val { color: var(--d2-arc); }
+.empty-state { padding: 3rem; text-align: center; color: var(--d2-text-dim); background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; }
+.empty-state code { color: var(--d2-arc); }
+.feed-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.feed-item { background: var(--d2-surface); padding: 1.25rem 1.5rem; border: 1px solid var(--d2-border); border-radius: 4px; transition: background 0.2s; }
+.feed-item:hover { background: var(--d2-surface-2); }
+.feed-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.feed-repo { color: var(--d2-exotic); font-size: 0.8rem; font-weight: 700; }
+.feed-branch { color: var(--d2-text-dim); font-size: 0.75rem; }
+.feed-date { color: var(--d2-text-dim); font-size: 0.75rem; margin-left: auto; }
+.feed-turns { font-size: 0.7rem; color: var(--d2-text-dim); }
+.feed-xp { font-size: 0.75rem; font-weight: 700; }
+.feed-summary { color: var(--d2-text); font-size: 0.9rem; margin: 0 0 0.5rem; line-height: 1.5; }
+.feed-refs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.feed-ref { font-size: 0.7rem; color: var(--d2-arc); background: var(--d2-surface-2); padding: 0.15rem 0.4rem; border-radius: 3px; border: 1px solid var(--d2-border); }
+</style>
