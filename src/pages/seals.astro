@@ -1,0 +1,131 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import sealsData from '../../data/seals.json';
+
+type Seal = {
+  id: string;
+  name: string;
+  title: string;
+  element: string;
+  icon: string;
+  difficulty: string;
+  lore: string;
+  gildable: boolean;
+  gilded_count: number;
+  masterworked: boolean;
+  total_triumphs: number;
+  earned_triumphs: number;
+  earned: boolean;
+  seasonal: boolean;
+  expires_at: string | null;
+};
+
+function progressRing(earned: number, total: number, r = 40) {
+  const circ = 2 * Math.PI * r;
+  const pct = total > 0 ? earned / total : 0;
+  const dash = pct * circ;
+  return { circ, dash, gap: circ - dash };
+}
+
+const elemColors: Record<string, string> = {
+  arc: '#79c8e2', solar: '#f4934f', void: '#b47be0',
+  strand: '#49de8b', stasis: '#4d9bd6', cross: '#ceae33',
+};
+
+const seals = sealsData.seals as Seal[];
+---
+
+<D2Layout title="Seals">
+  <div class="seals-page">
+    <div class="seals-header">
+      <h1>Seals &amp; Titles</h1>
+      {sealsData.equipped_title && (
+        <div class="equipped-title">Equipped: <span class="title-name">{sealsData.equipped_title}</span></div>
+      )}
+    </div>
+
+    <div class="seals-grid">
+      {seals.map(seal => {
+        const { dash, gap } = progressRing(seal.earned_triumphs, seal.total_triumphs);
+        const color = elemColors[seal.element] ?? elemColors.cross;
+        const pct = seal.total_triumphs > 0
+          ? Math.round(seal.earned_triumphs / seal.total_triumphs * 100)
+          : 0;
+        const circ = 2 * Math.PI * 40;
+        return (
+          <div
+            class={`seal-card${seal.earned ? ' earned' : ''}${seal.masterworked ? ' masterwork-glow' : ''}`}
+            style={`border-color: ${color}33`}
+          >
+            <div class="seal-ring">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--d2-border)" stroke-width="6"/>
+                <circle
+                  cx="50" cy="50" r="40"
+                  fill="none"
+                  stroke={color}
+                  stroke-width="6"
+                  stroke-dasharray={`${dash} ${gap}`}
+                  stroke-linecap="round"
+                  transform="rotate(-90 50 50)"
+                  style="transition: stroke-dasharray 1s ease"
+                />
+                <text x="50" y="55" text-anchor="middle" fill={color} font-size="18" font-family="Georgia">{pct}%</text>
+              </svg>
+            </div>
+            <div class="seal-body">
+              <div class="seal-icon">{seal.icon}</div>
+              <h2 class="seal-name" style={`color: ${color}`}>{seal.name}</h2>
+              <div class="seal-title">
+                {seal.gilded_count > 0
+                  ? <span class="gilded-title" style={`color: ${color}`}>✦ {seal.title} ×{seal.gilded_count}</span>
+                  : <span class="base-title">{seal.title}</span>
+                }
+              </div>
+              <div class="seal-progress">{seal.earned_triumphs} / {seal.total_triumphs} triumphs</div>
+              <div class="seal-diff">{seal.difficulty}</div>
+              <p class="seal-lore">"{seal.lore}"</p>
+              {seal.seasonal && seal.expires_at && (
+                <div class="seal-expiry">Expires: {seal.expires_at}</div>
+              )}
+              {seal.earned && (
+                <div class="seal-earned-badge">SEAL EARNED</div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</D2Layout>
+
+<style>
+.seals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); }
+.equipped-title { color: var(--d2-text-dim); font-size: 0.875rem; }
+.title-name { color: var(--d2-exotic); font-family: var(--font-lore); }
+.seals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.seal-card {
+  background: var(--d2-surface);
+  border: 1px solid var(--d2-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+.seal-card:hover { background: var(--d2-surface-2); }
+.seal-card.earned { background: var(--d2-surface-2); }
+.seal-ring { flex-shrink: 0; }
+.seal-body { flex: 1; }
+.seal-icon { font-size: 1.25rem; margin-bottom: 0.25rem; }
+.seal-name { font-family: var(--font-lore); font-size: 1rem; margin-bottom: 0.25rem; }
+.seal-title { margin-bottom: 0.25rem; }
+.gilded-title { font-weight: 700; }
+.base-title { color: var(--d2-text-dim); font-size: 0.875rem; }
+.seal-progress { font-size: 0.75rem; color: var(--d2-text-dim); margin-bottom: 0.25rem; }
+.seal-diff { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--d2-text-dim); margin-bottom: 0.75rem; }
+.seal-lore { font-size: 0.75rem; font-style: italic; font-family: var(--font-lore); color: var(--d2-text-dim); line-height: 1.4; }
+.seal-expiry { font-size: 0.7rem; color: var(--d2-solar); margin-top: 0.5rem; }
+.seal-earned-badge { font-size: 0.7rem; color: var(--d2-strand); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.5rem; }
+</style>

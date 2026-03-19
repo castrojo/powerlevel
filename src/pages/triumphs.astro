@@ -1,0 +1,116 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import triumphs from '../../data/triumphs.json';
+import plData from '../data/powerlevel.json';
+
+const { stats } = plData;
+type StatBlock = { raw: number };
+const statsMap = stats as Record<string, StatBlock>;
+
+function checkStatReq(req: { stat: string; value: number } | null): boolean {
+  if (!req) return true;
+  return (statsMap[req.stat]?.raw ?? 0) >= req.value;
+}
+
+let totalPts = 0;
+let earnedPts = 0;
+for (const cat of triumphs.categories) {
+  for (const t of cat.triumphs) {
+    totalPts += t.points;
+    if (t.earned) earnedPts += t.points;
+  }
+}
+---
+
+<D2Layout title="Triumphs">
+  <div class="triumphs-page">
+    <div class="triumphs-header">
+      <h1>Triumphs</h1>
+      <div class="triumph-score">
+        <span class="score-earned">{earnedPts}</span>
+        <span class="score-sep"> / </span>
+        <span class="score-total">{totalPts}</span>
+        <span class="score-label"> points</span>
+      </div>
+    </div>
+
+    {triumphs.categories.map(cat => (
+      <section class={`triumph-category ${cat.element}`}>
+        <h2 class="cat-header">
+          <span class="cat-icon">{cat.icon}</span>
+          {cat.name}
+        </h2>
+        <div class="triumph-list">
+          {cat.triumphs.map(t => {
+            const statReq = t.stat_requirement as { stat: string; value: number } | null;
+            const statMet = checkStatReq(statReq);
+            const showSecret = t.secret && !t.earned;
+            return (
+              <div class={`triumph-row${t.earned ? ' earned' : ''}${showSecret ? ' secret' : ''}`}>
+                <div class="triumph-icon">{t.earned ? '✓' : showSecret ? '?' : '○'}</div>
+                <div class="triumph-body">
+                  <div class="triumph-name">{showSecret ? 'CLASSIFIED' : t.name}</div>
+                  <div class="triumph-desc">{showSecret ? 'Complete this triumph to reveal its secret.' : t.description}</div>
+                  {!showSecret && t.flavor && <div class="triumph-flavor">"{t.flavor}"</div>}
+                  {statReq && !statMet && (
+                    <div class="triumph-req">Requires {statReq.stat.toUpperCase()} ≥ {statReq.value}</div>
+                  )}
+                </div>
+                <div class="triumph-pts">{t.points}pts</div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+  </div>
+</D2Layout>
+
+<style>
+.triumphs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); }
+.triumph-score { font-size: 1.25rem; color: var(--d2-text-dim); }
+.score-earned { color: var(--d2-exotic); font-family: var(--font-lore); }
+.triumph-category { margin-bottom: 2.5rem; }
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-lore);
+  font-size: 1.25rem;
+  color: var(--d2-text-bright);
+  padding: 0.75rem 1rem;
+  background: var(--d2-surface);
+  border: 1px solid var(--d2-border);
+  border-radius: 4px 4px 0 0;
+  margin-bottom: 0;
+}
+.triumph-category.arc    .cat-header { border-left: 3px solid var(--d2-arc); }
+.triumph-category.solar  .cat-header { border-left: 3px solid var(--d2-solar); }
+.triumph-category.void   .cat-header { border-left: 3px solid var(--d2-void); }
+.triumph-category.strand .cat-header { border-left: 3px solid var(--d2-strand); }
+.triumph-category.stasis .cat-header { border-left: 3px solid var(--d2-stasis); }
+.triumph-category.cross  .cat-header { border-left: 3px solid var(--d2-exotic); }
+.triumph-list { border: 1px solid var(--d2-border); border-top: none; border-radius: 0 0 4px 4px; overflow: hidden; }
+.triumph-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem;
+  border-bottom: 1px solid var(--d2-border-dim);
+  background: var(--d2-surface);
+  transition: background 0.2s;
+}
+.triumph-row:last-child { border-bottom: none; }
+.triumph-row:hover { background: var(--d2-surface-2); }
+.triumph-row.earned { opacity: 0.7; }
+.triumph-row.earned .triumph-icon { color: var(--d2-strand); }
+.triumph-row.secret { opacity: 0.5; }
+.triumph-icon { font-size: 1.25rem; color: var(--d2-text-dim); text-align: center; padding-top: 0.125rem; }
+.triumph-name { font-weight: 700; color: var(--d2-text-bright); margin-bottom: 0.25rem; font-size: 0.9rem; }
+.triumph-desc { font-size: 0.8rem; color: var(--d2-text-dim); margin-bottom: 0.25rem; }
+.triumph-flavor { font-size: 0.75rem; font-style: italic; font-family: var(--font-lore); color: var(--d2-text-dim); }
+.triumph-req { font-size: 0.7rem; color: var(--d2-solar); margin-top: 0.25rem; }
+.triumph-pts { font-size: 0.875rem; color: var(--d2-exotic); white-space: nowrap; }
+</style>

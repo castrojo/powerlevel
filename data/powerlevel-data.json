@@ -1,0 +1,625 @@
+{
+  "season": {
+    "name": "Season of the Powerlevel",
+    "project": "castrojo/powerlevel",
+    "quarter": "Q1 2026",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark."
+  },
+  "weapons": {
+    "workflow": {
+      "weapon": "Trustee",
+      "element": "arc",
+      "level": 0,
+      "aspect": "KNOCKOUT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "icon_path": "/icons/weapons/trustee.png"
+    },
+    "cicd-learning": {
+      "weapon": "Outbreak Perfected",
+      "element": "arc",
+      "level": 0,
+      "aspect": "KNOCKOUT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "icon_path": "/icons/weapons/outbreak-perfected.png"
+    },
+    "github": {
+      "weapon": "The Chaperone",
+      "element": "arc",
+      "level": 0,
+      "aspect": "JUGGERNAUT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "arc",
+      "super": "FISTS OF HAVOC",
+      "icon_path": "/icons/weapons/the-chaperone.png"
+    },
+    "bluefin-ci": {
+      "weapon": "The Lament",
+      "element": "void",
+      "level": 0,
+      "aspect": "JUGGERNAUT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "icon_path": "/icons/weapons/the-lament.png"
+    },
+    "github-actions-expert": {
+      "weapon": "Hothead",
+      "element": "arc",
+      "level": 0,
+      "aspect": "JUGGERNAUT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "arc",
+      "super": "JUGGERNAUT",
+      "icon_path": "/icons/weapons/hothead.png"
+    },
+    "knowledge": {
+      "weapon": "Gjallarhorn",
+      "element": "solar",
+      "level": 0,
+      "aspect": "SOL INVICTUS",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "HAMMER OF SOL",
+      "icon_path": "/icons/weapons/gjallarhorn.png"
+    },
+    "find-skills": {
+      "weapon": "Ager's Scepter",
+      "element": "void",
+      "level": 0,
+      "aspect": "SOL INVICTUS",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "icon_path": "/icons/weapons/agers-scepter.png"
+    },
+    "cncf-community": {
+      "weapon": "Two-Tailed Fox",
+      "element": "solar",
+      "level": 0,
+      "aspect": "ROARING FLAMES",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "ROARING FLAMES",
+      "icon_path": "/icons/weapons/two-tailed-fox.png"
+    },
+    "bluefin-docs": {
+      "weapon": "Trinity Ghoul",
+      "element": "solar",
+      "level": 0,
+      "aspect": "ROARING FLAMES",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "icon_path": "/icons/weapons/trinity-ghoul.png"
+    },
+    "flatpak-appstream": {
+      "weapon": "Jotunn",
+      "element": "solar",
+      "level": 0,
+      "aspect": "ROARING FLAMES",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "ROARING FLAMES",
+      "icon_path": "/icons/weapons/jotunn.png"
+    },
+    "second-opinion": {
+      "weapon": "Dead Man's Tale",
+      "element": "solar",
+      "level": 0,
+      "aspect": "BASTION",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "HAMMER OF SOL",
+      "icon_path": "/icons/weapons/dead-mans-tale.png"
+    },
+    "se-security-reviewer": {
+      "weapon": "Leviathan's Breath",
+      "element": "void",
+      "level": 0,
+      "aspect": "BASTION",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "BASTION",
+      "icon_path": "/icons/weapons/leviathans-breath.png"
+    },
+    "doublecheck": {
+      "weapon": "Eriana's Vow",
+      "element": "void",
+      "level": 0,
+      "aspect": "BASTION",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "BASTION",
+      "icon_path": "/icons/weapons/erianas-vow.png"
+    },
+    "tdd-red": {
+      "weapon": "Izanagi's Burden",
+      "element": "void",
+      "level": 0,
+      "aspect": "OFFENSIVE BULWARK",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "OFFENSIVE BULWARK",
+      "icon_path": "/icons/weapons/izanagis-burden.png"
+    },
+    "tdd-green": {
+      "weapon": "MIDA Multi-Tool",
+      "element": "void",
+      "level": 0,
+      "aspect": "OFFENSIVE BULWARK",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "OFFENSIVE BULWARK",
+      "icon_path": "/icons/weapons/mida-multi-tool.png"
+    },
+    "tdd-refactor": {
+      "weapon": "Vex Mythoclast",
+      "element": "void",
+      "level": 0,
+      "aspect": "OFFENSIVE BULWARK",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "OFFENSIVE BULWARK",
+      "icon_path": "/icons/weapons/vex-mythoclast.png"
+    },
+    "qa": {
+      "weapon": "Riskrunner",
+      "element": "void",
+      "level": 0,
+      "aspect": "OFFENSIVE BULWARK",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "OFFENSIVE BULWARK",
+      "icon_path": "/icons/weapons/riskrunner.png"
+    },
+    "oci-images": {
+      "weapon": "Divinity",
+      "element": "void",
+      "level": 0,
+      "aspect": "BASTION",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "void",
+      "super": "BASTION",
+      "icon_path": "/icons/weapons/divinity.png"
+    },
+    "cncf-dev": {
+      "weapon": "Sleeper Simulant",
+      "element": "solar",
+      "level": 0,
+      "aspect": "DRENGR'S LASH",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "icon_path": "/icons/weapons/sleeper-simulant.png"
+    },
+    "blueprint-mode": {
+      "weapon": "Symmetry",
+      "element": "strand",
+      "level": 0,
+      "aspect": "DRENGR'S LASH",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "DRENGR'S LASH",
+      "icon_path": "/icons/weapons/symmetry.png"
+    },
+    "principal-software-engineer": {
+      "weapon": "Edge Transit",
+      "element": "strand",
+      "level": 0,
+      "aspect": "DRENGR'S LASH",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "DRENGR'S LASH",
+      "icon_path": "/icons/weapons/edge-transit.png"
+    },
+    "homebrew-tap": {
+      "weapon": "Graviton Lance",
+      "element": "strand",
+      "level": 0,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "INTO THE FRAY",
+      "icon_path": "/icons/weapons/graviton-lance.png"
+    },
+    "dakota-buildstream": {
+      "weapon": "Anarchy",
+      "element": "strand",
+      "level": 0,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "INTO THE FRAY",
+      "icon_path": "/icons/weapons/anarchy.png"
+    },
+    "bluefin-packages": {
+      "weapon": "Fighting Lion",
+      "element": "strand",
+      "level": 0,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "INTO THE FRAY",
+      "icon_path": "/icons/weapons/fighting-lion.png"
+    },
+    "swe-subagent": {
+      "weapon": "Monte Carlo",
+      "element": "strand",
+      "level": 0,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "strand",
+      "super": "INTO THE FRAY",
+      "icon_path": "/icons/weapons/monte-carlo.png"
+    },
+    "bluefin-build": {
+      "weapon": "Ace of Spades",
+      "element": "stasis",
+      "level": 0,
+      "aspect": "HOWL OF THE STORM",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "stasis",
+      "super": "HOWL OF THE STORM",
+      "icon_path": "/icons/weapons/ace-of-spades.png"
+    },
+    "linux-desktop": {
+      "weapon": "Xenophage",
+      "element": "stasis",
+      "level": 0,
+      "aspect": "DIAMOND LANCE",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "stasis",
+      "super": "DIAMOND LANCE",
+      "icon_path": "/icons/weapons/xenophage.png"
+    },
+    "bluefin-lts": {
+      "weapon": "The Fourth Horseman",
+      "element": "stasis",
+      "level": 0,
+      "aspect": "DIAMOND LANCE",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "stasis",
+      "super": "DIAMOND LANCE",
+      "icon_path": "/icons/weapons/the-fourth-horseman.png"
+    },
+    "bluefin-release": {
+      "weapon": "Hawkmoon",
+      "element": "stasis",
+      "level": 0,
+      "aspect": "DIAMOND LANCE",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "stasis",
+      "super": "DIAMOND LANCE",
+      "icon_path": "/icons/weapons/hawkmoon.png"
+    },
+    "bluefin-variants": {
+      "weapon": "Sunshot",
+      "element": "stasis",
+      "level": 0,
+      "aspect": "HOWL OF THE STORM",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "stasis",
+      "super": "HOWL OF THE STORM",
+      "icon_path": "/icons/weapons/sunshot.png"
+    },
+    "autoresearch": {
+      "weapon": "Vigilance Wing",
+      "weapon_type": "Exotic Pulse Rifle",
+      "element": "arc",
+      "subclass": "arc",
+      "super": "FISTS OF HAVOC",
+      "level": 0,
+      "icon_path": "/icons/weapons/vigilance-wing.png"
+    },
+    "homebrew-taps": {
+      "weapon": "The Wardcliff Coil",
+      "weapon_type": "Exotic Rocket Launcher",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/the-wardcliff-coil.png"
+    },
+    "homebrew-tap-casks": {
+      "weapon": "Sleeper Simulant",
+      "weapon_type": "Exotic Linear Fusion",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/sleeper-simulant.png"
+    },
+    "homebrew-tap-formulas": {
+      "weapon": "Witherhoard",
+      "weapon_type": "Exotic Grenade Launcher",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/witherhoard.png"
+    },
+    "homebrew-packaging": {
+      "weapon": "Lorentz Driver",
+      "weapon_type": "Exotic Linear Fusion",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/lorentz-driver.png"
+    },
+    "homebrew-stats": {
+      "weapon": "Tractor Cannon",
+      "weapon_type": "Exotic Shotgun",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/tractor-cannon.png"
+    },
+    "bluefin-renovate": {
+      "weapon": "Wavesplitter",
+      "weapon_type": "Exotic Trace Rifle",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/wavesplitter.png"
+    },
+    "podman": {
+      "weapon": "Prometheus Lens",
+      "weapon_type": "Exotic Trace Rifle",
+      "element": "strand",
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "level": 0,
+      "icon_path": "/icons/weapons/prometheus-lens.png"
+    },
+    "skill-improver": {
+      "weapon": "Wish-Ender",
+      "weapon_type": "Exotic Bow",
+      "element": "void",
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "level": 0,
+      "icon_path": "/icons/weapons/wish-ender.png"
+    },
+    "cncf-gaps": {
+      "weapon": "Thorn",
+      "weapon_type": "Exotic Hand Cannon",
+      "element": "void",
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "level": 0,
+      "icon_path": "/icons/weapons/thorn.png"
+    },
+    "cncf-testing": {
+      "weapon": "Vex Mythoclast",
+      "weapon_type": "Exotic Fusion Rifle",
+      "element": "void",
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "level": 0,
+      "icon_path": "/icons/weapons/vex-mythoclast.png"
+    },
+    "firehose": {
+      "weapon": "Forerunner",
+      "weapon_type": "Exotic Sidearm",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "HAMMER OF SOL",
+      "level": 0,
+      "icon_path": "/icons/weapons/forerunner.png"
+    },
+    "people-website": {
+      "weapon": "Graviton Lance",
+      "weapon_type": "Exotic Pulse Rifle",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/graviton-lance.png"
+    },
+    "endusers-website": {
+      "weapon": "The Colony",
+      "weapon_type": "Exotic Grenade Launcher",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/the-colony.png"
+    },
+    "cncf-heroes": {
+      "weapon": "Polaris Lance",
+      "weapon_type": "Exotic Scout Rifle",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/polaris-lance.png"
+    },
+    "cncf-layout": {
+      "weapon": "Sunshot",
+      "weapon_type": "Exotic Hand Cannon",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/sunshot.png"
+    },
+    "cncf-data": {
+      "weapon": "Whisper of the Worm",
+      "weapon_type": "Exotic Sniper Rifle",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/whisper-of-the-worm.png"
+    },
+    "cncf-gobackend": {
+      "weapon": "Coldheart",
+      "weapon_type": "Exotic Trace Rifle",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/coldheart.png"
+    },
+    "trilogy-dev": {
+      "weapon": "Ace of Spades",
+      "weapon_type": "Exotic Hand Cannon",
+      "element": "solar",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "level": 0,
+      "icon_path": "/icons/weapons/ace-of-spades.png"
+    },
+    "bluefin-iso": {
+      "weapon": "Truth",
+      "weapon_type": "Exotic Rocket Launcher",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/truth.png"
+    },
+    "dakota-add-package": {
+      "weapon": "Ager's Scepter",
+      "weapon_type": "Exotic Trace Rifle",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/agers-scepter.png"
+    },
+    "dakota-bst-overrides": {
+      "weapon": "Stasis Grenade",
+      "weapon_type": "Legendary Grenade",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/stasis-grenade.png"
+    },
+    "dakota-ci": {
+      "weapon": "Leviathan's Breath",
+      "weapon_type": "Exotic Bow",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/leviatans-breath.png"
+    },
+    "dakota-debugging": {
+      "weapon": "Izanagi's Burden",
+      "weapon_type": "Exotic Sniper Rifle",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/izanagis-burden.png"
+    },
+    "dakota-local-ota": {
+      "weapon": "Cloudstrike",
+      "weapon_type": "Exotic Sniper Rifle",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/cloudstrike.png"
+    },
+    "dakota-oci-layers": {
+      "weapon": "Stormchaser",
+      "weapon_type": "Legendary Linear Fusion",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/stormchaser.png"
+    },
+    "dakota-overview": {
+      "weapon": "Cold Front",
+      "weapon_type": "Legendary SMG",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/cold-front.png"
+    },
+    "dakota-package-binaries": {
+      "weapon": "Dead Messenger",
+      "weapon_type": "Exotic Grenade Launcher",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/dead-messenger.png"
+    },
+    "dakota-package-gnome-extensions": {
+      "weapon": "Wicked Implement",
+      "weapon_type": "Exotic Scout Rifle",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/wicked-implement.png"
+    },
+    "dakota-package-go": {
+      "weapon": "Verglas Curve",
+      "weapon_type": "Exotic Bow",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/verglas-curve.png"
+    },
+    "dakota-package-rust": {
+      "weapon": "The Fourth Horseman",
+      "weapon_type": "Exotic Shotgun",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/the-fourth-horseman.png"
+    },
+    "dakota-package-zig": {
+      "weapon": "Revision Zero",
+      "weapon_type": "Exotic Pulse Rifle",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/revision-zero.png"
+    },
+    "dakota-patch-junctions": {
+      "weapon": "Final Warning",
+      "weapon_type": "Exotic Sidearm",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/final-warning.png"
+    },
+    "dakota-remove-package": {
+      "weapon": "Osteo Striga",
+      "weapon_type": "Exotic SMG",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/osteo-striga.png"
+    },
+    "dakota-update-refs": {
+      "weapon": "Cryosthesia 77K",
+      "weapon_type": "Exotic Sidearm",
+      "element": "stasis",
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "level": 0,
+      "icon_path": "/icons/weapons/cryosthesia-77k.png"
+    }
+  }
+}

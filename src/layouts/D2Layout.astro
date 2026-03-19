@@ -1,0 +1,79 @@
+---
+import '../styles/d2.css';
+const { title = 'Powerlevel', description = 'castrojo Copilot stats' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title} · Powerlevel</title>
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+</head>
+<body>
+  <nav class="d2-nav">
+    <a href={base} class="nav-brand">🔆 @castrojo</a>
+    <div class="nav-links">
+      <a href={`${base}arsenal`}>Arsenal</a>
+      <a href={`${base}triumphs`}>Triumphs</a>
+      <a href={`${base}seals`}>Seals</a>
+      <a href={`${base}stats`}>Stats</a>
+    </div>
+  </nav>
+  <main>
+    <slot />
+  </main>
+  <footer class="d2-footer">
+    <p>Fan site. Destiny artwork © Bungie, Inc. Used in accordance with Bungie's Community Content Policy. Not affiliated with or endorsed by Bungie.</p>
+    <p>Powered by GitHub Copilot · <a href="https://github.com/castrojo/powerlevel">source</a></p>
+  </footer>
+</body>
+</html>
+
+<style>
+.d2-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--d2-surface);
+  border-bottom: 1px solid var(--d2-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-brand {
+  font-family: var(--font-lore);
+  font-size: 1.25rem;
+  color: var(--d2-exotic);
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+.nav-links a {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--d2-text-dim);
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--d2-text-bright); }
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.d2-footer {
+  border-top: 1px solid var(--d2-border);
+  padding: 1rem 2rem;
+  text-align: center;
+  color: var(--d2-text-dim);
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+</style>

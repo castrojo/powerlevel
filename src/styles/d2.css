@@ -1,0 +1,144 @@
+/* d2.css — Destiny 2 design tokens for castrojo/powerlevel */
+
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Roboto+Condensed:wght@300;400;700&display=swap');
+
+:root {
+  /* Background */
+  --d2-bg:          #0a0a0f;
+  --d2-surface:     #13131a;
+  --d2-surface-2:   #1a1a24;
+  --d2-border:      #2a2a3a;
+  --d2-border-dim:  #1a1a28;
+
+  /* Text */
+  --d2-text:        #c8c8d0;
+  --d2-text-dim:    #666680;
+  --d2-text-bright: #e8e8f0;
+
+  /* Subclass elements */
+  --d2-arc:         #79c8e2;
+  --d2-solar:       #f4934f;
+  --d2-void:        #b47be0;
+  --d2-strand:      #49de8b;
+  --d2-stasis:      #4d9bd6;
+
+  /* Rarity / level */
+  --d2-common:      #c8c8c8;
+  --d2-uncommon:    #4d8f4d;
+  --d2-rare:        #4d6dbf;
+  --d2-legendary:   #6f3d8f;
+  --d2-exotic:      #ceae33;
+  --d2-masterwork:  #f5c518;
+
+  /* PL tiers */
+  --pl-newlight:    #cc4444;
+  --pl-soft:        #c8a020;
+  --pl-hard:        #49de8b;
+  --pl-pinnacle:    #ceae33;
+
+  /* Fonts */
+  --font-lore:      'IM Fell English', Georgia, serif;
+  --font-ui:        'Roboto Condensed', system-ui, sans-serif;
+
+  /* Spacing */
+  --gap-sm: 0.5rem;
+  --gap-md: 1rem;
+  --gap-lg: 2rem;
+
+  /* Transitions */
+  --trans: 0.2s ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--d2-bg);
+  color: var(--d2-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+body { min-height: 100vh; }
+
+a { color: var(--d2-arc); text-decoration: none; transition: color var(--trans); }
+a:hover { color: var(--d2-text-bright); }
+
+h1, h2, h3 { font-family: var(--font-lore); font-weight: 400; letter-spacing: 0.05em; }
+
+/* ── Element color utilities ── */
+.arc    { color: var(--d2-arc); }
+.solar  { color: var(--d2-solar); }
+.void   { color: var(--d2-void); }
+.strand { color: var(--d2-strand); }
+.stasis { color: var(--d2-stasis); }
+.exotic { color: var(--d2-exotic); }
+
+/* ── Level bar ── */
+.level-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--d2-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.level-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+.level-bar-fill.masterwork {
+  background: var(--d2-masterwork);
+  box-shadow: 0 0 6px var(--d2-masterwork);
+}
+
+/* ── Stat bar ── */
+.stat-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.stat-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--d2-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  background: var(--d2-text-dim);
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+/* ── Card surface ── */
+.card {
+  background: var(--d2-surface);
+  border: 1px solid var(--d2-border);
+  border-radius: 4px;
+  padding: var(--gap-md);
+}
+
+/* ── Separator ── */
+.sep {
+  border: none;
+  border-top: 1px solid var(--d2-border);
+  margin: var(--gap-md) 0;
+}
+
+/* ── Masterwork glow ── */
+@keyframes masterwork-shimmer {
+  0%, 100% { box-shadow: 0 0 8px var(--d2-masterwork); }
+  50%       { box-shadow: 0 0 20px var(--d2-masterwork), 0 0 40px var(--d2-exotic); }
+}
+.masterwork-glow {
+  animation: masterwork-shimmer 2s ease-in-out infinite;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root { font-size: 14px; }
+}

@@ -1,0 +1,132 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import plData from '../data/powerlevel.json';
+
+const { weapons } = plData;
+
+function levelTier(level: number): string {
+  const tiers = ['Unequipped','New Light','Brave','Seasoned','Hardened','Battle-Tested','Veteran','Forged','Unbroken','Ascendant','Gilded','Mastercrafted ★'];
+  if (level === 0) return tiers[0];
+  if (level === 100) return tiers[11];
+  return tiers[Math.floor(level / 10) + 1] ?? tiers[1];
+}
+
+function levelColor(level: number): string {
+  if (level === 100) return 'var(--d2-masterwork)';
+  if (level >= 67) return 'var(--pl-hard)';
+  if (level >= 34) return 'var(--pl-soft)';
+  return 'var(--d2-text-dim)';
+}
+
+const subclasses = [
+  { element: 'arc',    icon: '⚡', name: 'VELOCITY',     super: 'Thundercrash / Fists of Havoc' },
+  { element: 'solar',  icon: '🔥', name: 'COMMUNITY',    super: 'Hammer of Sol / Burning Maul' },
+  { element: 'void',   icon: '🟣', name: 'MASTERY',      super: 'Sentinel Shield / Ward of Dawn' },
+  { element: 'strand', icon: '🟢', name: 'DISTRIBUTION', super: 'Bladefury' },
+  { element: 'stasis', icon: '🔵', name: 'STABILITY',    super: 'Glacial Quake' },
+];
+
+type WeaponEntry = { weapon: string; weapon_type: string; element: string; level: number; primary?: boolean };
+const weaponEntries = Object.entries(weapons) as [string, WeaponEntry][];
+---
+
+<D2Layout title="Arsenal">
+  <div class="arsenal">
+    <h1>Arsenal</h1>
+    <p class="page-sub">Every skill is a weapon. Every weapon has a level.</p>
+
+    {subclasses.map(sc => {
+      const scWeapons = weaponEntries.filter(([, w]) => w.element === sc.element);
+      const avg = scWeapons.length
+        ? Math.round(scWeapons.reduce((s, [, w]) => s + w.level, 0) / scWeapons.length)
+        : 0;
+      return (
+        <section class={`subclass-section ${sc.element}`}>
+          <div class="subclass-header">
+            <span class="subclass-icon">{sc.icon}</span>
+            <div>
+              <h2 class="subclass-name">{sc.name}</h2>
+              <p class="subclass-super">{sc.super}</p>
+            </div>
+            <div class="subclass-avg">
+              <span class="avg-num">{avg}</span>
+              <span class="avg-label">avg</span>
+            </div>
+          </div>
+          <div class="weapon-grid">
+            {scWeapons.map(([id, w]) => (
+              <div class={`weapon-card${w.level === 100 ? ' masterwork-glow' : ''}`}>
+                <div class="weapon-header">
+                  <div>
+                    <div class="weapon-name">{w.weapon}</div>
+                    <div class="weapon-type">{w.weapon_type}</div>
+                  </div>
+                  {w.primary && <span class="primary-badge">★ PRIMARY</span>}
+                </div>
+                <div class="skill-id">{id}</div>
+                <div class="level-bar">
+                  <div class="level-bar-fill" style={`width: ${w.level}%; background: ${levelColor(w.level)}`}></div>
+                </div>
+                <div class="weapon-footer">
+                  <span class="tier-name" style={`color: ${levelColor(w.level)}`}>{levelTier(w.level)}</span>
+                  <span class="level-num">Lv. {w.level}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</D2Layout>
+
+<style>
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); margin-bottom: 0.5rem; }
+.page-sub { color: var(--d2-text-dim); margin-bottom: 2rem; }
+.subclass-section { margin-bottom: 3rem; }
+.subclass-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--d2-surface);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid var(--d2-border);
+  border-bottom: none;
+}
+.subclass-section.arc    .subclass-header { border-left: 3px solid var(--d2-arc); }
+.subclass-section.solar  .subclass-header { border-left: 3px solid var(--d2-solar); }
+.subclass-section.void   .subclass-header { border-left: 3px solid var(--d2-void); }
+.subclass-section.strand .subclass-header { border-left: 3px solid var(--d2-strand); }
+.subclass-section.stasis .subclass-header { border-left: 3px solid var(--d2-stasis); }
+.subclass-icon { font-size: 2rem; }
+.subclass-name { font-family: var(--font-lore); font-size: 1.25rem; color: var(--d2-text-bright); }
+.subclass-super { font-size: 0.75rem; color: var(--d2-text-dim); }
+.subclass-avg { margin-left: auto; text-align: right; }
+.avg-num { font-size: 1.5rem; color: var(--d2-text-bright); font-family: var(--font-lore); }
+.avg-label { display: block; font-size: 0.7rem; color: var(--d2-text-dim); text-transform: uppercase; }
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--d2-border);
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+.weapon-card {
+  background: var(--d2-surface);
+  padding: 1rem;
+  transition: background 0.2s;
+}
+.weapon-card:hover { background: var(--d2-surface-2); }
+.weapon-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+.weapon-name { font-size: 0.9rem; color: var(--d2-text-bright); font-weight: 700; }
+.weapon-type { font-size: 0.7rem; color: var(--d2-text-dim); }
+.primary-badge { font-size: 0.65rem; color: var(--d2-exotic); white-space: nowrap; }
+.skill-id { font-size: 0.65rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+.level-bar { height: 3px; background: var(--d2-border); border-radius: 2px; margin-bottom: 0.5rem; }
+.level-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+.weapon-footer { display: flex; justify-content: space-between; align-items: center; }
+.tier-name { font-size: 0.7rem; }
+.level-num { font-size: 0.7rem; color: var(--d2-text-dim); }
+</style>

@@ -1,0 +1,150 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import plData from '../data/powerlevel.json';
+
+const { stats, power_level, rank, exported_at } = plData;
+
+const statList = [
+  { key: 'recall',    label: 'RECALL',    d2: 'Mobility',    desc: 'How deep your knowledge base runs',            icon: '🧠' },
+  { key: 'endurance', label: 'ENDURANCE', d2: 'Resilience',  desc: 'Sustained presence across sessions',           icon: '🛡️' },
+  { key: 'synthesis', label: 'SYNTHESIS', d2: 'Recovery',    desc: 'Knowledge entries compounded over time',       icon: '📖' },
+  { key: 'breadth',   label: 'BREADTH',   d2: 'Discipline',  desc: 'Cross-domain reach across repos',              icon: '🗺️' },
+  { key: 'foresight', label: 'FORESIGHT', d2: 'Intellect',   desc: 'Methodical state capture via checkpoints',     icon: '🔭' },
+  { key: 'output',    label: 'OUTPUT',    d2: 'Strength',    desc: 'Work made real — commits and PRs shipped',     icon: '⚡' },
+] as const;
+
+type StatKey = typeof statList[number]['key'];
+type StatBlock = { score: number; label: string; raw: number; soft_cap: number; pinnacle: number };
+const statsMap = stats as Record<StatKey, StatBlock>;
+
+function statColor(score: number): string {
+  if (score >= 80) return 'var(--d2-exotic)';
+  if (score >= 60) return 'var(--pl-hard)';
+  if (score >= 40) return 'var(--d2-arc)';
+  if (score >= 20) return 'var(--pl-soft)';
+  return 'var(--d2-text-dim)';
+}
+
+const exportedDate = new Date(exported_at).toLocaleString();
+---
+
+<D2Layout title="Stats">
+  <div class="stats-page">
+    <div class="stats-header">
+      <div>
+        <h1>Character Stats</h1>
+        <p class="page-sub">Memory metrics — auto-computed from session history. Updated daily.</p>
+      </div>
+      <div class="pl-summary">
+        <div class="pl-big">◆ {power_level}</div>
+        <div class="pl-rank">{rank}</div>
+      </div>
+    </div>
+
+    <div class="stat-cards">
+      {statList.map(({ key, label, d2, desc, icon }) => {
+        const s = statsMap[key];
+        const color = statColor(s.score);
+        return (
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-icon">{icon}</span>
+              <div>
+                <div class="stat-label">{label}</div>
+                <div class="stat-d2">≈ D2 {d2}</div>
+              </div>
+              <div class="stat-score-big" style={`color: ${color}`}>{s.score}</div>
+            </div>
+            <div class="stat-track">
+              <div class="stat-fill" style={`width: ${s.score}%; background: ${color}`}></div>
+              <div class="soft-cap-marker" style="left: 67%" title="Soft cap"></div>
+            </div>
+            <div class="stat-meta">
+              <span class="stat-raw-val">{s.label}</span>
+              <span class="stat-caps">Soft {s.soft_cap} · Pinnacle {s.pinnacle}</span>
+            </div>
+            <p class="stat-desc">{desc}</p>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="stat-milestones">
+      <h2>Milestones</h2>
+      <div class="milestones-grid">
+        <div class={`milestone${statsMap.synthesis.raw >= 1 ? ' reached' : ''}`}>
+          <div class="milestone-icon">📖</div>
+          <div class="milestone-name">The Chronicle Begins</div>
+          <div class="milestone-req">SYNTHESIS ≥ 1</div>
+          <div class="milestone-flavor">"The knowledge base has weight now."</div>
+        </div>
+        <div class={`milestone${statsMap.output.raw >= 10 ? ' reached' : ''}`}>
+          <div class="milestone-icon">⚡</div>
+          <div class="milestone-name">Ten Things Made Real</div>
+          <div class="milestone-req">OUTPUT ≥ 10</div>
+          <div class="milestone-flavor">"A Guardian who ships."</div>
+        </div>
+        <div class={`milestone${statsMap.endurance.raw >= 50 ? ' reached' : ''}`}>
+          <div class="milestone-icon">🛡️</div>
+          <div class="milestone-name">Fifty Lights</div>
+          <div class="milestone-req">ENDURANCE ≥ 50</div>
+          <div class="milestone-flavor">"Fifty sessions. The Traveler noticed."</div>
+        </div>
+        <div class={`milestone${statsMap.breadth.raw >= 20 ? ' reached' : ''}`}>
+          <div class="milestone-icon">🗺️</div>
+          <div class="milestone-name">All Roads Lead</div>
+          <div class="milestone-req">BREADTH ≥ 20</div>
+          <div class="milestone-flavor">"You work everywhere. The mesh holds."</div>
+        </div>
+        <div class={`milestone${statsMap.output.raw >= 100 ? ' reached' : ''}`}>
+          <div class="milestone-icon">⚡</div>
+          <div class="milestone-name">A Hundred Real Things</div>
+          <div class="milestone-req">OUTPUT ≥ 100</div>
+          <div class="milestone-flavor">"This is what Guardians do."</div>
+        </div>
+        <div class={`milestone${statsMap.synthesis.raw >= 50 ? ' reached' : ''}`}>
+          <div class="milestone-icon">🔥</div>
+          <div class="milestone-name">Eternal Flame</div>
+          <div class="milestone-req">SYNTHESIS ≥ 50</div>
+          <div class="milestone-flavor">"Every future session improves."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="export-info">
+      Last exported: {exportedDate}
+    </div>
+  </div>
+</D2Layout>
+
+<style>
+.stats-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); margin-bottom: 0.25rem; }
+.page-sub { color: var(--d2-text-dim); font-size: 0.875rem; }
+.pl-summary { text-align: right; }
+.pl-big { font-size: 2.5rem; font-family: var(--font-lore); color: var(--d2-exotic); }
+.pl-rank { color: var(--d2-text-dim); font-size: 0.875rem; }
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.stat-card { background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1.25rem; }
+.stat-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.stat-icon { font-size: 1.5rem; }
+.stat-label { font-size: 0.875rem; font-weight: 700; color: var(--d2-text-bright); letter-spacing: 0.05em; }
+.stat-d2 { font-size: 0.7rem; color: var(--d2-text-dim); }
+.stat-score-big { font-size: 1.75rem; font-family: var(--font-lore); margin-left: auto; }
+.stat-track { position: relative; height: 8px; background: var(--d2-border); border-radius: 4px; margin-bottom: 0.5rem; overflow: visible; }
+.stat-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.soft-cap-marker { position: absolute; top: -4px; width: 2px; height: 16px; background: var(--d2-text-dim); opacity: 0.4; border-radius: 1px; }
+.stat-meta { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+.stat-raw-val { font-size: 0.8rem; color: var(--d2-text-bright); }
+.stat-caps { font-size: 0.7rem; color: var(--d2-text-dim); }
+.stat-desc { font-size: 0.75rem; color: var(--d2-text-dim); font-style: italic; }
+h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 1rem; }
+.milestones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.milestone { background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1rem; opacity: 0.5; transition: opacity 0.2s, border-color 0.2s; }
+.milestone.reached { opacity: 1; border-color: var(--d2-exotic); }
+.milestone-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.milestone-name { font-weight: 700; color: var(--d2-text-bright); margin-bottom: 0.25rem; font-size: 0.875rem; }
+.milestone-req { font-size: 0.7rem; color: var(--d2-exotic); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.milestone-flavor { font-size: 0.75rem; font-style: italic; font-family: var(--font-lore); color: var(--d2-text-dim); }
+.export-info { font-size: 0.75rem; color: var(--d2-text-dim); text-align: right; }
+</style>

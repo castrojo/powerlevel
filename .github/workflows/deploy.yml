@@ -1,0 +1,49 @@
+name: Export + Deploy
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # daily 6am UTC
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/**'
+
+jobs:
+  export-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Export powerlevel data
+        run: go run ./cmd/exporter/
+
+      - name: Commit if changed
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add src/data/powerlevel.json
+          git diff --cached --quiet || git commit -m "chore: auto-export powerlevel data [skip ci]"
+          git push
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - run: cd src && npm ci
+      - run: cd src && npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: src/dist/
+
+      - uses: actions/deploy-pages@v4

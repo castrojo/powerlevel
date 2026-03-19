@@ -1,0 +1,261 @@
+{
+  "categories": [
+    {
+      "id": "velocity",
+      "name": "VELOCITY",
+      "element": "arc",
+      "icon": "⚡",
+      "triumphs": [
+        {
+          "id": "first_session",
+          "name": "FIRST LIGHT",
+          "description": "Complete your first Copilot session with a knowledge-store entry",
+          "flavor": "The Traveler's light is new. So are you.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "tdd_first",
+          "name": "RED BEFORE GREEN",
+          "description": "Complete a full TDD red→green→refactor cycle using tdd-red, tdd-green, tdd-refactor agents",
+          "flavor": "You did not build before you broke.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "thundercrash",
+          "name": "THUNDERCRASH LANDING",
+          "description": "Pop the blueprint-mode super: complete a full 6-phase Blueprint Mode workflow with all gates honored",
+          "flavor": "The crater is the spec.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "trustee_first",
+          "name": "TRUSTEE'S OATH",
+          "description": "Use the workflow skill correctly in 5 consecutive sessions without scope creep",
+          "flavor": "It doesn't ask for recognition. It shows up.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "community",
+      "name": "COMMUNITY",
+      "element": "solar",
+      "icon": "🔥",
+      "triumphs": [
+        {
+          "id": "first_knowledge",
+          "name": "THE CHRONICLE BEGINS",
+          "description": "Store your first knowledge-store entry",
+          "flavor": "Every flame starts with a single spark.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": {"stat": "synthesis", "value": 1}
+        },
+        {
+          "id": "ten_knowledge",
+          "name": "THE LIBRARY",
+          "description": "Accumulate 10 knowledge entries (SYNTHESIS ≥ 10)",
+          "flavor": "The knowledge base has weight now.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": {"stat": "synthesis", "value": 10}
+        },
+        {
+          "id": "hammer_of_sol",
+          "name": "HAMMER THROWN",
+          "description": "Pop the principal-software-engineer super on a real architectural decision and implement its recommendations",
+          "flavor": "Each hammer lands precisely on the flaw.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "pr_merged",
+          "name": "TORCH PASSED",
+          "description": "Ship a merged PR to any open source project using Copilot assistance",
+          "flavor": "The Solar Guardian does not hoard light — they emit it.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": {"stat": "output", "value": 1}
+        }
+      ]
+    },
+    {
+      "id": "mastery",
+      "name": "MASTERY",
+      "element": "void",
+      "icon": "🟣",
+      "triumphs": [
+        {
+          "id": "new_skill",
+          "name": "THE FORGE",
+          "description": "Create a new skill file (SKILL.md) and add it to the INDEX.md",
+          "flavor": "You cannot fire what you have not forged.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "security_audit",
+          "name": "WARD OF DAWN",
+          "description": "Pop the se-security-reviewer super and remediate at least one finding",
+          "flavor": "The bubble. Nothing ships without passing through.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "skill_improved",
+          "name": "WEAPON UPGRADE",
+          "description": "Use skill-improver to improve an existing SKILL.md with measurable changes",
+          "flavor": "The weapon is better because you used it.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "distribution",
+      "name": "DISTRIBUTION",
+      "element": "strand",
+      "icon": "🟢",
+      "triumphs": [
+        {
+          "id": "first_package",
+          "name": "FIRST WEAVE",
+          "description": "Ship a new Homebrew cask or formula using the homebrew-tap skills",
+          "flavor": "The first thread. The mesh begins.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "bladefury",
+          "name": "BLADEFURY ACTIVATED",
+          "description": "Pop the github-actions-expert super to build a complete GH Actions workflow",
+          "flavor": "Weaving forward through integration complexity.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "multiplatform",
+          "name": "THE WEAVE HOLDS",
+          "description": "Successfully distribute software to users via 3 different mechanisms (brew, flatpak, OCI) in a single season",
+          "flavor": "One merged PR. Three sites updated. Forty packages rebuilt.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": true,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "stability",
+      "name": "STABILITY",
+      "element": "stasis",
+      "icon": "🔵",
+      "triumphs": [
+        {
+          "id": "first_build",
+          "name": "THE CRYSTAL HOLDS",
+          "description": "Successfully build a Bluefin OCI image using bluefin-build skill",
+          "flavor": "Not everything must move. Some things must simply hold.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "glacial_quake",
+          "name": "GLACIAL QUAKE",
+          "description": "Pop the swe-subagent super to stabilize a chaotic multi-file implementation",
+          "flavor": "It freezes the problem in place and executes with crystalline precision.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        }
+      ]
+    },
+    {
+      "id": "seasonal",
+      "name": "SEASON OF THE POWERLEVEL",
+      "element": "cross",
+      "icon": "🔆",
+      "triumphs": [
+        {
+          "id": "site_launched",
+          "name": "THE MIRROR IS FORGED",
+          "description": "Launch castrojo.github.io/powerlevel for the first time",
+          "flavor": "The Guardian turns the tools on themselves.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "first_level",
+          "name": "FIRST ADVANCEMENT",
+          "description": "Level up any weapon for the first time (self-assessed calibration)",
+          "flavor": "The trigger stopped surprising you.",
+          "points": 25,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "fifty_sessions",
+          "name": "FIFTY LIGHTS",
+          "description": "Reach ENDURANCE 50 — fifty completed Copilot sessions",
+          "flavor": "Fifty sessions. The Traveler noticed.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": {"stat": "endurance", "value": 50}
+        }
+      ]
+    }
+  ]
+}

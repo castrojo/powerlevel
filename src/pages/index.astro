@@ -1,0 +1,192 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import plData from '../data/powerlevel.json';
+
+const { power_level, rank, season, stats, active_supers, weapons } = plData;
+
+function plColor(pl: number): string {
+  if (pl >= 650) return 'var(--d2-exotic)';
+  if (pl >= 450) return 'var(--pl-hard)';
+  if (pl >= 250) return 'var(--pl-soft)';
+  return 'var(--pl-newlight)';
+}
+
+function levelTier(level: number): string {
+  if (level === 0) return 'Unequipped';
+  if (level < 10) return 'New Light';
+  if (level < 20) return 'Brave';
+  if (level < 30) return 'Seasoned';
+  if (level < 40) return 'Hardened';
+  if (level < 50) return 'Battle-Tested';
+  if (level < 60) return 'Veteran';
+  if (level < 70) return 'Forged';
+  if (level < 80) return 'Unbroken';
+  if (level < 90) return 'Ascendant';
+  if (level < 100) return 'Gilded';
+  return 'Mastercrafted ★';
+}
+
+const elemIcons: Record<string, string> = { arc: '⚡', solar: '🔥', void: '🟣', strand: '🟢', stasis: '🔵' };
+const elemNames: Record<string, string> = { arc: 'VELOCITY', solar: 'COMMUNITY', void: 'MASTERY', strand: 'DISTRIBUTION', stasis: 'STABILITY' };
+
+const statList = [
+  { key: 'endurance', label: 'ENDURANCE', d2: 'Resilience' },
+  { key: 'synthesis', label: 'SYNTHESIS', d2: 'Recovery' },
+  { key: 'breadth',   label: 'BREADTH',   d2: 'Discipline' },
+  { key: 'foresight', label: 'FORESIGHT', d2: 'Intellect' },
+  { key: 'output',    label: 'OUTPUT',    d2: 'Strength' },
+  { key: 'recall',    label: 'RECALL',    d2: 'Mobility' },
+] as const;
+
+type StatKey = typeof statList[number]['key'];
+const statsMap = stats as Record<StatKey, { score: number; label: string }>;
+
+const primaryWeapons = Object.entries(weapons).filter(([, w]) => (w as any).primary);
+const plFill = Math.min(100, Math.max(0, (power_level - 100) / 5.5));
+---
+
+<D2Layout title="Guardian Card">
+  <div class="guardian-card">
+
+    <div class="guardian-hero">
+      <div class="guardian-identity">
+        <h1 class="guardian-name">@castrojo</h1>
+        <p class="guardian-class">Titan · <span class="guardian-rank" style={`color: ${plColor(power_level)}`}>{rank}</span></p>
+        <p class="guardian-season">{season.name}</p>
+        <p class="guardian-lore">{season.lore}</p>
+      </div>
+      <div class="pl-gauge">
+        <div class="pl-number" style={`color: ${plColor(power_level)}`}>◆ {power_level}</div>
+        <div class="pl-label">POWER LEVEL</div>
+        <div class="pl-caps">
+          <span>Soft ◆250</span>
+          <span>Hard ◆450</span>
+          <span>Pinnacle ◆650</span>
+        </div>
+        <div class="pl-bar-track">
+          <div class="pl-bar-fill" style={`width: ${plFill}%; background: ${plColor(power_level)}`}></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="active-supers">
+      {active_supers.map((elem: string) => (
+        <div class={`super-panel ${elem}`}>
+          <div class="super-icon">{elemIcons[elem]}</div>
+          <div class="super-name">{elemNames[elem]}</div>
+          <div class="super-label">Active</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="stats-block">
+      <h2>Character Stats</h2>
+      <div class="stats-grid">
+        {statList.map(({ key, label }) => {
+          const s = statsMap[key];
+          return (
+            <div class="stat-row">
+              <span class="stat-name">{label}</span>
+              <div class="stat-bar-track">
+                <div class="stat-bar-fill" style={`width: ${s.score}%`}></div>
+              </div>
+              <span class="stat-score">{s.score}</span>
+              <span class="stat-raw">{s.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <div class="equipped">
+      <h2>Primary Weapon</h2>
+      {primaryWeapons.map(([id, w]) => {
+        const weapon = w as any;
+        return (
+          <div class={`weapon-card primary-weapon ${weapon.element}`}>
+            <div class="weapon-name">{weapon.weapon}</div>
+            <div class="weapon-type">{weapon.weapon_type}</div>
+            <div class="weapon-skill">{id}</div>
+            {weapon.lore && <p class="weapon-lore">"{weapon.lore}"</p>}
+            <div class="level-bar">
+              <div class="level-bar-fill" style={`width: ${weapon.level}%; background: var(--d2-arc)`}></div>
+            </div>
+            <div class="weapon-level">Lv. {weapon.level} · {levelTier(weapon.level)}</div>
+          </div>
+        );
+      })}
+    </div>
+
+  </div>
+</D2Layout>
+
+<style>
+.guardian-card { display: flex; flex-direction: column; gap: 2rem; }
+.guardian-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  background: var(--d2-surface);
+  border: 1px solid var(--d2-border);
+  border-radius: 4px;
+  padding: 2rem;
+}
+.guardian-name {
+  font-family: var(--font-lore);
+  font-size: 2.5rem;
+  color: var(--d2-text-bright);
+  margin-bottom: 0.25rem;
+}
+.guardian-class { color: var(--d2-text-dim); font-size: 1rem; margin-bottom: 0.5rem; }
+.guardian-season { color: var(--d2-exotic); font-size: 0.875rem; margin-bottom: 1rem; }
+.guardian-lore { color: var(--d2-text-dim); font-style: italic; font-family: var(--font-lore); max-width: 500px; }
+.pl-gauge { text-align: right; min-width: 200px; }
+.pl-number { font-size: 3rem; font-family: var(--font-lore); font-weight: 400; }
+.pl-label { color: var(--d2-text-dim); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.pl-caps { display: flex; gap: 1rem; font-size: 0.7rem; color: var(--d2-text-dim); margin: 0.5rem 0; justify-content: flex-end; }
+.pl-bar-track { height: 4px; background: var(--d2-border); border-radius: 2px; margin-top: 0.5rem; }
+.pl-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+.active-supers { display: flex; gap: 1rem; }
+.super-panel {
+  flex: 1;
+  background: var(--d2-surface);
+  border: 1px solid var(--d2-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+}
+.super-panel.arc    { border-color: var(--d2-arc); }
+.super-panel.solar  { border-color: var(--d2-solar); }
+.super-panel.void   { border-color: var(--d2-void); }
+.super-panel.strand { border-color: var(--d2-strand); }
+.super-panel.stasis { border-color: var(--d2-stasis); }
+.super-icon { font-size: 2rem; }
+.super-name { font-family: var(--font-lore); font-size: 1.25rem; color: var(--d2-text-bright); }
+.super-label { font-size: 0.7rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+
+.stats-block { background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1.5rem; }
+.stats-block h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 1.5rem; font-size: 1.25rem; }
+.stats-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+.stat-row { display: grid; grid-template-columns: 120px 1fr 3rem 100px; align-items: center; gap: 1rem; }
+.stat-name { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--d2-text-dim); }
+.stat-bar-track { height: 6px; background: var(--d2-border); border-radius: 3px; }
+.stat-bar-fill { height: 100%; background: var(--d2-text-dim); border-radius: 3px; transition: width 1s ease; }
+.stat-score { font-size: 0.875rem; color: var(--d2-text-bright); text-align: right; }
+.stat-raw { font-size: 0.75rem; color: var(--d2-text-dim); }
+
+.equipped h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 1rem; font-size: 1.25rem; }
+.weapon-card { background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1.5rem; }
+.primary-weapon.arc    { border-left: 3px solid var(--d2-arc); }
+.primary-weapon.solar  { border-left: 3px solid var(--d2-solar); }
+.primary-weapon.void   { border-left: 3px solid var(--d2-void); }
+.primary-weapon.strand { border-left: 3px solid var(--d2-strand); }
+.primary-weapon.stasis { border-left: 3px solid var(--d2-stasis); }
+.weapon-name { font-family: var(--font-lore); font-size: 1.5rem; color: var(--d2-exotic); }
+.weapon-type { font-size: 0.875rem; color: var(--d2-text-dim); margin-bottom: 0.25rem; }
+.weapon-skill { font-size: 0.75rem; color: var(--d2-arc); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+.weapon-lore { font-family: var(--font-lore); font-style: italic; color: var(--d2-text-dim); margin-bottom: 1rem; }
+.level-bar { height: 4px; background: var(--d2-border); border-radius: 2px; margin-bottom: 0.5rem; }
+.level-bar-fill { height: 100%; border-radius: 2px; }
+.weapon-level { font-size: 0.75rem; color: var(--d2-text-dim); }
+</style>

@@ -1,112 +1,38 @@
-# Bootstrap Instructions
+# castrojo/powerlevel — AGENTS.md
 
-This repo sets up a structured OpenCode workflow. When a user points you here, follow these steps exactly.
+Destiny 2-themed GitHub Copilot stats website. Go + Astro monorepo.
 
----
+## Structure
+- `cmd/pl/` — Go CLI terminal dashboard (replaces powerlevel.py)
+- `cmd/exporter/` — Go exporter: reads data/, writes src/data/powerlevel.json
+- `internal/data/` — data model, loader, PL formula, stat scaling
+- `internal/renderer/` — terminal ANSI output, bars, side-by-side columns
+- `internal/exporter/` — sanitized JSON export for website
+- `data/` — source of truth JSON (edit these manually to level up)
+- `src/` — Astro 5 website (castrojo.github.io/powerlevel)
+- `tests/` — Playwright E2E
 
-## Session Recommendations
+## Key commands
+- `just` or `just pl` — run terminal dashboard
+- `just install` — install `pl` binary to ~/.local/bin/
+- `just export` — regenerate src/data/powerlevel.json from data/
+- `just dev` — start Astro dev server
+- `just test-go` — Go unit tests
+- `just test-e2e` — Playwright E2E
 
-The author uses Claude but uses Gemini as a review model with its own guidelines. When instructed to **"go through Gemini's recommendations"**, look in `~/.config/opencode/plans/powerlevel/` for recent architectural guidance and plans. These files take absolute precedence over default behaviors.
+## Leveling up
+Edit `data/powerlevel-data.json` — bump weapon levels based on criteria in plan.
+Run `just export` then `just deploy`.
 
-Note: `templates/plans/git-workflow.md` is seeded into `~/.config/opencode/plans/` as part of the full `templates/` copy that setup.sh performs. `YOUR_USERNAME` placeholders in the file are substituted with the actual GitHub username during setup. Personal per-project plans are not committed here — they live only in the user's private `opencode-config` repo.
+## PL Formula
+`PL = 100 + sum(all weapon levels) / 8`
+Soft cap 250 (~3-4mo) · Hard cap 450 (~12-18mo) · Pinnacle 650 (~2-3yr)
 
----
-
-## Step 1: Check prerequisites
-
-Run:
-```bash
-gh auth status
-ssh -T git@github.com
-npm --version
-go version
-podman --version
-```
-
-If any fail, stop and tell the user:
-- `gh auth status` fails → `gh auth login --git-protocol ssh`
-- SSH fails → generate a key: `ssh-keygen -t ed25519` then `gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"`
-- `npm` missing → install Node.js from https://nodejs.org
-- `go` missing → install Go from https://go.dev/dl/
-- `podman` missing → install from https://podman.io
-
-Do not proceed until all five pass.
-
----
-
-## Step 2: Run setup
-
-```bash
-git clone git@github.com:castrojo/powerlevel.git /tmp/powerlevel-setup
-bash /tmp/powerlevel-setup/setup.sh
-```
-
-The script is fully automated. It will:
-- Create a private `opencode-config` repo in the user's GitHub account
-- Clone `obra/superpowers` as read-only (push disabled)
-- Build the workflow-state MCP binary (`go build`)
-- Install the PostgreSQL quadlet (`opencode-state-db.container`), start the DB, seed rules and skill sections
-- Install devaipod if `cargo` is available (skips with a notice otherwise)
-- Wire up symlinks, run `npm install`, configure global gitignore
-
-If the script fails, read the error — it will tell you exactly what to fix.
-
----
-
-## Step 3: Install community skills
-
-After setup, the user needs to install community skills via the OpenCode skill installer.
-Tell the user: "Open a new OpenCode session, press ctrl+p, and install these skills:"
-
-| Skill | What it does | Source |
-|---|---|---|
-| `find-skills` | **Search [skills.sh](https://skills.sh) to discover and install more skills** — install this first | `vercel-labs/skills` |
-| `gh-cli` | GitHub CLI operations (PRs, issues, releases) | `github/awesome-copilot` |
-| `code-review` | Thorough code review workflow | `supercent-io/skills-template` |
-| `container-debugging` | Debug Docker/Podman containers | `aj-geddes/useful-ai-prompts` |
-| `shellcheck-configuration` | Shell script static analysis | `wshobson/agents` |
-| `devops-engineer` | CI/CD, Docker, Kubernetes, cloud | `jeffallan/claude-skills` |
-| `github-actions-templates` | GitHub Actions workflow templates | `wshobson/agents` |
-| `git-commit` | Conventional commit generation | `github/awesome-copilot` |
-| `bash-linux` | Bash/Linux terminal patterns | `sickn33/antigravity-awesome-skills` |
-| `fedora-linux-triage` | Fedora/dnf/systemd/SELinux triage | `github/awesome-copilot` |
-
-Once `find-skills` is installed, the agent can run `npx skills find <query>` to search for more skills at any time.
-
----
-
-## Step 4: First session
-
-Tell the user to open a new OpenCode session in `~/.config/opencode/` and say "session-start".
-
-In that first session, ask the user a few questions to fill in `memory/human.md`:
-- Preferred container runtime (Docker, Podman, etc.)
-- Communication style preferences
-- Any tools or conventions they always use
-
-Write their answers into `memory/human.md` and commit:
-```bash
-cd ~/.config/opencode
-git add memory/human.md
-git commit -m "chore(memory): initial human preferences"
-git push
-```
-
-Setup is complete.
-
----
-
-## README Constraint
-
-The README is a **skill and feature focused product page**. Describe what the user gets
-(skills, memory, journal, workflow discipline) and how to use the repo. It is not a manual
-and contains no agent instructions. Keep it under 2 pages. Agent instructions belong in
-this file (`AGENTS.md`), not the README.
-
----
-
-## What NOT to Do
-
-- Do NOT set `gh repo edit --template` on this repo. An agent reads the repo directly.
-  The GitHub template flag is for humans using the "Use this template" UI — it has no
-  effect on how agents interact with the repo.
+## Subclass → Skill domain mapping
+| Element  | Name         | Domain          | Super agents                          |
+|----------|--------------|-----------------|---------------------------------------|
+| Arc      | VELOCITY     | CI/CD, TDD      | blueprint-mode, tdd-red/green/refactor |
+| Solar    | COMMUNITY    | OSS, knowledge  | principal-software-engineer            |
+| Void     | MASTERY      | Skills, security| se-security-reviewer, swe-subagent    |
+| Strand   | DISTRIBUTION | Packaging, GH   | github-actions-expert                 |
+| Stasis   | STABILITY    | OCI, builds     | swe-subagent                          |
