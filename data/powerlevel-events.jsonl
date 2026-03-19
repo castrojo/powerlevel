@@ -1,0 +1,9 @@
+# powerlevel-events.jsonl — append-only event log
+# Schema: one JSON object per line. Never edit existing lines. Append only.
+# Used by: GHA compute job (compute.yml) to derive triumphs.json earned state
+# Written by: agent appends one line per human-verified event
+#
+# Event types:
+#   triumph_earned  {"type":"triumph_earned","triumph_id":"first_light","timestamp":"2026-03-19T00:00:00Z","note":"optional context"}
+#   level_noted     {"type":"level_noted","skill":"workflow","level":2,"timestamp":"2026-03-19T00:00:00Z"}
+#   seal_earned     {"type":"seal_earned","seal_id":"cursebreaker","timestamp":"2026-03-19T00:00:00Z","gilded":false}
