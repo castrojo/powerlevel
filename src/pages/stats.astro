@@ -1,6 +1,7 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
+import modelUsage from '../../data/model-usage.json';
 import { statScale, computePL, getRank, type Weapon } from '../lib/compute';
 
 const pl = computePL(rawData.weapons as Record<string, Weapon>);
@@ -194,8 +195,115 @@ const buildDate = new Date().toLocaleDateString("en-US", { year: "numeric", mont
     <div class="export-info">
       Season: {rawData.season.name} · {rawData.season.quarter} · Last updated: {buildDate}
     </div>
+
+    <!-- Model Usage -->
+    <div class="model-section">
+      <h2>Model Dispatch Log</h2>
+      <p class="page-sub">Which AI models power your workflow — logged each time you pick models for a review or explore task.</p>
+
+      {modelUsage.total_dispatches === 0 ? (
+        <div class="model-empty">
+          <div class="model-empty-icon">🔫</div>
+          <div class="model-empty-title">Arsenal cold. No dispatches logged yet.</div>
+          <div class="model-empty-body">
+            Every time you run a code review or dispatch an explore agent, the selected models are appended to
+            <code>~/.copilot/model-log.jsonl</code> automatically. This chart fills in over time.
+          </div>
+          <div class="model-empty-hint">
+            Trigger a review → pick models → data appears here after next <code>just export-stats</code>.
+          </div>
+        </div>
+      ) : (
+        <div class="model-data">
+          <div class="model-summary">
+            <div class="model-stat"><span class="model-stat-n">{modelUsage.total_dispatches}</span><span class="model-stat-l">total dispatches</span></div>
+            <div class="model-stat"><span class="model-stat-n">{Object.keys(modelUsage.model_counts).length}</span><span class="model-stat-l">models used</span></div>
+            <div class="model-stat"><span class="model-stat-n">{Object.keys(modelUsage.task_counts).length}</span><span class="model-stat-l">task types</span></div>
+          </div>
+          <div class="model-chart-wrap">
+            <canvas id="model-donut" width="260" height="260"></canvas>
+            <div class="model-legend" id="model-legend"></div>
+          </div>
+          <div class="model-table">
+            {modelUsage.top_models.map((r: {model: string; count: number}) => (
+              <div class="model-row">
+                <span class="model-name">{r.model}</span>
+                <div class="model-bar-track">
+                  <div class="model-bar-fill" style={`width: ${Math.round(r.count / modelUsage.total_dispatches * 100)}%`}></div>
+                </div>
+                <span class="model-pct">{Math.round(r.count / modelUsage.total_dispatches * 100)}%</span>
+                <span class="model-count">×{r.count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {modelUsage.recent && modelUsage.recent.length > 0 && (
+        <div class="model-recent">
+          <h3>Recent Dispatches</h3>
+          {modelUsage.recent.slice().reverse().map((e: {timestamp: string; task: string; models: string[]}) => (
+            <div class="model-recent-row">
+              <span class="model-recent-task">{e.task}</span>
+              <span class="model-recent-models">{e.models.join(' + ')}</span>
+              <span class="model-recent-ts">{e.timestamp.slice(0, 10)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
   </div>
 </D2Layout>
+
+{modelUsage.total_dispatches > 0 && (
+  <script define:vars={{ topModels: modelUsage.top_models }}>
+    const MODEL_COLORS = [
+      '#ceae33', '#79c8e2', '#b47be0', '#49de8b', '#4d9bd6',
+      '#f4934f', '#c8c8c8', '#f5c518', '#4d6dbf', '#6f3d8f',
+    ];
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('model-donut');
+      if (!canvas || !topModels.length) return;
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js';
+      script.onload = () => {
+        new Chart(canvas, {
+          type: 'doughnut',
+          data: {
+            labels: topModels.map(r => r.model),
+            datasets: [{
+              data: topModels.map(r => r.count),
+              backgroundColor: MODEL_COLORS.slice(0, topModels.length),
+              borderColor: '#13131a',
+              borderWidth: 2,
+              hoverOffset: 6,
+            }],
+          },
+          options: {
+            responsive: false,
+            cutout: '68%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${ctx.raw} dispatch${ctx.raw === 1 ? '' : 'es'}`,
+                },
+              },
+            },
+          },
+        });
+        const legend = document.getElementById('model-legend');
+        if (legend) {
+          legend.innerHTML = topModels.map((r, i) =>
+            `<div class="legend-item"><span class="legend-dot" style="background:${MODEL_COLORS[i]}"></span>${r.model}</div>`
+          ).join('');
+        }
+      };
+      document.head.appendChild(script);
+    });
+  </script>
+)}
 
 <style>
 .stats-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
@@ -230,4 +338,39 @@ h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 1rem
 .radar-section { text-align: center; margin-bottom: 2rem; }
 .radar-chart { overflow: visible; }
 .sparkline { margin-left: 0.5rem; vertical-align: middle; opacity: 0.7; }
+
+/* Model usage */
+.model-section { margin-top: 2rem; }
+.model-section h2 { font-family: var(--font-lore); color: var(--d2-exotic); margin-bottom: 0.5rem; }
+.model-section h3 { font-family: var(--font-lore); color: var(--d2-text-bright); font-size: 1rem; margin: 1.5rem 0 0.75rem; }
+.model-empty {
+  background: var(--d2-surface); border: 1px dashed var(--d2-border);
+  border-radius: 4px; padding: 2rem; text-align: center;
+}
+.model-empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+.model-empty-title { font-family: var(--font-lore); font-size: 1.1rem; color: var(--d2-text-dim); margin-bottom: 0.75rem; }
+.model-empty-body { font-size: 0.8rem; color: var(--d2-text-dim); max-width: 480px; margin: 0 auto 0.75rem; line-height: 1.6; }
+.model-empty-hint { font-size: 0.75rem; color: var(--d2-text-dim); font-style: italic; }
+.model-empty code { color: var(--d2-arc); font-size: 0.75em; }
+.model-data { display: flex; flex-direction: column; gap: 1.5rem; }
+.model-summary { display: flex; gap: 2rem; }
+.model-stat { display: flex; flex-direction: column; align-items: center; background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1rem 1.5rem; min-width: 120px; }
+.model-stat-n { font-size: 2rem; font-family: var(--font-lore); color: var(--d2-exotic); }
+.model-stat-l { font-size: 0.7rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+.model-chart-wrap { display: flex; align-items: center; gap: 2rem; }
+.model-legend { display: flex; flex-direction: column; gap: 0.5rem; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--d2-text-dim); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.model-table { display: flex; flex-direction: column; gap: 0.5rem; }
+.model-row { display: grid; grid-template-columns: 220px 1fr 3rem 3rem; align-items: center; gap: 1rem; }
+.model-name { font-size: 0.8rem; color: var(--d2-text-bright); font-family: monospace; }
+.model-bar-track { height: 6px; background: var(--d2-border); border-radius: 3px; }
+.model-bar-fill { height: 100%; background: var(--d2-exotic); border-radius: 3px; transition: width 0.8s ease; }
+.model-pct { font-size: 0.75rem; color: var(--d2-text-dim); text-align: right; }
+.model-count { font-size: 0.75rem; color: var(--d2-arc); }
+.model-recent { display: flex; flex-direction: column; gap: 0.4rem; }
+.model-recent-row { display: grid; grid-template-columns: 120px 1fr 90px; gap: 1rem; align-items: center; font-size: 0.8rem; padding: 0.4rem 0; border-bottom: 1px solid var(--d2-border-dim); }
+.model-recent-task { color: var(--d2-arc); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem; }
+.model-recent-models { color: var(--d2-text-bright); }
+.model-recent-ts { color: var(--d2-text-dim); text-align: right; font-size: 0.7rem; }
 </style>

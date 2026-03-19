@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
 	"encoding/json"
 	"flag"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -53,9 +55,15 @@ func main() {
 	feed := buildFeed(db)
 	writeFeed(*dataDir, feed)
 
+	modelLog := filepath.Join(os.Getenv("HOME"), ".copilot", "model-log.jsonl")
+	modelUsage := buildModelUsage(modelLog)
+	writeModelUsage(*dataDir, modelUsage)
+
 	fmt.Printf("✓ Exported: %d sessions, %d turns, %d repos, %d checkpoints, %d output\n",
 		stats["endurance"].Raw, stats["recall"].Raw, stats["breadth"].Raw,
 		stats["foresight"].Raw, stats["output"].Raw)
+	fmt.Printf("✓ Model usage: %d total dispatches across %d models\n",
+		modelUsage.TotalDispatches, len(modelUsage.ModelCounts))
 }
 
 func computeStats(db *sql.DB) map[string]StatBlock {
@@ -185,4 +193,95 @@ func writeFeed(dataDir string, entries []FeedEntry) {
 	out, _ := json.MarshalIndent(feed, "", "  ")
 	os.WriteFile(filepath.Join(dataDir, "feed.json"), out, 0644)
 	fmt.Printf("✓ Wrote feed.json (%d entries)\n", len(entries))
+}
+
+// --- Model usage tracking ---
+
+// ModelLogEntry is one line from ~/.copilot/model-log.jsonl.
+type ModelLogEntry struct {
+	Timestamp string   `json:"timestamp"`
+	Task      string   `json:"task"`
+	Models    []string `json:"models"`
+}
+
+// ModelUsage is the exported model-usage.json structure.
+type ModelUsage struct {
+	GeneratedAt     string            `json:"generated_at"`
+	TotalDispatches int               `json:"total_dispatches"`
+	ModelCounts     map[string]int    `json:"model_counts"`
+	TaskCounts      map[string]int    `json:"task_counts"`
+	ModelsByTask    map[string]map[string]int `json:"models_by_task"`
+	TopModels       []ModelRank       `json:"top_models"`
+	Recent          []ModelLogEntry   `json:"recent"`
+}
+
+// ModelRank is a model with its total dispatch count, sorted descending.
+type ModelRank struct {
+	Model string `json:"model"`
+	Count int    `json:"count"`
+}
+
+func buildModelUsage(logPath string) ModelUsage {
+	usage := ModelUsage{
+		GeneratedAt:     time.Now().UTC().Format(time.RFC3339),
+		ModelCounts:     map[string]int{},
+		TaskCounts:      map[string]int{},
+		ModelsByTask:    map[string]map[string]int{},
+		TopModels:       []ModelRank{},
+		Recent:          []ModelLogEntry{},
+	}
+
+	f, err := os.Open(logPath)
+	if err != nil {
+		// File missing or empty — that's fine, return zero state.
+		return usage
+	}
+	defer f.Close()
+
+	var all []ModelLogEntry
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		var entry ModelLogEntry
+		if err := json.Unmarshal([]byte(line), &entry); err != nil {
+			continue // skip malformed lines
+		}
+		all = append(all, entry)
+
+		usage.TotalDispatches++
+		usage.TaskCounts[entry.Task]++
+
+		if usage.ModelsByTask[entry.Task] == nil {
+			usage.ModelsByTask[entry.Task] = map[string]int{}
+		}
+		for _, m := range entry.Models {
+			usage.ModelCounts[m]++
+			usage.ModelsByTask[entry.Task][m]++
+		}
+	}
+
+	// Top models sorted by count descending.
+	for model, count := range usage.ModelCounts {
+		usage.TopModels = append(usage.TopModels, ModelRank{Model: model, Count: count})
+	}
+	sort.Slice(usage.TopModels, func(i, j int) bool {
+		return usage.TopModels[i].Count > usage.TopModels[j].Count
+	})
+
+	// Last 10 entries for the recent list.
+	start := len(all) - 10
+	if start < 0 {
+		start = 0
+	}
+	usage.Recent = all[start:]
+
+	return usage
+}
+
+func writeModelUsage(dataDir string, usage ModelUsage) {
+	out, _ := json.MarshalIndent(usage, "", "  ")
+	os.WriteFile(filepath.Join(dataDir, "model-usage.json"), out, 0644)
 }

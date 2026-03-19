@@ -49,4 +49,13 @@ test.describe('Stats', () => {
     }
     expect(hasNonZero).toBe(true);
   });
+
+  test('model dispatch section renders (empty or populated)', async ({ page }) => {
+    await expect(page.getByText('Model Dispatch Log')).toBeVisible();
+    // Either the empty state OR the summary stats are present
+    const hasEmpty = await page.getByText('No dispatches logged yet').isVisible().catch(() => false);
+    const hasSummary = await page.locator('.model-summary').isVisible().catch(() => false);
+    const hasEmptyAlt = await page.getByText('Arsenal cold').isVisible().catch(() => false);
+    expect(hasEmpty || hasSummary || hasEmptyAlt).toBe(true);
+  });
 });
