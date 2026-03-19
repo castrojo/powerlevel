@@ -79,9 +79,8 @@ func main() {
 		avgs[i] = fmt.Sprintf("%s %d", spec.Icon, avg)
 	}
 
-	// Header
+	// Header — 2 lines: content line + ━━━ separator (no top border)
 	sep := strings.Repeat("━", W)
-	fmt.Println(sep)
 	fmt.Printf("  %s@castrojo%s  %s · Titan   🔆 %s   Active: %s   %s\n",
 		renderer.Bold, renderer.E,
 		rank, plStr,
