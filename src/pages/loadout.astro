@@ -1,0 +1,183 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import rawData from '../../data/powerlevel-data.json';
+import { levelTier, type Weapon } from '../lib/compute';
+
+const weapons = rawData.weapons as Record<string, Weapon>;
+
+// Auto-select weapons for each slot
+function topByElement(element: string): [string, Weapon] | null {
+  const entries = Object.entries(weapons).filter(([, w]) => w.element === element);
+  if (!entries.length) return null;
+  return entries.reduce((best, curr) => curr[1].level > best[1].level ? curr : best) as [string, Weapon];
+}
+
+function topOverall(): [string, Weapon] | null {
+  const entries = Object.entries(weapons);
+  if (!entries.length) return null;
+  return entries.reduce((best, curr) => curr[1].level > best[1].level ? curr : best) as [string, Weapon];
+}
+
+function primaryWeapon(): [string, Weapon] | null {
+  const entry = Object.entries(weapons).find(([, w]) => w.primary);
+  return (entry as [string, Weapon] | undefined) ?? topByElement('arc');
+}
+
+const kinetic = primaryWeapon();
+const energySlots = (['arc', 'solar', 'void', 'strand', 'stasis'] as const).map(el => topByElement(el)).filter((e): e is [string, Weapon] => e !== null);
+const power = topOverall();
+
+// Find dominant subclass (highest average level)
+const elements = ['arc', 'solar', 'void', 'strand', 'stasis'] as const;
+const subclassAvgs = elements.map(el => {
+  const ws = Object.values(weapons).filter(w => w.element === el);
+  const avg = ws.length ? ws.reduce((s, w) => s + w.level, 0) / ws.length : 0;
+  return { element: el, avg };
+});
+const dominantSubclass = subclassAvgs.reduce((a, b) => b.avg > a.avg ? b : a);
+
+const elemIcons: Record<string, string> = { arc: '⚡', solar: '🔥', void: '🟣', strand: '🟢', stasis: '🔵' };
+const elemNames: Record<string, string> = { arc: 'VELOCITY', solar: 'COMMUNITY', void: 'MASTERY', strand: 'DISTRIBUTION', stasis: 'STABILITY' };
+const elemColors: Record<string, string> = { arc: '#79c8e2', solar: '#f4934f', void: '#b47be0', strand: '#49de8b', stasis: '#4d9bd6' };
+
+const statList = [
+  { key: 'endurance', label: 'RESILIENCE',  slot: 'Helmet' },
+  { key: 'recall',    label: 'MOBILITY',    slot: 'Gauntlets' },
+  { key: 'synthesis', label: 'RECOVERY',    slot: 'Chest Armor' },
+  { key: 'breadth',   label: 'DISCIPLINE',  slot: 'Leg Armor' },
+  { key: 'foresight', label: 'INTELLECT',   slot: 'Class Item' },
+  { key: 'output',    label: 'STRENGTH',    slot: 'Bond' },
+] as const;
+const rawStats = rawData.stats as Record<string, any>;
+
+function levelColor(level: number): string {
+  if (level >= 100) return 'var(--d2-masterwork, var(--d2-exotic))';
+  if (level >= 67) return 'var(--pl-hard, #f4934f)';
+  if (level >= 34) return 'var(--pl-soft, #79c8e2)';
+  return 'var(--d2-text-dim)';
+}
+---
+
+<D2Layout title="Loadout">
+  <div class="loadout-page">
+    <h1>Loadout</h1>
+    <p class="page-sub">Auto-equipped — highest level weapon per slot.</p>
+
+    <div class="loadout-screen">
+      <!-- Left column: Weapons -->
+      <div class="weapon-column">
+        <div class="column-label">WEAPONS</div>
+
+        {kinetic && (
+          <div class="loadout-slot kinetic">
+            <div class="slot-label">KINETIC ★ PRIMARY</div>
+            <div class="slot-card">
+              <div class="slot-weapon">{kinetic[1].weapon}</div>
+              <div class="slot-skill">{kinetic[0]}</div>
+              <div class="slot-type">{kinetic[1].weapon_type}</div>
+              <div class="slot-level" style={`color: ${levelColor(kinetic[1].level)}`}>Lv. {kinetic[1].level} · {levelTier(kinetic[1].level)}</div>
+            </div>
+          </div>
+        )}
+
+        <div class="slot-divider">ENERGY</div>
+        {energySlots.map(entry => (
+          <div class={`loadout-slot energy-slot ${entry[1].element}`}>
+            <div class="slot-label">{elemIcons[entry[1].element]} {elemNames[entry[1].element] ?? entry[1].element.toUpperCase()}</div>
+            <div class="slot-card">
+              <div class="slot-weapon">{entry[1].weapon}</div>
+              <div class="slot-skill">{entry[0]}</div>
+              <div class="slot-type">{entry[1].weapon_type}</div>
+              <div class="slot-level" style={`color: ${levelColor(entry[1].level)}`}>Lv. {entry[1].level}</div>
+            </div>
+          </div>
+        ))}
+
+        <div class="slot-divider">POWER</div>
+        {power && (
+          <div class={`loadout-slot power-slot ${power[1].element}`}>
+            <div class="slot-label">🔆 POWER WEAPON</div>
+            <div class="slot-card">
+              <div class="slot-weapon">{power[1].weapon}</div>
+              <div class="slot-skill">{power[0]}</div>
+              <div class="slot-type">{power[1].weapon_type}</div>
+              <div class="slot-level" style={`color: ${levelColor(power[1].level)}`}>Lv. {power[1].level} · {levelTier(power[1].level)}</div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Center column: Subclass -->
+      <div class="subclass-column">
+        <div class="column-label">SUBCLASS</div>
+        <div class={`subclass-node ${dominantSubclass.element}`} style={`border-color: ${elemColors[dominantSubclass.element]}`}>
+          <div class="subclass-icon">{elemIcons[dominantSubclass.element]}</div>
+          <div class="subclass-name" style={`color: ${elemColors[dominantSubclass.element]}`}>
+            {elemNames[dominantSubclass.element]}
+          </div>
+          <div class="subclass-avg">avg {Math.round(dominantSubclass.avg)}</div>
+        </div>
+      </div>
+
+      <!-- Right column: Armor / Stats -->
+      <div class="armor-column">
+        <div class="column-label">ARMOR · MEMORY STATS</div>
+        {statList.map(s => {
+          const stat = rawStats[s.key];
+          const raw = stat?.raw ?? 0;
+          const softCap = stat?.softCap ?? 100;
+          const pct = Math.min(100, Math.round((raw / (softCap || 1)) * 100));
+          return (
+            <div class="armor-slot">
+              <div class="armor-slot-name">{s.slot}</div>
+              <div class="armor-stat-label">{s.label}</div>
+              <div class="armor-bar-track">
+                <div class="armor-bar-fill" style={`width: ${pct}%`}></div>
+              </div>
+              <div class="armor-raw">{raw} {stat?.unit ?? ''}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</D2Layout>
+
+<style>
+h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); margin-bottom: 0.5rem; }
+.page-sub { color: var(--d2-text-dim); margin-bottom: 2rem; }
+.loadout-screen { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: start; }
+.column-label { font-size: 0.65rem; letter-spacing: 0.12em; color: var(--d2-text-dim); text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--d2-border); }
+.weapon-column, .armor-column { display: flex; flex-direction: column; gap: 0.5rem; }
+.loadout-slot { display: flex; flex-direction: column; gap: 0.25rem; }
+.slot-label { font-size: 0.65rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.slot-card { background: var(--d2-surface); border: 1px solid var(--d2-border); padding: 0.75rem; border-radius: 3px; }
+.slot-card:hover { background: var(--d2-surface-2); }
+.slot-weapon { font-size: 0.95rem; color: var(--d2-text-bright); font-weight: 700; }
+.slot-skill { font-size: 0.65rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin: 0.2rem 0; }
+.slot-type { font-size: 0.7rem; color: var(--d2-text-dim); }
+.slot-level { font-size: 0.75rem; margin-top: 0.25rem; }
+.slot-divider { font-size: 0.6rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.15em; padding: 0.5rem 0 0.25rem; border-top: 1px solid var(--d2-border); margin-top: 0.5rem; }
+.loadout-slot.arc .slot-card { border-left: 2px solid var(--d2-arc); }
+.loadout-slot.solar .slot-card { border-left: 2px solid var(--d2-solar, #f4934f); }
+.loadout-slot.void .slot-card { border-left: 2px solid var(--d2-void, #b47be0); }
+.loadout-slot.strand .slot-card { border-left: 2px solid var(--d2-strand, #49de8b); }
+.loadout-slot.stasis .slot-card { border-left: 2px solid var(--d2-stasis, #4d9bd6); }
+.loadout-slot.kinetic .slot-card { border-left: 2px solid var(--d2-exotic); }
+.loadout-slot.power-slot .slot-card { border-left: 2px solid var(--d2-exotic); }
+.subclass-column { display: flex; flex-direction: column; align-items: center; }
+.subclass-node { width: 120px; height: 120px; border: 2px solid; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; background: var(--d2-surface); }
+.subclass-icon { font-size: 2.5rem; }
+.subclass-name { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+.subclass-avg { font-size: 0.65rem; color: var(--d2-text-dim); }
+.armor-slot { background: var(--d2-surface); border: 1px solid var(--d2-border); padding: 0.6rem 0.75rem; border-radius: 3px; }
+.armor-slot-name { font-size: 0.6rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+.armor-stat-label { font-size: 0.8rem; color: var(--d2-text-bright); font-weight: 700; margin: 0.1rem 0; }
+.armor-bar-track { height: 3px; background: var(--d2-border); border-radius: 2px; margin: 0.35rem 0; }
+.armor-bar-fill { height: 100%; background: var(--d2-arc); border-radius: 2px; }
+.armor-raw { font-size: 0.65rem; color: var(--d2-text-dim); }
+@media (max-width: 700px) {
+  .loadout-screen { grid-template-columns: 1fr; }
+  .subclass-column { order: -1; }
+}
+</style>
