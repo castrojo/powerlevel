@@ -4,7 +4,7 @@
       "id": "velocity",
       "name": "VELOCITY",
       "element": "arc",
-      "icon": "⚡",
+      "icon": "\u26a1",
       "triumphs": [
         {
           "id": "first_session",
@@ -12,15 +12,15 @@
           "description": "Complete your first Copilot session with a knowledge-store entry",
           "flavor": "The Traveler's light is new. So are you.",
           "points": 25,
-          "earned": false,
-          "earned_at": null,
+          "earned": true,
+          "earned_at": "2026-03-18T20:26:11Z",
           "secret": false,
           "stat_requirement": null
         },
         {
           "id": "tdd_first",
           "name": "RED BEFORE GREEN",
-          "description": "Complete a full TDD red→green→refactor cycle using tdd-red, tdd-green, tdd-refactor agents",
+          "description": "Complete a full TDD red\u2192green\u2192refactor cycle using tdd-red, tdd-green, tdd-refactor agents",
           "flavor": "You did not build before you broke.",
           "points": 50,
           "earned": false,
@@ -56,7 +56,7 @@
       "id": "community",
       "name": "COMMUNITY",
       "element": "solar",
-      "icon": "🔥",
+      "icon": "\ud83d\udd25",
       "triumphs": [
         {
           "id": "first_knowledge",
@@ -64,21 +64,27 @@
           "description": "Store your first knowledge-store entry",
           "flavor": "Every flame starts with a single spark.",
           "points": 25,
-          "earned": false,
-          "earned_at": null,
+          "earned": true,
+          "earned_at": "2026-03-18T20:26:11Z",
           "secret": false,
-          "stat_requirement": {"stat": "synthesis", "value": 1}
+          "stat_requirement": {
+            "stat": "synthesis",
+            "value": 1
+          }
         },
         {
           "id": "ten_knowledge",
           "name": "THE LIBRARY",
-          "description": "Accumulate 10 knowledge entries (SYNTHESIS ≥ 10)",
+          "description": "Accumulate 10 knowledge entries (SYNTHESIS \u2265 10)",
           "flavor": "The knowledge base has weight now.",
           "points": 50,
           "earned": false,
           "earned_at": null,
           "secret": false,
-          "stat_requirement": {"stat": "synthesis", "value": 10}
+          "stat_requirement": {
+            "stat": "synthesis",
+            "value": 10
+          }
         },
         {
           "id": "hammer_of_sol",
@@ -95,12 +101,15 @@
           "id": "pr_merged",
           "name": "TORCH PASSED",
           "description": "Ship a merged PR to any open source project using Copilot assistance",
-          "flavor": "The Solar Guardian does not hoard light — they emit it.",
+          "flavor": "The Solar Guardian does not hoard light \u2014 they emit it.",
           "points": 50,
           "earned": false,
           "earned_at": null,
           "secret": false,
-          "stat_requirement": {"stat": "output", "value": 1}
+          "stat_requirement": {
+            "stat": "output",
+            "value": 1
+          }
         }
       ]
     },
@@ -108,7 +117,7 @@
       "id": "mastery",
       "name": "MASTERY",
       "element": "void",
-      "icon": "🟣",
+      "icon": "\ud83d\udfe3",
       "triumphs": [
         {
           "id": "new_skill",
@@ -116,8 +125,8 @@
           "description": "Create a new skill file (SKILL.md) and add it to the INDEX.md",
           "flavor": "You cannot fire what you have not forged.",
           "points": 50,
-          "earned": false,
-          "earned_at": null,
+          "earned": true,
+          "earned_at": "2026-03-18T14:23:30Z",
           "secret": false,
           "stat_requirement": null
         },
@@ -149,7 +158,7 @@
       "id": "distribution",
       "name": "DISTRIBUTION",
       "element": "strand",
-      "icon": "🟢",
+      "icon": "\ud83d\udfe2",
       "triumphs": [
         {
           "id": "first_package",
@@ -190,7 +199,7 @@
       "id": "stability",
       "name": "STABILITY",
       "element": "stasis",
-      "icon": "🔵",
+      "icon": "\ud83d\udd35",
       "triumphs": [
         {
           "id": "first_build",
@@ -220,7 +229,7 @@
       "id": "seasonal",
       "name": "SEASON OF THE POWERLEVEL",
       "element": "cross",
-      "icon": "🔆",
+      "icon": "\ud83d\udd06",
       "triumphs": [
         {
           "id": "site_launched",
@@ -228,8 +237,8 @@
           "description": "Launch castrojo.github.io/powerlevel for the first time",
           "flavor": "The Guardian turns the tools on themselves.",
           "points": 100,
-          "earned": false,
-          "earned_at": null,
+          "earned": true,
+          "earned_at": "2026-03-19T00:31:05Z",
           "secret": false,
           "stat_requirement": null
         },
@@ -247,13 +256,16 @@
         {
           "id": "fifty_sessions",
           "name": "FIFTY LIGHTS",
-          "description": "Reach ENDURANCE 50 — fifty completed Copilot sessions",
+          "description": "Reach ENDURANCE 50 \u2014 fifty completed Copilot sessions",
           "flavor": "Fifty sessions. The Traveler noticed.",
           "points": 100,
           "earned": false,
           "earned_at": null,
           "secret": false,
-          "stat_requirement": {"stat": "endurance", "value": 50}
+          "stat_requirement": {
+            "stat": "endurance",
+            "value": 50
+          }
         }
       ]
     }
