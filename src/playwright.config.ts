@@ -2,10 +2,10 @@ import { defineConfig } from '@playwright/test';
 
 const isCI = !!process.env.CI;
 const PORT = 4322;
-const BASE = isCI ? `/powerlevel` : '/powerlevel';
+const BASE = '/powerlevel';
 
 export default defineConfig({
-  testDir: '../tests',
+  testDir: './tests',
   forbidOnly: isCI,
   retries: isCI ? 1 : 0,
   use: {
@@ -17,6 +17,5 @@ export default defineConfig({
     url: `http://localhost:${PORT}${BASE}`,
     reuseExistingServer: !isCI,
     timeout: 120_000,
-    cwd: process.cwd(),
   },
 });
