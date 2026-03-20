@@ -79,6 +79,70 @@ const subclassElements = [
       </div>
     </section>
 
+    <!-- Guardian Creed / Belief System -->
+    <section class="lore-section creed-section">
+      <div class="lore-eyebrow">GUARDIAN CREED</div>
+      <h2 class="lore-title">The Belief System</h2>
+      <p class="lore-body">
+        The Traveler does not hand out titles. Neither does the Terminal. The Powerlevel framework 
+        is the Bluefin project's belief system — expressed in the language of Destiny 2. 
+        The lore IS the values. The triumphs ARE the mission. The Darkness we fight is legacy technology.
+      </p>
+      <div class="creed-values">
+        <div class="creed-value">
+          <span class="creed-label">MISSION</span>
+          <p class="creed-text">Accelerate operating system development by integrating with the cloud native ecosystem, in order to provide an on-ramp for new open source contributors.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-label">THE ANTI-LEGACY TENET</span>
+          <p class="creed-text">We rigorously and aggressively move away from legacy technologies as soon as possible. The Darkness in our lore is X11, dnf, and the traditional distro model — what we leave behind. The Light is Wayland, Flatpak, Homebrew, and cloud-native tooling.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-label">PURPOSELY INVISIBLE</span>
+          <p class="creed-text">Bluefin is not a distribution. Your relationship is with Flathub, Homebrew, and whatever you put in your containers. The OS disappears. The tools remain.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-label">PUT IT IN A MUSEUM</span>
+          <p class="creed-text">This is like moving from the Jurassic to the Cretaceous. An important epoch of evolution — but it's time to upgrade. Old-school jank belongs in a container, not on the host.</p>
+        </div>
+        <div class="creed-value">
+          <span class="creed-label">EVOLUTION OVER STAGNATION</span>
+          <p class="creed-text">"Evolution is a process of constant branching and expansion." — Stephen Jay Gould. "Culture eats strategy for breakfast." — Peter Drucker.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bluefin's Kettle -->
+    <section class="lore-section kettle-section">
+      <div class="lore-eyebrow">BLUEFIN'S KETTLE</div>
+      <h2 class="lore-title">The Cast of Characters</h2>
+      <p class="lore-body">
+        Bluefin tells its story through artwork. Each creature in the flock represents something 
+        important to the ecosystem. Artwork by <a href="https://www.etsy.com/shop/JSchnurrCommissions" class="lore-link">Jacob Schnurr</a>.
+        "Each story element is related to open source projects and their maintainers and communities. 
+        Their challenges, and their triumphs."
+      </p>
+      <div class="kettle-grid">
+        {[
+          { name: 'Bluefin', role: 'The leader — first among equals, the nimblest', species: 'Deinonychus antirrhopus', icon: '🦖' },
+          { name: 'Bluefin LTS', role: 'The largest raptor — represents the inertia of the enterprise', species: 'Achillobator giganticus', icon: '🦕' },
+          { name: 'Karl', role: 'Kubernetes unleashed — our guiding light, the developer experience', species: 'Amargasaurus cazaui', icon: '☸️' },
+          { name: 'Katharina', role: 'An unexpected ally (Homebrew)', species: 'Kentrosaurus aethiopicus', icon: '🍺' },
+          { name: 'Dolly', role: 'Our application store (Flathub) — also, sails are cool', species: 'Dimetrodon limbatus', icon: '📦' },
+          { name: 'OhKei! / Tai', role: 'Transportation and Heavy Industrial Output', species: 'Concavenator corcovatus', icon: '🏭' },
+        ].map(creature => (
+          <div class="kettle-card">
+            <div class="kettle-icon">{creature.icon}</div>
+            <div class="kettle-info">
+              <span class="kettle-name">{creature.name}</span>
+              <span class="kettle-role">{creature.role}</span>
+              <span class="kettle-species">{creature.species}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- Ghost Messages -->
     <section class="lore-section ghost-section">
       <div class="lore-eyebrow">GHOST TRANSMISSION LOG</div>
@@ -123,4 +187,19 @@ const subclassElements = [
 .ghost-msg { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--d2-surface-2); border-radius: 4px; border: 1px solid var(--d2-border); }
 .ghost-icon { font-size: 1.5rem; flex-shrink: 0; }
 .ghost-text { color: var(--d2-text); font-style: italic; margin: 0; line-height: 1.6; }
+.creed-section { border-top: 2px solid var(--d2-exotic); }
+.creed-values { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.5rem; }
+.creed-value { padding: 1rem; background: var(--d2-surface-2); border-left: 3px solid var(--d2-exotic); border-radius: 2px; }
+.creed-label { display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--d2-exotic); margin-bottom: 0.5rem; font-weight: 700; }
+.creed-text { color: var(--d2-text); line-height: 1.7; font-size: 0.9rem; margin: 0; }
+.kettle-section { border-top: 2px solid var(--d2-solar); }
+.lore-link { color: var(--d2-solar); text-decoration: none; }
+.lore-link:hover { text-decoration: underline; }
+.kettle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.kettle-card { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--d2-surface-2); border: 1px solid var(--d2-border); border-radius: 4px; }
+.kettle-icon { font-size: 2rem; flex-shrink: 0; }
+.kettle-info { display: flex; flex-direction: column; gap: 0.25rem; }
+.kettle-name { font-family: var(--font-lore); color: var(--d2-solar); font-size: 1rem; font-weight: 700; }
+.kettle-role { color: var(--d2-text); font-size: 0.85rem; line-height: 1.4; }
+.kettle-species { color: var(--d2-text-dim); font-size: 0.75rem; font-style: italic; }
 </style>
