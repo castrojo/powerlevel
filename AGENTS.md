@@ -44,9 +44,21 @@ git push
 # compute.yml triggers automatically on push to data/skill-levels.json
 ```
 
-**Never run `just export-stats` locally. Never call compute.py directly.**
-The GHA cache (`computed-<hash>`) stores computed results between runs.
-deploy.yml restores from cache before building — no polling, no GHA commits needed.
+Use `just level-up` to open `skill-levels.json` in your editor for manual level edits.
+
+## Stats refresh (local workflow)
+
+`just export-stats` reads `~/.copilot/session-store.db` — a LOCAL file. GHA cannot access it.
+Run locally at session end to keep stats current:
+
+```bash
+cd ~/src/powerlevel
+just refresh   # = export-stats + build-site + commit + push
+```
+
+**Never annotate `just export-stats` as GHA-only.** It has always been a local command.
+The GHA cache (`computed-<hash>`) stores computed weapon/triumph results between runs.
+deploy.yml restores from cache before building.
 
 ## PL Formula
 `PL = 100 + sum(all weapon levels) / 8`
