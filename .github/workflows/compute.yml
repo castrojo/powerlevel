@@ -1,9 +1,13 @@
 # compute.yml — Sync weapon levels from SKILL.md + triumph state from events
 #
-# SETUP REQUIRED: This workflow reads castrojo/copilot-config (private repo).
-# Add a secret named COPILOT_CONFIG_PAT to this repo's Actions settings
-# (Settings → Secrets and variables → Actions → New repository secret).
-# The PAT must have `repo` scope on castrojo/copilot-config (read access is sufficient).
+# Auth: Uses the built-in GITHUB_TOKEN only — no custom PATs or secrets required.
+# GitHub Actions Design Rule: always prefer secrets.GITHUB_TOKEN (or github.token)
+# over custom PATs. Create custom secrets only when GITHUB_TOKEN is provably
+# insufficient (e.g., cross-org write access). Document why when you do.
+#
+# Cross-repo read: github.token can read castrojo/copilot-config because both
+# repos share the same owner (castrojo). If checkout fails with 403, enable
+# Actions read permissions in copilot-config settings — NOT by adding a PAT.
 
 name: Compute Powerlevel
 
@@ -29,13 +33,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Checkout castrojo/copilot-config (private) to read skills/*/SKILL.md
-      # Requires COPILOT_CONFIG_PAT secret with repo scope on castrojo/copilot-config
-      - name: Checkout copilot-config (private)
+      # Checkout castrojo/copilot-config to read skills/*/SKILL.md Level: fields.
+      # Uses the built-in github.token — no custom PAT needed.
+      - name: Checkout copilot-config
         uses: actions/checkout@v4
         with:
           repository: castrojo/copilot-config
-          token: ${{ secrets.COPILOT_CONFIG_PAT }}
+          token: ${{ github.token }}
           path: copilot-config
 
       # Run the compute script inline — stdlib only, no pip installs needed
