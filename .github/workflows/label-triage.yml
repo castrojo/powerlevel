@@ -1,0 +1,49 @@
+# .github/workflows/label-triage.yml
+# Auto-applies default labels when required labels are missing on new/edited issues.
+# Required labels: kind:* + priority:* + source:*
+# Never fails -- auto-remediates with safe defaults and posts a comment.
+# Script: .github/scripts/label-triage.py
+
+name: Label Triage
+
+on:
+  issues:
+    types: [opened, edited]
+  schedule:
+    # Weekly sweep: re-check all open issues on Monday at 09:00 UTC
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage-new-issue:
+    name: Auto-label new/edited issue
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply default labels if missing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          LABEL_TRIAGE_MODE: triage
+        run: python3 .github/scripts/label-triage.py
+
+  weekly-sweep:
+    name: Weekly label sweep
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Re-apply needs-triage to issues still missing required labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          LABEL_TRIAGE_MODE: sweep
+        run: python3 .github/scripts/label-triage.py
