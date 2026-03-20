@@ -20,9 +20,33 @@ Destiny 2-themed GitHub Copilot stats website. Go + Astro monorepo.
 - `just test-go` — Go unit tests
 - `just test-e2e` — Playwright E2E
 
-## Leveling up
-Edit `data/powerlevel-data.json` — bump weapon levels based on criteria in plan.
-Run `just export` then `just deploy`.
+## Leveling up (GHA-first design)
+
+**All computation runs in GitHub Actions. Agents are data sources only.**
+
+When a skill level increases, agents MUST update TWO files:
+
+1. `Level:` field in `~/src/skills/<name>/SKILL.md` (copilot-config repo)
+2. `~/src/powerlevel/data/skill-levels.json` — matching entry for the skill
+
+Both must be committed. `skill-levels.json` is the machine-readable source that
+`compute.yml` reads. Updating only SKILL.md will NOT update the powerlevel.
+
+```bash
+# After incrementing Level: in skills/X/SKILL.md:
+cd ~/src && just sync          # commit copilot-config
+# Then update powerlevel:
+# edit ~/src/powerlevel/data/skill-levels.json — bump "skill-name": N
+cd ~/src/powerlevel
+git add data/skill-levels.json
+git commit -m "feat: level up skill-name → N"
+git push
+# compute.yml triggers automatically on push to data/skill-levels.json
+```
+
+**Never run `just export-stats` locally. Never call compute.py directly.**
+The GHA cache (`computed-<hash>`) stores computed results between runs.
+deploy.yml restores from cache before building — no polling, no GHA commits needed.
 
 ## PL Formula
 `PL = 100 + sum(all weapon levels) / 8`
