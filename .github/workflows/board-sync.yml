@@ -1,0 +1,25 @@
+# TEMPLATE: .github/workflows/board-sync.yml
+# Copy this file to .github/workflows/board-sync.yml in each castrojo/* fork/owned repo.
+#
+# CRITICAL: Deploy ONLY to castrojo/* repos. NEVER to upstream repos.
+# Upstream repos: ublue-os/*, projectbluefin/* upstreams, cncf/* — READ ONLY.
+#
+# Required secret in the target repo: PROJECT_TOKEN
+# - Must be a classic PAT (ghp_*) with scopes: repo + project
+# - Add at: https://github.com/castrojo/<REPO>/settings/secrets/actions
+
+name: Sync to Project Board
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  board-sync:
+    name: Add to board if epic or high-priority
+    uses: castrojo/copilot-config/.github/workflows/board-add.yml@main
+    with:
+      issue_url: ${{ github.event.issue.html_url }}
+      issue_labels: ${{ join(github.event.issue.labels.*.name, ',') }}
+    secrets:
+      project_token: ${{ secrets.PROJECT_TOKEN }}
