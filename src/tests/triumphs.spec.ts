@@ -23,7 +23,7 @@ test.describe('Triumphs', () => {
   });
 
   test('secret triumph shows classified', async ({ page }) => {
-    await expect(page.getByText(/Classified/i)).toBeVisible();
+    await expect(page.getByText(/Classified/i).first()).toBeVisible();
   });
 
   test('triumph flavor text rendered', async ({ page }) => {

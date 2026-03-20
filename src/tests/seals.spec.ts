@@ -10,7 +10,7 @@ test.describe('Seals', () => {
   });
 
   test('all 5 seals rendered', async ({ page }) => {
-    for (const seal of ['CONQUEROR', 'CURSEBREAKER', 'CHRONICLER', 'WEAPONSMITH', 'IRON LORD']) {
+    for (const seal of ['CONQUEROR', 'CURSEBREAKER', 'CHRONICLER', 'BLACKSMITH', 'IRON LORD']) {
       await expect(page.getByText(seal).first()).toBeVisible();
     }
   });
@@ -22,7 +22,7 @@ test.describe('Seals', () => {
   });
 
   test('seal difficulty labels shown', async ({ page }) => {
-    await expect(page.getByText('pinnacle')).toBeVisible();
+    await expect(page.getByText('pinnacle').first()).toBeVisible();
   });
 
   test('seasonal seal shows expiry', async ({ page }) => {
