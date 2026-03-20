@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/castrojo/powerlevel/internal/data"
@@ -15,6 +17,65 @@ const W = 152 // 1440p sweet spot
 func dataPath() string {
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, "src", "powerlevel", "data", "powerlevel-data.json")
+}
+
+func sealsPath() string {
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, "src", "powerlevel", "data", "seals.json")
+}
+
+type sealEntry struct {
+	Name           string `json:"name"`
+	Icon           string `json:"icon"`
+	Difficulty     string `json:"difficulty"`
+	EarnedTriumphs int    `json:"earned_triumphs"`
+	TotalTriumphs  int    `json:"total_triumphs"`
+	Earned         bool   `json:"earned"`
+}
+
+type sealsFile struct {
+	Seals []sealEntry `json:"seals"`
+}
+
+func loadSeals(path string) []sealEntry {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	var sf sealsFile
+	if err := json.Unmarshal(b, &sf); err != nil {
+		return nil
+	}
+	return sf.Seals
+}
+
+func formatSealProgress(seals []sealEntry) string {
+	diffOrder := map[string]int{"accessible": 0, "veteran": 1, "pinnacle": 2, "seasonal": 3}
+	var active []sealEntry
+	for _, s := range seals {
+		if !s.Earned {
+			active = append(active, s)
+		}
+	}
+	if len(active) == 0 {
+		return "All seals complete ✓"
+	}
+	sort.Slice(active, func(i, j int) bool {
+		ri := float64(active[i].EarnedTriumphs) / max(float64(active[i].TotalTriumphs), 1)
+		rj := float64(active[j].EarnedTriumphs) / max(float64(active[j].TotalTriumphs), 1)
+		if ri != rj {
+			return ri > rj
+		}
+		return diffOrder[active[i].Difficulty] < diffOrder[active[j].Difficulty]
+	})
+	if len(active) > 5 {
+		active = active[:5]
+	}
+	parts := make([]string, len(active))
+	for i, s := range active {
+		parts[i] = fmt.Sprintf("%s %s %d/%d", s.Icon, s.Name, s.EarnedTriumphs, s.TotalTriumphs)
+	}
+	return strings.Join(parts, "  ·  ")
 }
 
 func main() {
@@ -119,6 +180,9 @@ func main() {
 	fmt.Println(thin)
 	fmt.Printf("  %s   New Light ◆ 1  Veteran ◆ 50  Mastercrafted ◆ 100\n", strings.Join(avgs, "  "))
 	fmt.Printf("  🔆 POWERLEVEL %s◆ %d%s   (%s)   --all for full view\n", plC, pl, renderer.E, rank)
+	if seals := loadSeals(sealsPath()); seals != nil {
+		fmt.Printf("  Seals: %s\n", formatSealProgress(seals))
+	}
 	fmt.Println(thin)
 }
 
