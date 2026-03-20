@@ -18,15 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore computed data cache
+      - name: Restore computed triumphs cache
         uses: actions/cache@v4
         with:
-          path: |
-            data/powerlevel-data.json
-            data/triumphs.json
+          path: data/triumphs.json
           key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
-          restore-keys: |
-            computed-
 
       - uses: actions/setup-node@v4
         with:
@@ -61,15 +57,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore computed data cache
+      - name: Restore computed triumphs cache
         uses: actions/cache@v4
         with:
-          path: |
-            data/powerlevel-data.json
-            data/triumphs.json
+          path: data/triumphs.json
           key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
-          restore-keys: |
-            computed-
 
       - uses: actions/setup-node@v4
         with:

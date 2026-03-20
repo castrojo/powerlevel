@@ -41,11 +41,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            data/powerlevel-data.json
             data/triumphs.json
           key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
-          restore-keys: |
-            computed-
 
       - name: Run compute script
         if: steps.cache.outputs.cache-hit != 'true'

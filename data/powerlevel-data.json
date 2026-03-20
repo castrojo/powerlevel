@@ -1,10 +1,4 @@
 {
-  "season": {
-    "name": "Season of the Powerlevel",
-    "project": "castrojo/powerlevel",
-    "quarter": "Q1 2026",
-    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark."
-  },
   "ghost_messages": [
     "Guardian. You were resurrected on July 12, 2021. Every session since is borrowed time. Spend it well.",
     "The epoch is shifting. What was Jurassic grows distant. The Cretaceous is yours now.",
@@ -22,54 +16,60 @@
     "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
     "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
   ],
+  "season": {
+    "name": "Season of the Powerlevel",
+    "project": "castrojo/powerlevel",
+    "quarter": "Q1 2026",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark."
+  },
   "stats": {
     "breadth": {
-      "raw": 5,
+      "raw": 6,
       "softCap": 20,
       "pinnacle": 100,
       "unit": "repos",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     },
     "endurance": {
-      "raw": 18,
+      "raw": 23,
       "softCap": 200,
       "pinnacle": 1000,
       "unit": "sessions",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     },
     "foresight": {
-      "raw": 15,
+      "raw": 22,
       "softCap": 50,
       "pinnacle": 300,
       "unit": "checkpoints",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     },
     "output": {
-      "raw": 57,
+      "raw": 82,
       "softCap": 100,
       "pinnacle": 500,
       "unit": "commits",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     },
     "recall": {
-      "raw": 222,
+      "raw": 289,
       "softCap": 2000,
       "pinnacle": 10000,
       "unit": "turns",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     },
     "synthesis": {
-      "raw": 4,
+      "raw": 5,
       "softCap": 50,
       "pinnacle": 500,
       "unit": "entries",
       "history": null,
-      "exported_at": "2026-03-19T22:21:39Z"
+      "exported_at": "2026-03-20T02:12:42Z"
     }
   },
   "weapons": {
