@@ -88,3 +88,7 @@ deploy: build-site
 # Show current PL
 pl:
     go run ./cmd/pl/
+
+# Lint GitHub Actions workflows with actionlint
+lint-ci:
+    actionlint .github/workflows/*.yml

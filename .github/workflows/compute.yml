@@ -1,13 +1,38 @@
 # compute.yml — Sync weapon levels from SKILL.md + triumph state from events
 #
-# Auth: Uses the built-in GITHUB_TOKEN only — no custom PATs or secrets required.
-# GitHub Actions Design Rule: always prefer secrets.GITHUB_TOKEN (or github.token)
-# over custom PATs. Create custom secrets only when GITHUB_TOKEN is provably
-# insufficient (e.g., cross-org write access). Document why when you do.
+# ═══════════════════════════════════════════════════════════════════════════════
+# ## Setup Required (one-time, by repo owner)
 #
-# Cross-repo read: github.token can read castrojo/copilot-config because both
-# repos share the same owner (castrojo). If checkout fails with 403, enable
-# Actions read permissions in copilot-config settings — NOT by adding a PAT.
+# This workflow checks out castrojo/copilot-config (a private repo) to read
+# Level: fields from skills/*/SKILL.md. github.token is scoped only to the
+# triggering repo (castrojo/powerlevel) and will 403 on cross-repo access —
+# even when both repos share the same owner. An SSH deploy key is used instead.
+#
+# Steps to create the deploy key:
+#
+#   1. Generate a dedicated ed25519 key pair (no passphrase):
+#        ssh-keygen -t ed25519 -C "powerlevel-compute-ro" \
+#          -f ~/.ssh/copilot_config_deploy_key -N ""
+#
+#   2. Add the PUBLIC key as a read-only deploy key to castrojo/copilot-config:
+#        GitHub → castrojo/copilot-config → Settings → Deploy keys → Add deploy key
+#        Title:  powerlevel-compute-ro
+#        Key:    (paste contents of ~/.ssh/copilot_config_deploy_key.pub)
+#        Allow write access: NO (leave unchecked)
+#
+#   3. Add the PRIVATE key as a repository secret to castrojo/powerlevel:
+#        GitHub → castrojo/powerlevel → Settings → Secrets and variables →
+#          Actions → New repository secret
+#        Name:   COPILOT_CONFIG_DEPLOY_KEY
+#        Value:  (paste contents of ~/.ssh/copilot_config_deploy_key)
+#
+#   4. Delete the local key pair after uploading — it lives only in GitHub now.
+#
+# Auth design rule (workflow/SKILL.md §14):
+#   Prefer github.token (built-in). Fine-grained PATs acceptable for cross-repo
+#   access. SSH deploy keys preferred over PATs — they are repo-scoped, cannot
+#   escalate, and expire only when explicitly revoked. Never use classic PATs.
+# ═══════════════════════════════════════════════════════════════════════════════
 
 name: Compute Powerlevel
 
@@ -33,13 +58,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Checkout castrojo/copilot-config to read skills/*/SKILL.md Level: fields.
-      # Uses the built-in github.token — no custom PAT needed.
+      # Checkout castrojo/copilot-config (private) to read skills/*/SKILL.md Level: fields.
+      # Uses an SSH deploy key (read-only, scoped to copilot-config only).
+      # See ## Setup Required block at the top of this file for one-time key setup.
       - name: Checkout copilot-config
         uses: actions/checkout@v4
         with:
           repository: castrojo/copilot-config
-          token: ${{ github.token }}
+          ssh-key: ${{ secrets.COPILOT_CONFIG_DEPLOY_KEY }}
           path: copilot-config
 
       # Run the compute script inline — stdlib only, no pip installs needed
