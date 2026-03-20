@@ -1487,6 +1487,72 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "warden"
+        },
+        {
+          "id": "ir_severity_triage",
+          "name": "TRIAGE PROTOCOL",
+          "description": "Define and document a severity classification matrix for a real project \u2014 at minimum P0/P1/P2 levels with criteria, response SLAs, and escalation paths for each severity",
+          "flavor": "The Ghost does not panic. It classifies. Panic is what happens before the protocol.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ir_chaos_test",
+          "name": "CONTROLLED COLLAPSE",
+          "description": "Execute a planned chaos engineering experiment \u2014 define the hypothesis, inject the failure, observe the blast radius, restore, and document findings. System must recover to steady state without manual intervention",
+          "flavor": "The Darkness does not ask permission before it strikes. Neither should your tests.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ir_sla_defined",
+          "name": "THE COVENANT'S TEETH",
+          "description": "Define formal SLAs for a real service with customer-facing commitments \u2014 availability target, response time, and consequence of breach. Document in the repo and reference from the README",
+          "flavor": "An SLO is a promise to yourself. An SLA is a promise to everyone else. Know the difference.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ir_blameless_culture",
+          "name": "THE BLAMELESS RECORD",
+          "description": "Run a blameless retrospective following a real incident or near-miss \u2014 separate what happened from who was involved, identify systemic factors, and produce action items that target process, not people",
+          "flavor": "The Light does not punish the Guardian who fell. It asks: what failed to catch them?",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ir_detection_gap_closed",
+          "name": "BLIND SPOT FOUND",
+          "description": "Identify a failure mode that currently produces no alert or log entry \u2014 add detection coverage (an alert, a structured log, or a health check) before the failure occurs in production",
+          "flavor": "The worst enemy is the one the Ghost cannot see. Close the gap before it opens.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "ir_postmortem_three",
+          "name": "PATTERN RECOGNIZED",
+          "description": "Write blameless postmortems for 3 distinct incidents in a season \u2014 at the third, identify a common root cause pattern across all three and produce a single architectural action item to address it",
+          "flavor": "The first incident is a surprise. The second is a coincidence. The third is a pattern. Name it.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     },
@@ -1507,6 +1573,83 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "spirekeeper"
+        },
+        {
+          "id": "obs_structured_logging",
+          "name": "THE READABLE DARK",
+          "description": "Instrument a service with structured logging (JSON or equivalent) \u2014 every log entry must include: timestamp, level, correlation ID, service name, and a message field. No freeform string concatenation",
+          "flavor": "The Ghost cannot parse chaos. Give it fields it can read.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_correlation_ids",
+          "name": "THE THREAD FOLLOWS",
+          "description": "Implement request correlation IDs that propagate across at least 2 service boundaries \u2014 a single trace ID visible in logs from ingress to final handler, queryable end-to-end",
+          "flavor": "Strand weaves through everything. So should your trace ID.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_alert_runbook_linked",
+          "name": "THE ALARM HAS A VOICE",
+          "description": "For every alert firing in production: ensure a runbook link is present in the alert body. Deploy this requirement for at minimum 5 distinct alerts across one or more projects",
+          "flavor": "An alarm that wakes you with no instructions is not an alarm. It is a complaint.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_metric_cardinality_fixed",
+          "name": "CARDINALITY CONTAINED",
+          "description": "Identify and remediate a high-cardinality metric label (e.g., user ID, request ID, or unbounded enum in a label) that is causing metric storage explosion \u2014 document before/after cardinality count",
+          "flavor": "The Traveler does not number every grain of light. Neither should your metrics.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_baseline_established",
+          "name": "THE KNOWN STATE",
+          "description": "Establish a documented performance baseline for a real service \u2014 p50, p95, p99 latency and error rate captured under normal load, committed to the repo, and referenced in future runbooks",
+          "flavor": "You cannot name what is broken until you know what is normal.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_on_call_dashboard",
+          "name": "THE FIRST SCREEN",
+          "description": "Build an on-call dashboard that answers the first 5 questions an engineer asks during an incident \u2014 it must be usable without familiarity with the system, and linked from the on-call rotation docs",
+          "flavor": "The Titan who arrives to an unfamiliar battle needs a map, not a legend.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "obs_full_golden_signals",
+          "name": "ALL FOUR BURNING",
+          "description": "For a single service in production: demonstrate all four Golden Signals (latency, traffic, errors, saturation) are queryable, graphed on a dashboard, and each has at least one associated alert threshold defined",
+          "flavor": "Four signals. One truth. The Seer who misses even one is flying blind.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     },
@@ -1551,6 +1694,50 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "pathfinder"
+        },
+        {
+          "id": "cr_doublecheck_on_pr",
+          "name": "THE ADVERSARIAL EYE",
+          "description": "Run the doublecheck agent on AI-generated code before merging a PR \u2014 all three pipeline layers (self-audit, source verification, adversarial review) completed, findings documented in the PR description",
+          "flavor": "The Ghost trusts the Light. It does not trust the code. Neither should you.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "cr_principal_consult",
+          "name": "THE TOWER ANSWERS",
+          "description": "Invoke the principal-software-engineer agent during a code review \u2014 the consultation must surface a design concern not caught in the initial review, documented as a PR comment before merge",
+          "flavor": "Zavala has seen the design before. He has also seen it fail. Ask him both times.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "cr_review_turnaround_five",
+          "name": "THE RAPID VERDICT",
+          "description": "Complete 5 code reviews within 4 hours of assignment \u2014 each must include substantive inline comments, not just LGTM. Track and document the turnaround time for each review",
+          "flavor": "The Trials do not wait for the late. Neither does the PR queue.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "cr_review_checklist",
+          "name": "THE GUARDIAN'S CHECKLIST",
+          "description": "Author and publish a code review checklist for your project \u2014 covering at minimum: security, test coverage, error handling, and API contract stability. Reference it from the CONTRIBUTING guide",
+          "flavor": "The checklist is not bureaucracy. It is the memory the reviewer does not have to carry.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     },
@@ -1687,6 +1874,39 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "pathfinder"
+        },
+        {
+          "id": "adr_design_doc_authored",
+          "name": "THE DESIGN COMMITTED",
+          "description": "Author a design document for a feature touching 3+ components before writing any implementation code \u2014 must include: problem statement, constraints, proposed solution, alternatives considered, and open questions",
+          "flavor": "The blueprint is not the building. But without it, the building is not the plan.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "adr_team_ratified",
+          "name": "THE COUNCIL DECIDES",
+          "description": "Have an ADR you authored reviewed and ratified by at least one other contributor \u2014 the review must result in at least one substantive change to the decision or its consequences section",
+          "flavor": "The Iron Lords did not build alone. The council sharpens what the individual cannot.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
+        },
+        {
+          "id": "adr_reversal_documented",
+          "name": "THE WRONG PATH NAMED",
+          "description": "Document a decision that was made and subsequently proven wrong \u2014 write the full reversal ADR: what was decided, what changed, what it cost, and what the new decision is. Tag the original ADR as Deprecated",
+          "flavor": "The Darkness teaches by winning. The Guardian teaches by writing down how they lost.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     },
@@ -1879,6 +2099,17 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "warden"
+        },
+        {
+          "id": "toil_runbook_eliminated",
+          "name": "THE RUNBOOK DIES WELL",
+          "description": "Automate a runbook procedure so thoroughly that the runbook becomes unnecessary \u2014 the automation handles detection, response, and verification. Mark the runbook as Deprecated with a pointer to the automation",
+          "flavor": "The best runbook is the one that no longer needs to be run.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null
         }
       ]
     },
