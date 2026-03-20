@@ -7,6 +7,4 @@
 #   triumph_earned  {"type":"triumph_earned","triumph_id":"first_light","timestamp":"2026-03-19T00:00:00Z","note":"optional context"}
 #   level_noted     {"type":"level_noted","skill":"workflow","level":2,"timestamp":"2026-03-19T00:00:00Z"}
 #   seal_earned     {"type":"seal_earned","seal_id":"cursebreaker","timestamp":"2026-03-19T00:00:00Z","gilded":false}
-# trigger: test reusable workflow pattern 2026-03-20
 # verify: reusable workflow access test
-# trigger
