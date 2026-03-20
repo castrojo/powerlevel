@@ -75,6 +75,43 @@ def main():
                 json.dump(triumphs_data, f, indent=2)
                 f.write("\n")
             changed = True
+    else:
+        with open("data/triumphs.json") as f:
+            triumphs_data = json.load(f)
+
+    # ── 4. Update seal progress in seals.json ─────────────────────────────────
+    all_earned = {
+        tr["id"]
+        for cat in triumphs_data.get("categories", [])
+        for tr in cat.get("triumphs", [])
+        if tr.get("earned")
+    }
+
+    with open("data/seals.json") as f:
+        seals_data = json.load(f)
+
+    seals_changed = False
+    for seal in seals_data.get("seals", []):
+        required = seal.get("required_triumph_ids", [])
+        earned_count = sum(1 for tid in required if tid in all_earned)
+        total_count = len(required)
+        is_earned = total_count > 0 and earned_count >= total_count
+        if (
+            seal.get("earned_triumphs") != earned_count
+            or seal.get("total_triumphs") != total_count
+            or seal.get("earned") != is_earned
+        ):
+            print(f"  Seal {seal['id']}: {earned_count}/{total_count} triumphs earned")
+            seal["earned_triumphs"] = earned_count
+            seal["total_triumphs"] = total_count
+            seal["earned"] = is_earned
+            seals_changed = True
+
+    if seals_changed:
+        with open("data/seals.json", "w") as f:
+            json.dump(seals_data, f, indent=2)
+            f.write("\n")
+        changed = True
 
     # Write result to GITHUB_OUTPUT so the workflow can gate the commit step
     output_file = os.environ.get("GITHUB_OUTPUT", "")
