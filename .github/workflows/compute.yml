@@ -1,142 +1,69 @@
-# compute.yml — Sync weapon levels from SKILL.md + triumph state from events
+# compute.yml — Sync weapon levels from skill-levels.json + triumph state from events.
 #
-# Auth design: always github.token — zero custom secrets required.
+# Design: all computation runs in GitHub Actions. Zero cross-repo auth needed.
+#   - data/skill-levels.json  (committed by agents alongside SKILL.md Level: changes)
+#   - data/powerlevel-events.jsonl  (appended by agents when triumphs are earned)
 #
-# Cross-repo read pattern (workflow/SKILL.md §14):
-#   castrojo/copilot-config is a private repo. To read its SKILL.md files,
-#   this workflow calls copilot-config's reusable export-levels.yml workflow.
-#   The called workflow runs with copilot-config's own github.token — no PAT,
-#   no deploy key, no secrets of any kind.
-#
-# One-time prerequisite (already done):
-#   copilot-config → Settings → Actions → General → Access →
-#   "Accessible from repositories owned by castrojo"
+# Cache key = hash of both input files. Cache hit → skip computation entirely.
+# deploy.yml restores from the same cache before building the Astro site.
+# Auth: github.token only. No PATs, no deploy keys, no cross-repo calls.
 
 name: Compute Powerlevel
 
 on:
-  schedule:
-    - cron: '0 9 * * 1'  # Mondays 09:00 UTC
-  workflow_dispatch:
   push:
     paths:
+      - 'data/skill-levels.json'
       - 'data/powerlevel-events.jsonl'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays 09:00 UTC
+
+concurrency:
+  group: compute
+  cancel-in-progress: true
 
 jobs:
-  # Step 1: call copilot-config's reusable workflow to extract Level: fields.
-  # It checks out its own repo with its own github.token — no credentials needed here.
-  extract:
-    name: Extract skill levels from copilot-config
-    uses: castrojo/copilot-config/.github/workflows/export-levels.yml@main
-
-  # Step 2: use the extracted levels + local events to update data files.
   compute:
-    name: Sync weapon levels + triumph state
-    needs: extract
+    name: Compute weapon levels + triumph state
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout powerlevel repo
+      - name: Checkout powerlevel
         uses: actions/checkout@v4
         with:
           token: ${{ github.token }}
 
-      # Write extracted levels to a file via env var — avoids any injection risk
-      - name: Write extracted levels to file
-        env:
-          LEVELS_JSON: ${{ needs.extract.outputs.levels_json }}
-        run: echo "$LEVELS_JSON" > /tmp/skill-levels.json
+      - name: Restore computed data cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/powerlevel-data.json
+            data/triumphs.json
+          key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
+          restore-keys: |
+            computed-
 
-      - name: Compute weapon levels and triumph state
+      - name: Run compute script
+        if: steps.cache.outputs.cache-hit != 'true'
         id: compute
-        run: |
-          python3 - << 'EOF'
-          import json, os, sys
-
-          # ── 1. Read Level: values from copilot-config (via reusable workflow) ──
-          with open('/tmp/skill-levels.json') as f:
-              skill_levels = json.load(f)
-          print(f"Got {len(skill_levels)} skill levels from copilot-config")
-
-          # ── 2. Update powerlevel-data.json weapon levels ──────────────────────
-          with open('data/powerlevel-data.json') as f:
-              pl_data = json.load(f)
-
-          changed = False
-          for skill, level in skill_levels.items():
-              if skill in pl_data.get('weapons', {}):
-                  current = pl_data['weapons'][skill].get('level')
-                  if current != level:
-                      print(f"  {skill}: {current} → {level}")
-                      pl_data['weapons'][skill]['level'] = level
-                      changed = True
-
-          if changed:
-              with open('data/powerlevel-data.json', 'w') as f:
-                  json.dump(pl_data, f, indent=2)
-                  f.write('\n')
-              print(f"Updated weapon levels for {len(skill_levels)} skills")
-          else:
-              print("No weapon level changes")
-
-          # ── 3. Read powerlevel-events.jsonl → update triumphs.json ───────────
-          earned_triumph_ids = set()
-          events_path = 'data/powerlevel-events.jsonl'
-          if os.path.exists(events_path):
-              with open(events_path) as f:
-                  for lineno, line in enumerate(f, 1):
-                      line = line.strip()
-                      if not line or line.startswith('#'):
-                          continue
-                      try:
-                          event = json.loads(line)
-                          if event.get('type') == 'triumph_earned':
-                              earned_triumph_ids.add(event['triumph_id'])
-                      except json.JSONDecodeError as e:
-                          print(f"  Warning: line {lineno}: {e}")
-
-          print(f"Found {len(earned_triumph_ids)} earned triumph IDs in events log")
-
-          if earned_triumph_ids:
-              with open('data/triumphs.json') as f:
-                  triumphs_data = json.load(f)
-
-              triumph_changed = False
-              for category in triumphs_data.get('categories', []):
-                  for triumph in category.get('triumphs', []):
-                      if triumph['id'] in earned_triumph_ids and not triumph.get('earned'):
-                          triumph['earned'] = True
-                          if not triumph.get('earned_at'):
-                              triumph['earned_at'] = os.environ.get('COMPUTE_DATE', 'unknown')
-                          print(f"  Marked triumph earned: {triumph['id']}")
-                          triumph_changed = True
-
-              if triumph_changed:
-                  with open('data/triumphs.json', 'w') as f:
-                      json.dump(triumphs_data, f, indent=2)
-                      f.write('\n')
-                  changed = True
-
-          # exit 0 = changes written, exit 2 = nothing changed (not an error)
-          sys.exit(0 if changed else 2)
-          EOF
-        env:
-          COMPUTE_DATE: ${{ github.run_id }}
+        run: python3 scripts/compute.py
         continue-on-error: true
 
-      - name: Commit changes
-        if: steps.compute.outcome == 'success'
+      - name: Commit updated data files
+        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/powerlevel-data.json data/triumphs.json
-          git diff --staged --quiet || git commit -m "chore: GHA compute — sync weapon levels + triumph state [skip ci]"
+          git diff --staged --quiet || git commit -m "chore: GHA compute — sync weapon levels + triumph state"
           git push
 
-      - name: Check compute result
-        if: steps.compute.outcome == 'failure'
+      - name: Fail if compute errored
+        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outcome == 'failure'
         run: |
-          echo "::error::Compute script failed. Check logs above."
+          echo "::error::Compute script failed — see logs above."
           exit 1
