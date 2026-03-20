@@ -76,7 +76,7 @@
     "workflow": {
       "weapon": "Trustee",
       "element": "arc",
-      "level": 3,
+      "level": 5,
       "aspect": "KNOCKOUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -97,7 +97,7 @@
     "github": {
       "weapon": "The Chaperone",
       "element": "arc",
-      "level": 3,
+      "level": 5,
       "aspect": "JUGGERNAUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -127,7 +127,7 @@
     "knowledge": {
       "weapon": "Gjallarhorn",
       "element": "solar",
-      "level": 2,
+      "level": 4,
       "aspect": "SOL INVICTUS",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -702,7 +702,7 @@
     "powerlevel": {
       "weapon": "Monte Carlo",
       "element": "solar",
-      "level": 2,
+      "level": 4,
       "aspect": "INTO THE FRAY",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
