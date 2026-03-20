@@ -1,0 +1,157 @@
+# compute.yml — Sync weapon levels from SKILL.md + triumph state from events
+#
+# SETUP REQUIRED: This workflow reads castrojo/copilot-config (private repo).
+# Add a secret named COPILOT_CONFIG_PAT to this repo's Actions settings
+# (Settings → Secrets and variables → Actions → New repository secret).
+# The PAT must have `repo` scope on castrojo/copilot-config (read access is sufficient).
+
+name: Compute Powerlevel
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays 09:00 UTC — matches deploy.yml cadence
+  workflow_dispatch:       # Manual trigger for immediate update
+  push:
+    paths:
+      - 'data/powerlevel-events.jsonl'  # Re-compute when events are appended
+
+jobs:
+  compute:
+    name: Sync weapon levels + triumph state
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push the updated data files back to this repo
+
+    steps:
+      # Checkout castrojo/powerlevel (this repo) so we can write data files and commit
+      - name: Checkout powerlevel repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Checkout castrojo/copilot-config (private) to read skills/*/SKILL.md
+      # Requires COPILOT_CONFIG_PAT secret with repo scope on castrojo/copilot-config
+      - name: Checkout copilot-config (private)
+        uses: actions/checkout@v4
+        with:
+          repository: castrojo/copilot-config
+          token: ${{ secrets.COPILOT_CONFIG_PAT }}
+          path: copilot-config
+
+      # Run the compute script inline — stdlib only, no pip installs needed
+      # Exit codes: 0 = changes were written, 2 = nothing changed (not an error)
+      - name: Compute weapon levels and triumph state
+        id: compute
+        run: |
+          python3 << 'EOF'
+          import json, os, re, glob, sys
+
+          # ── 1. Read Level: values from copilot-config SKILL.md files ──────────
+          skill_levels = {}
+          for path in glob.glob('copilot-config/skills/*/SKILL.md'):
+              skill_name = os.path.basename(os.path.dirname(path))
+              with open(path) as f:
+                  content = f.read()
+              # Match the ## Powerlevel section and extract Level: field
+              pl_match = re.search(
+                  r'## Powerlevel.*?\*\*Level:\*\*\s*(\d+)',
+                  content,
+                  re.DOTALL
+              )
+              if pl_match:
+                  skill_levels[skill_name] = int(pl_match.group(1))
+
+          print(f"Found Level: fields in {len(skill_levels)} SKILL.md files: {sorted(skill_levels.keys())}")
+
+          # ── 2. Update powerlevel-data.json weapon levels ──────────────────────
+          with open('data/powerlevel-data.json') as f:
+              pl_data = json.load(f)
+
+          changed = False
+          for skill, level in skill_levels.items():
+              if skill in pl_data.get('weapons', {}):
+                  current = pl_data['weapons'][skill].get('level')
+                  if current != level:
+                      print(f"  {skill}: {current} → {level}")
+                      pl_data['weapons'][skill]['level'] = level
+                      changed = True
+
+          if changed:
+              with open('data/powerlevel-data.json', 'w') as f:
+                  json.dump(pl_data, f, indent=2)
+                  f.write('\n')
+              print(f"Updated weapon levels for {len(skill_levels)} skills")
+          else:
+              print("No weapon level changes")
+
+          # ── 3. Read powerlevel-events.jsonl → update triumphs.json ───────────
+          earned_triumph_ids = set()
+          events_path = 'data/powerlevel-events.jsonl'
+          if os.path.exists(events_path):
+              with open(events_path) as f:
+                  for lineno, line in enumerate(f, 1):
+                      line = line.strip()
+                      if not line or line.startswith('#'):
+                          continue
+                      try:
+                          event = json.loads(line)
+                          if event.get('type') == 'triumph_earned':
+                              earned_triumph_ids.add(event['triumph_id'])
+                      except json.JSONDecodeError as e:
+                          print(f"  Warning: skipping malformed JSON on line {lineno}: {e}")
+
+          print(f"Found {len(earned_triumph_ids)} earned triumph IDs in events log")
+
+          if earned_triumph_ids:
+              with open('data/triumphs.json') as f:
+                  triumphs_data = json.load(f)
+
+              triumph_changed = False
+              compute_date = os.environ.get('COMPUTE_DATE', 'unknown')
+              for category in triumphs_data.get('categories', []):
+                  for triumph in category.get('triumphs', []):
+                      if triumph['id'] in earned_triumph_ids and not triumph.get('earned'):
+                          triumph['earned'] = True
+                          # Preserve earned_at if already set; otherwise stamp today
+                          if not triumph.get('earned_at'):
+                              triumph['earned_at'] = compute_date
+                          print(f"  Marked triumph earned: {triumph['id']}")
+                          triumph_changed = True
+
+              if triumph_changed:
+                  with open('data/triumphs.json', 'w') as f:
+                      json.dump(triumphs_data, f, indent=2)
+                      f.write('\n')
+                  print(f"Updated triumphs.json ({len(earned_triumph_ids)} IDs processed)")
+                  changed = True
+              else:
+                  print("No triumph state changes")
+
+          # ── 4. Signal whether anything changed (consumed by next step) ────────
+          # exit 0 = changes written, exit 2 = clean run / nothing to commit
+          sys.exit(0 if changed else 2)
+          EOF
+        env:
+          COMPUTE_DATE: ${{ github.event.repository.updated_at || '' }}
+        # exit 2 means "nothing changed" — not a workflow failure
+        continue-on-error: true
+
+      # Only commit when the compute step wrote changes (exit 0)
+      # exit 2 (no changes) skips this step cleanly
+      - name: Commit changes
+        if: steps.compute.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/powerlevel-data.json data/triumphs.json
+          # Double-check: only commit if staged changes exist
+          git diff --staged --quiet || git commit -m "chore: GHA compute — sync weapon levels + triumph state [skip ci]"
+          git push
+
+      # Fail the workflow explicitly if compute exited with an unexpected code
+      # (anything other than 0=changed or 2=no-changes)
+      - name: Check compute result
+        if: steps.compute.outcome == 'failure'
+        run: |
+          echo "::error::Compute script failed with an unexpected error. Check logs above."
+          exit 1
