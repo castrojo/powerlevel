@@ -1,9 +1,44 @@
 {
-  "generated_at": "2026-03-19T22:21:39Z",
-  "total_dispatches": 0,
-  "model_counts": {},
-  "task_counts": {},
-  "models_by_task": {},
-  "top_models": [],
-  "recent": []
+  "generated_at": "2026-03-20T01:53:41Z",
+  "total_dispatches": 1,
+  "model_counts": {
+    "claude-opus-4.6": 1,
+    "gemini-3-pro-preview": 1,
+    "gpt-5.2": 1
+  },
+  "task_counts": {
+    "code-review": 1
+  },
+  "models_by_task": {
+    "code-review": {
+      "claude-opus-4.6": 1,
+      "gemini-3-pro-preview": 1,
+      "gpt-5.2": 1
+    }
+  },
+  "top_models": [
+    {
+      "model": "gpt-5.2",
+      "count": 1
+    },
+    {
+      "model": "gemini-3-pro-preview",
+      "count": 1
+    },
+    {
+      "model": "claude-opus-4.6",
+      "count": 1
+    }
+  ],
+  "recent": [
+    {
+      "timestamp": "2026-03-20T01:40:25Z",
+      "task": "code-review",
+      "models": [
+        "gpt-5.2",
+        "gemini-3-pro-preview",
+        "claude-opus-4.6"
+      ]
+    }
+  ]
 }
