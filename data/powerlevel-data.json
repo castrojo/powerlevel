@@ -698,6 +698,36 @@
       "subclass": "void",
       "super": "Sentinel Shield / Ward of Dawn",
       "primary": false
+    },
+    "powerlevel": {
+      "weapon": "Monte Carlo",
+      "element": "solar",
+      "level": 2,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "HAMMER OF SOL",
+      "icon_path": "/icons/weapons/monte-carlo.png"
+    },
+    "bluefin-mcp": {
+      "weapon": "Dead Messenger",
+      "element": "solar",
+      "level": 2,
+      "aspect": "INTO THE FRAY",
+      "weapon_type": "Exotic Weapon",
+      "subclass": "solar",
+      "super": "HAMMER OF SOL",
+      "icon_path": "/icons/weapons/dead-messenger.png"
+    },
+    "astro-dark-mode": {
+      "weapon": "Erianas Vow",
+      "element": "solar",
+      "level": 1,
+      "aspect": "RADIANT",
+      "weapon_type": "Legendary Weapon",
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "icon_path": "/icons/weapons/erianas-vow.png"
     }
   }
 }
