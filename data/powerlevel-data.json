@@ -7,59 +7,59 @@
   },
   "stats": {
     "breadth": {
-      "raw": 6,
+      "raw": 5,
       "softCap": 20,
       "pinnacle": 100,
       "unit": "repos",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "endurance": {
-      "raw": 23,
+      "raw": 18,
       "softCap": 200,
       "pinnacle": 1000,
       "unit": "sessions",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "foresight": {
-      "raw": 20,
+      "raw": 15,
       "softCap": 50,
       "pinnacle": 300,
       "unit": "checkpoints",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "output": {
-      "raw": 79,
+      "raw": 57,
       "softCap": 100,
       "pinnacle": 500,
       "unit": "commits",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "recall": {
-      "raw": 287,
+      "raw": 222,
       "softCap": 2000,
       "pinnacle": 10000,
       "unit": "turns",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     },
     "synthesis": {
-      "raw": 5,
+      "raw": 4,
       "softCap": 50,
       "pinnacle": 500,
       "unit": "entries",
       "history": null,
-      "exported_at": "2026-03-20T01:53:41Z"
+      "exported_at": "2026-03-19T22:21:39Z"
     }
   },
   "weapons": {
     "workflow": {
       "weapon": "Trustee",
       "element": "arc",
-      "level": 1,
+      "level": 3,
       "aspect": "KNOCKOUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -70,7 +70,7 @@
     "cicd-learning": {
       "weapon": "Outbreak Perfected",
       "element": "arc",
-      "level": 1,
+      "level": 2,
       "aspect": "KNOCKOUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -80,7 +80,7 @@
     "github": {
       "weapon": "The Chaperone",
       "element": "arc",
-      "level": 1,
+      "level": 3,
       "aspect": "JUGGERNAUT",
       "weapon_type": "Legendary Weapon",
       "subclass": "arc",
@@ -110,7 +110,7 @@
     "knowledge": {
       "weapon": "Gjallarhorn",
       "element": "solar",
-      "level": 1,
+      "level": 2,
       "aspect": "SOL INVICTUS",
       "weapon_type": "Legendary Weapon",
       "subclass": "solar",
@@ -408,7 +408,7 @@
       "element": "strand",
       "subclass": "strand",
       "super": "BLADEFURY",
-      "level": 1,
+      "level": 2,
       "icon_path": "/icons/weapons/tractor-cannon.png"
     },
     "bluefin-renovate": {

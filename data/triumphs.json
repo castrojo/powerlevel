@@ -49,50 +49,6 @@
           "earned_at": null,
           "secret": false,
           "stat_requirement": null
-        },
-        {
-          "id": "velocity_blueprint_mastery",
-          "name": "ARCHITECT'S BLUEPRINT",
-          "description": "Use blueprint-mode correctly for 3 separate features \u2014 each invocation must pass all planning gates before implementation begins, with gate output documented in the PR description",
-          "flavor": "The plan is not the map. The plan is the weapon.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "velocity_ci_streak",
-          "name": "GREEN UNBROKEN",
-          "description": "Achieve 10 consecutive GitHub Actions runs that pass on the first attempt \u2014 no re-runs, no workflow_dispatch retries, no force-push resets across any repo",
-          "flavor": "The Traveler's Light does not flicker. Neither does your pipeline.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "velocity_parallel_agents",
-          "name": "COORDINATED FIRE",
-          "description": "Dispatch 3 or more agents simultaneously in a single session \u2014 each completing a distinct, real task in parallel \u2014 and synthesize their outputs into a unified deliverable",
-          "flavor": "The Vanguard does not take turns. Neither should you.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "velocity_friction_filed",
-          "name": "FRICTION LOGGED",
-          "description": "Observe a workflow friction point during a session and file a GitHub issue or SKILL.md update to address it before the session ends \u2014 the fix is documented, not deferred",
-          "flavor": "The log remembers what the Guardian forgets. Write it down.",
-          "points": 25,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -154,50 +110,6 @@
             "stat": "output",
             "value": 1
           }
-        },
-        {
-          "id": "community_cncf_contrib",
-          "name": "THE CNCF PLEDGE",
-          "description": "Contribute a merged PR to any CNCF project repository \u2014 governance docs, people site, projects site, endusers site, or landscape data \u2014 using the cncf-dev or cncf-community skill",
-          "flavor": "The cloud is not a place. It is a promise made between builders. You kept it.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "community_docs_published",
-          "name": "WORDS IN THE ARCHIVE",
-          "description": "Publish or substantially update a blog post, documentation page, or user guide \u2014 PR merged to bluefin-docs or any public-facing documentation repo",
-          "flavor": "The Light was never meant to be kept. Someone had to write it down.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "community_skill_levelup",
-          "name": "POWER ASCENDING",
-          "description": "Record the first Level: increment in any skill's SKILL.md \u2014 the moment a skill crosses from loaded to mastered, marked in the permanent record",
-          "flavor": "The Ghost watched the number change. So did you. Neither of you said anything. Both of you knew.",
-          "points": 25,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "community_cross_skill",
-          "name": "THE CONVERGENCE",
-          "description": "In a single session, meaningfully apply 3 or more distinct skill families \u2014 each must produce a real output (PR, knowledge entry, or merged change). Domains genuinely integrated, not sequential",
-          "flavor": "Ikora Rey does not specialize. She contains multitudes. So does the session log.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -234,50 +146,6 @@
           "name": "RESONANCE UNLOCKED",
           "description": "Use skill-improver to improve an existing SKILL.md with measurable changes",
           "flavor": "The weapon is better because you used it.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "mastery_vuln_remediated",
-          "name": "SHADOW BANISHED",
-          "description": "Use se-security-reviewer to identify a real security vulnerability \u2014 OWASP Top 10 or equivalent \u2014 and remediate it with a merged PR. Finding must be actionable, not theoretical",
-          "flavor": "The Void does not hide what you refuse to see. It only waits.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "mastery_tdd_cycle",
-          "name": "THE TRIUNE PATH",
-          "description": "Complete the full TDD red->green->refactor cycle using all three agents (tdd-red, tdd-green, tdd-refactor) for a real feature \u2014 all three phases in a single session, all tests green at the end",
-          "flavor": "Three agents. One truth. The code that emerged was not written. It was proven.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "mastery_doublecheck",
-          "name": "SECOND SIGHT",
-          "description": "Run the doublecheck agent on 3 distinct AI-generated outputs in a season \u2014 each must complete all three pipeline layers (self-audit, source verification, adversarial review) and produce a structured report",
-          "flavor": "The first read is for understanding. The second read is for the truth.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "mastery_principal_review",
-          "name": "VOICE FROM THE TOWER",
-          "description": "Invoke the principal-software-engineer agent on a real architectural decision \u2014 the consultation must surface at minimum one design concern or trade-off that materially changes your approach",
-          "flavor": "Zavala does not advise lightly. Neither does the agent. Listen both times.",
           "points": 50,
           "earned": false,
           "earned_at": null,
@@ -324,50 +192,6 @@
           "earned_at": null,
           "secret": true,
           "stat_requirement": null
-        },
-        {
-          "id": "distribution_flatpak",
-          "name": "FLATTENED AND SHIPPED",
-          "description": "Publish a Flatpak application using the flatpak skill \u2014 AppStream metainfo passes appstreamcli validate with zero warnings and zero errors, and the submission reaches Flathub or a public remote",
-          "flavor": "The sandbox was not a prison. It was a promise that the app would behave. It did.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "distribution_brew_merged",
-          "name": "THE CASK LANDS",
-          "description": "Submit a Homebrew cask or formula using the homebrew-tap skill that is merged to ublue-os/homebrew-tap or castrojo/tap \u2014 CI must pass on the first push",
-          "flavor": "The tap is a contract. The cask is the handshake. Both have been kept.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "distribution_oci_pushed",
-          "name": "SEALED IN LIGHT",
-          "description": "Build, tag, and push an OCI container image using the oci-images skill \u2014 cosign signature verification must pass, and the image must be pullable from GHCR by a separate environment",
-          "flavor": "The image is not a file. It is a promise, signed in cryptographic light.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "distribution_triple_format",
-          "name": "THREE VECTORS",
-          "description": "Package the same software in 3 or more distinct distribution formats (e.g., Homebrew cask, Flatpak, OCI image, COPR RPM) across a single season \u2014 each format must be independently installable",
-          "flavor": "One target. Three trajectories. The Guardian who can only aim one way is not a threat.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -394,50 +218,6 @@
           "description": "Pop the swe-subagent super to stabilize a chaotic multi-file implementation",
           "flavor": "Chaos does not survive the cold. Neither does the bug.",
           "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "stability_build_green",
-          "name": "THE MATRIX HOLDS",
-          "description": "Achieve a fully green Bluefin image build \u2014 all variant matrix jobs pass, all cosign checks succeed, no CI failures across any matrix dimension",
-          "flavor": "The Behemoth does not bend. It holds. When it holds, nothing moves.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "stability_no_hotfix",
-          "name": "IMMUTABLE COVENANT",
-          "description": "Complete a full season of platform work with zero hotfix commits \u2014 all changes go through the proper PR gate, no emergency bypasses, no direct pushes to protected branches",
-          "flavor": "The fortress was not built to be patched. It was built to hold. It held.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "stability_bootc_switch",
-          "name": "THE SWITCH IS MADE",
-          "description": "Successfully execute a bootc switch to a locally-built OCI image in a QEMU VM, verify the running system matches the expected image digest, and document the process in the knowledge store",
-          "flavor": "The old system did not die. It became something better. That is the nature of immutable light.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "stability_lts_gate",
-          "name": "GATED AND RELEASED",
-          "description": "Complete a full bluefin-lts PR gate cycle from start to finish: PR triggers create-lts-pr.yml gate, draft created, squash-merge approved, merged without force pushes or manual interventions",
-          "flavor": "The Queen's Gate is not a formality. It is the proof that the platform was ready.",
-          "points": 75,
           "earned": false,
           "earned_at": null,
           "secret": false,
@@ -486,39 +266,6 @@
             "stat": "endurance",
             "value": 50
           }
-        },
-        {
-          "id": "seasonal_first_compute",
-          "name": "THE COMPUTATION RUNS",
-          "description": "Witness the first successful pl-gha-compute GitHub Actions run \u2014 the workflow that reads SKILL.md Level: fields and writes powerlevel-data.json \u2014 all steps green, data updated",
-          "flavor": "The system computed itself. The Traveler watched. The log said: success.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "seasonal_seal_progress",
-          "name": "THE SEAL TURNS",
-          "description": "Reach 50% progress on any seal that has never previously been at 50% \u2014 the moment the title shifts from aspiration to trajectory",
-          "flavor": "Halfway is not a destination. It is the proof that the destination exists.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "seasonal_powerlevel_threshold",
-          "name": "THE THRESHOLD CROSSED",
-          "description": "Cross a Powerlevel milestone threshold (500, 750, 1000, 1250, 1500, or 1750) for the first time \u2014 recorded automatically when the dashboard computes the new level",
-          "flavor": "The number changed. The Guardian did not. But something about the room felt different.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -1453,6 +1200,42 @@
       "seal_id": "warden",
       "triumphs": [
         {
+          "id": "first_responder",
+          "name": "FIRST BLOOD",
+          "description": "Respond to a real production or CI incident \u2014 not a routine failure \u2014 within 1 hour of detection. Document the initial triage steps taken in the knowledge store within the same session.",
+          "flavor": "The alert fires. The cursor moves. The Warden was already watching.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
+          "id": "blameless_record",
+          "name": "BLAMELESS RECORD",
+          "description": "Write a complete blameless postmortem for a real incident or near-miss: timeline, root cause (not just symptom), contributing factors, action items with owners and due dates. Store in knowledge-store with `type:postmortem` tag.",
+          "flavor": "No names in the report. Only systems, decisions, and the gaps between them.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
+          "id": "five_whys_deep",
+          "name": "THE FIVE WHYS",
+          "description": "Apply the 5-why technique to a real failure \u2014 trace the causal chain to its root (not the proximate cause). Each 'why' must be a distinct, verifiable statement. Document in knowledge-store with the full chain.",
+          "flavor": "The proximate cause is never the cause. Keep asking.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
           "id": "incident_commander",
           "name": "INCIDENT COMMANDER",
           "description": "Coordinate a multi-component incident response \u2014 define the severity, assign investigation tracks (at minimum one for mitigation, one for root cause), drive to resolution, and deliver the postmortem. All documented with timestamps.",
@@ -1477,6 +1260,42 @@
           "seal_id": "warden"
         },
         {
+          "id": "runbook_authored",
+          "name": "THE WARDEN'S TOME",
+          "description": "Author a runbook for an operational procedure that currently exists only in tribal knowledge or informal SKILL.md notes. Structure: trigger condition \u2192 detection \u2192 mitigation \u2192 escalation \u2192 verification. Commit to the skills repo.",
+          "flavor": "If it isn't written down, it only exists while you're awake.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
+          "id": "runbook_executed",
+          "name": "BY THE BOOK",
+          "description": "Execute a pre-written runbook during a real incident or maintenance operation \u2014 following it step-by-step, not from memory. Annotate any steps that needed updating and submit the improvement.",
+          "flavor": "The Warden did not improvise. The Warden followed the runbook. The runbook was right.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
+          "id": "runbook_updated_after_incident",
+          "name": "REVISED IN BLOOD",
+          "description": "After any incident where the runbook failed to prevent or accelerate recovery, update the runbook with the missing step/detection signal/escalation path. Document what the runbook missed and why.",
+          "flavor": "The old runbook would have let it happen again. The new one will not.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
           "id": "oncall_rotation_documented",
           "name": "THE WATCH BEGINS",
           "description": "Document an on-call rotation for a real project: who, what they own, escalation path, alert routing, and handoff process. The document must be committed to the repo and referenced in the project's README.",
@@ -1487,72 +1306,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "warden"
-        },
-        {
-          "id": "ir_severity_triage",
-          "name": "TRIAGE PROTOCOL",
-          "description": "Define and document a severity classification matrix for a real project \u2014 at minimum P0/P1/P2 levels with criteria, response SLAs, and escalation paths for each severity",
-          "flavor": "The Ghost does not panic. It classifies. Panic is what happens before the protocol.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "ir_chaos_test",
-          "name": "CONTROLLED COLLAPSE",
-          "description": "Execute a planned chaos engineering experiment \u2014 define the hypothesis, inject the failure, observe the blast radius, restore, and document findings. System must recover to steady state without manual intervention",
-          "flavor": "The Darkness does not ask permission before it strikes. Neither should your tests.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "ir_sla_defined",
-          "name": "THE COVENANT'S TEETH",
-          "description": "Define formal SLAs for a real service with customer-facing commitments \u2014 availability target, response time, and consequence of breach. Document in the repo and reference from the README",
-          "flavor": "An SLO is a promise to yourself. An SLA is a promise to everyone else. Know the difference.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "ir_blameless_culture",
-          "name": "THE BLAMELESS RECORD",
-          "description": "Run a blameless retrospective following a real incident or near-miss \u2014 separate what happened from who was involved, identify systemic factors, and produce action items that target process, not people",
-          "flavor": "The Light does not punish the Guardian who fell. It asks: what failed to catch them?",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "ir_detection_gap_closed",
-          "name": "BLIND SPOT FOUND",
-          "description": "Identify a failure mode that currently produces no alert or log entry \u2014 add detection coverage (an alert, a structured log, or a health check) before the failure occurs in production",
-          "flavor": "The worst enemy is the one the Ghost cannot see. Close the gap before it opens.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "ir_postmortem_three",
-          "name": "PATTERN RECOGNIZED",
-          "description": "Write blameless postmortems for 3 distinct incidents in a season \u2014 at the third, identify a common root cause pattern across all three and produce a single architectural action item to address it",
-          "flavor": "The first incident is a surprise. The second is a coincidence. The third is a pattern. Name it.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -1562,6 +1315,78 @@
       "element": "arc",
       "seal_id": "spirekeeper",
       "triumphs": [
+        {
+          "id": "golden_signals_instrumented",
+          "name": "GOLDEN SIGNALS",
+          "description": "Instrument a real service or pipeline with all four Golden Signals: latency, traffic, error rate, saturation. Each signal must produce a queryable metric or log line \u2014 not just a print statement.",
+          "flavor": "Four signals. One truth. The system speaks; the Seer listens.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
+        {
+          "id": "trace_the_path",
+          "name": "TRACE THE PATH",
+          "description": "Instrument a multi-step operation with distributed tracing (OpenTelemetry or equivalent) \u2014 at minimum 3 spans covering distinct stages. Use the trace to identify an actual performance bottleneck or unexpected latency.",
+          "flavor": "The request left. The Seer watched every step it took.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
+        {
+          "id": "alert_not_noise",
+          "name": "SIGNAL, NOT NOISE",
+          "description": "Define and deploy a monitoring alert that fires for a real condition and NOT for normal variance. The alert must have documented: threshold rationale, runbook link, severity level, and a suppression condition for known maintenance windows.",
+          "flavor": "The alert fires once. For the right reason. The Seer built that.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
+        {
+          "id": "dashboard_created",
+          "name": "THE WATCHER'S EYE",
+          "description": "Create an operational dashboard covering at least 3 distinct signal types for a real project. The dashboard must be usable by someone who didn't build it \u2014 include a title and description for each panel.",
+          "flavor": "They did not need to ask what was happening. They looked at the board.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
+        {
+          "id": "slo_defined",
+          "name": "THE COVENANT",
+          "description": "Define formal SLOs for a real service: at minimum one availability SLO and one latency SLO. Each must include: measurement method, target percentage, measurement window, and the consequence of breach. Store the definition in the knowledge base.",
+          "flavor": "Success has a number now. The system is accountable to it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
+        {
+          "id": "error_budget_decision",
+          "name": "BUDGET BURNED",
+          "description": "Make and document an explicit error budget decision: either freeze releases because the budget is exhausted, OR document a risk acceptance to ship despite budget pressure. The decision must reference the SLO and be stored with a `type:slo-decision` tag.",
+          "flavor": "The budget was finite. The decision was deliberate. The record is honest.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
+        },
         {
           "id": "slo_reviewed",
           "name": "THE RECKONING",
@@ -1575,81 +1400,16 @@
           "seal_id": "spirekeeper"
         },
         {
-          "id": "obs_structured_logging",
-          "name": "THE READABLE DARK",
-          "description": "Instrument a service with structured logging (JSON or equivalent) \u2014 every log entry must include: timestamp, level, correlation ID, service name, and a message field. No freeform string concatenation",
-          "flavor": "The Ghost cannot parse chaos. Give it fields it can read.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_correlation_ids",
-          "name": "THE THREAD FOLLOWS",
-          "description": "Implement request correlation IDs that propagate across at least 2 service boundaries \u2014 a single trace ID visible in logs from ingress to final handler, queryable end-to-end",
-          "flavor": "Strand weaves through everything. So should your trace ID.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_alert_runbook_linked",
-          "name": "THE ALARM HAS A VOICE",
-          "description": "For every alert firing in production: ensure a runbook link is present in the alert body. Deploy this requirement for at minimum 5 distinct alerts across one or more projects",
-          "flavor": "An alarm that wakes you with no instructions is not an alarm. It is a complaint.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_metric_cardinality_fixed",
-          "name": "CARDINALITY CONTAINED",
-          "description": "Identify and remediate a high-cardinality metric label (e.g., user ID, request ID, or unbounded enum in a label) that is causing metric storage explosion \u2014 document before/after cardinality count",
-          "flavor": "The Traveler does not number every grain of light. Neither should your metrics.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_baseline_established",
-          "name": "THE KNOWN STATE",
-          "description": "Establish a documented performance baseline for a real service \u2014 p50, p95, p99 latency and error rate captured under normal load, committed to the repo, and referenced in future runbooks",
-          "flavor": "You cannot name what is broken until you know what is normal.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_on_call_dashboard",
-          "name": "THE FIRST SCREEN",
-          "description": "Build an on-call dashboard that answers the first 5 questions an engineer asks during an incident \u2014 it must be usable without familiarity with the system, and linked from the on-call rotation docs",
-          "flavor": "The Titan who arrives to an unfamiliar battle needs a map, not a legend.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "obs_full_golden_signals",
-          "name": "ALL FOUR BURNING",
-          "description": "For a single service in production: demonstrate all four Golden Signals (latency, traffic, errors, saturation) are queryable, graphed on a dashboard, and each has at least one associated alert threshold defined",
-          "flavor": "Four signals. One truth. The Seer who misses even one is flying blind.",
+          "id": "observability_gap_fixed",
+          "name": "INTO THE DARK NO MORE",
+          "description": "Identify a system, pipeline, or workflow that currently fails invisibly. Add at minimum: a failure log with context, an alert or check, and a runbook link. Verified by simulating the failure and confirming the signal fires.",
+          "flavor": "It failed before. Silently. It will never fail silently again.",
           "points": 100,
           "earned": false,
           "earned_at": null,
           "secret": false,
-          "stat_requirement": null
+          "stat_requirement": null,
+          "seal_id": "spirekeeper"
         }
       ]
     },
@@ -1659,6 +1419,54 @@
       "element": "strand",
       "seal_id": "pathfinder",
       "triumphs": [
+        {
+          "id": "first_substantive_review",
+          "name": "THE REVIEWER'S OATH",
+          "description": "Give a code review that results in at least one actionable finding being addressed before merge \u2014 not a spelling fix, but a logic, security, or design concern. The review comment must be substantive (3+ sentences with reasoning).",
+          "flavor": "The PR was better because you read it. The author knows it now too.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
+          "id": "blueprint_before_pr",
+          "name": "BLUEPRINT BEFORE FORGE",
+          "description": "For any feature touching more than 3 files: run `blueprint-mode` for the design phase AND present the design in the PR description BEFORE writing implementation code. The PR must reference the blueprint output.",
+          "flavor": "The plan came first. The code followed the plan. The PR shows both.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
+          "id": "review_turnaround",
+          "name": "RAPID RESPONSE",
+          "description": "Respond to a PR review request within 4 hours of assignment (during a working session) \u2014 not just 'LGTM' but a complete review with inline comments. Verified by PR timeline showing review within 4 hours of assignment.",
+          "flavor": "The request came in. The review went out. The queue did not grow.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
+          "id": "design_review_first",
+          "name": "DESIGN IN THE OPEN",
+          "description": "Open a GitHub issue or discussion for a significant architectural change BEFORE writing any code \u2014 gather at least one external piece of feedback. The final implementation must reference the issue.",
+          "flavor": "The design was public. The critique was welcomed. The code is better for it.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
         {
           "id": "review_comment_resolved",
           "name": "LIGHT ACCEPTED",
@@ -1694,50 +1502,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "pathfinder"
-        },
-        {
-          "id": "cr_doublecheck_on_pr",
-          "name": "THE ADVERSARIAL EYE",
-          "description": "Run the doublecheck agent on AI-generated code before merging a PR \u2014 all three pipeline layers (self-audit, source verification, adversarial review) completed, findings documented in the PR description",
-          "flavor": "The Ghost trusts the Light. It does not trust the code. Neither should you.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "cr_principal_consult",
-          "name": "THE TOWER ANSWERS",
-          "description": "Invoke the principal-software-engineer agent during a code review \u2014 the consultation must surface a design concern not caught in the initial review, documented as a PR comment before merge",
-          "flavor": "Zavala has seen the design before. He has also seen it fail. Ask him both times.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "cr_review_turnaround_five",
-          "name": "THE RAPID VERDICT",
-          "description": "Complete 5 code reviews within 4 hours of assignment \u2014 each must include substantive inline comments, not just LGTM. Track and document the turnaround time for each review",
-          "flavor": "The Trials do not wait for the late. Neither does the PR queue.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "cr_review_checklist",
-          "name": "THE GUARDIAN'S CHECKLIST",
-          "description": "Author and publish a code review checklist for your project \u2014 covering at minimum: security, test coverage, error handling, and API contract stability. Reference it from the CONTRIBUTING guide",
-          "flavor": "The checklist is not bureaucracy. It is the memory the reviewer does not have to carry.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -1840,6 +1604,42 @@
       "seal_id": "pathfinder",
       "triumphs": [
         {
+          "id": "first_adr_written",
+          "name": "THE FIRST DECREE",
+          "description": "Author your first formal Architecture Decision Record (ADR) \u2014 in `docs/decisions/` or equivalent. Must include: Title, Status, Context, Decision, Consequences (positive and negative). Not a SKILL.md entry \u2014 a structured ADR document.",
+          "flavor": "The first decree. Context. Decision. Consequences. It is written.",
+          "points": 50,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
+          "id": "adr_referenced_in_pr",
+          "name": "LORE APPLIED",
+          "description": "Reference a prior ADR in a PR description when making a decision that either follows or consciously deviates from that ADR. The reference must explain WHY the ADR is relevant \u2014 not just a link.",
+          "flavor": "The decision was made before. You knew it. You said why it still applied.",
+          "points": 75,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
+          "id": "adr_superseded",
+          "name": "THE LAW REWRITTEN",
+          "description": "Supersede an existing ADR with a new one \u2014 because circumstances changed, new data emerged, or the original decision was wrong. The new ADR must explicitly reference the old one and explain why the decision changed.",
+          "flavor": "The old law was not wrong. It was right, then. This one is right, now.",
+          "points": 100,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "pathfinder"
+        },
+        {
           "id": "adr_prevents_mistake",
           "name": "WRITTEN IN ADVANCE",
           "description": "An ADR you authored is referenced by another contributor (or a future session agent) when evaluating a design option \u2014 and it demonstrably prevents a mistake or avoids re-debating a settled decision.",
@@ -1874,39 +1674,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "pathfinder"
-        },
-        {
-          "id": "adr_design_doc_authored",
-          "name": "THE DESIGN COMMITTED",
-          "description": "Author a design document for a feature touching 3+ components before writing any implementation code \u2014 must include: problem statement, constraints, proposed solution, alternatives considered, and open questions",
-          "flavor": "The blueprint is not the building. But without it, the building is not the plan.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "adr_team_ratified",
-          "name": "THE COUNCIL DECIDES",
-          "description": "Have an ADR you authored reviewed and ratified by at least one other contributor \u2014 the review must result in at least one substantive change to the decision or its consequences section",
-          "flavor": "The Iron Lords did not build alone. The council sharpens what the individual cannot.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
-        },
-        {
-          "id": "adr_reversal_documented",
-          "name": "THE WRONG PATH NAMED",
-          "description": "Document a decision that was made and subsequently proven wrong \u2014 write the full reversal ADR: what was decided, what changed, what it cost, and what the new decision is. Tag the original ADR as Deprecated",
-          "flavor": "The Darkness teaches by winning. The Guardian teaches by writing down how they lost.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -2053,6 +1820,18 @@
       "seal_id": "warden",
       "triumphs": [
         {
+          "id": "toil_eliminated",
+          "name": "THE AUTOMATION IMPERATIVE",
+          "description": "Identify a repeated manual operation (toil) that consumes real time each week, automate it completely, and document the before/after time measurement in knowledge-store. The automation must be used in at least 2 subsequent sessions before claiming this triumph.",
+          "flavor": "The task no longer exists. The time it took no longer disappears.",
+          "points": 150,
+          "earned": false,
+          "earned_at": null,
+          "secret": false,
+          "stat_requirement": null,
+          "seal_id": "warden"
+        },
+        {
           "id": "toil_quantified",
           "name": "THE WEIGHT OF REPETITION",
           "description": "Identify and quantify a source of operational toil: how many times per week, how long each occurrence, what is the cumulative cost per season. Document it as a backlog item with a priority level.",
@@ -2099,17 +1878,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "warden"
-        },
-        {
-          "id": "toil_runbook_eliminated",
-          "name": "THE RUNBOOK DIES WELL",
-          "description": "Automate a runbook procedure so thoroughly that the runbook becomes unnecessary \u2014 the automation handles detection, response, and verification. Mark the runbook as Deprecated with a pointer to the automation",
-          "flavor": "The best runbook is the one that no longer needs to be run.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -2422,17 +2190,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "unbroken"
-        },
-        {
-          "id": "unbroken_no_regressions_season",
-          "name": "THE UNBLEMISHED SEASON",
-          "description": "Complete an entire season of work (12+ consecutive sessions) with zero CI regressions introduced \u2014 every commit leaves the pipeline green",
-          "flavor": "The Crucible does not remember who almost made it. Neither does the build log.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null
         }
       ]
     },
@@ -2501,282 +2258,6 @@
           "secret": false,
           "stat_requirement": null,
           "seal_id": "harbinger"
-        }
-      ]
-    },
-    {
-      "id": "warden",
-      "name": "WARDEN",
-      "element": "solar",
-      "icon": "\ud83d\udd25",
-      "triumphs": [
-        {
-          "id": "first_responder",
-          "name": "FIRST BLOOD",
-          "description": "Respond to a real production or CI incident \u2014 not a routine failure \u2014 within 1 hour of detection. Document the initial triage steps taken in the knowledge store within the same session.",
-          "flavor": "The alert fires. The cursor moves. The Warden was already watching.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "blameless_record",
-          "name": "BLAMELESS RECORD",
-          "description": "Write a complete blameless postmortem for a real incident or near-miss: timeline, root cause (not just symptom), contributing factors, action items with owners and due dates. Store in knowledge-store with `type:postmortem` tag.",
-          "flavor": "No names in the report. Only systems, decisions, and the gaps between them.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "five_whys_deep",
-          "name": "THE FIVE WHYS",
-          "description": "Apply the 5-why technique to a real failure \u2014 trace the causal chain to its root (not the proximate cause). Each 'why' must be a distinct, verifiable statement. Document in knowledge-store with the full chain.",
-          "flavor": "The proximate cause is never the cause. Keep asking.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "runbook_authored",
-          "name": "THE WARDEN'S TOME",
-          "description": "Author a runbook for an operational procedure that currently exists only in tribal knowledge or informal SKILL.md notes. Structure: trigger condition \u2192 detection \u2192 mitigation \u2192 escalation \u2192 verification. Commit to the skills repo.",
-          "flavor": "If it isn't written down, it only exists while you're awake.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "runbook_executed",
-          "name": "BY THE BOOK",
-          "description": "Execute a pre-written runbook during a real incident or maintenance operation \u2014 following it step-by-step, not from memory. Annotate any steps that needed updating and submit the improvement.",
-          "flavor": "The Warden did not improvise. The Warden followed the runbook. The runbook was right.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "runbook_updated_after_incident",
-          "name": "REVISED IN BLOOD",
-          "description": "After any incident where the runbook failed to prevent or accelerate recovery, update the runbook with the missing step/detection signal/escalation path. Document what the runbook missed and why.",
-          "flavor": "The old runbook would have let it happen again. The new one will not.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        },
-        {
-          "id": "toil_eliminated",
-          "name": "THE AUTOMATION IMPERATIVE",
-          "description": "Identify a repeated manual operation (toil) that consumes real time each week, automate it completely, and document the before/after time measurement in knowledge-store. The automation must be used in at least 2 subsequent sessions before claiming this triumph.",
-          "flavor": "The task no longer exists. The time it took no longer disappears.",
-          "points": 150,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "warden"
-        }
-      ]
-    },
-    {
-      "id": "spirekeeper",
-      "name": "SPIREKEEPER",
-      "element": "arc",
-      "icon": "\u26a1",
-      "triumphs": [
-        {
-          "id": "golden_signals_instrumented",
-          "name": "GOLDEN SIGNALS",
-          "description": "Instrument a real service or pipeline with all four Golden Signals: latency, traffic, error rate, saturation. Each signal must produce a queryable metric or log line \u2014 not just a print statement.",
-          "flavor": "Four signals. One truth. The system speaks; the Seer listens.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "trace_the_path",
-          "name": "TRACE THE PATH",
-          "description": "Instrument a multi-step operation with distributed tracing (OpenTelemetry or equivalent) \u2014 at minimum 3 spans covering distinct stages. Use the trace to identify an actual performance bottleneck or unexpected latency.",
-          "flavor": "The request left. The Seer watched every step it took.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "alert_not_noise",
-          "name": "SIGNAL, NOT NOISE",
-          "description": "Define and deploy a monitoring alert that fires for a real condition and NOT for normal variance. The alert must have documented: threshold rationale, runbook link, severity level, and a suppression condition for known maintenance windows.",
-          "flavor": "The alert fires once. For the right reason. The Seer built that.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "dashboard_created",
-          "name": "THE WATCHER'S EYE",
-          "description": "Create an operational dashboard covering at least 3 distinct signal types for a real project. The dashboard must be usable by someone who didn't build it \u2014 include a title and description for each panel.",
-          "flavor": "They did not need to ask what was happening. They looked at the board.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "slo_defined",
-          "name": "THE COVENANT",
-          "description": "Define formal SLOs for a real service: at minimum one availability SLO and one latency SLO. Each must include: measurement method, target percentage, measurement window, and the consequence of breach. Store the definition in the knowledge base.",
-          "flavor": "Success has a number now. The system is accountable to it.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "error_budget_decision",
-          "name": "BUDGET BURNED",
-          "description": "Make and document an explicit error budget decision: either freeze releases because the budget is exhausted, OR document a risk acceptance to ship despite budget pressure. The decision must reference the SLO and be stored with a `type:slo-decision` tag.",
-          "flavor": "The budget was finite. The decision was deliberate. The record is honest.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        },
-        {
-          "id": "observability_gap_fixed",
-          "name": "INTO THE DARK NO MORE",
-          "description": "Identify a system, pipeline, or workflow that currently fails invisibly. Add at minimum: a failure log with context, an alert or check, and a runbook link. Verified by simulating the failure and confirming the signal fires.",
-          "flavor": "It failed before. Silently. It will never fail silently again.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "spirekeeper"
-        }
-      ]
-    },
-    {
-      "id": "pathfinder",
-      "name": "PATHFINDER",
-      "element": "strand",
-      "icon": "\ud83d\udfe2",
-      "triumphs": [
-        {
-          "id": "first_substantive_review",
-          "name": "THE REVIEWER'S OATH",
-          "description": "Give a code review that results in at least one actionable finding being addressed before merge \u2014 not a spelling fix, but a logic, security, or design concern. The review comment must be substantive (3+ sentences with reasoning).",
-          "flavor": "The PR was better because you read it. The author knows it now too.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "blueprint_before_pr",
-          "name": "BLUEPRINT BEFORE FORGE",
-          "description": "For any feature touching more than 3 files: run `blueprint-mode` for the design phase AND present the design in the PR description BEFORE writing implementation code. The PR must reference the blueprint output.",
-          "flavor": "The plan came first. The code followed the plan. The PR shows both.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "review_turnaround",
-          "name": "RAPID RESPONSE",
-          "description": "Respond to a PR review request within 4 hours of assignment (during a working session) \u2014 not just 'LGTM' but a complete review with inline comments. Verified by PR timeline showing review within 4 hours of assignment.",
-          "flavor": "The request came in. The review went out. The queue did not grow.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "design_review_first",
-          "name": "DESIGN IN THE OPEN",
-          "description": "Open a GitHub issue or discussion for a significant architectural change BEFORE writing any code \u2014 gather at least one external piece of feedback. The final implementation must reference the issue.",
-          "flavor": "The design was public. The critique was welcomed. The code is better for it.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "first_adr_written",
-          "name": "THE FIRST DECREE",
-          "description": "Author your first formal Architecture Decision Record (ADR) \u2014 in `docs/decisions/` or equivalent. Must include: Title, Status, Context, Decision, Consequences (positive and negative). Not a SKILL.md entry \u2014 a structured ADR document.",
-          "flavor": "The first decree. Context. Decision. Consequences. It is written.",
-          "points": 50,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "adr_referenced_in_pr",
-          "name": "LORE APPLIED",
-          "description": "Reference a prior ADR in a PR description when making a decision that either follows or consciously deviates from that ADR. The reference must explain WHY the ADR is relevant \u2014 not just a link.",
-          "flavor": "The decision was made before. You knew it. You said why it still applied.",
-          "points": 75,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
-        },
-        {
-          "id": "adr_superseded",
-          "name": "THE LAW REWRITTEN",
-          "description": "Supersede an existing ADR with a new one \u2014 because circumstances changed, new data emerged, or the original decision was wrong. The new ADR must explicitly reference the old one and explain why the decision changed.",
-          "flavor": "The old law was not wrong. It was right, then. This one is right, now.",
-          "points": 100,
-          "earned": false,
-          "earned_at": null,
-          "secret": false,
-          "stat_requirement": null,
-          "seal_id": "pathfinder"
         }
       ]
     }
