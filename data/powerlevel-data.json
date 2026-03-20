@@ -5,6 +5,23 @@
     "quarter": "Q1 2026",
     "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark."
   },
+  "ghost_messages": [
+    "Guardian. You were resurrected on July 12, 2021. Every session since is borrowed time. Spend it well.",
+    "The epoch is shifting. What was Jurassic grows distant. The Cretaceous is yours now.",
+    "Karl has been spotted navigating upstream. Three commits merged. The sauropod never loses his way.",
+    "Katharina returns from distant homelands with new formulae. The brew strengthens.",
+    "Dolly reports all Flatpaks synchronized. The application model holds against the Darkness.",
+    "The Traveler illuminates a path away from legacy. Wayland native confirmed across all fronts.",
+    "Each story element is related to communities \u2014 their challenges, and their triumphs. This is yours.",
+    "Bluefin was born to disappear. The best operating systems are invisible. Is she invisible yet?",
+    "Ghost transmission: the old distribution model belongs in a museum. We put it there. Move on.",
+    "I scanned your history. You have more 'fix: typo' entries than any Guardian on record. I've filed this under 'endearing.'",
+    "Old-school jank, safely contained in distrobox. The Paleosaurs are quarantined. For now.",
+    "The CI is green. The site is deployed. The Light holds. \u2014 For now.",
+    "Mission: accelerate the ecosystem. Become invisible. Leave the future better than you found it.",
+    "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
+    "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
+  ],
   "stats": {
     "breadth": {
       "raw": 5,

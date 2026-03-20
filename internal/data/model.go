@@ -44,7 +44,8 @@ type Stats struct {
 
 // PowerlevelData is the root of powerlevel-data.json.
 type PowerlevelData struct {
-	Season  Season            `json:"season"`
-	Weapons map[string]Weapon `json:"weapons"`
-	Stats   Stats             `json:"stats"`
+	Season        Season            `json:"season"`
+	GhostMessages []string          `json:"ghost_messages"`
+	Weapons       map[string]Weapon `json:"weapons"`
+	Stats         Stats             `json:"stats"`
 }

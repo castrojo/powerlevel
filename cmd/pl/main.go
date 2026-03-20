@@ -3,10 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/castrojo/powerlevel/internal/data"
 	"github.com/castrojo/powerlevel/internal/renderer"
@@ -105,6 +107,14 @@ func main() {
 		pl := data.ComputePL(d.Weapons)
 		rank := data.GetRank(pl)
 		fmt.Printf("🔆 ◆ %d %s — https://castrojo.github.io/powerlevel/\n", pl, rank)
+		if len(d.GhostMessages) > 0 {
+			src := rand.NewSource(time.Now().UnixNano())
+			r := rand.New(src)
+			if r.Intn(3) == 0 {
+				msg := d.GhostMessages[r.Intn(len(d.GhostMessages))]
+				fmt.Printf("👻 \"%s\"\n", msg)
+			}
+		}
 		os.Exit(0)
 	}
 
