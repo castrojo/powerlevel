@@ -51,19 +51,12 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         id: compute
         run: python3 scripts/compute.py
-        continue-on-error: true
 
       - name: Commit updated data files
-        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outcome == 'success'
+        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/powerlevel-data.json data/triumphs.json
           git diff --staged --quiet || git commit -m "chore: GHA compute — sync weapon levels + triumph state"
           git push
-
-      - name: Fail if compute errored
-        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outcome == 'failure'
-        run: |
-          echo "::error::Compute script failed — see logs above."
-          exit 1

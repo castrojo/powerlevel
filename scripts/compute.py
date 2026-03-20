@@ -76,11 +76,16 @@ def main():
                 f.write("\n")
             changed = True
 
+    # Write result to GITHUB_OUTPUT so the workflow can gate the commit step
+    output_file = os.environ.get("GITHUB_OUTPUT", "")
+    if output_file:
+        with open(output_file, "a") as f:
+            f.write(f"changed={'true' if changed else 'false'}\n")
+
     if not changed:
         print("No changes — weapon levels and triumphs are already current.")
-        sys.exit(2)
-
-    print("Compute complete.")
+    else:
+        print("Compute complete.")
     sys.exit(0)
 
 
