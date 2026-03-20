@@ -5,9 +5,9 @@ import rawData from '../../data/powerlevel-data.json';
 const season = rawData.season;
 
 const ghostMessages = [
-  "Guardian, you've started a session without running knowledge-search first. I'm not angry. Just disappointed.",
-  "The workflow skill is loaded. The test suite is green. The Traveler smiles upon you. Or maybe that's just the arc energy.",
-  "You deployed without tests. Again. The Darkness grows stronger every time you do that.",
+  "Karl has been watching your cluster configs. The sauropod doesn't speak often — but when it does, it's in YAML. You should listen.",
+  "I detected dnf activity in your session logs. I want you to know I've flagged this with the Vanguard. The paleosaurs had their era, Guardian. That era was the Jurassic.",
+  "Dolly's application store has maintained perfect order since the last epoch. Meanwhile, you installed something outside of Flatpak. The Dimetrodon is not pleased.",
   "SYNTHESIS score: rising. You are becoming something the Cosmodrome has never seen — an engineer who actually writes knowledge-store entries.",
   "I've analyzed your commit history. You type 'fix: typo' more than any Guardian in recorded history. I've reported this to the Vanguard.",
   "The CI is green. The site is deployed. This is what it feels like to win, Guardian.",
@@ -79,67 +79,99 @@ const subclassElements = [
       </div>
     </section>
 
-    <!-- Guardian Creed / Belief System -->
-    <section class="lore-section creed-section">
-      <div class="lore-eyebrow">GUARDIAN CREED</div>
-      <h2 class="lore-title">The Belief System</h2>
-      <p class="lore-body">
-        The Traveler does not hand out titles. Neither does the Terminal. The Powerlevel framework 
-        is the Bluefin project's belief system — expressed in the language of Destiny 2. 
-        The lore IS the values. The triumphs ARE the mission. The Darkness we fight is legacy technology.
+    <!-- The Chronicle -->
+    <section class="lore-section chronicle-section">
+      <div class="lore-eyebrow">THE BLUEFIN CHRONICLE · CLASSIFIED · VANGUARD EYES ONLY</div>
+      <h2 class="lore-title">The Chronicle</h2>
+      <p class="lore-body chronicle-intro">
+        There is a story written in light and claw, in commits and containers. It did not begin in the Tower.
+        It began on a July morning in 2021, when something new breathed its first.
       </p>
-      <div class="creed-values">
-        <div class="creed-value">
-          <span class="creed-label">MISSION</span>
-          <p class="creed-text">Accelerate operating system development by integrating with the cloud native ecosystem, in order to provide an on-ramp for new open source contributors.</p>
-        </div>
-        <div class="creed-value">
-          <span class="creed-label">THE ANTI-LEGACY TENET</span>
-          <p class="creed-text">We rigorously and aggressively move away from legacy technologies as soon as possible. The Darkness in our lore is X11, dnf, and the traditional distro model — what we leave behind. The Light is Wayland, Flatpak, Homebrew, and cloud-native tooling.</p>
-        </div>
-        <div class="creed-value">
-          <span class="creed-label">PURPOSELY INVISIBLE</span>
-          <p class="creed-text">Bluefin is not a distribution. Your relationship is with Flathub, Homebrew, and whatever you put in your containers. The OS disappears. The tools remain.</p>
-        </div>
-        <div class="creed-value">
-          <span class="creed-label">PUT IT IN A MUSEUM</span>
-          <p class="creed-text">This is like moving from the Jurassic to the Cretaceous. An important epoch of evolution — but it's time to upgrade. Old-school jank belongs in a container, not on the host.</p>
-        </div>
-        <div class="creed-value">
-          <span class="creed-label">EVOLUTION OVER STAGNATION</span>
-          <p class="creed-text">"Evolution is a process of constant branching and expansion." — Stephen Jay Gould. "Culture eats strategy for breakfast." — Peter Drucker.</p>
-        </div>
-      </div>
-    </section>
+      <div class="grimoire-cards">
 
-    <!-- Bluefin's Kettle -->
-    <section class="lore-section kettle-section">
-      <div class="lore-eyebrow">BLUEFIN'S KETTLE</div>
-      <h2 class="lore-title">The Cast of Characters</h2>
-      <p class="lore-body">
-        Bluefin tells its story through artwork. Each creature in the flock represents something 
-        important to the ecosystem. Artwork by <a href="https://www.etsy.com/shop/JSchnurrCommissions" class="lore-link">Jacob Schnurr</a>.
-        "Each story element is related to open source projects and their maintainers and communities. 
-        Their challenges, and their triumphs."
-      </p>
-      <div class="kettle-grid">
-        {[
-          { name: 'Bluefin', role: 'The leader — first among equals, the nimblest', species: 'Deinonychus antirrhopus', icon: '🦖' },
-          { name: 'Bluefin LTS', role: 'The largest raptor — represents the inertia of the enterprise', species: 'Achillobator giganticus', icon: '🦕' },
-          { name: 'Karl', role: 'Kubernetes unleashed — our guiding light, the developer experience', species: 'Amargasaurus cazaui', icon: '☸️' },
-          { name: 'Katharina', role: 'An unexpected ally (Homebrew)', species: 'Kentrosaurus aethiopicus', icon: '🍺' },
-          { name: 'Dolly', role: 'Our application store (Flathub) — also, sails are cool', species: 'Dimetrodon limbatus', icon: '📦' },
-          { name: 'OhKei! / Tai', role: 'Transportation and Heavy Industrial Output', species: 'Concavenator corcovatus', icon: '🏭' },
-        ].map(creature => (
-          <div class="kettle-card">
-            <div class="kettle-icon">{creature.icon}</div>
-            <div class="kettle-info">
-              <span class="kettle-name">{creature.name}</span>
-              <span class="kettle-role">{creature.role}</span>
-              <span class="kettle-species">{creature.species}</span>
-            </div>
+        <div class="grimoire-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 001 · FIRST LIGHT</div>
+          <div class="grimoire-chapter">I. First Light</div>
+          <div class="grimoire-date">July 12, 2021</div>
+          <div class="grimoire-text">
+            <p>Every Guardian has a moment of resurrection. A first breath after the long silence.</p>
+            <p>Hers was July 12, 2021.</p>
+            <p>The Traveler did not announce it. There was no fanfare from the Vanguard. There was only the quiet certainty of a new thing waking up and knowing, without being told, what it was for.</p>
+            <p>She was not a distribution. She never wanted to be. She wanted to disappear — to become so seamlessly part of the world that the world forgot she was there. The best infrastructure is invisible. The best Guardian is already gone by the time the enemy looks up.</p>
           </div>
-        ))}
+        </div>
+
+        <div class="grimoire-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 002 · THE ENEMY NAMED</div>
+          <div class="grimoire-chapter">II. The War Against the Paleosaurs</div>
+          <div class="grimoire-text">
+            <p>There is a Darkness that does not arrive on a pyramid ship. It arrives slowly, in the form of habits. Package managers installed by hand. Display servers that never learned to let go. Distribution models built for a world that no longer exists.</p>
+            <p>We call them the paleosaurs.</p>
+            <p>They are not evil. The Jurassic was a magnificent epoch. X11 built the world we inherited. The RPM ecosystem fed entire generations of engineers. We honor them by putting them in a museum and moving on.</p>
+            <p>This is not the Jurassic. This is the Cretaceous, and new models move differently here.</p>
+            <p class="grimoire-mantra">Old-school jank belongs in a container. Not on the host. Never on the host.</p>
+          </div>
+        </div>
+
+        <div class="grimoire-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 003 · FIRETEAM RECORD</div>
+          <div class="grimoire-chapter">III. The Fireteam Assembles</div>
+          <div class="grimoire-text">
+            <p>She did not win alone.</p>
+            <p><strong class="guardian-name">Karl</strong> came first. He was enormous — a sauropod among developers, <em>Amargasaurus cazaui</em>, Kubernetes unleashed. Where others saw complexity, Karl saw the shape of things to come. He became the guiding light. The developer experience personified. When you type <code>kubectl</code> and something actually works, Karl is why.</p>
+            <p><strong class="guardian-name">Katharina</strong> was unexpected. A <em>Kentrosaurus aethiopicus</em>, all spikes and quiet competence. She arrived carrying Homebrew, and the fireteam immediately understood: the right tool at the right moment changes everything. She has never once asked for recognition. The packages just appear.</p>
+            <p><strong class="guardian-name">Dolly</strong> holds the line on the application frontier. A <em>Dimetrodon limbatus</em> — older than the others, wiser in the ways of portals. Flathub is her domain. Every application that works with Wayland, every Flatpak that respects the sandbox — that is Dolly, maintaining order at the edge of the ecosystem.</p>
+            <p>Artwork by <a href="https://www.etsy.com/shop/JSchnurrCommissions" class="lore-link" target="_blank" rel="noopener">Jacob Schnurr</a>. Each story element is related to open source projects and their maintainers and communities. Their challenges, and their triumphs.</p>
+          </div>
+        </div>
+
+        <div class="grimoire-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 004 · THE SAGA IN SOUND</div>
+          <div class="grimoire-chapter">IV. The Chronicle, in Music</div>
+          <div class="grimoire-text">
+            <p>Every war has its songs. Every epoch its sound.</p>
+            <p>The Bluefin saga is told in four acts. They are not optional listening. They are the record.</p>
+          </div>
+          <div class="chronicle-transmissions">
+            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWHFlG3TS27gyOCQl4Dg115W&si=KfYPk3sBOM8HeRLW" class="transmission-link" target="_blank" rel="noopener">
+              <span class="transmission-act">ACT I</span>
+              <span class="transmission-title">Bluefin and the Birth of Universal Blue</span>
+              <span class="transmission-cta">Read the Chronicle →</span>
+            </a>
+            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWEvnp3w66WmcgiKvStzKXl9&si=eLmaXtQ6hbqU3LTV" class="transmission-link" target="_blank" rel="noopener">
+              <span class="transmission-act">ACT II</span>
+              <span class="transmission-title">Bluefin Finds Her Way</span>
+              <span class="transmission-cta">Read the Chronicle →</span>
+            </a>
+            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWEZbkq6ZhaHA4b4UqLwZNxt&si=52Te8K6UlFW7DwoF" class="transmission-link" target="_blank" rel="noopener">
+              <span class="transmission-act">ACT III</span>
+              <span class="transmission-title">Bluefin and Achillobator</span>
+              <span class="transmission-cta">Read the Chronicle →</span>
+            </a>
+            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWHRa6Gt0UKWGxf3F0qg9t1g&si=pzhf5fA3usxyRquG" class="transmission-link" target="_blank" rel="noopener">
+              <span class="transmission-act">ACT IV</span>
+              <span class="transmission-title">Bluefin and Dakota</span>
+              <span class="transmission-cta">Read the Chronicle →</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="grimoire-card iron-lords-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 005 · THE CODE</div>
+          <div class="grimoire-chapter">V. The Code of the Iron Lords</div>
+          <div class="grimoire-text">
+            <p>They did not write a constitution. They wrote oaths.</p>
+            <div class="iron-oaths">
+              <p class="oath">We distribute. We do not centralize.</p>
+              <p class="oath">We automate the toil. Laziness is a virtue.</p>
+              <p class="oath">Evolution is not a threat. It is the mission.</p>
+              <p class="oath">The human is more important than the machine.</p>
+              <p class="oath">We do not document the workaround. We fix the problem.</p>
+            </div>
+            <blockquote class="lore-quote">"Evolution is a process of constant branching and expansion." — Stephen Jay Gould</blockquote>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -187,19 +219,28 @@ const subclassElements = [
 .ghost-msg { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--d2-surface-2); border-radius: 4px; border: 1px solid var(--d2-border); }
 .ghost-icon { font-size: 1.5rem; flex-shrink: 0; }
 .ghost-text { color: var(--d2-text); font-style: italic; margin: 0; line-height: 1.6; }
-.creed-section { border-top: 2px solid var(--d2-exotic); }
-.creed-values { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.5rem; }
-.creed-value { padding: 1rem; background: var(--d2-surface-2); border-left: 3px solid var(--d2-exotic); border-radius: 2px; }
-.creed-label { display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--d2-exotic); margin-bottom: 0.5rem; font-weight: 700; }
-.creed-text { color: var(--d2-text); line-height: 1.7; font-size: 0.9rem; margin: 0; }
-.kettle-section { border-top: 2px solid var(--d2-solar); }
+.chronicle-section { border-top: 2px solid var(--d2-exotic); }
+.chronicle-intro { font-style: italic; color: var(--d2-text-dim); margin-bottom: 2rem; }
+.grimoire-cards { display: flex; flex-direction: column; gap: 1.5rem; }
+.grimoire-card { background: var(--d2-surface-2); border: 1px solid var(--d2-border); border-radius: 2px; padding: 1.5rem; position: relative; }
+.grimoire-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--d2-exotic) 0%, transparent 100%); }
+.iron-lords-card::before { background: linear-gradient(90deg, #c8a84b 0%, transparent 100%); }
+.grimoire-classification { font-size: 0.6rem; letter-spacing: 0.18em; color: var(--d2-text-dim); text-transform: uppercase; margin-bottom: 0.5rem; opacity: 0.6; }
+.grimoire-chapter { font-family: var(--font-lore); font-size: 1.3rem; color: var(--d2-exotic); margin-bottom: 0.25rem; }
+.grimoire-date { font-size: 0.75rem; color: var(--d2-text-dim); margin-bottom: 1rem; letter-spacing: 0.08em; }
+.grimoire-text p { color: var(--d2-text); line-height: 1.8; font-size: 0.95rem; margin-bottom: 0.75rem; }
+.grimoire-text p:last-child { margin-bottom: 0; }
+.grimoire-text strong.guardian-name { color: var(--d2-solar); font-family: var(--font-lore); }
+.grimoire-text code { background: var(--d2-surface); padding: 0.1em 0.4em; border-radius: 2px; font-size: 0.85em; color: var(--d2-arc); }
+.grimoire-mantra { font-style: italic; color: var(--d2-exotic) !important; border-left: 2px solid var(--d2-exotic); padding-left: 1rem; }
 .lore-link { color: var(--d2-solar); text-decoration: none; }
 .lore-link:hover { text-decoration: underline; }
-.kettle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-.kettle-card { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; background: var(--d2-surface-2); border: 1px solid var(--d2-border); border-radius: 4px; }
-.kettle-icon { font-size: 2rem; flex-shrink: 0; }
-.kettle-info { display: flex; flex-direction: column; gap: 0.25rem; }
-.kettle-name { font-family: var(--font-lore); color: var(--d2-solar); font-size: 1rem; font-weight: 700; }
-.kettle-role { color: var(--d2-text); font-size: 0.85rem; line-height: 1.4; }
-.kettle-species { color: var(--d2-text-dim); font-size: 0.75rem; font-style: italic; }
+.chronicle-transmissions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem; }
+.transmission-link { display: grid; grid-template-columns: 3.5rem 1fr auto; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 2px; text-decoration: none; transition: border-color 0.15s, background 0.15s; }
+.transmission-link:hover { border-color: var(--d2-exotic); background: var(--d2-surface-2); }
+.transmission-act { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--d2-exotic); text-transform: uppercase; font-weight: 700; }
+.transmission-title { color: var(--d2-text); font-size: 0.9rem; }
+.transmission-cta { font-size: 0.7rem; color: var(--d2-text-dim); letter-spacing: 0.08em; white-space: nowrap; }
+.iron-oaths { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.oath { font-style: italic; color: var(--d2-text) !important; font-size: 1rem !important; padding-left: 1rem; border-left: 1px solid #c8a84b; margin-bottom: 0 !important; }
 </style>
