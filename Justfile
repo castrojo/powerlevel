@@ -77,6 +77,10 @@ level-up:
     $EDITOR data/skill-levels.json
     @echo "✓ Levels updated — push to trigger compute pipeline"
 
+# Show session streak stats
+streak:
+    go run ./cmd/streak/
+
 # Export stats and feed from session_store — run LOCALLY before pushing.
 # session-store.db is a local file, GHA cannot access it.
 # Run this at the end of each session to keep stats current.
