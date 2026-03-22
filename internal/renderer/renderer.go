@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/castrojo/powerlevel/internal/data"
 )
@@ -20,9 +21,11 @@ const (
 
 var ansiRE = regexp.MustCompile(`\033\[[0-9;]*m`)
 
-// VisLen returns the visible (non-ANSI) length of s.
+// VisLen returns the visible (non-ANSI) rune count of s.
+// Uses utf8.RuneCountInString so multi-byte chars like ▰ count as 1, not 3.
 func VisLen(s string) int {
-	return len(ansiRE.ReplaceAllString(s, ""))
+	stripped := ansiRE.ReplaceAllString(s, "")
+	return utf8.RuneCountInString(stripped)
 }
 
 // Pad pads s to visible width w.
@@ -251,16 +254,3 @@ func subclassAvgLocal(element string, weapons map[string]data.Weapon) int {
 	return sum / count
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}

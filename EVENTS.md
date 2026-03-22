@@ -43,7 +43,7 @@ Records that a triumph has been completed and verified by a human.
 
 **Example:**
 ```json
-{"type":"triumph_earned","triumph_id":"first_light","timestamp":"2026-03-19T14:22:00Z","note":"Merged first PR on the project"}
+{"type":"triumph_earned","triumph_id":"first_session","timestamp":"2026-03-19T14:22:00Z","note":"Merged first PR on the project"}
 ```
 
 ---
@@ -114,7 +114,7 @@ Agents use `jq -n` to construct a well-formed JSON object and append it:
 ```bash
 # Append a triumph_earned event
 jq -n \
-  --arg tid "first_light" \
+  --arg tid "first_session" \
   --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --arg note "Merged first PR" \
   '{"type":"triumph_earned","triumph_id":$tid,"timestamp":$ts,"note":$note}' \

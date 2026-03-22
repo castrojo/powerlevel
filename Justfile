@@ -4,6 +4,12 @@
 default:
     go run ./cmd/pl/
 
+# First-time setup: create global config
+setup:
+    mkdir -p ~/.config/powerlevel
+    @test -f ~/.config/powerlevel/config.json || echo '{"powerlevel_dir":"$(HOME)/src/powerlevel"}' > ~/.config/powerlevel/config.json
+    @echo "✓ ~/.config/powerlevel/config.json ready"
+
 # Build the binary
 build:
     go build -o pl ./cmd/pl/

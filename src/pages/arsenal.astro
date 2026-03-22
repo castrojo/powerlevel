@@ -3,7 +3,7 @@ import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
 import { levelTier } from '../lib/compute';
 
-const weapons = rawData.weapons;
+const weapons = rawData.weapons ?? {};
 
 function levelColor(level: number): string {
   if (level >= 100) return 'var(--d2-masterwork)';

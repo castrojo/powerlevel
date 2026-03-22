@@ -18,11 +18,20 @@ import (
 // SessionManifest tracks which sessions have been counted into stats.
 // Committed to git — makes stats cumulative across machines forever.
 type SessionManifest struct {
-	SessionIDs             []string `json:"session_ids"`
-	Repos                  []string `json:"repos"`
-	FeedSessionIDs         []string `json:"feed_session_ids"`
-	ModelLogProcessedLines int      `json:"model_log_processed_lines"`
-	UpdatedAt              string   `json:"updated_at"`
+	SessionIDs             []string          `json:"session_ids"`
+	Repos                  []string          `json:"repos"`
+	FeedSessionIDs         []string          `json:"feed_session_ids"`
+	ModelLogProcessedLines int               `json:"model_log_processed_lines"`
+	// SessionTimestamps maps session ID → created_at (UTC ISO8601).
+	// Used by cmd/streak to compute cross-machine day-streak stats.
+	SessionTimestamps      map[string]string `json:"session_timestamps,omitempty"`
+	UpdatedAt              string            `json:"updated_at"`
+}
+
+// sessionRow holds a session ID and its created_at timestamp from the DB.
+type sessionRow struct {
+	ID        string
+	CreatedAt string
 }
 
 func loadManifest(dataDir string) SessionManifest {
@@ -38,10 +47,17 @@ func loadManifest(dataDir string) SessionManifest {
 	return m
 }
 
-func saveManifest(dataDir string, m SessionManifest) {
+func saveManifest(path string, m *SessionManifest) error {
 	m.UpdatedAt = time.Now().UTC().Format(time.RFC3339)
-	out, _ := json.MarshalIndent(m, "", "  ")
-	os.WriteFile(filepath.Join(dataDir, "exported-sessions.json"), out, 0644)
+	b, err := json.MarshalIndent(m, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal manifest: %w", err)
+	}
+	tmp := path + ".tmp"
+	if err := os.WriteFile(tmp, b, 0644); err != nil {
+		return fmt.Errorf("write manifest tmp: %w", err)
+	}
+	return os.Rename(tmp, path)
 }
 
 func toSet(ids []string) map[string]bool {
@@ -94,6 +110,8 @@ func main() {
 	counted := toSet(manifest.SessionIDs)
 	feedCounted := toSet(manifest.FeedSessionIDs)
 
+	manifestPath := filepath.Join(*dataDir, "exported-sessions.json")
+
 	// Collect new sessions not yet counted into stats.
 	newSessions := queryNewSessions(db, counted)
 	if len(newSessions) == 0 {
@@ -103,9 +121,17 @@ func main() {
 
 		delta := computeDeltaStats(db, newSessions)
 		mergedStats := mergeStats(*dataDir, delta, &manifest)
-		patchStats(*dataDir, mergedStats)
 
 		manifest.SessionIDs = append(manifest.SessionIDs, newSessions...)
+
+		// Save manifest BEFORE patching stats so an interrupted run doesn't
+		// double-count sessions on the next execution.
+		if err := saveManifest(manifestPath, &manifest); err != nil {
+			log.Fatalf("save manifest: %v", err)
+		}
+
+		patchStats(*dataDir, mergedStats)
+
 		fmt.Printf("✓ Stats: endurance=%d recall=%d breadth=%d foresight=%d output=%d\n",
 			mergedStats["endurance"].Raw, mergedStats["recall"].Raw,
 			mergedStats["breadth"].Raw, mergedStats["foresight"].Raw,
@@ -135,7 +161,9 @@ func main() {
 		fmt.Println("✓ Model usage already current")
 	}
 
-	saveManifest(*dataDir, manifest)
+	if err := saveManifest(manifestPath, &manifest); err != nil {
+		log.Fatalf("save manifest: %v", err)
+	}
 	fmt.Println("✓ Manifest saved — stats are cumulative across machines")
 }
 
@@ -149,7 +177,9 @@ func queryNewSessions(db *sql.DB, counted map[string]bool) []string {
 	var newIDs []string
 	for rows.Next() {
 		var id string
-		rows.Scan(&id)
+		if err := rows.Scan(&id); err != nil {
+			continue
+		}
 		if !counted[id] {
 			newIDs = append(newIDs, id)
 		}
@@ -182,7 +212,9 @@ func computeDeltaStats(db *sql.DB, sessionIDs []string) map[string]StatBlock {
 	if rows != nil {
 		for rows.Next() {
 			var r string
-			rows.Scan(&r)
+			if err := rows.Scan(&r); err != nil {
+				continue
+			}
 			newRepos = append(newRepos, r)
 		}
 		rows.Close()
@@ -304,7 +336,9 @@ func buildNewFeedEntries(db *sql.DB, feedCounted map[string]bool) []FeedEntry {
 	var entries []FeedEntry
 	for rows.Next() {
 		var e FeedEntry
-		rows.Scan(&e.ID, &e.Repository, &e.Branch, &e.Summary, &e.CreatedAt)
+		if err := rows.Scan(&e.ID, &e.Repository, &e.Branch, &e.Summary, &e.CreatedAt); err != nil {
+			continue
+		}
 		if feedCounted[e.ID] {
 			continue
 		}
@@ -315,7 +349,9 @@ func buildNewFeedEntries(db *sql.DB, feedCounted map[string]bool) []FeedEntry {
 		if prRows != nil {
 			for prRows.Next() {
 				var ref string
-				prRows.Scan(&ref)
+				if err := prRows.Scan(&ref); err != nil {
+					continue
+				}
 				e.PRs = append(e.PRs, ref)
 			}
 			prRows.Close()
@@ -323,8 +359,9 @@ func buildNewFeedEntries(db *sql.DB, feedCounted map[string]bool) []FeedEntry {
 
 		e.XP = e.Turns*2 + len(e.PRs)*50
 		e.Tags = []string{}
-		if len(e.Summary) > 200 {
-			e.Summary = e.Summary[:200] + "…"
+		e.Summary = truncateRunes(e.Summary, 200)
+		if len([]rune(e.Summary)) == 200 {
+			e.Summary += "…"
 		}
 		entries = append(entries, e)
 	}
@@ -476,6 +513,16 @@ func buildIncrementalModelUsage(dataDir, logPath string, processedLines int) (Mo
 func writeModelUsage(dataDir string, usage ModelUsage) {
 	out, _ := json.MarshalIndent(usage, "", "  ")
 	os.WriteFile(filepath.Join(dataDir, "model-usage.json"), out, 0644)
+}
+
+// truncateRunes truncates s to at most n Unicode code points.
+// Safe for multi-byte characters (e.g., CJK, emoji).
+func truncateRunes(s string, n int) string {
+	r := []rune(s)
+	if len(r) <= n {
+		return s
+	}
+	return string(r[:n])
 }
 
 func joinStrings(ss []string, sep string) string {

@@ -17,7 +17,8 @@ on:
 jobs:
   board-sync:
     name: Add to board if epic or high-priority
-    uses: castrojo/copilot-config/.github/workflows/board-add.yml@main
+    # pinned to main as of 2025-07-15 — update periodically
+    uses: castrojo/copilot-config/.github/workflows/board-add.yml@f7b144ba207eed8a5145485fb6aa2bec43d18fae
     with:
       issue_url: ${{ github.event.issue.html_url }}
       issue_labels: ${{ join(github.event.issue.labels.*.name, ',') }}

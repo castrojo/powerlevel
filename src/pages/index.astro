@@ -3,11 +3,11 @@ import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
 import { computePL, getRank, activeSupers, levelTier, statScale, type Weapon } from '../lib/compute';
 
-const pl = computePL(rawData.weapons as Record<string, Weapon>);
+const weapons = rawData.weapons ?? {};
+const pl = Object.keys(weapons).length > 0 ? computePL(weapons as Record<string, Weapon>) : 0;
 const rank = getRank(pl);
-const supers = activeSupers(rawData.weapons as Record<string, Weapon>);
+const supers = Object.keys(weapons).length > 0 ? activeSupers(weapons as Record<string, Weapon>) : [];
 const season = rawData.season;
-const weapons = rawData.weapons;
 const stats = rawData.stats;
 
 function plColor(pl: number): string {

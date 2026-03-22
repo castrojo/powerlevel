@@ -48,6 +48,13 @@ Use `just level-up` to open `skill-levels.json` in your editor for manual level 
 
 ## Stats refresh (local workflow)
 
+### First-time setup
+Create the optional global config for tools that need to locate the powerlevel repo:
+```bash
+mkdir -p ~/.config/powerlevel
+echo '{"powerlevel_dir":"~/src/powerlevel"}' > ~/.config/powerlevel/config.json
+```
+
 `just export-stats` reads `~/.copilot/session-store.db` — a LOCAL file. GHA cannot access it.
 Run locally at session end to keep stats current:
 
@@ -86,3 +93,8 @@ Soft cap 250 (~3-4mo) · Hard cap 450 (~12-18mo) · Pinnacle 650 (~2-3yr)
 | Void     | MASTERY      | Skills, security| se-security-reviewer, swe-subagent    |
 | Strand   | DISTRIBUTION | Packaging, GH   | github-actions-expert                 |
 | Stasis   | STABILITY    | OCI, builds     | swe-subagent                          |
+
+## Superpowers skills
+The canonical Superpowers skill set lives at [obra/superpowers](https://github.com/obra/superpowers).
+The `castrojo/superpowers` fork contains personal customizations.
+Contribute general-purpose skills upstream to `obra/superpowers`.
