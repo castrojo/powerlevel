@@ -92,6 +92,10 @@ deploy: build-site
     git push
     @echo "✓ Deployed"
 
+# Generate profile card SVG
+card:
+    go run ./cmd/card/
+
 # Show current PL
 pl:
     go run ./cmd/pl/
