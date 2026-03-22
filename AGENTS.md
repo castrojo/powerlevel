@@ -60,6 +60,20 @@ just refresh   # = export-stats + build-site + commit + push
 The GHA cache (`computed-<hash>`) stores computed weapon/triumph results between runs.
 deploy.yml restores from cache before building.
 
+### Multi-machine cumulative stats
+
+`just export-stats` is **safe to run from any machine**. Stats are cumulative across machines.
+
+`data/exported-sessions.json` (committed to git) is the session manifest. The exporter:
+1. Loads manifest → skips already-counted session UUIDs
+2. Computes **delta** from only new local sessions
+3. **Adds** delta to committed baseline — never overwrites
+4. Merges feed top-20 (deduplicated by session ID), accumulates model usage by line offset
+5. Saves updated manifest
+
+**Do NOT** edit `data/exported-sessions.json` manually.
+**Do NOT** run `just export-stats` from two machines simultaneously — pull before you run.
+
 ## PL Formula
 `PL = 100 + sum(all weapon levels) / 8`
 Soft cap 250 (~3-4mo) · Hard cap 450 (~12-18mo) · Pinnacle 650 (~2-3yr)
