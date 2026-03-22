@@ -13,12 +13,34 @@ Destiny 2-themed GitHub Copilot stats website. Go + Astro monorepo.
 - `tests/` — Playwright E2E
 
 ## Key commands
-- `just` or `just pl` — run terminal dashboard
+- `just` or `just pl` — run terminal dashboard (local dev only)
 - `just install` — install `pl` binary to ~/.local/bin/
 - `just export` — regenerate src/data/powerlevel.json from data/
 - `just dev` — start Astro dev server
 - `just test-go` — Go unit tests
 - `just test-e2e` — Playwright E2E
+
+## Session start display
+
+Agents should display current Powerlevel at session start using the static reader:
+
+```bash
+python3 -c "
+import json, os
+path = os.path.expanduser('~/src/powerlevel/data/powerlevel-data.json')
+try:
+    d = json.load(open(path))
+    weapons = d.get('weapons', {})
+    pl = int(sum(w['level'] for w in weapons.values()) / max(len(weapons), 1))
+    print(f'🔆 ◆ {pl} · {d[\"season\"][\"name\"]}')
+except Exception:
+    print('🔆 ◆ -- (data unavailable)')
+"
+```
+
+**Do NOT** run `just pl`, `go run ./cmd/pl/`, or any command that invokes the Go binary
+for display purposes. The binary is for local development use only.
+Computation happens in GitHub Actions — agents read pre-computed data.
 
 ## Leveling up (GHA-first design)
 

@@ -85,6 +85,28 @@ Records that a seal (a milestone badge) has been unlocked.
 
 ---
 
+### `session_start`
+
+Records that a Copilot session has begun. Agents MAY append this at session start
+instead of invoking the `pl` binary.
+
+| Field       | Type   | Required | Description                          |
+|-------------|--------|----------|--------------------------------------|
+| `type`      | string | ✅        | Always `"session_start"`             |
+| `timestamp` | string | ✅        | ISO 8601 UTC                         |
+| `model`     | string | ❌        | Model name used for this session     |
+| `repo`      | string | ❌        | Primary repo being worked on         |
+
+**Example:**
+```json
+{"type":"session_start","timestamp":"2026-03-22T04:00:00Z","model":"claude-sonnet-4.6","repo":"castrojo/powerlevel"}
+```
+
+Note: `session_start` events are informational only — `cmd/compute` ignores them.
+They are not required; the exporter derives session data from the SQLite session store.
+
+---
+
 ## Rules
 
 1. **Append-only.** Never edit or delete existing lines. The log is immutable
