@@ -1,28 +1,29 @@
 name: Export + Deploy
 
+# gh4 fix: trigger on workflow_run so deploy always runs after compute completes.
+# This eliminates the race where deploy could publish stale data before compute commits.
+# Keep schedule + workflow_dispatch for manual and weekly runs.
 on:
+  workflow_run:
+    workflows: ["Compute Powerlevel"]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '0 9 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'data/**'
-      - 'src/**'
-      - 'internal/**'
-      - 'cmd/**'
 
 jobs:
   validate-and-test:
     name: Validate + E2E
+    # gh4 fix: only proceed if compute succeeded (workflow_run context) or triggered directly.
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
+      # gh2/gh3 fix: checkout repo directly — data files are committed by compute.
+      # No cache restore needed; stale cache could clobber repo fixes.
       - uses: actions/checkout@v4
-
-      - name: Restore computed triumphs cache
-        uses: actions/cache@v4
-        with:
-          path: data/triumphs.json
-          key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
 
       - uses: actions/setup-node@v4
         with:
@@ -48,6 +49,7 @@ jobs:
     needs: validate-and-test
     runs-on: ubuntu-latest
     permissions:
+      # gh10 fix: reduced from contents:write — deploy job never commits to the repo.
       contents: read
       pages: write
       id-token: write
@@ -55,13 +57,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # gh2/gh3 fix: checkout repo directly — data files are committed by compute.
       - uses: actions/checkout@v4
-
-      - name: Restore computed triumphs cache
-        uses: actions/cache@v4
-        with:
-          path: data/triumphs.json
-          key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
 
       - uses: actions/setup-node@v4
         with:

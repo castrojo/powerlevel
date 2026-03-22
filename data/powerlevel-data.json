@@ -284,16 +284,6 @@
       "super": "DRENGR'S LASH",
       "icon_path": "/icons/weapons/edge-transit.png"
     },
-    "homebrew-tap": {
-      "weapon": "Graviton Lance",
-      "element": "strand",
-      "level": 1,
-      "aspect": "INTO THE FRAY",
-      "weapon_type": "Legendary Weapon",
-      "subclass": "strand",
-      "super": "INTO THE FRAY",
-      "icon_path": "/icons/weapons/graviton-lance.png"
-    },
     "dakota-buildstream": {
       "weapon": "Anarchy",
       "element": "strand",

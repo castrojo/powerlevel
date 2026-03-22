@@ -4,8 +4,8 @@
 #   - data/skill-levels.json  (committed by agents alongside SKILL.md Level: changes)
 #   - data/powerlevel-events.jsonl  (appended by agents when triumphs are earned)
 #
-# Cache key = hash of both input files. Cache hit → skip computation entirely.
-# deploy.yml restores from the same cache before building the Astro site.
+# gh1 fix: no cache-hit skip — compute always runs (exits fast when no-change via GITHUB_OUTPUT).
+# deploy.yml uses workflow_run on this workflow completing so there is no race condition.
 # Auth: github.token only. No PATs, no deploy keys, no cross-repo calls.
 
 name: Compute Powerlevel
@@ -15,6 +15,7 @@ on:
     paths:
       - 'data/skill-levels.json'
       - 'data/powerlevel-events.jsonl'
+      - 'cmd/compute/**'
   workflow_dispatch:
   schedule:
     - cron: '0 9 * * 1'  # Mondays 09:00 UTC
@@ -36,21 +37,17 @@ jobs:
         with:
           token: ${{ github.token }}
 
-      - name: Restore computed data cache
-        id: cache
-        uses: actions/cache@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          path: |
-            data/triumphs.json
-          key: computed-${{ hashFiles('data/skill-levels.json', 'data/powerlevel-events.jsonl') }}
+          go-version-file: go.mod
 
-      - name: Run compute script
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Run compute
         id: compute
-        run: python3 scripts/compute.py
+        run: go run ./cmd/compute/
 
       - name: Commit updated data files
-        if: steps.cache.outputs.cache-hit != 'true' && steps.compute.outputs.changed == 'true'
+        if: steps.compute.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

@@ -113,16 +113,27 @@ func main() {
 	manifestPath := filepath.Join(*dataDir, "exported-sessions.json")
 
 	// Collect new sessions not yet counted into stats.
-	newSessions := queryNewSessions(db, counted)
-	if len(newSessions) == 0 {
+	newRows := queryNewSessions(db, counted)
+	if len(newRows) == 0 {
 		fmt.Println("✓ No new sessions to export — stats already current")
 	} else {
-		fmt.Printf("→ %d new session(s) to export\n", len(newSessions))
+		fmt.Printf("→ %d new session(s) to export\n", len(newRows))
 
-		delta := computeDeltaStats(db, newSessions)
+		newSessionIDs := sessionRowIDs(newRows)
+		delta := computeDeltaStats(db, newSessionIDs)
 		mergedStats := mergeStats(*dataDir, delta, &manifest)
 
-		manifest.SessionIDs = append(manifest.SessionIDs, newSessions...)
+		manifest.SessionIDs = append(manifest.SessionIDs, newSessionIDs...)
+
+		// Record timestamps for streak tracking.
+		if manifest.SessionTimestamps == nil {
+			manifest.SessionTimestamps = make(map[string]string, len(newRows))
+		}
+		for _, r := range newRows {
+			if r.CreatedAt != "" {
+				manifest.SessionTimestamps[r.ID] = r.CreatedAt
+			}
+		}
 
 		// Save manifest BEFORE patching stats so an interrupted run doesn't
 		// double-count sessions on the next execution.
@@ -167,24 +178,34 @@ func main() {
 	fmt.Println("✓ Manifest saved — stats are cumulative across machines")
 }
 
-// queryNewSessions returns session IDs from the local DB not yet in the manifest.
-func queryNewSessions(db *sql.DB, counted map[string]bool) []string {
-	rows, err := db.Query("SELECT id FROM sessions ORDER BY created_at ASC")
+// queryNewSessions returns session rows (ID + created_at) from the local DB
+// not yet recorded in the manifest.
+func queryNewSessions(db *sql.DB, counted map[string]bool) []sessionRow {
+	rows, err := db.Query("SELECT id, COALESCE(created_at,'') FROM sessions ORDER BY created_at ASC")
 	if err != nil {
 		log.Fatalf("query sessions: %v", err)
 	}
 	defer rows.Close()
-	var newIDs []string
+	var newRows []sessionRow
 	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
+		var id, createdAt string
+		if err := rows.Scan(&id, &createdAt); err != nil {
 			continue
 		}
 		if !counted[id] {
-			newIDs = append(newIDs, id)
+			newRows = append(newRows, sessionRow{ID: id, CreatedAt: createdAt})
 		}
 	}
-	return newIDs
+	return newRows
+}
+
+// sessionRowIDs extracts just the ID strings from a slice of sessionRows.
+func sessionRowIDs(rows []sessionRow) []string {
+	ids := make([]string, len(rows))
+	for i, r := range rows {
+		ids[i] = r.ID
+	}
+	return ids
 }
 
 // computeDeltaStats calculates stats for a specific set of session IDs only.
