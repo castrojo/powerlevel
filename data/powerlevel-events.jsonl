@@ -8,3 +8,7 @@
 #   level_noted     {"type":"level_noted","skill":"workflow","level":2,"timestamp":"2026-03-19T00:00:00Z"}
 #   seal_earned     {"type":"seal_earned","seal_id":"cursebreaker","timestamp":"2026-03-19T00:00:00Z","gilded":false}
 # verify: reusable workflow access test
+{"type":"triumph_earned","triumph_id":"new_skill","timestamp":"2026-03-18T14:23:30Z","note":"First skill file authored — the Forge opens"}
+{"type":"triumph_earned","triumph_id":"first_session","timestamp":"2026-03-18T20:26:11Z","note":"First Copilot session with knowledge-store entry — the Light is new"}
+{"type":"triumph_earned","triumph_id":"first_knowledge","timestamp":"2026-03-18T20:26:11Z","note":"First knowledge entry stored — the Chronicle begins"}
+{"type":"triumph_earned","triumph_id":"site_launched","timestamp":"2026-03-19T00:31:05Z","note":"Powerlevel site deployed — the Mirror is Forged"}
