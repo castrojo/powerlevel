@@ -1,0 +1,108 @@
+name: System Efficiency Audit
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'  # Mondays 10:00 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Validate pipeline health
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check powerlevel-data.json freshness
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          from datetime import datetime, timezone, timedelta
+
+          with open('data/powerlevel-data.json') as f:
+              d = json.load(f)
+
+          stats = d.get('stats', {})
+          timestamps = [
+              s.get('exported_at')
+              for s in stats.values()
+              if isinstance(s, dict) and s.get('exported_at')
+          ]
+
+          if not timestamps:
+              print('::warning::No exported_at timestamps found in powerlevel-data.json stats')
+              sys.exit(0)
+
+          latest = max(timestamps)
+          age = datetime.now(timezone.utc) - datetime.fromisoformat(latest.replace('Z', '+00:00'))
+
+          if age > timedelta(days=8):
+              print(f'::warning::powerlevel-data.json is {age.days} days old (last export: {latest}) — run just export-stats')
+          else:
+              print(f'✓ powerlevel-data.json is fresh ({age.days} days old)')
+          EOF
+
+      - name: Check for duplicate triumph events
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          from collections import Counter
+
+          earned = []
+          with open('data/powerlevel-events.jsonl') as f:
+              for lineno, line in enumerate(f, 1):
+                  line = line.strip()
+                  if not line or line.startswith('#'):
+                      continue
+                  try:
+                      ev = json.loads(line)
+                      if ev.get('type') == 'triumph_earned':
+                          tid = ev.get('triumph_id')
+                          if tid:
+                              earned.append(tid)
+                  except json.JSONDecodeError:
+                      print(f'::warning::Malformed JSON at line {lineno} in powerlevel-events.jsonl')
+
+          counts = Counter(earned)
+          dups = {k: v for k, v in counts.items() if v > 1}
+          if dups:
+              for tid, count in dups.items():
+                  print(f'::warning::Triumph {tid!r} earned {count} times in events log — possible duplicate')
+          else:
+              print(f'✓ No duplicate triumph events ({len(earned)} earned IDs)')
+          EOF
+
+      - name: Check seal consistency
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+
+          with open('data/seals.json') as f:
+              seals = json.load(f).get('seals', [])
+
+          issues = 0
+          for seal in seals:
+              if seal.get('earned') and seal.get('earned_triumphs', 0) < seal.get('total_triumphs', 1):
+                  print(f'::warning::Seal {seal["id"]!r} marked earned but earned_triumphs ({seal["earned_triumphs"]}) < total_triumphs ({seal["total_triumphs"]})')
+                  issues += 1
+
+          if issues == 0:
+              print(f'✓ All {len(seals)} seals are internally consistent')
+          EOF
+
+      - name: Check compute.py is gone
+        run: |
+          if [ -f "scripts/compute.py" ]; then
+            echo "::warning::scripts/compute.py still exists — should be deleted after migration to cmd/compute"
+          else
+            echo "✓ scripts/compute.py correctly absent"
+          fi
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Verify cmd/compute builds
+        run: go build ./cmd/compute/

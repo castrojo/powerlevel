@@ -19,6 +19,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/castrojo/powerlevel/internal/data"
 )
 
 func main() {
@@ -97,22 +99,6 @@ func loadSkillLevels(path string) (map[string]float64, error) {
 	return levels, nil
 }
 
-// milestoneTier returns the milestone tier name for a weapon level, or "" if below 100.
-func milestoneTier(level float64) string {
-	switch {
-	case level >= 250:
-		return "Transcendent"
-	case level >= 200:
-		return "Pinnacle"
-	case level >= 150:
-		return "Adept"
-	case level >= 100:
-		return "Mastercrafted"
-	default:
-		return ""
-	}
-}
-
 // updateWeaponLevels reads powerlevel-data.json, updates weapon levels from skillLevels,
 // sets milestone_tier fields, and writes back if changed.
 func updateWeaponLevels(path string, skillLevels map[string]float64) (bool, error) {
@@ -156,7 +142,7 @@ func updateWeaponLevels(path string, skillLevels map[string]float64) (bool, erro
 		}
 
 		// Milestone tier — always sync (in case thresholds changed).
-		tier := milestoneTier(newLevelF)
+		tier := data.MilestoneTier(int(newLevelF))
 		currentTier, _ := weapon["milestone_tier"].(string)
 		if tier == "" {
 			// Below 100: remove the field if present.

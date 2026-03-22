@@ -7,9 +7,22 @@ const weapons = rawData.weapons ?? {};
 
 function levelColor(level: number): string {
   if (level >= 100) return 'var(--d2-masterwork)';
-  if (level >= 67) return 'var(--pl-hard)';
-  if (level >= 34) return 'var(--pl-soft)';
+  if (level >= 90)  return '#a855f7';  // gilded — purple
+  if (level >= 80)  return '#3fb6e6';  // ascendant — arc blue
+  if (level >= 70)  return '#41c182';  // unbroken — strand green
+  if (level >= 60)  return '#f2831a';  // forged — solar orange
+  if (level >= 34)  return 'var(--pl-soft)';
   return 'var(--d2-text-dim)';
+}
+
+function milestoneTierColor(tier: string): string {
+  switch (tier) {
+    case 'Mastercrafted': return '#c9b037';
+    case 'Adept':         return '#b4b4b4';
+    case 'Pinnacle':      return '#e5c97e';
+    case 'Transcendent':  return '#a855f7';
+    default:              return '#888';
+  }
 }
 
 const subclasses = [
@@ -20,7 +33,7 @@ const subclasses = [
   { element: 'stasis', icon: '🔵', name: 'STABILITY',    super: 'Glacial Quake' },
 ];
 
-type WeaponEntry = { weapon: string; weapon_type: string; element: string; level: number; primary?: boolean };
+type WeaponEntry = { weapon: string; weapon_type: string; element: string; level: number; primary?: boolean; milestone_tier?: string };
 const weaponEntries = Object.entries(weapons) as [string, WeaponEntry][];
 ---
 
@@ -63,7 +76,15 @@ const weaponEntries = Object.entries(weapons) as [string, WeaponEntry][];
                 </div>
                 <div class="weapon-footer">
                   <span class="tier-name" style={`color: ${levelColor(w.level)}`}>{levelTier(w.level)}</span>
-                  <span class="level-num">Lv. {w.level}</span>
+                  <div class="level-num-group">
+                    {w.milestone_tier && (
+                      <span
+                        class="milestone-badge"
+                        style={`background: ${milestoneTierColor(w.milestone_tier)}22; color: ${milestoneTierColor(w.milestone_tier)}; border: 1px solid ${milestoneTierColor(w.milestone_tier)}55`}
+                      >{w.milestone_tier}</span>
+                    )}
+                    <span class="level-num">Lv. {w.level}</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -121,6 +142,8 @@ h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); ma
 .level-bar { height: 3px; background: var(--d2-border); border-radius: 2px; margin-bottom: 0.5rem; }
 .level-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
 .weapon-footer { display: flex; justify-content: space-between; align-items: center; }
+.level-num-group { display: flex; align-items: center; gap: 0.35rem; }
+.milestone-badge { font-size: 0.6rem; padding: 0.1rem 0.35rem; border-radius: 999px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
 .tier-name { font-size: 0.7rem; }
 .level-num { font-size: 0.7rem; color: var(--d2-text-dim); }
 </style>

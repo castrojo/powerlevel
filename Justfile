@@ -113,3 +113,14 @@ pl:
 # Lint GitHub Actions workflows with actionlint
 lint-ci:
     actionlint .github/workflows/*.yml
+
+# Run pipeline health audit locally (mirrors GHA audit.yml)
+[script]
+audit:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "=== Powerlevel Pipeline Audit ==="
+    python3 scripts/audit-local.py
+    go build ./cmd/compute/ && echo "  cmd/compute: builds OK" || echo "  cmd/compute: BUILD FAILED"
+    test ! -f scripts/compute.py && echo "  compute.py: correctly absent" || echo "  WARNING: compute.py still present"
+    echo "=== Audit complete ==="
