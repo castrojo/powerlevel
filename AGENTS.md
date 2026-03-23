@@ -1,122 +1,43 @@
-# castrojo/powerlevel — AGENTS.md
+> ⛔ Never open upstream PRs. Full rules: `cat ~/src/skills/workflow/SKILL.md`
+
+# castrojo/powerlevel
 
 Destiny 2-themed GitHub Copilot stats website. Go + Astro monorepo.
+Live: `https://castrojo.github.io/powerlevel/` | Branch: `main`
 
-## Structure
-- `cmd/pl/` — Go CLI terminal dashboard (replaces powerlevel.py)
-- `cmd/exporter/` — Go exporter: reads data/, writes src/data/powerlevel.json
-- `internal/data/` — data model, loader, PL formula, stat scaling
-- `internal/renderer/` — terminal ANSI output, bars, side-by-side columns
-- `internal/exporter/` — sanitized JSON export for website
-- `data/` — source of truth JSON (edit these manually to level up)
-- `src/` — Astro 5 website (castrojo.github.io/powerlevel)
-- `tests/` — Playwright E2E
-
-## Key commands
-- `just` or `just pl` — run terminal dashboard (local dev only)
-- `just install` — install `pl` binary to ~/.local/bin/
-- `just export` — regenerate src/data/powerlevel.json from data/
-- `just dev` — start Astro dev server
-- `just test-go` — Go unit tests
-- `just test-e2e` — Playwright E2E
-
-## Session start display
-
-Agents should display current Powerlevel at session start using the static reader:
+## Skills
 
 ```bash
-python3 -c "
-import json, os
-path = os.path.expanduser('~/src/powerlevel/data/powerlevel-data.json')
-try:
-    d = json.load(open(path))
-    weapons = d.get('weapons', {})
-    pl = int(sum(w['level'] for w in weapons.values()) / max(len(weapons), 1))
-    print(f'🔆 ◆ {pl} · {d[\"season\"][\"name\"]}')
-except Exception:
-    print('🔆 ◆ -- (data unavailable)')
-"
+cat skills/SKILL.md              # repo operational knowledge (leveling, stats, GHA race conditions)
+cat ~/src/skills/powerlevel/SKILL.md    # same skill via global path
 ```
 
-**Do NOT** run `just pl`, `go run ./cmd/pl/`, or any command that invokes the Go binary
-for display purposes. The binary is for local development use only.
-Computation happens in GitHub Actions — agents read pre-computed data.
-
-## Leveling up (GHA-first design)
-
-**All computation runs in GitHub Actions. Agents are data sources only.**
-
-When a skill level increases, agents MUST update TWO files:
-
-1. `Level:` field in `~/src/skills/<name>/SKILL.md` (copilot-config repo)
-2. `~/src/powerlevel/data/skill-levels.json` — matching entry for the skill
-
-Both must be committed. `skill-levels.json` is the machine-readable source that
-`compute.yml` reads. Updating only SKILL.md will NOT update the powerlevel.
+## Quick Start
 
 ```bash
-# After incrementing Level: in skills/X/SKILL.md:
-cd ~/src && just sync          # commit copilot-config
-# Then update powerlevel:
-# edit ~/src/powerlevel/data/skill-levels.json — bump "skill-name": N
-cd ~/src/powerlevel
-git add data/skill-levels.json
-git commit -m "feat: level up skill-name → N"
-git push
-# compute.yml triggers automatically on push to data/skill-levels.json
+just dev           # start Astro dev server
+just test-go       # Go unit tests
+just test-e2e      # Playwright E2E
+just export        # regenerate src/data/powerlevel.json from data/
+just refresh       # export-stats + build-site + commit + push (run locally at session end)
 ```
 
-Use `just level-up` to open `skill-levels.json` in your editor for manual level edits.
+## Critical Rules
 
-## Stats refresh (local workflow)
+- **Read pre-computed data only** — never run `just pl` or the Go binary for display; read `data/powerlevel-data.json` directly
+- **Two-file leveling** — always update BOTH `~/src/skills/<name>/SKILL.md` Level AND `data/skill-levels.json`
+- **Stats are cumulative** — never run `just export-stats` from two machines simultaneously; pull first
+- **GHA-first** — all computation runs in GitHub Actions; agents are data sources only
 
-### First-time setup
-Create the optional global config for tools that need to locate the powerlevel repo:
-```bash
-mkdir -p ~/.config/powerlevel
-echo '{"powerlevel_dir":"~/src/powerlevel"}' > ~/.config/powerlevel/config.json
-```
-
-`just export-stats` reads `~/.copilot/session-store.db` — a LOCAL file. GHA cannot access it.
-Run locally at session end to keep stats current:
+## Work Queue
 
 ```bash
-cd ~/src/powerlevel
-just refresh   # = export-stats + build-site + commit + push
+gh issue list --repo castrojo/powerlevel --label copilot-ready --state open
+gh issue list --repo castrojo/copilot-config --label copilot-ready --state open
 ```
 
-**Never annotate `just export-stats` as GHA-only.** It has always been a local command.
-The GHA cache (`computed-<hash>`) stores computed weapon/triumph results between runs.
-deploy.yml restores from cache before building.
+## Session End
 
-### Multi-machine cumulative stats
-
-`just export-stats` is **safe to run from any machine**. Stats are cumulative across machines.
-
-`data/exported-sessions.json` (committed to git) is the session manifest. The exporter:
-1. Loads manifest → skips already-counted session UUIDs
-2. Computes **delta** from only new local sessions
-3. **Adds** delta to committed baseline — never overwrites
-4. Merges feed top-20 (deduplicated by session ID), accumulates model usage by line offset
-5. Saves updated manifest
-
-**Do NOT** edit `data/exported-sessions.json` manually.
-**Do NOT** run `just export-stats` from two machines simultaneously — pull before you run.
-
-## PL Formula
-`PL = 100 + sum(all weapon levels) / 8`
-Soft cap 250 (~3-4mo) · Hard cap 450 (~12-18mo) · Pinnacle 650 (~2-3yr)
-
-## Subclass → Skill domain mapping
-| Element  | Name         | Domain          | Super agents                          |
-|----------|--------------|-----------------|---------------------------------------|
-| Arc      | VELOCITY     | CI/CD, TDD      | blueprint-mode, tdd-red/green/refactor |
-| Solar    | COMMUNITY    | OSS, knowledge  | principal-software-engineer            |
-| Void     | MASTERY      | Skills, security| se-security-reviewer, swe-subagent    |
-| Strand   | DISTRIBUTION | Packaging, GH   | github-actions-expert                 |
-| Stasis   | STABILITY    | OCI, builds     | swe-subagent                          |
-
-## Superpowers skills
-The canonical Superpowers skill set lives at [obra/superpowers](https://github.com/obra/superpowers).
-The `castrojo/superpowers` fork contains personal customizations.
-Contribute general-purpose skills upstream to `obra/superpowers`.
+```bash
+supermemory(mode="add", type="conversation", scope="project", content="[WHAT]...[WHY]...[FIX]...[NEXT]...")
+```
