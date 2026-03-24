@@ -1,0 +1,82 @@
+---
+import D2Layout from '../layouts/D2Layout.astro';
+import modelUsage from '../../data/model-usage.json';
+
+const modelRows = Object.entries(modelUsage.model_counts || {}).sort((a, b) => b[1] - a[1]);
+const taskRows = Object.entries(modelUsage.task_counts || {}).sort((a, b) => b[1] - a[1]);
+---
+
+<D2Layout title="Model Usage">
+  <div class="models-page">
+    <h1>Model Usage</h1>
+    <p class="page-sub">Aggregated from <code>data/model-usage.json</code>.</p>
+
+    <div class="summary card">
+      <div class="stat">
+        <span class="value">{modelUsage.total_dispatches}</span>
+        <span class="label">dispatches</span>
+      </div>
+      <div class="stat">
+        <span class="value">{modelRows.length}</span>
+        <span class="label">models</span>
+      </div>
+      <div class="stat">
+        <span class="value">{taskRows.length}</span>
+        <span class="label">task types</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>By Model</h2>
+      {modelRows.length === 0 ? (
+        <p class="empty">No model usage data yet.</p>
+      ) : (
+        <ul class="rows">
+          {modelRows.map(([model, count]) => (
+            <li class="row">
+              <span class="name">{model}</span>
+              <span class="count">{count}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div class="card">
+      <h2>By Task</h2>
+      {taskRows.length === 0 ? (
+        <p class="empty">No task usage data yet.</p>
+      ) : (
+        <ul class="rows">
+          {taskRows.map(([task, count]) => (
+            <li class="row">
+              <span class="name">{task}</span>
+              <span class="count">{count}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+</D2Layout>
+
+<style>
+.models-page { display: flex; flex-direction: column; gap: 1rem; }
+h1 { font-family: var(--font-lore); color: var(--d2-exotic); margin: 0; }
+h2 { font-family: var(--font-lore); color: var(--d2-text-bright); margin: 0 0 0.75rem; }
+.page-sub { color: var(--d2-text-dim); margin: 0; }
+.page-sub code { color: var(--d2-arc); }
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.stat { display: flex; flex-direction: column; align-items: center; }
+.value { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); }
+.label { font-size: 0.75rem; color: var(--d2-text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.card { background: var(--d2-surface); border: 1px solid var(--d2-border); border-radius: 4px; padding: 1rem; }
+.rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.row { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--d2-border-dim); padding-bottom: 0.4rem; }
+.name { color: var(--d2-text-bright); font-family: monospace; }
+.count { color: var(--d2-arc); font-weight: 700; }
+.empty { color: var(--d2-text-dim); }
+@media (max-width: 800px) {
+  .summary { grid-template-columns: 1fr; }
+}
+</style>
