@@ -1,6 +1,50 @@
 {
-  "generated_at": "2026-03-24T05:56:00Z",
+  "generated_at": "2026-03-27T12:03:15Z",
   "entries": [
+    {
+      "id": "c880f04f-3531-4a02-a9f9-742df4f88a2a",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "Act as a Senior Architect reviewer. In read-only mode, audit this repository for cncf-darkmode rebra...",
+      "created_at": "2026-03-24T08:14:14.476Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
+      "tags": []
+    },
+    {
+      "id": "1a22a98f-6ca6-4e53-929d-b9558e812dd6",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "Act as a Tech Lead reviewer. In read-only mode, triage issues #3 #4 #5 #8 #9 #10 #11 #12 #13 #14 #15...",
+      "created_at": "2026-03-24T08:14:14.475Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
+      "tags": []
+    },
+    {
+      "id": "6080c006-b785-4607-bb15-fb8a217dc0b7",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "Act as a QA Lead reviewer. In read-only mode, analyze testing and CI risk for planned header refacto...",
+      "created_at": "2026-03-24T08:14:14.470Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
+      "tags": []
+    },
+    {
+      "id": "c996f27f-f93d-4964-9f1e-d5eff8fee066",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "",
+      "created_at": "2026-03-24T08:06:31.634Z",
+      "turns": 0,
+      "prs": null,
+      "xp": 0,
+      "tags": []
+    },
     {
       "id": "fb4208c1-eaac-4c48-b99c-8484930a3856",
       "repository": "castrojo/cncf-darkmode",
@@ -185,50 +229,6 @@
         "61"
       ],
       "xp": 56,
-      "tags": []
-    },
-    {
-      "id": "7cacaddd-8429-4193-98fd-82ebd8596f44",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Check Repository Workflow Status",
-      "created_at": "2026-03-22T13:08:42.868Z",
-      "turns": 3,
-      "prs": null,
-      "xp": 6,
-      "tags": []
-    },
-    {
-      "id": "cd3fc6a0-11b1-4f70-a035-465b633d0d8d",
-      "repository": "ublue-os/homebrew-tap",
-      "branch": "main",
-      "summary": "Convert Repo To Homebrew Tap",
-      "created_at": "2026-03-22T12:12:23.740Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "c269b678-84c8-4111-aa6b-7c17946ec7ad",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-22T12:05:20.289Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "d52473f3-7d26-4077-b90b-3ca08b995b8b",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Locate Prometheus Perses Dashboard Repo",
-      "created_at": "2026-03-22T12:03:58.676Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
       "tags": []
     }
   ]
