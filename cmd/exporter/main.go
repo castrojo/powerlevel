@@ -18,14 +18,14 @@ import (
 // SessionManifest tracks which sessions have been counted into stats.
 // Committed to git — makes stats cumulative across machines forever.
 type SessionManifest struct {
-	SessionIDs             []string          `json:"session_ids"`
-	Repos                  []string          `json:"repos"`
-	FeedSessionIDs         []string          `json:"feed_session_ids"`
-	ModelLogProcessedLines int               `json:"model_log_processed_lines"`
+	SessionIDs             []string `json:"session_ids"`
+	Repos                  []string `json:"repos"`
+	FeedSessionIDs         []string `json:"feed_session_ids"`
+	ModelLogProcessedLines int      `json:"model_log_processed_lines"`
 	// SessionTimestamps maps session ID → created_at (UTC ISO8601).
 	// Used by cmd/streak to compute cross-machine day-streak stats.
-	SessionTimestamps      map[string]string `json:"session_timestamps,omitempty"`
-	UpdatedAt              string            `json:"updated_at"`
+	SessionTimestamps map[string]string `json:"session_timestamps,omitempty"`
+	UpdatedAt         string            `json:"updated_at"`
 }
 
 // sessionRow holds a session ID and its created_at timestamp from the DB.
@@ -279,11 +279,14 @@ func mergeStats(dataDir string, delta map[string]StatBlock, manifest *SessionMan
 	for _, key := range additive {
 		d := delta[key]
 		e := existing[key]
+		newRaw := e.Raw + d.Raw
+		history := appendHistory(e.History, newRaw)
 		result[key] = StatBlock{
-			Raw:        e.Raw + d.Raw,
+			Raw:        newRaw,
 			SoftCap:    d.SoftCap,
 			Pinnacle:   d.Pinnacle,
 			Unit:       d.Unit,
+			History:    history,
 			ExportedAt: d.ExportedAt,
 		}
 	}
@@ -301,7 +304,8 @@ func mergeStats(dataDir string, delta map[string]StatBlock, manifest *SessionMan
 		breadthRaw = e.Raw // never go below what the old machine committed
 	}
 	d := delta["breadth"]
-	result["breadth"] = StatBlock{Raw: breadthRaw, SoftCap: d.SoftCap, Pinnacle: d.Pinnacle, Unit: d.Unit, ExportedAt: d.ExportedAt}
+	breadthHistory := appendHistory(existing["breadth"].History, breadthRaw)
+	result["breadth"] = StatBlock{Raw: breadthRaw, SoftCap: d.SoftCap, Pinnacle: d.Pinnacle, Unit: d.Unit, History: breadthHistory, ExportedAt: d.ExportedAt}
 
 	return result
 }
@@ -364,7 +368,14 @@ func buildNewFeedEntries(db *sql.DB, feedCounted map[string]bool) []FeedEntry {
 			continue
 		}
 
-		db.QueryRow("SELECT COUNT(*) FROM turns WHERE session_id = ?", e.ID).Scan(&e.Turns)
+		if scanErr := db.QueryRow("SELECT COUNT(*) FROM turns WHERE session_id = ?", e.ID).Scan(&e.Turns); scanErr != nil {
+			log.Printf("feed: turns query for session %s: %v — skipping", e.ID, scanErr)
+			continue
+		}
+
+		if e.Turns == 0 && e.Summary == "" {
+			continue
+		}
 
 		prRows, _ := db.Query("SELECT ref_value FROM session_refs WHERE session_id = ? AND ref_type IN ('commit','pr') LIMIT 5", e.ID)
 		if prRows != nil {
@@ -544,6 +555,19 @@ func truncateRunes(s string, n int) string {
 		return s
 	}
 	return string(r[:n])
+}
+
+// appendHistory appends val to a copy of h and caps the result at 90 entries
+// (sliding window — drops the oldest entries). Uses copy to avoid slice aliasing.
+func appendHistory(h []int, val int) []int {
+	const maxHistory = 90
+	dst := make([]int, len(h), len(h)+1)
+	copy(dst, h)
+	dst = append(dst, val)
+	if len(dst) > maxHistory {
+		dst = dst[len(dst)-maxHistory:]
+	}
+	return dst
 }
 
 func joinStrings(ss []string, sep string) string {

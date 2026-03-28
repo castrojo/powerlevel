@@ -718,6 +718,36 @@
       "subclass": "solar",
       "super": "BURNING MAUL",
       "icon_path": "/icons/weapons/erianas-vow.png"
+    },
+    "end-session": {
+      "weapon": "The Chaperone",
+      "element": "strand",
+      "level": 1,
+      "aspect": "DRENGR'S LASH",
+      "weapon_type": "Exotic Shotgun",
+      "subclass": "strand",
+      "super": "DRENGR'S LASH",
+      "icon_path": "/icons/weapons/the-chaperone.png"
+    },
+    "github-issues": {
+      "weapon": "Gjallarhorn",
+      "element": "solar",
+      "level": 4,
+      "aspect": "SOL INVICTUS",
+      "weapon_type": "Exotic Rocket Launcher",
+      "subclass": "solar",
+      "super": "SOLAR SUPERS",
+      "icon_path": "/icons/weapons/gjallarhorn.png"
+    },
+    "skill-auditor": {
+      "weapon": "Wish-Ender",
+      "element": "void",
+      "level": 1,
+      "aspect": "Unknown",
+      "weapon_type": "Exotic Bow",
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "icon_path": "/icons/weapons/wish-ender.png"
     }
   }
 }
