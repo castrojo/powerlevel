@@ -74,7 +74,7 @@
         },
         {
           "description": "Dispatch 3 or more agents simultaneously in a single session — each completing a distinct, real task in parallel — and synthesize their outputs into a unified deliverable",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "The Vanguard does not take turns. Neither should you.",
           "id": "velocity_parallel_agents",
@@ -179,7 +179,7 @@
         },
         {
           "description": "Record the first Level: increment in any skill's SKILL.md — the moment a skill crosses from loaded to mastered, marked in the permanent record",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "The Ghost watched the number change. So did you. Neither of you said anything. Both of you knew.",
           "id": "community_skill_levelup",
@@ -275,7 +275,7 @@
         },
         {
           "description": "Invoke the principal-software-engineer agent on a real architectural decision — the consultation must surface at minimum one design concern or trade-off that materially changes your approach",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "Zavala does not advise lightly. Neither does the agent. Listen both times.",
           "id": "mastery_principal_review",
@@ -1853,7 +1853,7 @@
         },
         {
           "description": "For any session touching 3+ files: complete the scope declaration AND knowledge-search step BEFORE writing a single line of code — with the scope, goal, and out-of-scope explicitly stated in the session's first response.",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "The cursor did not move first. The plan moved first. The cursor followed.",
           "id": "decision_before_code",
