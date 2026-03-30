@@ -1,6 +1,90 @@
 {
-  "generated_at": "2026-03-27T23:37:04Z",
+  "generated_at": "2026-03-30T18:34:51Z",
   "entries": [
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-github-actions-expert-2",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: github-actions-expert reached Level 2",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-bluefin-iso-2",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: bluefin-iso reached Level 2",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-cicd-learning-3",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: cicd-learning reached Level 3",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-bluefin-ci-2",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: bluefin-ci reached Level 2",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-bluefin-lts-2",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: bluefin-lts reached Level 2",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
+    {
+      "id": "event-level-noted-2026-03-30T00:00:00Z-bluefin-build-2",
+      "repository": "castrojo/powerlevel",
+      "branch": "main",
+      "summary": "Level up milestone: bluefin-build reached Level 2",
+      "created_at": "2026-03-30T00:00:00Z",
+      "turns": 1,
+      "prs": [],
+      "xp": 25,
+      "tags": [
+        "level-up",
+        "milestone"
+      ]
+    },
     {
       "id": "c857c254-6b92-41cc-8729-cf12df985580",
       "repository": "ublue-os/bluefin-lts",
@@ -46,39 +130,6 @@
       "tags": []
     },
     {
-      "id": "c996f27f-f93d-4964-9f1e-d5eff8fee066",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-24T08:06:31.634Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "fb4208c1-eaac-4c48-b99c-8484930a3856",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-24T05:44:21.846Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "d1831c4c-5030-49bc-837e-b8be054b1357",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-24T05:44:07.439Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
       "id": "5b97d05d-80cc-414d-b5e8-479c5050d3ad",
       "repository": "github/docs",
       "branch": "feat/saturn",
@@ -89,17 +140,6 @@
         "ca5835f"
       ],
       "xp": 80,
-      "tags": []
-    },
-    {
-      "id": "7f775f09-547e-480f-b2f9-bb31a78704a8",
-      "repository": "castrojo/testhub",
-      "branch": "feat/saturn",
-      "summary": "",
-      "created_at": "2026-03-23T16:44:33.900Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
       "tags": []
     },
     {
@@ -122,50 +162,6 @@
       "turns": 1,
       "prs": null,
       "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "7f58550d-cfda-4936-bd89-798c2606da39",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-23T14:37:55.650Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "cabdf4f4-d86c-4d3f-a36b-17774cc7c3eb",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-23T14:37:47.276Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "7328e4a9-c775-458f-8f4f-6d037f972581",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "",
-      "created_at": "2026-03-23T13:08:49.581Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "57821c10-f82e-4dbd-89cc-403c8581fd3d",
-      "repository": "",
-      "branch": "",
-      "summary": "",
-      "created_at": "2026-03-23T13:08:37.025Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
       "tags": []
     },
     {
