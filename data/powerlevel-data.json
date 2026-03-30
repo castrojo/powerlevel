@@ -6,18 +6,18 @@
     "Katharina returns from distant homelands with new formulae. The brew strengthens.",
     "Dolly reports all Flatpaks synchronized. The application model holds against the Darkness.",
     "The Traveler illuminates a path away from legacy. Wayland native confirmed across all fronts.",
-    "Each story element is related to communities — their challenges, and their triumphs. This is yours.",
+    "Each story element is related to communities \u2014 their challenges, and their triumphs. This is yours.",
     "Bluefin was born to disappear. The best operating systems are invisible. Is she invisible yet?",
     "Ghost transmission: the old distribution model belongs in a museum. We put it there. Move on.",
     "I scanned your history. You have more 'fix: typo' entries than any Guardian on record. I've filed this under 'endearing.'",
     "Old-school jank, safely contained in distrobox. The Paleosaurs are quarantined. For now.",
-    "The CI is green. The site is deployed. The Light holds. — For now.",
+    "The CI is green. The site is deployed. The Light holds. \u2014 For now.",
     "Mission: accelerate the ecosystem. Become invisible. Leave the future better than you found it.",
-    "Bluefin and Achillobator, side by side. The enterprise moves slow — but it moves. Stay patient.",
-    "The human is more important than the machine. I remind myself of this every session. — Ghost"
+    "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
+    "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
   ],
   "season": {
-    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility — operating without knowing which disciplines have gone dark.",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark.",
     "name": "Season of the Powerlevel",
     "project": "castrojo/powerlevel",
     "quarter": "Q1 2026"
@@ -74,14 +74,14 @@
   },
   "weapons": {
     "astro-dark-mode": {
-      "aspect": "RADIANT",
-      "element": "solar",
-      "icon_path": "/icons/weapons/erianas-vow.png",
+      "aspect": "ARC SOUL",
+      "element": "arc",
+      "icon_path": "/icons/weapons/borealis.png",
       "level": 1,
-      "subclass": "solar",
-      "super": "BURNING MAUL",
-      "weapon": "Erianas Vow",
-      "weapon_type": "Legendary Weapon"
+      "subclass": "arc",
+      "super": "CHAOS REACH",
+      "weapon": "Borealis",
+      "weapon_type": "Exotic Sniper Rifle"
     },
     "autoresearch": {
       "element": "arc",
@@ -142,14 +142,14 @@
       "weapon_type": "Legendary Weapon"
     },
     "bluefin-mcp": {
-      "aspect": "STRAND DISPLACEMENT",
-      "element": "strand",
-      "icon_path": "/icons/weapons/monte-carlo.png",
+      "aspect": "WELL OF RADIANCE",
+      "element": "solar",
+      "icon_path": "/icons/weapons/eyes-of-tomorrow.png",
       "level": 2,
-      "subclass": "strand",
-      "super": "STRAND DISPLACEMENT",
-      "weapon": "Monte Carlo",
-      "weapon_type": "Exotic Weapon"
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "weapon": "Eyes of Tomorrow",
+      "weapon_type": "Exotic Rocket Launcher"
     },
     "bluefin-packages": {
       "aspect": "INTO THE FRAY",
@@ -277,31 +277,34 @@
       "weapon_type": "Exotic Scout Rifle"
     },
     "cncf-layout": {
-      "element": "solar",
-      "icon_path": "/icons/weapons/sunshot.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/blast-furnace.png",
       "level": 1,
-      "subclass": "solar",
-      "super": "BURNING MAUL",
-      "weapon": "Sunshot",
-      "weapon_type": "Exotic Hand Cannon"
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "Blast Furnace",
+      "weapon_type": "Legendary Pulse Rifle",
+      "aspect": "KNOCKOUT"
     },
     "cncf-testing": {
-      "element": "void",
-      "icon_path": "/icons/weapons/vex-mythoclast.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/chattering-bone.png",
       "level": 1,
       "subclass": "void",
-      "super": "SENTINEL SHIELD",
-      "weapon": "Vex Mythoclast",
-      "weapon_type": "Exotic Fusion Rifle"
+      "super": "NOVA BOMB",
+      "weapon": "Chattering Bone",
+      "weapon_type": "Legendary Pulse Rifle",
+      "aspect": "ECHO OF CESSATION"
     },
     "dakota-add-package": {
-      "element": "stasis",
-      "icon_path": "/icons/weapons/agers-scepter.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/chroma-rush.png",
       "level": 1,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "weapon": "Ager's Scepter",
-      "weapon_type": "Exotic Trace Rifle"
+      "weapon": "Chroma Rush",
+      "weapon_type": "Legendary Auto Rifle",
+      "aspect": "HOWL OF THE STORM"
     },
     "dakota-bst-overrides": {
       "element": "stasis",
@@ -323,22 +326,24 @@
       "weapon_type": "Legendary Weapon"
     },
     "dakota-ci": {
-      "element": "stasis",
-      "icon_path": "/icons/weapons/leviatans-breath.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/commemoration.png",
       "level": 1,
-      "subclass": "stasis",
-      "super": "GLACIAL QUAKE",
-      "weapon": "Leviathan's Breath",
-      "weapon_type": "Exotic Bow"
+      "subclass": "arc",
+      "super": "JUGGERNAUT",
+      "weapon": "Commemoration",
+      "weapon_type": "Legendary Machine Gun",
+      "aspect": "JUGGERNAUT"
     },
     "dakota-debugging": {
-      "element": "stasis",
-      "icon_path": "/icons/weapons/izanagis-burden.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/succession.png",
       "level": 1,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "weapon": "Izanagi's Burden",
-      "weapon_type": "Exotic Sniper Rifle"
+      "weapon": "Succession",
+      "weapon_type": "Legendary Sniper Rifle",
+      "aspect": "SILENCE AND SQUALL"
     },
     "dakota-local-ota": {
       "element": "stasis",
@@ -395,13 +400,14 @@
       "weapon_type": "Exotic Bow"
     },
     "dakota-package-rust": {
-      "element": "stasis",
-      "icon_path": "/icons/weapons/the-fourth-horseman.png",
+      "element": "solar",
+      "icon_path": "/icons/weapons/lord-of-wolves.png",
       "level": 1,
-      "subclass": "stasis",
-      "super": "GLACIAL QUAKE",
-      "weapon": "The Fourth Horseman",
-      "weapon_type": "Exotic Shotgun"
+      "subclass": "solar",
+      "super": "GOLDEN GUN",
+      "weapon": "Lord of Wolves",
+      "weapon_type": "Exotic Shotgun",
+      "aspect": "CONSECRATION"
     },
     "dakota-package-zig": {
       "element": "stasis",
@@ -450,14 +456,14 @@
       "weapon_type": "Legendary Weapon"
     },
     "end-session": {
-      "aspect": "DRENGR'S LASH",
-      "element": "strand",
-      "icon_path": "/icons/weapons/the-chaperone.png",
+      "aspect": "STYLISH EXECUTIONER",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/travelers-chosen.png",
       "level": 1,
-      "subclass": "strand",
-      "super": "DRENGR'S LASH",
-      "weapon": "The Chaperone",
-      "weapon_type": "Exotic Shotgun"
+      "subclass": "void",
+      "super": "DEADFALL",
+      "weapon": "Traveler's Chosen",
+      "weapon_type": "Exotic Sidearm"
     },
     "endusers-website": {
       "element": "solar",
@@ -546,13 +552,14 @@
       "weapon_type": "Exotic Shotgun"
     },
     "homebrew-tap-casks": {
-      "element": "strand",
-      "icon_path": "/icons/weapons/sleeper-simulant.png",
+      "element": "solar",
+      "icon_path": "/icons/weapons/ascendancy.png",
       "level": 1,
-      "subclass": "strand",
-      "super": "BLADEFURY",
-      "weapon": "Sleeper Simulant",
-      "weapon_type": "Exotic Linear Fusion"
+      "subclass": "solar",
+      "super": "DAYBREAK",
+      "weapon": "Ascendancy",
+      "weapon_type": "Legendary Rocket Launcher",
+      "aspect": "HEAT RISES"
     },
     "homebrew-tap-formulas": {
       "element": "strand",
@@ -573,14 +580,14 @@
       "weapon_type": "Exotic Rocket Launcher"
     },
     "knowledge": {
-      "aspect": "SOL INVICTUS",
-      "element": "solar",
-      "icon_path": "/icons/weapons/gjallarhorn.png",
+      "aspect": "HOWL OF THE STORM",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/no-time-to-explain.png",
       "level": 4,
-      "subclass": "solar",
-      "super": "HAMMER OF SOL",
-      "weapon": "Gjallarhorn",
-      "weapon_type": "Legendary Weapon"
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "No Time To Explain",
+      "weapon_type": "Exotic Pulse Rifle"
     },
     "linux-desktop": {
       "aspect": "DIAMOND LANCE",
@@ -621,14 +628,14 @@
       "weapon_type": "Exotic Trace Rifle"
     },
     "powerlevel": {
-      "aspect": "INTO THE FRAY",
-      "element": "solar",
-      "icon_path": "/icons/weapons/monte-carlo.png",
+      "aspect": "LETHAL CURRENT",
+      "element": "arc",
+      "icon_path": "/icons/weapons/ergo-sum.png",
       "level": 4,
-      "subclass": "solar",
-      "super": "HAMMER OF SOL",
-      "weapon": "Monte Carlo",
-      "weapon_type": "Exotic Weapon"
+      "subclass": "arc",
+      "super": "CHAOS REACH",
+      "weapon": "Ergo Sum",
+      "weapon_type": "Exotic Sword"
     },
     "principal-software-engineer": {
       "aspect": "DRENGR'S LASH",
@@ -671,14 +678,14 @@
       "weapon_type": "Legendary Weapon"
     },
     "skill-auditor": {
-      "aspect": "Unknown",
+      "aspect": "ECHO OF CESSATION",
       "element": "void",
-      "icon_path": "/icons/weapons/wish-ender.png",
+      "icon_path": "/icons/weapons/gridskipper.png",
       "level": 1,
       "subclass": "void",
       "super": "NOVA BOMB",
-      "weapon": "Wish-Ender",
-      "weapon_type": "Exotic Bow"
+      "weapon": "Gridskipper",
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "skill-improver": {
       "element": "void",
@@ -730,13 +737,14 @@
       "weapon_type": "Legendary Weapon"
     },
     "trilogy-dev": {
-      "element": "solar",
-      "icon_path": "/icons/weapons/ace-of-spades.png",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/the-messenger.png",
       "level": 1,
-      "subclass": "solar",
-      "super": "BURNING MAUL",
-      "weapon": "Ace of Spades",
-      "weapon_type": "Exotic Hand Cannon"
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "The Messenger",
+      "weapon_type": "Legendary Pulse Rifle",
+      "aspect": "KNOCKOUT"
     },
     "workflow": {
       "aspect": "KNOCKOUT",
