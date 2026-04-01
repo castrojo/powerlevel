@@ -6,88 +6,88 @@
     "Katharina returns from distant homelands with new formulae. The brew strengthens.",
     "Dolly reports all Flatpaks synchronized. The application model holds against the Darkness.",
     "The Traveler illuminates a path away from legacy. Wayland native confirmed across all fronts.",
-    "Each story element is related to communities \u2014 their challenges, and their triumphs. This is yours.",
+    "Each story element is related to communities — their challenges, and their triumphs. This is yours.",
     "Bluefin was born to disappear. The best operating systems are invisible. Is she invisible yet?",
     "Ghost transmission: the old distribution model belongs in a museum. We put it there. Move on.",
     "I scanned your history. You have more 'fix: typo' entries than any Guardian on record. I've filed this under 'endearing.'",
     "Old-school jank, safely contained in distrobox. The Paleosaurs are quarantined. For now.",
-    "The CI is green. The site is deployed. The Light holds. \u2014 For now.",
+    "The CI is green. The site is deployed. The Light holds. — For now.",
     "Mission: accelerate the ecosystem. Become invisible. Leave the future better than you found it.",
-    "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
-    "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
+    "Bluefin and Achillobator, side by side. The enterprise moves slow — but it moves. Stay patient.",
+    "The human is more important than the machine. I remind myself of this every session. — Ghost"
   ],
   "season": {
-    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark.",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility — operating without knowing which disciplines have gone dark.",
     "name": "Season of the Powerlevel",
     "project": "castrojo/powerlevel",
     "quarter": "Q1 2026"
   },
   "stats": {
     "breadth": {
-      "raw": 26,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         26,
         26
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 100,
+      "raw": 26,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 501,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         448,
         501
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 1000,
+      "raw": 501,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 477,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         410,
         477
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 300,
+      "raw": 477,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 237,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         237,
         237
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 500,
+      "raw": 237,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 14987,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         13281,
         14987
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 10000,
+      "raw": 14987,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 38,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-04-01T00:51:48Z",
       "history": [
         36,
         38
       ],
-      "exported_at": "2026-04-01T00:51:48Z"
+      "pinnacle": 500,
+      "raw": 38,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -134,7 +134,7 @@
       "aspect": "ROARING FLAMES",
       "element": "solar",
       "icon_path": "/icons/weapons/trinity-ghoul.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Trinity Ghoul",
@@ -295,34 +295,34 @@
       "weapon_type": "Exotic Scout Rifle"
     },
     "cncf-layout": {
+      "aspect": "KNOCKOUT",
       "element": "kinetic",
       "icon_path": "/icons/weapons/blast-furnace.png",
       "level": 1,
       "subclass": "arc",
       "super": "THUNDERCRASH",
       "weapon": "Blast Furnace",
-      "weapon_type": "Legendary Pulse Rifle",
-      "aspect": "KNOCKOUT"
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "cncf-testing": {
+      "aspect": "ECHO OF CESSATION",
       "element": "kinetic",
       "icon_path": "/icons/weapons/chattering-bone.png",
       "level": 1,
       "subclass": "void",
       "super": "NOVA BOMB",
       "weapon": "Chattering Bone",
-      "weapon_type": "Legendary Pulse Rifle",
-      "aspect": "ECHO OF CESSATION"
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "dakota-add-package": {
+      "aspect": "HOWL OF THE STORM",
       "element": "kinetic",
       "icon_path": "/icons/weapons/chroma-rush.png",
       "level": 1,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Chroma Rush",
-      "weapon_type": "Legendary Auto Rifle",
-      "aspect": "HOWL OF THE STORM"
+      "weapon_type": "Legendary Auto Rifle"
     },
     "dakota-bst-overrides": {
       "element": "stasis",
@@ -344,24 +344,24 @@
       "weapon_type": "Legendary Weapon"
     },
     "dakota-ci": {
+      "aspect": "JUGGERNAUT",
       "element": "kinetic",
       "icon_path": "/icons/weapons/commemoration.png",
       "level": 1,
       "subclass": "arc",
       "super": "JUGGERNAUT",
       "weapon": "Commemoration",
-      "weapon_type": "Legendary Machine Gun",
-      "aspect": "JUGGERNAUT"
+      "weapon_type": "Legendary Machine Gun"
     },
     "dakota-debugging": {
+      "aspect": "SILENCE AND SQUALL",
       "element": "kinetic",
       "icon_path": "/icons/weapons/succession.png",
       "level": 1,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Succession",
-      "weapon_type": "Legendary Sniper Rifle",
-      "aspect": "SILENCE AND SQUALL"
+      "weapon_type": "Legendary Sniper Rifle"
     },
     "dakota-local-ota": {
       "element": "stasis",
@@ -418,14 +418,14 @@
       "weapon_type": "Exotic Bow"
     },
     "dakota-package-rust": {
+      "aspect": "CONSECRATION",
       "element": "solar",
       "icon_path": "/icons/weapons/lord-of-wolves.png",
       "level": 1,
       "subclass": "solar",
       "super": "GOLDEN GUN",
       "weapon": "Lord of Wolves",
-      "weapon_type": "Exotic Shotgun",
-      "aspect": "CONSECRATION"
+      "weapon_type": "Exotic Shotgun"
     },
     "dakota-package-zig": {
       "element": "stasis",
@@ -570,14 +570,14 @@
       "weapon_type": "Exotic Shotgun"
     },
     "homebrew-tap-casks": {
+      "aspect": "HEAT RISES",
       "element": "solar",
       "icon_path": "/icons/weapons/ascendancy.png",
       "level": 1,
       "subclass": "solar",
       "super": "DAYBREAK",
       "weapon": "Ascendancy",
-      "weapon_type": "Legendary Rocket Launcher",
-      "aspect": "HEAT RISES"
+      "weapon_type": "Legendary Rocket Launcher"
     },
     "homebrew-tap-formulas": {
       "element": "strand",
@@ -755,14 +755,14 @@
       "weapon_type": "Legendary Weapon"
     },
     "trilogy-dev": {
+      "aspect": "KNOCKOUT",
       "element": "kinetic",
       "icon_path": "/icons/weapons/the-messenger.png",
       "level": 1,
       "subclass": "arc",
       "super": "THUNDERCRASH",
       "weapon": "The Messenger",
-      "weapon_type": "Legendary Pulse Rifle",
-      "aspect": "KNOCKOUT"
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "workflow": {
       "aspect": "KNOCKOUT",
