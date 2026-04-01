@@ -24,52 +24,70 @@
   },
   "stats": {
     "breadth": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 100,
-      "raw": 17,
+      "raw": 26,
       "softCap": 20,
-      "unit": "repos"
+      "pinnacle": 100,
+      "unit": "repos",
+      "history": [
+        26,
+        26
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     },
     "endurance": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 1000,
-      "raw": 116,
+      "raw": 501,
       "softCap": 200,
-      "unit": "sessions"
+      "pinnacle": 1000,
+      "unit": "sessions",
+      "history": [
+        448,
+        501
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     },
     "foresight": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 300,
-      "raw": 61,
+      "raw": 477,
       "softCap": 50,
-      "unit": "checkpoints"
+      "pinnacle": 300,
+      "unit": "checkpoints",
+      "history": [
+        410,
+        477
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     },
     "output": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 500,
       "raw": 237,
       "softCap": 100,
-      "unit": "commits"
+      "pinnacle": 500,
+      "unit": "commits",
+      "history": [
+        237,
+        237
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     },
     "recall": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 10000,
-      "raw": 926,
+      "raw": 14987,
       "softCap": 2000,
-      "unit": "turns"
+      "pinnacle": 10000,
+      "unit": "turns",
+      "history": [
+        13281,
+        14987
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     },
     "synthesis": {
-      "exported_at": "2026-03-27T23:37:04Z",
-      "history": null,
-      "pinnacle": 500,
-      "raw": 13,
+      "raw": 38,
       "softCap": 50,
-      "unit": "entries"
+      "pinnacle": 500,
+      "unit": "entries",
+      "history": [
+        36,
+        38
+      ],
+      "exported_at": "2026-04-01T00:51:48Z"
     }
   },
   "weapons": {
