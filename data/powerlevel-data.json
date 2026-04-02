@@ -24,70 +24,76 @@
   },
   "stats": {
     "breadth": {
-      "exported_at": "2026-04-01T00:51:48Z",
+      "raw": 28,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos",
       "history": [
         26,
-        26
+        26,
+        28
       ],
-      "pinnacle": 100,
-      "raw": 26,
-      "softCap": 20,
-      "unit": "repos"
+      "exported_at": "2026-04-02T21:12:30Z"
     },
     "endurance": {
-      "exported_at": "2026-04-01T00:51:48Z",
+      "raw": 507,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions",
       "history": [
         448,
-        501
+        501,
+        507
       ],
-      "pinnacle": 1000,
-      "raw": 501,
-      "softCap": 200,
-      "unit": "sessions"
+      "exported_at": "2026-04-02T21:12:30Z"
     },
     "foresight": {
-      "exported_at": "2026-04-01T00:51:48Z",
+      "raw": 484,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints",
       "history": [
         410,
-        477
+        477,
+        484
       ],
-      "pinnacle": 300,
-      "raw": 477,
-      "softCap": 50,
-      "unit": "checkpoints"
+      "exported_at": "2026-04-02T21:12:30Z"
     },
     "output": {
-      "exported_at": "2026-04-01T00:51:48Z",
+      "raw": 254,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits",
       "history": [
         237,
-        237
+        237,
+        254
       ],
-      "pinnacle": 500,
-      "raw": 237,
-      "softCap": 100,
-      "unit": "commits"
+      "exported_at": "2026-04-02T21:12:30Z"
     },
     "recall": {
-      "exported_at": "2026-04-01T00:51:48Z",
+      "raw": 15079,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns",
       "history": [
         13281,
-        14987
+        14987,
+        15079
       ],
-      "pinnacle": 10000,
-      "raw": 14987,
-      "softCap": 2000,
-      "unit": "turns"
+      "exported_at": "2026-04-02T21:12:30Z"
     },
     "synthesis": {
-      "exported_at": "2026-04-01T00:51:48Z",
-      "history": [
-        36,
-        38
-      ],
-      "pinnacle": 500,
       "raw": 38,
       "softCap": 50,
-      "unit": "entries"
+      "pinnacle": 500,
+      "unit": "entries",
+      "history": [
+        36,
+        38,
+        38
+      ],
+      "exported_at": "2026-04-02T21:12:30Z"
     }
   },
   "weapons": {

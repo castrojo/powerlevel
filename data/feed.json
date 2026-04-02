@@ -1,6 +1,90 @@
 {
-  "generated_at": "2026-04-01T00:51:48Z",
+  "generated_at": "2026-04-02T21:12:30Z",
   "entries": [
+    {
+      "id": "6409e8a0-b691-4485-89f5-c356e3ea3a48",
+      "repository": "castrojo/homebrew-stats",
+      "branch": "main",
+      "summary": "Enable URL Tabs And 365d Charts",
+      "created_at": "2026-04-02T16:29:02.126Z",
+      "turns": 38,
+      "prs": [
+        "1868c12e01cf2a235e2df7d296d0d97390600f65",
+        "3dac768",
+        "69f8b7c",
+        "b861915",
+        "bb43edc"
+      ],
+      "xp": 326,
+      "tags": []
+    },
+    {
+      "id": "14b10d30-d6f1-4de1-9983-d9c1ad09e4a3",
+      "repository": "ublue-os/bluefin-lts",
+      "branch": "main",
+      "summary": "Unblock PRs For Main And LTS",
+      "created_at": "2026-04-02T14:32:47.119Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
+    {
+      "id": "387b0f8a-9b12-490f-ba8d-8b5621e39d43",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Fix Documentation Build",
+      "created_at": "2026-04-02T00:34:43.786Z",
+      "turns": 1,
+      "prs": [
+        "6309cec21b4c2351f838b54ee1135ce2c40e7177",
+        "8f17c14"
+      ],
+      "xp": 102,
+      "tags": []
+    },
+    {
+      "id": "57e027f4-f227-4065-a6f9-022558861a6f",
+      "repository": "castrojo/bluefin-lts",
+      "branch": "main",
+      "summary": "Add SBOM Signing To Bluefin LTS",
+      "created_at": "2026-04-01T23:54:51.355Z",
+      "turns": 11,
+      "prs": [
+        "46bdf3c",
+        "5e01b1e",
+        "65c07a5",
+        "ed162d8",
+        "9"
+      ],
+      "xp": 272,
+      "tags": []
+    },
+    {
+      "id": "1ba34d35-4d30-4461-83cb-2accd3aa8a6d",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Improve Changelog Documentation",
+      "created_at": "2026-04-01T22:25:31.128Z",
+      "turns": 36,
+      "prs": [
+        "52a8dc5",
+        "d84ad0f"
+      ],
+      "xp": 172,
+      "tags": []
+    },
+    {
+      "id": "c3d2e7d0-b57f-47fd-981e-8023b76cb942",
+      "repository": "",
+      "branch": "",
+      "summary": "/chronicle standup",
+      "created_at": "2026-04-01T22:14:07.412Z",
+      "turns": 4,
+      "prs": null,
+      "xp": 8,
+      "tags": []
+    },
     {
       "id": "ses_2b979a96affeQGBAwhELtkdkO8",
       "repository": "src",
@@ -153,72 +237,6 @@
       "turns": 37,
       "prs": [],
       "xp": 74,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ec24e8ffeAP950pkYlqY7lG",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: testhub (@general subagent)",
-      "created_at": "2026-03-31 22:46:39",
-      "turns": 17,
-      "prs": [],
-      "xp": 34,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ec4295ffe5Cqxo8lKWFd2bG",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: bluefin (@general subagent)",
-      "created_at": "2026-03-31 22:46:32",
-      "turns": 23,
-      "prs": [],
-      "xp": 46,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ec6e45ffePWF3aD8B2E8mzX",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: bluefin-docs (@general subagent)",
-      "created_at": "2026-03-31 22:46:20",
-      "turns": 16,
-      "prs": [],
-      "xp": 32,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ec86a5ffebdKaKZ9BYK6iXj",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: documentation (@general subagent)",
-      "created_at": "2026-03-31 22:46:14",
-      "turns": 27,
-      "prs": [],
-      "xp": 54,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9f3b2c3ffeOnV8RYiIY5cyEb",
-      "repository": "src",
-      "branch": "",
-      "summary": "Run just sync (@general subagent)",
-      "created_at": "2026-03-31 22:38:24",
-      "turns": 2,
-      "prs": [],
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9f9b4e7ffe8PJafGqsEll2hi",
-      "repository": "src",
-      "branch": "",
-      "summary": "Address SBOM pipeline and Bluefin docs PR review",
-      "created_at": "2026-03-31 22:31:50",
-      "turns": 93,
-      "prs": [],
-      "xp": 186,
       "tags": []
     }
   ]
