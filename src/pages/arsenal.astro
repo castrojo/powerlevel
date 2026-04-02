@@ -31,6 +31,7 @@ const subclasses = [
   { element: 'void',   icon: '🟣', name: 'MASTERY',      super: 'Sentinel Shield / Ward of Dawn' },
   { element: 'strand', icon: '🟢', name: 'DISTRIBUTION', super: 'Bladefury' },
   { element: 'stasis', icon: '🔵', name: 'STABILITY',    super: 'Glacial Quake' },
+  { element: 'kinetic', icon: '⬢', name: 'KINETIC',      super: 'No Element' },
 ];
 
 type WeaponEntry = { weapon: string; weapon_type: string; element: string; level: number; primary?: boolean; milestone_tier?: string };
@@ -114,6 +115,7 @@ h1 { font-family: var(--font-lore); font-size: 2rem; color: var(--d2-exotic); ma
 .subclass-section.void   .subclass-header { border-left: 3px solid var(--d2-void); }
 .subclass-section.strand .subclass-header { border-left: 3px solid var(--d2-strand); }
 .subclass-section.stasis .subclass-header { border-left: 3px solid var(--d2-stasis); }
+.subclass-section.kinetic .subclass-header { border-left: 3px solid #b0bec5; }
 .subclass-icon { font-size: 2rem; }
 .subclass-name { font-family: var(--font-lore); font-size: 1.25rem; color: var(--d2-text-bright); }
 .subclass-super { font-size: 0.75rem; color: var(--d2-text-dim); }

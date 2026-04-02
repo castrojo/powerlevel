@@ -9,12 +9,12 @@ test.describe('Arsenal', () => {
     await expect(page.locator('h1')).toContainText('Arsenal');
   });
 
-  test('all 5 subclasses rendered', async ({ page }) => {
+  test('all 6 subclasses rendered', async ({ page }) => {
     // Subclasses display by domain name in h2.subclass-name
     const headings = page.locator('h2.subclass-name');
     await expect(headings.first()).toBeVisible();
     const count = await headings.count();
-    expect(count).toBe(5);
+    expect(count).toBe(6);
   });
 
   test('Trustee primary weapon shown', async ({ page }) => {
