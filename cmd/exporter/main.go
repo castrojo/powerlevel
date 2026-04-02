@@ -95,12 +95,42 @@ type StatBlock struct {
 	RepoNames  []string `json:"-"` // internal: repo names for breadth, not written to JSON
 }
 
+func pickNewerDB(a, b string) string {
+	infoA, errA := os.Stat(a)
+	infoB, errB := os.Stat(b)
+	if errA != nil && errB != nil {
+		return a
+	}
+	if errA != nil {
+		return b
+	}
+	if errB != nil {
+		return a
+	}
+	if infoB.ModTime().After(infoA.ModTime()) {
+		return b
+	}
+	return a
+}
+
 func main() {
-	sessionDB := flag.String("session-store", filepath.Join(os.Getenv("HOME"), ".copilot", "session-store.db"), "path to session-store.db")
+	opencodeDefault := filepath.Join(os.Getenv("HOME"), ".local", "share", "opencode", "opencode.db")
+	copilotDefault := filepath.Join(os.Getenv("HOME"), ".copilot", "session-store.db")
+	defaultDB := pickNewerDB(opencodeDefault, copilotDefault)
+
+	sessionDB := flag.String("session-store", defaultDB, "path to session DB (opencode.db or session-store.db)")
 	dataDir := flag.String("data-dir", "data", "path to data directory")
 	flag.Parse()
 
-	db, err := sql.Open("sqlite3", *sessionDB+"?mode=ro")
+	selectedSessionDB := *sessionDB
+	switch selectedSessionDB {
+	case "copilot":
+		selectedSessionDB = copilotDefault
+	case "opencode":
+		selectedSessionDB = opencodeDefault
+	}
+
+	db, err := sql.Open("sqlite3", selectedSessionDB+"?mode=ro")
 	if err != nil {
 		log.Fatalf("failed to open session store: %v", err)
 	}

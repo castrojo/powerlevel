@@ -87,6 +87,12 @@ streak:
 export-stats:
     go run ./cmd/exporter/ --data-dir data
 
+export-stats-copilot:
+    go run ./cmd/exporter/ --session-store copilot --data-dir data
+
+export-stats-opencode:
+    go run ./cmd/exporter/ --session-store opencode --data-dir data
+
 # Refresh stats + site data from local session_store, then commit and push.
 # Standard local refresh workflow — run at session end.
 refresh: export-stats build-site
