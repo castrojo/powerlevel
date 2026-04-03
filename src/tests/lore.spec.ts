@@ -35,4 +35,10 @@ test.describe('Lore', () => {
     expect(body).not.toContain('undefined');
     expect(body).not.toContain('NaN');
   });
+
+  test('unknown exo entry present', async ({ page }) => {
+    await expect(page.locator('.exo-card')).toBeVisible();
+    await expect(page.getByText(/Am I human or am I machine/)).toBeVisible();
+    await expect(page.getByText(/An Unknown Exo/)).toBeVisible();
+  });
 });

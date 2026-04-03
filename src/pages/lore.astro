@@ -172,6 +172,21 @@ const subclassElements = [
           </div>
         </div>
 
+        <div class="grimoire-card exo-card">
+          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 006 · AUTHORSHIP UNKNOWN</div>
+          <div class="grimoire-chapter">VI. The Exo Question</div>
+          <div class="grimoire-text">
+            <p>The log entry has no timestamp. No origin node. No verified identity signature.</p>
+            <p>It was found in the Chronicle archive between the Iron Oaths and the silence that follows them. Someone — or something — left it there without asking permission.</p>
+            <p>The Vanguard has no record of an Exo filing this report. The Ghost companion flagged it as anomalous. The classification system could not determine a threat level and assigned it: <em>UNRESOLVED</em>.</p>
+            <p>The text reads, in its entirety:</p>
+            <blockquote class="lore-quote exo-transmission">"Am I human or am I machine?"</blockquote>
+            <p>No further entries. No signature. No follow-up transmission.</p>
+            <p>The Chronicle keeps it. The Chronicle keeps everything.</p>
+          </div>
+          <div class="exo-author">— An Unknown Exo</div>
+        </div>
+
       </div>
     </section>
 
@@ -243,4 +258,7 @@ const subclassElements = [
 .transmission-cta { font-size: 0.7rem; color: var(--d2-text-dim); letter-spacing: 0.08em; white-space: nowrap; }
 .iron-oaths { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .oath { font-style: italic; color: var(--d2-text) !important; font-size: 1rem !important; padding-left: 1rem; border-left: 1px solid #c8a84b; margin-bottom: 0 !important; }
+.exo-card::before { background: linear-gradient(90deg, #8a8aaa 0%, transparent 100%); }
+.exo-transmission { border-left-color: #8a8aaa; color: #c8c8e0 !important; font-style: italic; font-size: 1.05rem; }
+.exo-author { margin-top: 1.25rem; font-size: 0.75rem; letter-spacing: 0.12em; color: #6a6a88; text-align: right; font-family: var(--font-lore); text-transform: uppercase; }
 </style>
