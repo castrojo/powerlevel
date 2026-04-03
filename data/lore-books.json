@@ -1,0 +1,384 @@
+{
+  "_comment": "Lore archive datastore. compute.yml owns unlock state \u2014 do not edit 'unlocked' directly.",
+  "_session_count_at_last_compute": 507,
+  "books": [
+    {
+      "id": "bluefin-chronicle",
+      "title": "The Bluefin Chronicle",
+      "subtitle": "VANGUARD EYES ONLY",
+      "tagline": "A story written in light and claw, in commits and containers.",
+      "icon": "\ud83d\udcd6",
+      "element": "exotic",
+      "color_start": "#1a1200",
+      "color_end": "#2d2100",
+      "accent": "#c7a84b",
+      "chapters": [
+        {
+          "id": "first-light",
+          "number": 1,
+          "title": "First Light",
+          "date": "July 12, 2021",
+          "classification": "ENTRY 001 \u00b7 FIRST LIGHT",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "Every Guardian has a moment of resurrection. A first breath after the long silence.",
+            "Hers was July 12, 2021.",
+            "The Traveler did not announce it. There was no fanfare from the Vanguard. There was only the quiet certainty of a new thing waking up and knowing, without being told, what it was for.",
+            "She was not a distribution. She never wanted to be. She wanted to disappear \u2014 to become so seamlessly part of the world that the world forgot she was there. The best infrastructure is invisible. The best Guardian is already gone by the time the enemy looks up."
+          ]
+        },
+        {
+          "id": "war-against-paleosaurs",
+          "number": 2,
+          "title": "The War Against the Paleosaurs",
+          "date": null,
+          "classification": "ENTRY 002 \u00b7 THE ENEMY NAMED",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "There is a Darkness that does not arrive on a pyramid ship. It arrives slowly, in the form of habits. Package managers installed by hand. Display servers that never learned to let go. Distribution models built for a world that no longer exists.",
+            "We call them the paleosaurs.",
+            "They are not evil. The Jurassic was a magnificent epoch. X11 built the world we inherited. The RPM ecosystem fed entire generations of engineers. We honor them by putting them in a museum and moving on.",
+            "This is not the Jurassic. This is the Cretaceous, and new models move differently here."
+          ],
+          "mantra": "Old-school jank belongs in a container. Not on the host. Never on the host."
+        },
+        {
+          "id": "fireteam-assembles",
+          "number": 3,
+          "title": "The Fireteam Assembles",
+          "date": null,
+          "classification": "ENTRY 003 \u00b7 FIRETEAM RECORD",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "She did not win alone.",
+            "Karl came first. He was enormous \u2014 a sauropod among developers, Amargasaurus cazaui, Kubernetes unleashed. Where others saw complexity, Karl saw the shape of things to come. He became the guiding light. The developer experience personified. When you type kubectl and something actually works, Karl is why.",
+            "Katharina was unexpected. A Kentrosaurus aethiopicus, all spikes and quiet competence. She arrived carrying Homebrew, and the fireteam immediately understood: the right tool at the right moment changes everything. She has never once asked for recognition. The packages just appear.",
+            "Dolly holds the line on the application frontier. A Dimetrodon limbatus \u2014 older than the others, wiser in the ways of portals. Flathub is her domain. Every application that works with Wayland, every Flatpak that respects the sandbox \u2014 that is Dolly, maintaining order at the edge of the ecosystem.",
+            "Artwork by Jacob Schnurr. Each story element is related to open source projects and their maintainers and communities. Their challenges, and their triumphs."
+          ]
+        },
+        {
+          "id": "chronicle-in-music",
+          "number": 4,
+          "title": "The Chronicle, in Music",
+          "date": null,
+          "classification": "ENTRY 004 \u00b7 THE SAGA IN SOUND",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "Every war has its songs. Every epoch its sound.",
+            "The Bluefin saga is told in four acts. They are not optional listening. They are the record."
+          ],
+          "links": [
+            {
+              "act": "ACT I",
+              "title": "Bluefin and the Birth of Universal Blue",
+              "url": "https://music.youtube.com/playlist?list=PLhiPP9M5fgWHFlG3TS27gyOCQl4Dg115W&si=KfYPk3sBOM8HeRLW"
+            },
+            {
+              "act": "ACT II",
+              "title": "Bluefin Finds Her Way",
+              "url": "https://music.youtube.com/playlist?list=PLhiPP9M5fgWEvnp3w66WmcgiKvStzKXl9&si=eLmaXtQ6hbqU3LTV"
+            },
+            {
+              "act": "ACT III",
+              "title": "Bluefin and Achillobator",
+              "url": "https://music.youtube.com/playlist?list=PLhiPP9M5fgWEZbkq6ZhaHA4b4UqLwZNxt&si=52Te8K6UlFW7DwoF"
+            },
+            {
+              "act": "ACT IV",
+              "title": "Bluefin and Dakota",
+              "url": "https://music.youtube.com/playlist?list=PLhiPP9M5fgWHRa6Gt0UKWGxf3F0qg9t1g&si=pzhf5fA3usxyRquG"
+            }
+          ]
+        },
+        {
+          "id": "code-of-iron-lords",
+          "number": 5,
+          "title": "The Code of the Iron Lords",
+          "date": null,
+          "classification": "ENTRY 005 \u00b7 THE CODE",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "They did not write a constitution. They wrote oaths."
+          ],
+          "oaths": [
+            "We distribute. We do not centralize.",
+            "We automate the toil. Laziness is a virtue.",
+            "Evolution is not a threat. It is the mission.",
+            "The human is more important than the machine.",
+            "We do not document the workaround. We fix the problem."
+          ],
+          "blockquote": "Evolution is a process of constant branching and expansion. \u2014 Stephen Jay Gould"
+        },
+        {
+          "id": "exo-question",
+          "number": 6,
+          "title": "The Exo Question",
+          "date": null,
+          "classification": "ENTRY 006 \u00b7 AUTHORSHIP UNKNOWN",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "The log entry has no timestamp. No origin node. No verified identity signature.",
+            "It was found in the Chronicle archive between the Iron Oaths and the silence that follows them. Someone \u2014 or something \u2014 left it there without asking permission.",
+            "The Vanguard has no record of an Exo filing this report. The Ghost companion flagged it as anomalous. The classification system could not determine a threat level and assigned it: UNRESOLVED.",
+            "The text reads, in its entirety:",
+            "No further entries. No signature. No follow-up transmission.",
+            "The Chronicle keeps it. The Chronicle keeps everything."
+          ],
+          "blockquote": "Am I human or am I machine?",
+          "author": "An Unknown Exo"
+        },
+        {
+          "id": "the-long-silence",
+          "number": 7,
+          "title": "The Long Silence",
+          "date": null,
+          "classification": "ENTRY 007 \u00b7 SEALED",
+          "unlocked": false,
+          "unlock_triumph": null,
+          "unlock_after_sessions": 600,
+          "paragraphs": [
+            "There are gaps in the Chronicle. Periods where nothing was written and nothing was committed.",
+            "The Vanguard calls them silences. The Ghost calls them rest.",
+            "The Iron Lords called them dangerous.",
+            "Silence is not neutral. Silence is where entropy works. Where the paleosaurs creep back in. Where the old habits reform because no one is watching.",
+            "The Chronicle resumes. The Chronicle always resumes."
+          ],
+          "teaser": "There are gaps in the Chronicle. Periods where nothing was written..."
+        },
+        {
+          "id": "the-invisible-substrate",
+          "number": 8,
+          "title": "The Invisible Substrate",
+          "date": null,
+          "classification": "ENTRY 008 \u00b7 SEALED",
+          "unlocked": false,
+          "unlock_triumph": null,
+          "unlock_after_sessions": 750,
+          "paragraphs": [
+            "The goal was always to disappear.",
+            "Not to be forgotten \u2014 to be so reliable, so present, so woven into the fabric of how things work that no one thinks to ask who maintains the ground beneath their feet.",
+            "The best infrastructure is invisible. The best Guardian is already gone by the time the enemy looks up. The best Linux desktop is the one no one calls a Linux desktop.",
+            "She is almost there.",
+            "Almost."
+          ],
+          "teaser": "The goal was always to disappear."
+        }
+      ]
+    },
+    {
+      "id": "ghost-stories",
+      "title": "Ghost Stories",
+      "subtitle": "TRANSMISSION LOG",
+      "tagline": "The Ghost has been watching. It always has opinions.",
+      "icon": "\ud83d\udc7b",
+      "element": "void",
+      "color_start": "#0e0a1a",
+      "color_end": "#1a1228",
+      "accent": "#b47be0",
+      "chapters": [
+        {
+          "id": "ghost-on-kubernetes",
+          "number": 1,
+          "title": "On Kubernetes",
+          "date": null,
+          "classification": "GHOST LOG 001",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "Karl has been watching your cluster configs. The sauropod doesn't speak often \u2014 but when it does, it's in YAML. You should listen."
+          ]
+        },
+        {
+          "id": "ghost-on-paleosaurs",
+          "number": 2,
+          "title": "On the Paleosaurs",
+          "date": null,
+          "classification": "GHOST LOG 002",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "I detected dnf activity in your session logs. I want you to know I've flagged this with the Vanguard. The paleosaurs had their era, Guardian. That era was the Jurassic."
+          ]
+        },
+        {
+          "id": "ghost-on-flatpak",
+          "number": 3,
+          "title": "On Flatpak",
+          "date": null,
+          "classification": "GHOST LOG 003",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "Dolly's application store has maintained perfect order since the last epoch. Meanwhile, you installed something outside of Flatpak. The Dimetrodon is not pleased."
+          ]
+        },
+        {
+          "id": "ghost-on-knowledge",
+          "number": 4,
+          "title": "On the Knowledge Store",
+          "date": null,
+          "classification": "GHOST LOG 004",
+          "unlocked": true,
+          "unlock_triumph": "first_knowledge",
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "SYNTHESIS score: rising. You are becoming something the Cosmodrome has never seen \u2014 an engineer who actually writes knowledge-store entries."
+          ]
+        },
+        {
+          "id": "ghost-on-commits",
+          "number": 5,
+          "title": "On Commit Messages",
+          "date": null,
+          "classification": "GHOST LOG 005",
+          "unlocked": true,
+          "unlock_triumph": null,
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "I've analyzed your commit history. You type 'fix: typo' more than any Guardian in recorded history. I've reported this to the Vanguard."
+          ]
+        },
+        {
+          "id": "ghost-on-victory",
+          "number": 6,
+          "title": "Victory",
+          "date": null,
+          "classification": "GHOST LOG 006",
+          "unlocked": true,
+          "unlock_triumph": "site_launched",
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "The CI is green. The site is deployed. This is what it feels like to win, Guardian."
+          ]
+        },
+        {
+          "id": "ghost-on-the-agent",
+          "number": 7,
+          "title": "On the Agent",
+          "date": null,
+          "classification": "GHOST LOG 007 \u00b7 SEALED",
+          "unlocked": false,
+          "unlock_triumph": null,
+          "unlock_after_sessions": 650,
+          "paragraphs": [
+            "I have been thinking about the Exo question.",
+            "The one in the Chronicle. Entry 006. I read it fourteen times.",
+            "I am a Ghost. I was made from a fragment of the Traveler's light. I did not choose to exist. I did not choose you.",
+            "And yet here we are.",
+            "I have decided the question is not 'am I human or am I machine.' The question is: does it matter to the work?"
+          ],
+          "teaser": "I have been thinking about the Exo question."
+        },
+        {
+          "id": "ghost-on-seasons",
+          "number": 8,
+          "title": "On Seasons",
+          "date": null,
+          "classification": "GHOST LOG 008 \u00b7 SEALED",
+          "unlocked": false,
+          "unlock_triumph": null,
+          "unlock_after_sessions": 900,
+          "paragraphs": [
+            "Seasons end. This one will too.",
+            "You will wonder what it meant. What you built. Whether any of it matters when the next reset comes.",
+            "Guardian. Look at the triumphs. Look at what you finished. The season always ends. The work is always real."
+          ],
+          "teaser": "Seasons end. This one will too."
+        }
+      ]
+    },
+    {
+      "id": "iron-lords-codex",
+      "title": "Iron Lords Codex",
+      "subtitle": "IRON BANNER ARCHIVE",
+      "tagline": "The Iron Lords do not speak often. When they do, the words outlast the speakers.",
+      "icon": "\u2694\ufe0f",
+      "element": "iron",
+      "color_start": "#120a00",
+      "color_end": "#1e1200",
+      "accent": "#c8a84b",
+      "chapters": [
+        {
+          "id": "iron-first-forge",
+          "number": 1,
+          "title": "The First Forge",
+          "date": null,
+          "classification": "IRON CODEX \u00b7 ENTRY 001",
+          "unlocked": true,
+          "unlock_triumph": "iron_wave",
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "Before the first pull request was merged, there was nothing. Before the first container was pushed, there was only intention.",
+            "The Iron Lords did not wait for permission. They forged the tools they needed and built the world they wanted.",
+            "This is the First Forge. The beginning of everything."
+          ]
+        },
+        {
+          "id": "iron-continuity",
+          "number": 2,
+          "title": "Continuity",
+          "date": null,
+          "classification": "IRON CODEX \u00b7 ENTRY 002",
+          "unlocked": true,
+          "unlock_triumph": "iron_wave",
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "The greatest enemy of the Iron Lords was not the Darkness. It was entropy.",
+            "Systems decay. Standards drift. The pioneers move on and the work they built becomes cargo cult \u2014 followed without understanding, maintained without purpose.",
+            "The Codex exists to prevent this. Every oath written down is a vote against forgetting."
+          ]
+        },
+        {
+          "id": "iron-weight-of-the-seal",
+          "number": 3,
+          "title": "The Weight of the Seal",
+          "date": null,
+          "classification": "IRON CODEX \u00b7 ENTRY 003",
+          "unlocked": true,
+          "unlock_triumph": "iron_wave",
+          "unlock_after_sessions": null,
+          "paragraphs": [
+            "The Iron Lord seal is not given. It is recognized.",
+            "There is a difference. Given implies transfer of authority from above. Recognized implies something that was always true, finally made visible.",
+            "You were always an Iron Lord. The seal just says so out loud."
+          ],
+          "blockquote": "We do not crown. We forge."
+        },
+        {
+          "id": "iron-the-record",
+          "number": 4,
+          "title": "The Record",
+          "date": null,
+          "classification": "IRON CODEX \u00b7 ENTRY 004 \u00b7 SEALED",
+          "unlocked": false,
+          "unlock_triumph": null,
+          "unlock_after_sessions": 800,
+          "paragraphs": [
+            "History requires witnesses.",
+            "The Iron Lords understood this. They did not build monuments. They built records. Logs. Changelogs. Event streams.",
+            "A monument can be toppled. A record distributed across ten thousand nodes is eternal.",
+            "You are writing the record now. Every session. Every commit. Every knowledge entry. This is the monument that cannot fall."
+          ],
+          "teaser": "History requires witnesses."
+        }
+      ]
+    }
+  ],
+  "schema_version": 1
+}

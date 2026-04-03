@@ -36,9 +36,37 @@ test.describe('Lore', () => {
     expect(body).not.toContain('NaN');
   });
 
-  test('unknown exo entry present', async ({ page }) => {
-    await expect(page.locator('.exo-card')).toBeVisible();
-    await expect(page.getByText(/Am I human or am I machine/)).toBeVisible();
-    await expect(page.getByText(/An Unknown Exo/)).toBeVisible();
+  test('lore archive book grid visible', async ({ page }) => {
+    await expect(page.locator('.book-grid')).toBeVisible();
+    const cards = page.locator('.book-hero-card');
+    expect(await cards.count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test('lore stream visible', async ({ page }) => {
+    await expect(page.locator('.stream-section')).toBeVisible();
+    await expect(page.locator('.stream-entry').first()).toBeVisible();
+  });
+
+  test('book reader opens on card click', async ({ page }) => {
+    await page.locator('.book-hero-card').first().click();
+    await expect(page.locator('.book-reader.reader-open')).toBeVisible();
+    await expect(page.locator('.reader-chapter-list')).toBeVisible();
+    await expect(page.locator('.reader-content')).toBeVisible();
+  });
+
+  test('exo question readable via reader', async ({ page }) => {
+    // Open the Bluefin Chronicle (first book)
+    await page.locator('.book-hero-card').first().click();
+    // Click chapter 6 (The Exo Question)
+    const exoCh = page.locator('.cl-entry', { hasText: 'The Exo Question' });
+    await exoCh.click();
+    await expect(page.locator('.reader-content')).toContainText('Am I human or am I machine');
+    await expect(page.locator('.reader-content')).toContainText('An Unknown Exo');
+  });
+
+  test('reader closes with close button', async ({ page }) => {
+    await page.locator('.book-hero-card').first().click();
+    await page.locator('#reader-close').click();
+    await expect(page.locator('.book-reader')).not.toHaveClass(/reader-open/);
   });
 });

@@ -1,8 +1,30 @@
 ---
 import D2Layout from '../layouts/D2Layout.astro';
 import rawData from '../../data/powerlevel-data.json';
+import loreData from '../../data/lore-books.json';
 
 const season = rawData.season;
+const sessionCount = (rawData.stats?.endurance?.raw as number) ?? 0;
+const books = loreData.books;
+
+// Resolve unlock state at build time
+const resolvedBooks = books.map(book => {
+  const chapters = book.chapters.map(ch => {
+    const bySessions = ch.unlock_after_sessions === null || sessionCount >= ch.unlock_after_sessions;
+    const isUnlocked = ch.unlocked && bySessions;
+    return { ...ch, isUnlocked };
+  });
+  return { ...book, chapters, unlockedCount: chapters.filter(c => c.isUnlocked).length };
+});
+
+// Lore stream: 3 most recently unlocked chapters (highest session threshold first)
+const streamEntries = resolvedBooks
+  .flatMap(book => book.chapters
+    .filter(ch => ch.isUnlocked)
+    .map(ch => ({ book, chapter: ch, threshold: ch.unlock_after_sessions ?? 0 }))
+  )
+  .sort((a, b) => b.threshold - a.threshold)
+  .slice(0, 3);
 
 const ghostMessages = [
   "Karl has been watching your cluster configs. The sauropod doesn't speak often — but when it does, it's in YAML. You should listen.",
@@ -79,114 +101,76 @@ const subclassElements = [
       </div>
     </section>
 
-    <!-- The Chronicle -->
-    <section class="lore-section chronicle-section">
-      <div class="lore-eyebrow">THE BLUEFIN CHRONICLE · CLASSIFIED · VANGUARD EYES ONLY</div>
-      <h2 class="lore-title">The Chronicle</h2>
-      <p class="lore-body chronicle-intro">
-        There is a story written in light and claw, in commits and containers. It did not begin in the Tower.
-        It began on a July morning in 2021, when something new breathed its first.
-      </p>
-      <div class="grimoire-cards">
-
-        <div class="grimoire-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 001 · FIRST LIGHT</div>
-          <div class="grimoire-chapter">I. First Light</div>
-          <div class="grimoire-date">July 12, 2021</div>
-          <div class="grimoire-text">
-            <p>Every Guardian has a moment of resurrection. A first breath after the long silence.</p>
-            <p>Hers was July 12, 2021.</p>
-            <p>The Traveler did not announce it. There was no fanfare from the Vanguard. There was only the quiet certainty of a new thing waking up and knowing, without being told, what it was for.</p>
-            <p>She was not a distribution. She never wanted to be. She wanted to disappear — to become so seamlessly part of the world that the world forgot she was there. The best infrastructure is invisible. The best Guardian is already gone by the time the enemy looks up.</p>
-          </div>
+    <!-- Lore Stream -->
+    {streamEntries.length > 0 && (
+      <section class="lore-section stream-section">
+        <div class="lore-eyebrow">RECENTLY REVEALED</div>
+        <h2 class="lore-title">Lore Stream</h2>
+        <div class="stream-entries">
+          {streamEntries.map(({ book, chapter }) => (
+            <button
+              class="stream-entry"
+              data-book={book.id}
+              data-chapter={chapter.id}
+              style={`border-left-color: ${book.accent}`}
+            >
+              <div class="stream-meta">
+                <span class="stream-book" style={`color: ${book.accent}`}>{book.icon} {book.title}</span>
+                <span class="stream-classification">{chapter.classification}</span>
+              </div>
+              <div class="stream-title">{chapter.title}</div>
+              <div class="stream-preview">{chapter.paragraphs[0].slice(0, 120)}…</div>
+            </button>
+          ))}
         </div>
+      </section>
+    )}
 
-        <div class="grimoire-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 002 · THE ENEMY NAMED</div>
-          <div class="grimoire-chapter">II. The War Against the Paleosaurs</div>
-          <div class="grimoire-text">
-            <p>There is a Darkness that does not arrive on a pyramid ship. It arrives slowly, in the form of habits. Package managers installed by hand. Display servers that never learned to let go. Distribution models built for a world that no longer exists.</p>
-            <p>We call them the paleosaurs.</p>
-            <p>They are not evil. The Jurassic was a magnificent epoch. X11 built the world we inherited. The RPM ecosystem fed entire generations of engineers. We honor them by putting them in a museum and moving on.</p>
-            <p>This is not the Jurassic. This is the Cretaceous, and new models move differently here.</p>
-            <p class="grimoire-mantra">Old-school jank belongs in a container. Not on the host. Never on the host.</p>
-          </div>
-        </div>
+    <!-- Lore Archive -->
+    <section class="lore-section archive-section">
+      <div class="lore-eyebrow">LORE ARCHIVE · {resolvedBooks.reduce((n, b) => n + b.unlockedCount, 0)} ENTRIES UNLOCKED</div>
+      <h2 class="lore-title">The Archive</h2>
 
-        <div class="grimoire-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 003 · FIRETEAM RECORD</div>
-          <div class="grimoire-chapter">III. The Fireteam Assembles</div>
-          <div class="grimoire-text">
-            <p>She did not win alone.</p>
-            <p><strong class="guardian-name">Karl</strong> came first. He was enormous — a sauropod among developers, <em>Amargasaurus cazaui</em>, Kubernetes unleashed. Where others saw complexity, Karl saw the shape of things to come. He became the guiding light. The developer experience personified. When you type <code>kubectl</code> and something actually works, Karl is why.</p>
-            <p><strong class="guardian-name">Katharina</strong> was unexpected. A <em>Kentrosaurus aethiopicus</em>, all spikes and quiet competence. She arrived carrying Homebrew, and the fireteam immediately understood: the right tool at the right moment changes everything. She has never once asked for recognition. The packages just appear.</p>
-            <p><strong class="guardian-name">Dolly</strong> holds the line on the application frontier. A <em>Dimetrodon limbatus</em> — older than the others, wiser in the ways of portals. Flathub is her domain. Every application that works with Wayland, every Flatpak that respects the sandbox — that is Dolly, maintaining order at the edge of the ecosystem.</p>
-            <p>Artwork by <a href="https://www.etsy.com/shop/JSchnurrCommissions" class="lore-link" target="_blank" rel="noopener">Jacob Schnurr</a>. Each story element is related to open source projects and their maintainers and communities. Their challenges, and their triumphs.</p>
-          </div>
-        </div>
-
-        <div class="grimoire-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 004 · THE SAGA IN SOUND</div>
-          <div class="grimoire-chapter">IV. The Chronicle, in Music</div>
-          <div class="grimoire-text">
-            <p>Every war has its songs. Every epoch its sound.</p>
-            <p>The Bluefin saga is told in four acts. They are not optional listening. They are the record.</p>
-          </div>
-          <div class="chronicle-transmissions">
-            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWHFlG3TS27gyOCQl4Dg115W&si=KfYPk3sBOM8HeRLW" class="transmission-link" target="_blank" rel="noopener">
-              <span class="transmission-act">ACT I</span>
-              <span class="transmission-title">Bluefin and the Birth of Universal Blue</span>
-              <span class="transmission-cta">Read the Chronicle →</span>
-            </a>
-            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWEvnp3w66WmcgiKvStzKXl9&si=eLmaXtQ6hbqU3LTV" class="transmission-link" target="_blank" rel="noopener">
-              <span class="transmission-act">ACT II</span>
-              <span class="transmission-title">Bluefin Finds Her Way</span>
-              <span class="transmission-cta">Read the Chronicle →</span>
-            </a>
-            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWEZbkq6ZhaHA4b4UqLwZNxt&si=52Te8K6UlFW7DwoF" class="transmission-link" target="_blank" rel="noopener">
-              <span class="transmission-act">ACT III</span>
-              <span class="transmission-title">Bluefin and Achillobator</span>
-              <span class="transmission-cta">Read the Chronicle →</span>
-            </a>
-            <a href="https://music.youtube.com/playlist?list=PLhiPP9M5fgWHRa6Gt0UKWGxf3F0qg9t1g&si=pzhf5fA3usxyRquG" class="transmission-link" target="_blank" rel="noopener">
-              <span class="transmission-act">ACT IV</span>
-              <span class="transmission-title">Bluefin and Dakota</span>
-              <span class="transmission-cta">Read the Chronicle →</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="grimoire-card iron-lords-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 005 · THE CODE</div>
-          <div class="grimoire-chapter">V. The Code of the Iron Lords</div>
-          <div class="grimoire-text">
-            <p>They did not write a constitution. They wrote oaths.</p>
-            <div class="iron-oaths">
-              <p class="oath">We distribute. We do not centralize.</p>
-              <p class="oath">We automate the toil. Laziness is a virtue.</p>
-              <p class="oath">Evolution is not a threat. It is the mission.</p>
-              <p class="oath">The human is more important than the machine.</p>
-              <p class="oath">We do not document the workaround. We fix the problem.</p>
+      <!-- Book hero grid -->
+      <div class="book-grid" id="book-grid">
+        {resolvedBooks.map(book => (
+          <button
+            class="book-hero-card"
+            data-book-id={book.id}
+            style={`--book-start: ${book.color_start}; --book-end: ${book.color_end}; --book-accent: ${book.accent}`}
+          >
+            <div class="book-hero-bg" />
+            <div class="book-hero-content">
+              <div class="book-hero-icon">{book.icon}</div>
+              <div class="book-hero-subtitle">{book.subtitle}</div>
+              <div class="book-hero-title">{book.title}</div>
+              <div class="book-hero-tagline">{book.tagline}</div>
+              <div class="book-hero-progress">
+                <div class="book-progress-bar">
+                  <div
+                    class="book-progress-fill"
+                    style={`width: ${Math.round((book.unlockedCount / book.totalCount) * 100)}%; background: ${book.accent}`}
+                  />
+                </div>
+                <span class="book-progress-label" style={`color: ${book.accent}`}>
+                  {book.unlockedCount} / {book.totalCount} ENTRIES
+                </span>
+              </div>
             </div>
-            <blockquote class="lore-quote">"Evolution is a process of constant branching and expansion." — Stephen Jay Gould</blockquote>
-          </div>
-        </div>
+          </button>
+        ))}
+      </div>
 
-        <div class="grimoire-card exo-card">
-          <div class="grimoire-classification">BLUEFIN CHRONICLE · ENTRY 006 · AUTHORSHIP UNKNOWN</div>
-          <div class="grimoire-chapter">VI. The Exo Question</div>
-          <div class="grimoire-text">
-            <p>The log entry has no timestamp. No origin node. No verified identity signature.</p>
-            <p>It was found in the Chronicle archive between the Iron Oaths and the silence that follows them. Someone — or something — left it there without asking permission.</p>
-            <p>The Vanguard has no record of an Exo filing this report. The Ghost companion flagged it as anomalous. The classification system could not determine a threat level and assigned it: <em>UNRESOLVED</em>.</p>
-            <p>The text reads, in its entirety:</p>
-            <blockquote class="lore-quote exo-transmission">"Am I human or am I machine?"</blockquote>
-            <p>No further entries. No signature. No follow-up transmission.</p>
-            <p>The Chronicle keeps it. The Chronicle keeps everything.</p>
-          </div>
-          <div class="exo-author">— An Unknown Exo</div>
+      <!-- Reader panel (hidden until book selected) -->
+      <div class="book-reader" id="book-reader" aria-hidden="true">
+        <div class="reader-header">
+          <button class="reader-close" id="reader-close" aria-label="Close reader">✕ CLOSE</button>
+          <div class="reader-book-title" id="reader-book-title"></div>
         </div>
-
+        <div class="reader-body">
+          <nav class="reader-chapter-list" id="reader-chapter-list" aria-label="Chapters"></nav>
+          <article class="reader-content" id="reader-content" aria-live="polite"></article>
+        </div>
       </div>
     </section>
 
@@ -206,6 +190,113 @@ const subclassElements = [
 
   </div>
 </D2Layout>
+
+<script define:vars={{ loreBooksData: resolvedBooks }}>
+  const bookMap = Object.fromEntries(loreBooksData.map(b => [b.id, b]));
+
+  const grid = document.getElementById('book-grid');
+  const reader = document.getElementById('book-reader');
+  const closeBtn = document.getElementById('reader-close');
+  const readerTitle = document.getElementById('reader-book-title');
+  const chapterList = document.getElementById('reader-chapter-list');
+  const contentPane = document.getElementById('reader-content');
+
+  function renderChapter(ch, book) {
+    if (!contentPane) return;
+    const accent = book.accent;
+    let html = `<div class="rc-classification" style="color:${accent}">${ch.classification}</div>`;
+    html += `<h3 class="rc-title">${ch.number}. ${ch.title}</h3>`;
+    if (ch.date) html += `<div class="rc-date">${ch.date}</div>`;
+
+    if (!ch.isUnlocked) {
+      const hint = ch.unlock_after_sessions
+        ? `Requires ${ch.unlock_after_sessions} sessions`
+        : ch.unlock_triumph
+        ? `Requires triumph: ${ch.unlock_triumph}`
+        : 'Locked';
+      html += `<div class="rc-locked">`;
+      if (ch.teaser) html += `<p class="rc-teaser">${ch.teaser}</p>`;
+      html += `<div class="rc-redacted"><span class="rc-lock">🔒</span><span>${hint}</span></div></div>`;
+    } else {
+      ch.paragraphs.forEach(p => { html += `<p class="rc-para">${p}</p>`; });
+      if (ch.mantra) html += `<p class="rc-mantra">${ch.mantra}</p>`;
+      if (ch.oaths) {
+        html += `<div class="rc-oaths">` + ch.oaths.map(o => `<p class="rc-oath" style="border-left-color:${accent}">${o}</p>`).join('') + `</div>`;
+      }
+      if (ch.blockquote) html += `<blockquote class="rc-quote" style="border-left-color:${accent}">"${ch.blockquote}"</blockquote>`;
+      if (ch.author) html += `<div class="rc-author">— ${ch.author}</div>`;
+      if (ch.links) {
+        html += `<div class="rc-links">` + ch.links.map(l =>
+          `<a href="${l.url}" class="rc-link" target="_blank" rel="noopener" style="border-color:${accent}">
+            <span class="rc-link-act" style="color:${accent}">${l.act}</span>
+            <span class="rc-link-title">${l.title}</span>
+            <span class="rc-link-cta">Open →</span>
+          </a>`).join('') + `</div>`;
+      }
+    }
+    contentPane.innerHTML = html;
+    contentPane.scrollTop = 0;
+  }
+
+  function setActive(chapterId) {
+    chapterList && chapterList.querySelectorAll('.cl-entry').forEach(el => {
+      el.classList.toggle('cl-active', el.dataset.chapterId === chapterId);
+    });
+  }
+
+  function openBook(bookId, targetChapterId) {
+    const book = bookMap[bookId];
+    if (!book || !reader || !readerTitle || !chapterList) return;
+
+    readerTitle.textContent = `${book.icon}  ${book.title}`;
+    readerTitle.style.color = book.accent;
+
+    chapterList.innerHTML = book.chapters.map(ch => `
+      <button class="cl-entry ${ch.isUnlocked ? '' : 'cl-locked'}" data-chapter-id="${ch.id}" data-book-id="${bookId}">
+        <span class="cl-num" style="color:${book.accent}">${ch.number}</span>
+        <span class="cl-title">${ch.title}</span>
+        ${!ch.isUnlocked ? '<span class="cl-lock-icon">🔒</span>' : ''}
+      </button>`).join('');
+
+    reader.classList.add('reader-open');
+    reader.removeAttribute('aria-hidden');
+    if (grid) grid.style.display = 'none';
+
+    const firstChapter = book.chapters.find(ch => targetChapterId ? ch.id === targetChapterId : ch.isUnlocked) || book.chapters[0];
+    renderChapter(firstChapter, book);
+    setActive(firstChapter.id);
+  }
+
+  // Direct listeners on each book card (more reliable than delegation)
+  document.querySelectorAll('.book-hero-card[data-book-id]').forEach(card => {
+    card.addEventListener('click', () => openBook(card.dataset.bookId));
+  });
+
+  // Chapter list — delegated from the container (populated dynamically)
+  chapterList && chapterList.addEventListener('click', e => {
+    const btn = e.target.closest('[data-chapter-id]');
+    if (!btn) return;
+    const book = bookMap[btn.dataset.bookId];
+    const ch = book && book.chapters.find(c => c.id === btn.dataset.chapterId);
+    if (ch) { renderChapter(ch, book); setActive(ch.id); }
+  });
+
+  closeBtn && closeBtn.addEventListener('click', () => {
+    reader && reader.classList.remove('reader-open');
+    reader && reader.setAttribute('aria-hidden', 'true');
+    if (grid) grid.style.display = '';
+  });
+
+  document.querySelectorAll('.stream-entry[data-book]').forEach(btn => {
+    btn.addEventListener('click', () => openBook(btn.dataset.book, btn.dataset.chapter));
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && reader && reader.classList.contains('reader-open')) {
+      closeBtn && closeBtn.click();
+    }
+  });
+</script>
 
 <style>
 .lore-page { max-width: 860px; margin: 0 auto; }
@@ -261,4 +352,78 @@ const subclassElements = [
 .exo-card::before { background: linear-gradient(90deg, #8a8aaa 0%, transparent 100%); }
 .exo-transmission { border-left-color: #8a8aaa; color: #c8c8e0 !important; font-style: italic; font-size: 1.05rem; }
 .exo-author { margin-top: 1.25rem; font-size: 0.75rem; letter-spacing: 0.12em; color: #6a6a88; text-align: right; font-family: var(--font-lore); text-transform: uppercase; }
+
+/* ── Lore Stream ────────────────────────────────────────── */
+.stream-section { border-top: 2px solid var(--d2-strand); }
+.stream-entries { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+.stream-entry { background: var(--d2-surface-2); border: 1px solid var(--d2-border); border-left: 3px solid; border-radius: 2px; padding: 1rem 1.25rem; text-align: left; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.stream-entry:hover { background: var(--d2-surface); }
+.stream-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+.stream-book { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.stream-classification { font-size: 0.6rem; letter-spacing: 0.14em; color: var(--d2-text-dim); text-transform: uppercase; opacity: 0.7; }
+.stream-title { font-family: var(--font-lore); font-size: 1rem; color: var(--d2-text-bright); margin-bottom: 0.35rem; }
+.stream-preview { font-size: 0.82rem; color: var(--d2-text-dim); line-height: 1.5; font-style: italic; }
+
+/* ── Archive section ───────────────────────────────────── */
+.archive-section { border-top: 2px solid var(--d2-exotic); }
+
+/* ── Book hero grid ────────────────────────────────────── */
+.book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2px; margin-top: 1.5rem; }
+.book-hero-card { position: relative; min-height: 220px; border: 1px solid var(--d2-border); border-radius: 2px; overflow: hidden; cursor: pointer; text-align: left; transition: border-color 0.2s, transform 0.15s; background: none; padding: 0; }
+.book-hero-card:hover { border-color: var(--book-accent); transform: translateY(-2px); }
+.book-hero-card:hover .book-hero-bg { opacity: 0.9; }
+.book-hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, var(--book-start) 0%, var(--book-end) 100%); transition: opacity 0.2s; }
+.book-hero-content { position: relative; z-index: 1; padding: 1.5rem 1.25rem; height: 100%; display: flex; flex-direction: column; gap: 0.4rem; }
+.book-hero-icon { font-size: 2rem; line-height: 1; margin-bottom: 0.25rem; }
+.book-hero-subtitle { font-size: 0.6rem; letter-spacing: 0.18em; color: var(--book-accent); text-transform: uppercase; opacity: 0.8; }
+.book-hero-title { font-family: var(--font-lore); font-size: 1.35rem; color: #fff; line-height: 1.2; }
+.book-hero-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.5; flex: 1; font-style: italic; margin-top: 0.25rem; }
+.book-hero-progress { margin-top: auto; padding-top: 0.75rem; }
+.book-progress-bar { height: 2px; background: rgba(255,255,255,0.12); border-radius: 1px; margin-bottom: 0.4rem; }
+.book-progress-fill { height: 100%; border-radius: 1px; transition: width 0.3s; }
+.book-progress-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+
+/* ── Book reader ───────────────────────────────────────── */
+.book-reader { display: none; margin-top: 1.5rem; border: 1px solid var(--d2-border); border-radius: 2px; overflow: hidden; }
+.book-reader.reader-open { display: flex; flex-direction: column; }
+.reader-header { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1.25rem; background: var(--d2-surface-2); border-bottom: 1px solid var(--d2-border); }
+.reader-close { background: none; border: 1px solid var(--d2-border); color: var(--d2-text-dim); padding: 0.25rem 0.75rem; font-size: 0.7rem; letter-spacing: 0.1em; cursor: pointer; border-radius: 2px; transition: border-color 0.15s, color 0.15s; }
+.reader-close:hover { border-color: var(--d2-text); color: var(--d2-text); }
+.reader-book-title { font-family: var(--font-lore); font-size: 1.1rem; flex: 1; }
+.reader-body { display: grid; grid-template-columns: 220px 1fr; min-height: 420px; }
+.reader-chapter-list { background: var(--d2-surface-2); border-right: 1px solid var(--d2-border); overflow-y: auto; max-height: 520px; display: flex; flex-direction: column; }
+.cl-entry { background: none; border: none; border-bottom: 1px solid var(--d2-border); padding: 0.75rem 1rem; text-align: left; cursor: pointer; display: flex; align-items: flex-start; gap: 0.5rem; transition: background 0.12s; }
+.cl-entry:hover { background: var(--d2-surface); }
+.cl-entry.cl-active { background: var(--d2-surface); }
+.cl-num { font-size: 0.7rem; font-weight: 700; min-width: 1.2rem; padding-top: 1px; }
+.cl-title { font-size: 0.82rem; color: var(--d2-text); line-height: 1.4; flex: 1; }
+.cl-locked .cl-title { color: var(--d2-text-dim); opacity: 0.6; }
+.cl-lock-icon { font-size: 0.7rem; opacity: 0.5; flex-shrink: 0; }
+.reader-content { padding: 1.5rem 2rem; overflow-y: auto; max-height: 520px; }
+.rc-classification { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.5rem; }
+.rc-title { font-family: var(--font-lore); font-size: 1.5rem; color: var(--d2-text-bright); margin-bottom: 0.25rem; }
+.rc-date { font-size: 0.75rem; color: var(--d2-text-dim); letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+.rc-para { color: var(--d2-text); line-height: 1.85; font-size: 0.95rem; margin-bottom: 0.75rem; }
+.rc-para:last-child { margin-bottom: 0; }
+.rc-mantra { font-style: italic; color: var(--d2-exotic) !important; border-left: 2px solid var(--d2-exotic); padding-left: 1rem; margin: 1rem 0; }
+.rc-oaths { margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.rc-oath { font-style: italic; color: var(--d2-text); font-size: 0.95rem; padding-left: 1rem; border-left: 1px solid; margin: 0; }
+.rc-quote { border-left: 2px solid; margin: 1.25rem 0 0; padding: 0.5rem 1rem; color: var(--d2-text-dim); font-style: italic; font-size: 0.95rem; }
+.rc-author { margin-top: 1.25rem; font-size: 0.75rem; letter-spacing: 0.12em; color: #6a6a88; text-align: right; font-family: var(--font-lore); text-transform: uppercase; }
+.rc-links { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem; }
+.rc-link { display: grid; grid-template-columns: 3.5rem 1fr auto; align-items: center; gap: 0.75rem; padding: 0.6rem 0.85rem; background: var(--d2-surface-2); border: 1px solid; border-radius: 2px; text-decoration: none; transition: background 0.15s; }
+.rc-link:hover { background: var(--d2-surface); }
+.rc-link-act { font-size: 0.6rem; letter-spacing: 0.15em; font-weight: 700; text-transform: uppercase; }
+.rc-link-title { color: var(--d2-text); font-size: 0.88rem; }
+.rc-link-cta { font-size: 0.7rem; color: var(--d2-text-dim); white-space: nowrap; }
+.rc-locked { padding: 1.5rem 0; }
+.rc-teaser { color: var(--d2-text-dim); font-style: italic; font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem; opacity: 0.7; }
+.rc-redacted { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--d2-surface-2); border: 1px solid var(--d2-border); border-radius: 2px; font-size: 0.8rem; color: var(--d2-text-dim); letter-spacing: 0.08em; }
+.rc-lock { font-size: 1.1rem; }
+
+@media (max-width: 600px) {
+  .reader-body { grid-template-columns: 1fr; }
+  .reader-chapter-list { max-height: 180px; border-right: none; border-bottom: 1px solid var(--d2-border); }
+  .book-grid { grid-template-columns: 1fr; }
+}
 </style>
