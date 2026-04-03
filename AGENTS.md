@@ -22,6 +22,17 @@ just export        # regenerate src/data/powerlevel.json from data/
 just refresh       # export-stats + build-site + commit + push (run locally at session end)
 ```
 
+## Push Policy — castrojo/powerlevel (repo-specific override)
+
+> **Direct-to-main is ENABLED for this repo.** This overrides the global feature-branch rule.
+
+- Agents MAY commit and push directly to `main` on `origin` (castrojo/powerlevel)
+- No feature branch required. No PR required.
+- After any `src/` or `cmd/` change: run `gh workflow run deploy.yml --repo castrojo/powerlevel` to publish
+- After any `data/skill-levels.json` change: GHA compute triggers automatically on push to main
+
+This is a single-maintainer live site. The branch workflow adds friction with no benefit here.
+
 ## Critical Rules
 
 - **Read pre-computed data only** — never run `just pl` or the Go binary for display; read `data/powerlevel-data.json` directly
