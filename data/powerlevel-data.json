@@ -24,82 +24,82 @@
   },
   "stats": {
     "breadth": {
-      "raw": 35,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         26,
         26,
         28,
         35
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 100,
+      "raw": 35,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 522,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         448,
         501,
         507,
         522
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 1000,
+      "raw": 522,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 499,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         410,
         477,
         484,
         499
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 300,
+      "raw": 499,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 316,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         237,
         237,
         254,
         316
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 500,
+      "raw": 316,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 15311,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         13281,
         14987,
         15079,
         15311
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 10000,
+      "raw": 15311,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 39,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-04-06T13:37:08Z",
       "history": [
         36,
         38,
         38,
         39
       ],
-      "exported_at": "2026-04-06T13:37:08Z"
+      "pinnacle": 500,
+      "raw": 39,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -527,7 +527,7 @@
       "aspect": "ROARING FLAMES",
       "element": "solar",
       "icon_path": "/icons/weapons/jotunn.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "ROARING FLAMES",
       "weapon": "Jotunn",
