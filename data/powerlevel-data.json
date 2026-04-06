@@ -24,76 +24,82 @@
   },
   "stats": {
     "breadth": {
-      "raw": 28,
+      "raw": 35,
       "softCap": 20,
       "pinnacle": 100,
       "unit": "repos",
       "history": [
         26,
         26,
-        28
+        28,
+        35
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     },
     "endurance": {
-      "raw": 507,
+      "raw": 522,
       "softCap": 200,
       "pinnacle": 1000,
       "unit": "sessions",
       "history": [
         448,
         501,
-        507
+        507,
+        522
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     },
     "foresight": {
-      "raw": 484,
+      "raw": 499,
       "softCap": 50,
       "pinnacle": 300,
       "unit": "checkpoints",
       "history": [
         410,
         477,
-        484
+        484,
+        499
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     },
     "output": {
-      "raw": 254,
+      "raw": 316,
       "softCap": 100,
       "pinnacle": 500,
       "unit": "commits",
       "history": [
         237,
         237,
-        254
+        254,
+        316
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     },
     "recall": {
-      "raw": 15079,
+      "raw": 15311,
       "softCap": 2000,
       "pinnacle": 10000,
       "unit": "turns",
       "history": [
         13281,
         14987,
-        15079
+        15079,
+        15311
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     },
     "synthesis": {
-      "raw": 38,
+      "raw": 39,
       "softCap": 50,
       "pinnacle": 500,
       "unit": "entries",
       "history": [
         36,
         38,
-        38
+        38,
+        39
       ],
-      "exported_at": "2026-04-02T21:12:30Z"
+      "exported_at": "2026-04-06T13:37:08Z"
     }
   },
   "weapons": {

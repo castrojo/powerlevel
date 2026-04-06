@@ -1,6 +1,222 @@
 {
-  "generated_at": "2026-04-02T21:12:30Z",
+  "generated_at": "2026-04-06T13:37:08Z",
   "entries": [
+    {
+      "id": "6e0b8cbb-ce42-4a82-96c1-131cc01b0b77",
+      "repository": "castrojo/testhub",
+      "branch": "main",
+      "summary": "Integrate OpenScreen Into TestHub",
+      "created_at": "2026-04-06T03:22:10.701Z",
+      "turns": 31,
+      "prs": [
+        "1603f49",
+        "53e0986",
+        "57c36d2",
+        "5b83626",
+        "6985434"
+      ],
+      "xp": 312,
+      "tags": []
+    },
+    {
+      "id": "864bb64b-277f-4d1e-a262-3927069e1c5a",
+      "repository": "lemonade-sdk/lemonade",
+      "branch": "main",
+      "summary": "Podman Run Gemma With Vulkan",
+      "created_at": "2026-04-06T00:04:16.732Z",
+      "turns": 20,
+      "prs": [
+        "ae15f98"
+      ],
+      "xp": 90,
+      "tags": []
+    },
+    {
+      "id": "b1733634-f7de-4868-b427-36fe30fb5a28",
+      "repository": "projectbluefin/website",
+      "branch": "main",
+      "summary": "Plan ProjectBluefin Docs Homepage",
+      "created_at": "2026-04-05T20:41:36.257Z",
+      "turns": 8,
+      "prs": [
+        "0fea5af",
+        "4639b0e",
+        "538e997",
+        "74c6397"
+      ],
+      "xp": 216,
+      "tags": []
+    },
+    {
+      "id": "b4f31366-78e3-4f08-a8e3-24eba39f1e1c",
+      "repository": "castrojo/documentation",
+      "branch": "main",
+      "summary": "Audit ProjectBluefin Contributors",
+      "created_at": "2026-04-05T15:18:32.848Z",
+      "turns": 17,
+      "prs": [
+        "075311e",
+        "668c66d",
+        "8be46b3"
+      ],
+      "xp": 184,
+      "tags": []
+    },
+    {
+      "id": "fa732777-da91-4653-a4b9-dfa4ab2f485e",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Audit Contributor Tracking Script",
+      "created_at": "2026-04-05T14:51:39.826Z",
+      "turns": 14,
+      "prs": [
+        "124d06d"
+      ],
+      "xp": 78,
+      "tags": []
+    },
+    {
+      "id": "026a3386-be51-4888-a3db-089f7753335c",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Add HWE Kernel To Bluefin LTS",
+      "created_at": "2026-04-05T14:15:33.317Z",
+      "turns": 21,
+      "prs": [
+        "0df8ae5",
+        "2b11a29",
+        "326e650",
+        "4fe3aa8",
+        "5f057dd"
+      ],
+      "xp": 292,
+      "tags": []
+    },
+    {
+      "id": "ea83b319-2fee-44ec-9409-eb0414590385",
+      "repository": "castrojo/bootc-ecosystem",
+      "branch": "main",
+      "summary": "Rename Homebrew-Stats To Bootc-Ecosystem",
+      "created_at": "2026-04-04T17:03:13.452Z",
+      "turns": 54,
+      "prs": [
+        "019bd3a",
+        "12cf97b",
+        "1527e04",
+        "19d0e5d",
+        "1bfcce2"
+      ],
+      "xp": 358,
+      "tags": []
+    },
+    {
+      "id": "d34a137e-b718-41ba-94b2-fea0514af7ff",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Onboard Workflow And Improve Copilot Config",
+      "created_at": "2026-04-04T05:26:25.508Z",
+      "turns": 6,
+      "prs": [
+        "55fe6a0",
+        "76a4691"
+      ],
+      "xp": 112,
+      "tags": []
+    },
+    {
+      "id": "243cd1b7-af98-4789-92da-51264f8933e6",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Review And Improve Configuration",
+      "created_at": "2026-04-04T05:14:07.724Z",
+      "turns": 10,
+      "prs": null,
+      "xp": 20,
+      "tags": []
+    },
+    {
+      "id": "aef937f7-64cc-4521-8077-431c63fb1d73",
+      "repository": "travier/fedora-atomic-desktops-sealed",
+      "branch": "main",
+      "summary": "Move Image Branch To Fedora Repo",
+      "created_at": "2026-04-04T03:51:03.677Z",
+      "turns": 21,
+      "prs": [
+        "83c6f02e",
+        "86be280c",
+        "92b61b10",
+        "47",
+        "48"
+      ],
+      "xp": 292,
+      "tags": []
+    },
+    {
+      "id": "d79cb748-aa0a-47cd-bc65-1a3b473c83a2",
+      "repository": "ublue-os/bluefin",
+      "branch": "main",
+      "summary": "Start Workflow For Bluefin Issue 4412",
+      "created_at": "2026-04-03T20:16:43.609Z",
+      "turns": 7,
+      "prs": [
+        "0d571edb",
+        "534bd47"
+      ],
+      "xp": 114,
+      "tags": []
+    },
+    {
+      "id": "1fdd863a-8a4e-471e-b643-76ccdc76979b",
+      "repository": "castrojo/bluefin",
+      "branch": "detached@c030f3a9",
+      "summary": "Resolve Git Issues And Check GSConnect",
+      "created_at": "2026-04-03T19:35:53.500Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
+    {
+      "id": "62c771d3-3ece-48ae-bcb7-47a5e41732bb",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Design Unlockable Lore Books",
+      "created_at": "2026-04-03T03:29:06.072Z",
+      "turns": 14,
+      "prs": [
+        "9500d4f",
+        "cf479f8",
+        "dd602ea"
+      ],
+      "xp": 178,
+      "tags": []
+    },
+    {
+      "id": "4366b6ba-4572-4531-9394-52d055b6d7c3",
+      "repository": "projectbluefin/testhub",
+      "branch": "main",
+      "summary": "Review TestHub App Publishing",
+      "created_at": "2026-04-02T22:22:51.460Z",
+      "turns": 6,
+      "prs": [
+        "31b5225"
+      ],
+      "xp": 62,
+      "tags": []
+    },
+    {
+      "id": "a18b2555-0a53-4fd1-bfce-65abe6e9e9c4",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Review And Fix Workflow",
+      "created_at": "2026-04-02T21:18:36.379Z",
+      "turns": 1,
+      "prs": [
+        "1dd4c69"
+      ],
+      "xp": 52,
+      "tags": []
+    },
     {
       "id": "6409e8a0-b691-4485-89f5-c356e3ea3a48",
       "repository": "castrojo/homebrew-stats",
@@ -72,171 +288,6 @@
         "d84ad0f"
       ],
       "xp": 172,
-      "tags": []
-    },
-    {
-      "id": "c3d2e7d0-b57f-47fd-981e-8023b76cb942",
-      "repository": "",
-      "branch": "",
-      "summary": "/chronicle standup",
-      "created_at": "2026-04-01T22:14:07.412Z",
-      "turns": 4,
-      "prs": null,
-      "xp": 8,
-      "tags": []
-    },
-    {
-      "id": "ses_2b979a96affeQGBAwhELtkdkO8",
-      "repository": "src",
-      "branch": "",
-      "summary": "Refresh powerlevel stats (@general subagent)",
-      "created_at": "2026-04-01 00:51:42",
-      "turns": 1,
-      "prs": [],
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "ses_2b979ad47ffe60FTW3rNmn6qp5",
-      "repository": "src",
-      "branch": "",
-      "summary": "Sync copilot-config (@general subagent)",
-      "created_at": "2026-04-01 00:51:41",
-      "turns": 1,
-      "prs": [],
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ae0adfffe59X4UJsG4vHVyE",
-      "repository": "src",
-      "branch": "",
-      "summary": "Explore bluefin-docs pages and data sourcing (@explore subagent)",
-      "created_at": "2026-03-31 23:54:29",
-      "turns": 12,
-      "prs": [],
-      "xp": 24,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ae25c8ffeezivkmAHyF0EbC",
-      "repository": "src",
-      "branch": "",
-      "summary": "Explore bluefin-docs CI/SBOM/cache system (@explore subagent)",
-      "created_at": "2026-03-31 23:54:22",
-      "turns": 22,
-      "prs": [],
-      "xp": 44,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9ae46ccffeHB7A8V7jimgHcT",
-      "repository": "src",
-      "branch": "",
-      "summary": "Explore bluefin-docs codebase structure (@explore subagent)",
-      "created_at": "2026-03-31 23:54:14",
-      "turns": 27,
-      "prs": [],
-      "xp": 54,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9aee2bdffeH4OGY7A6H1OeQO",
-      "repository": "src",
-      "branch": "",
-      "summary": "Bluefin docs audit plan: AGENTS.md, cleanup, cache verification",
-      "created_at": "2026-03-31 23:53:34",
-      "turns": 80,
-      "prs": [],
-      "xp": 160,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9c3b2aeffeliUfWAI0QqlT2h",
-      "repository": "src",
-      "branch": "",
-      "summary": "Land open PRs in projectbluefin/documentation repo",
-      "created_at": "2026-03-31 23:30:50",
-      "turns": 74,
-      "prs": [],
-      "xp": 148,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9de791affeTTPhOIHFZCCHPv",
-      "repository": "src",
-      "branch": "",
-      "summary": "Bluefin docs changes not appearing on site (fork check)",
-      "created_at": "2026-03-31 23:01:35",
-      "turns": 153,
-      "prs": [],
-      "xp": 306,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e0ea6effegJcZUYXMg4HKj9",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: testhub (@general subagent)",
-      "created_at": "2026-03-31 22:58:55",
-      "turns": 13,
-      "prs": [],
-      "xp": 26,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e0fdd8ffeEtF5S5Y9woU4zi",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: bluefin (fresh deep research) (@general subagent)",
-      "created_at": "2026-03-31 22:58:50",
-      "turns": 16,
-      "prs": [],
-      "xp": 32,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e12488ffeUojB50dUK4zCvY",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: documentation (@general subagent)",
-      "created_at": "2026-03-31 22:58:40",
-      "turns": 5,
-      "prs": [],
-      "xp": 10,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e7e62dffe44BobIbWyz8d7q",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: testhub (@general subagent)",
-      "created_at": "2026-03-31 22:51:17",
-      "turns": 15,
-      "prs": [],
-      "xp": 30,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e7f898ffeR2rIzV0QLQ1MQs",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: bluefin (@general subagent)",
-      "created_at": "2026-03-31 22:51:13",
-      "turns": 34,
-      "prs": [],
-      "xp": 68,
-      "tags": []
-    },
-    {
-      "id": "ses_2b9e8106bffejSivz6WgchRrln",
-      "repository": "src",
-      "branch": "",
-      "summary": "supermemory-init: documentation (@general subagent)",
-      "created_at": "2026-03-31 22:51:07",
-      "turns": 37,
-      "prs": [],
-      "xp": 74,
       "tags": []
     }
   ]
