@@ -24,10 +24,7 @@
   },
   "stats": {
     "breadth": {
-      "raw": 35,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         26,
         26,
@@ -35,13 +32,13 @@
         35,
         35
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 100,
+      "raw": 35,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 531,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         448,
         501,
@@ -49,13 +46,13 @@
         522,
         531
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 1000,
+      "raw": 531,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 512,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         410,
         477,
@@ -63,13 +60,13 @@
         499,
         512
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 300,
+      "raw": 512,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 344,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         237,
         237,
@@ -77,13 +74,13 @@
         316,
         344
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 500,
+      "raw": 344,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 15423,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         13281,
         14987,
@@ -91,13 +88,13 @@
         15311,
         15423
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 10000,
+      "raw": 15423,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 39,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-04-07T14:35:13Z",
       "history": [
         36,
         38,
@@ -105,7 +102,10 @@
         39,
         39
       ],
-      "exported_at": "2026-04-07T14:35:13Z"
+      "pinnacle": 500,
+      "raw": 39,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -240,7 +240,7 @@
       "aspect": "DRENGR'S LASH",
       "element": "strand",
       "icon_path": "/icons/weapons/symmetry.png",
-      "level": 1,
+      "level": 2,
       "subclass": "strand",
       "super": "DRENGR'S LASH",
       "weapon": "Symmetry",
@@ -279,7 +279,7 @@
       "aspect": "DRENGR'S LASH",
       "element": "solar",
       "icon_path": "/icons/weapons/sleeper-simulant.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Sleeper Simulant",
@@ -326,7 +326,7 @@
       "aspect": "ECHO OF CESSATION",
       "element": "kinetic",
       "icon_path": "/icons/weapons/chattering-bone.png",
-      "level": 1,
+      "level": 2,
       "subclass": "void",
       "super": "NOVA BOMB",
       "weapon": "Chattering Bone",
@@ -485,7 +485,7 @@
       "aspect": "BASTION",
       "element": "void",
       "icon_path": "/icons/weapons/erianas-vow.png",
-      "level": 1,
+      "level": 3,
       "subclass": "void",
       "super": "BASTION",
       "weapon": "Eriana's Vow",
@@ -495,7 +495,7 @@
       "aspect": "STYLISH EXECUTIONER",
       "element": "kinetic",
       "icon_path": "/icons/weapons/travelers-chosen.png",
-      "level": 1,
+      "level": 2,
       "subclass": "void",
       "super": "DEADFALL",
       "weapon": "Traveler's Chosen",
@@ -504,7 +504,7 @@
     "endusers-website": {
       "element": "solar",
       "icon_path": "/icons/weapons/the-colony.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "The Colony",
@@ -648,7 +648,7 @@
     "people-website": {
       "element": "solar",
       "icon_path": "/icons/weapons/graviton-lance.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Graviton Lance",
@@ -677,7 +677,7 @@
       "aspect": "DRENGR'S LASH",
       "element": "strand",
       "icon_path": "/icons/weapons/edge-transit.png",
-      "level": 1,
+      "level": 2,
       "subclass": "strand",
       "super": "DRENGR'S LASH",
       "weapon": "Edge Transit",
@@ -687,7 +687,7 @@
       "aspect": "OFFENSIVE BULWARK",
       "element": "void",
       "icon_path": "/icons/weapons/riskrunner.png",
-      "level": 1,
+      "level": 2,
       "subclass": "void",
       "super": "OFFENSIVE BULWARK",
       "weapon": "Riskrunner",
@@ -736,7 +736,7 @@
       "aspect": "INTO THE FRAY",
       "element": "strand",
       "icon_path": "/icons/weapons/monte-carlo.png",
-      "level": 1,
+      "level": 3,
       "subclass": "strand",
       "super": "INTO THE FRAY",
       "weapon": "Monte Carlo",
