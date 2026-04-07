@@ -24,10 +24,7 @@
   },
   "stats": {
     "breadth": {
-      "raw": 35,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         26,
         26,
@@ -36,13 +33,13 @@
         35,
         35
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 100,
+      "raw": 35,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 540,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         448,
         501,
@@ -51,13 +48,13 @@
         531,
         540
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 1000,
+      "raw": 540,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 517,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         410,
         477,
@@ -66,13 +63,13 @@
         512,
         517
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 300,
+      "raw": 517,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 361,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         237,
         237,
@@ -81,13 +78,13 @@
         344,
         361
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 500,
+      "raw": 361,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 15465,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         13281,
         14987,
@@ -96,13 +93,13 @@
         15423,
         15465
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 10000,
+      "raw": 15465,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 39,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-04-07T19:01:46Z",
       "history": [
         36,
         38,
@@ -111,7 +108,10 @@
         39,
         39
       ],
-      "exported_at": "2026-04-07T19:01:46Z"
+      "pinnacle": 500,
+      "raw": 39,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -792,7 +792,7 @@
       "aspect": "KNOCKOUT",
       "element": "arc",
       "icon_path": "/icons/weapons/trustee.png",
-      "level": 5,
+      "level": 6,
       "primary": true,
       "subclass": "arc",
       "super": "THUNDERCRASH",
