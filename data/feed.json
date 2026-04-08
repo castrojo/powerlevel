@@ -1,6 +1,163 @@
 {
-  "generated_at": "2026-04-07T19:01:46Z",
+  "generated_at": "2026-04-08T21:18:12Z",
   "entries": [
+    {
+      "id": "9277f248-372f-496b-8810-c20792646d68",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "Onboard Workflow For CNCF Darkmode",
+      "created_at": "2026-04-08T19:03:48.961Z",
+      "turns": 13,
+      "prs": [
+        "1b863e6",
+        "4faccf6",
+        "7639e1b",
+        "a884aed",
+        "aecf4b4"
+      ],
+      "xp": 276,
+      "tags": []
+    },
+    {
+      "id": "2a5ab541-35ce-4f09-8e25-cb9ee223345f",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Onboard Workflow And Prep CNCF Darkmode",
+      "created_at": "2026-04-08T18:41:43.879Z",
+      "turns": 10,
+      "prs": [
+        "47be66c",
+        "b4c919d"
+      ],
+      "xp": 120,
+      "tags": []
+    },
+    {
+      "id": "c034bcd4-04e2-42bc-af77-283ba9f70aa3",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Compare Homebrew And Fedora Versions",
+      "created_at": "2026-04-08T16:58:11.472Z",
+      "turns": 4,
+      "prs": null,
+      "xp": 8,
+      "tags": []
+    },
+    {
+      "id": "bb520334-ef9f-4bb3-ae1e-4fa8d596857b",
+      "repository": "bazzite-org/kernel-bazzite",
+      "branch": "main",
+      "summary": "List Bazzite Wheels And Drivers",
+      "created_at": "2026-04-08T15:37:07.983Z",
+      "turns": 3,
+      "prs": null,
+      "xp": 6,
+      "tags": []
+    },
+    {
+      "id": "dd32704d-320a-414c-b03e-f07f37cc0814",
+      "repository": "castrojo/cncf-darkmode",
+      "branch": "main",
+      "summary": "CNCF Dark Mode PRD And Audit",
+      "created_at": "2026-04-08T13:18:41.265Z",
+      "turns": 16,
+      "prs": [
+        "05f673e",
+        "1cd8284",
+        "509088a",
+        "7114b4c",
+        "862235e"
+      ],
+      "xp": 282,
+      "tags": []
+    },
+    {
+      "id": "b5adcc64-c6da-42c0-ba61-01ec08f14bf8",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "PRD Creation And Testhub Discovery",
+      "created_at": "2026-04-07T23:01:52.021Z",
+      "turns": 14,
+      "prs": [
+        "7f2f6e0",
+        "91b900c",
+        "9d069fb",
+        "c52e135",
+        "db1e9fa"
+      ],
+      "xp": 278,
+      "tags": []
+    },
+    {
+      "id": "72220073-841e-4eb2-a52f-7fa4701e4590",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Fix Bootc Ecosystem PR",
+      "created_at": "2026-04-07T22:21:57.603Z",
+      "turns": 2,
+      "prs": [
+        "38e5ffa"
+      ],
+      "xp": 54,
+      "tags": []
+    },
+    {
+      "id": "9b62cd6e-8ed8-421e-be21-5a37929c7e72",
+      "repository": "projectbluefin/testhub",
+      "branch": "main",
+      "summary": "Onboard TestHub and Fix OpenScreen PR",
+      "created_at": "2026-04-07T21:55:24.447Z",
+      "turns": 23,
+      "prs": [
+        "2134b59",
+        "7ef90ea",
+        "a5710cd",
+        "e5f9ecc",
+        "77"
+      ],
+      "xp": 296,
+      "tags": []
+    },
+    {
+      "id": "c0bc1b9a-4909-462d-8d58-617415996d11",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Plan Testhub Status Page PRD",
+      "created_at": "2026-04-07T20:51:19.192Z",
+      "turns": 13,
+      "prs": [
+        "46ff58f"
+      ],
+      "xp": 76,
+      "tags": []
+    },
+    {
+      "id": "8016dc9f-2d9d-4751-8a0c-7b5489dc057a",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Plan Homebrew Taps Integration",
+      "created_at": "2026-04-07T19:20:49.741Z",
+      "turns": 16,
+      "prs": [
+        "0b6bcea",
+        "28ff568",
+        "c4f08e4",
+        "d569154"
+      ],
+      "xp": 232,
+      "tags": []
+    },
+    {
+      "id": "e5fee5a8-3932-4582-ba2e-3beed43c61eb",
+      "repository": "castrojo/bootc-ecosystem",
+      "branch": "main",
+      "summary": "Investigate SLSA For Aurora Bluefin Bazzite",
+      "created_at": "2026-04-07T19:07:10.116Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
     {
       "id": "108019a5-2eb4-45aa-8897-28f1d66a4402",
       "repository": "projectbluefin/common",
@@ -111,170 +268,6 @@
       "turns": 2,
       "prs": null,
       "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "bacd9324-09c8-4b76-b08c-85ae23c027a1",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Fetch Bluefin Linux Mentions",
-      "created_at": "2026-04-07T03:15:03.369Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "7c8b8187-e625-435a-bb6e-ed3611b33cdf",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Add Reddit MCP Server",
-      "created_at": "2026-04-07T01:45:52.890Z",
-      "turns": 7,
-      "prs": null,
-      "xp": 14,
-      "tags": []
-    },
-    {
-      "id": "187c6d5b-5396-4697-819e-0dc87572f843",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "Fix People Tab Link",
-      "created_at": "2026-04-06T18:28:04.059Z",
-      "turns": 41,
-      "prs": [
-        "0e29df0",
-        "35ddf13",
-        "5d2ec6f",
-        "5fb412c",
-        "74fce1a"
-      ],
-      "xp": 332,
-      "tags": []
-    },
-    {
-      "id": "de2b5f1f-ab24-4cea-8bb0-b62d91065f87",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "Repair CNCF Dark Mode Site",
-      "created_at": "2026-04-06T16:55:43.305Z",
-      "turns": 21,
-      "prs": [
-        "1431370",
-        "3f6c121",
-        "6dae0b6",
-        "99c8d68",
-        "d4eab80"
-      ],
-      "xp": 292,
-      "tags": []
-    },
-    {
-      "id": "81ac2308-2972-4e6a-8f65-3cc0fb730354",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Polish CNCF Dark Mode Site",
-      "created_at": "2026-04-06T13:40:05.455Z",
-      "turns": 32,
-      "prs": [
-        "095cfe0",
-        "1af5a5f",
-        "65df833",
-        "68767bd",
-        "6f7eea2"
-      ],
-      "xp": 314,
-      "tags": []
-    },
-    {
-      "id": "6e0b8cbb-ce42-4a82-96c1-131cc01b0b77",
-      "repository": "castrojo/testhub",
-      "branch": "main",
-      "summary": "Integrate OpenScreen Into TestHub",
-      "created_at": "2026-04-06T03:22:10.701Z",
-      "turns": 31,
-      "prs": [
-        "1603f49",
-        "53e0986",
-        "57c36d2",
-        "5b83626",
-        "6985434"
-      ],
-      "xp": 312,
-      "tags": []
-    },
-    {
-      "id": "864bb64b-277f-4d1e-a262-3927069e1c5a",
-      "repository": "lemonade-sdk/lemonade",
-      "branch": "main",
-      "summary": "Podman Run Gemma With Vulkan",
-      "created_at": "2026-04-06T00:04:16.732Z",
-      "turns": 20,
-      "prs": [
-        "ae15f98"
-      ],
-      "xp": 90,
-      "tags": []
-    },
-    {
-      "id": "b1733634-f7de-4868-b427-36fe30fb5a28",
-      "repository": "projectbluefin/website",
-      "branch": "main",
-      "summary": "Plan ProjectBluefin Docs Homepage",
-      "created_at": "2026-04-05T20:41:36.257Z",
-      "turns": 8,
-      "prs": [
-        "0fea5af",
-        "4639b0e",
-        "538e997",
-        "74c6397"
-      ],
-      "xp": 216,
-      "tags": []
-    },
-    {
-      "id": "b4f31366-78e3-4f08-a8e3-24eba39f1e1c",
-      "repository": "castrojo/documentation",
-      "branch": "main",
-      "summary": "Audit ProjectBluefin Contributors",
-      "created_at": "2026-04-05T15:18:32.848Z",
-      "turns": 17,
-      "prs": [
-        "075311e",
-        "668c66d",
-        "8be46b3"
-      ],
-      "xp": 184,
-      "tags": []
-    },
-    {
-      "id": "fa732777-da91-4653-a4b9-dfa4ab2f485e",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Audit Contributor Tracking Script",
-      "created_at": "2026-04-05T14:51:39.826Z",
-      "turns": 14,
-      "prs": [
-        "124d06d"
-      ],
-      "xp": 78,
-      "tags": []
-    },
-    {
-      "id": "026a3386-be51-4888-a3db-089f7753335c",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Add HWE Kernel To Bluefin LTS",
-      "created_at": "2026-04-05T14:15:33.317Z",
-      "turns": 21,
-      "prs": [
-        "0df8ae5",
-        "2b11a29",
-        "326e650",
-        "4fe3aa8",
-        "5f057dd"
-      ],
-      "xp": 292,
       "tags": []
     }
   ]
