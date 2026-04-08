@@ -332,7 +332,7 @@
       "aspect": "ECHO OF CESSATION",
       "element": "kinetic",
       "icon_path": "/icons/weapons/chattering-bone.png",
-      "level": 2,
+      "level": 3,
       "subclass": "void",
       "super": "NOVA BOMB",
       "weapon": "Chattering Bone",
