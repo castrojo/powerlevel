@@ -2,5 +2,10 @@ src/node_modules/
 src/dist/
 src/.astro/
 *.test.db
+# Go build artifacts
 /pl
+/exporter
+/streak
+/card
+/compute
 src/test-results/
