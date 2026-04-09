@@ -210,6 +210,13 @@ func processEvents(path string) (map[string]struct{}, map[string]int, error) {
 				continue
 			}
 			sealCounts[sid]++
+
+		// level_noted is a planned future event type that would be emitted when a
+		// weapon level increases (e.g. {"type":"level_noted","skill":"workflow","level":3}).
+		// It would allow the compute pipeline to log level-up milestones in the event
+		// stream for audit and renderer use. Not yet implemented — tracked as a future
+		// enhancement. Unknown event types are intentionally silently ignored here for
+		// forward-compatibility.
 		}
 	}
 	if err := scanner.Err(); err != nil {
