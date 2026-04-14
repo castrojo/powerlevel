@@ -1,273 +1,296 @@
 {
-  "generated_at": "2026-04-08T21:18:12Z",
+  "generated_at": "2026-04-14T18:41:59Z",
   "entries": [
     {
-      "id": "9277f248-372f-496b-8810-c20792646d68",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "Onboard Workflow For CNCF Darkmode",
-      "created_at": "2026-04-08T19:03:48.961Z",
-      "turns": 13,
+      "id": "837b08ca-6025-4867-9b8f-0d06ec2c91bc",
+      "repository": "projectbluefin/documentation",
+      "branch": "",
+      "summary": "Investigate Bluefin LTS Card",
+      "created_at": "2026-04-14T14:52:53.063Z",
+      "turns": 12,
       "prs": [
-        "1b863e6",
-        "4faccf6",
-        "7639e1b",
-        "a884aed",
-        "aecf4b4"
+        "20f2172",
+        "289c77d",
+        "8892d32",
+        "9893aee",
+        "e4170a6"
       ],
-      "xp": 276,
+      "xp": 274,
       "tags": []
     },
     {
-      "id": "2a5ab541-35ce-4f09-8e25-cb9ee223345f",
-      "repository": "castrojo/copilot-config",
+      "id": "550f7a96-9f58-407a-8854-823c5192c347",
+      "repository": "ublue-os/homebrew-tap",
       "branch": "main",
-      "summary": "Onboard Workflow And Prep CNCF Darkmode",
-      "created_at": "2026-04-08T18:41:43.879Z",
-      "turns": 10,
+      "summary": "Investigate Homebrew Tap Issue",
+      "created_at": "2026-04-14T13:40:36.927Z",
+      "turns": 5,
       "prs": [
-        "47be66c",
-        "b4c919d"
+        "8032d1f"
       ],
-      "xp": 120,
+      "xp": 60,
       "tags": []
     },
     {
-      "id": "c034bcd4-04e2-42bc-af77-283ba9f70aa3",
+      "id": "8f2ba0c7-14e1-42c6-b1d6-f7a94490c730",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Compare Homebrew And Fedora Versions",
-      "created_at": "2026-04-08T16:58:11.472Z",
+      "summary": "Ensure Changelog Uses Published SBOMs",
+      "created_at": "2026-04-14T12:56:53.090Z",
+      "turns": 7,
+      "prs": [
+        "8b5a258"
+      ],
+      "xp": 64,
+      "tags": []
+    },
+    {
+      "id": "dc6a7862-b1a3-4e0a-8449-e2cd261a2ce3",
+      "repository": "ublue-os/bluefin-lts",
+      "branch": "main",
+      "summary": "Investigate Bluefin LTS SBOMs",
+      "created_at": "2026-04-14T12:28:11.775Z",
+      "turns": 6,
+      "prs": [
+        "3809fbf",
+        "8a7b19f"
+      ],
+      "xp": 112,
+      "tags": []
+    },
+    {
+      "id": "a34dd5c7-5ac8-40f2-84fe-ce8f10ed58fc",
+      "repository": "castrojo/dakota",
+      "branch": "main",
+      "summary": "Port Asusctl To Dakota",
+      "created_at": "2026-04-14T03:48:37.868Z",
+      "turns": 44,
+      "prs": null,
+      "xp": 88,
+      "tags": []
+    },
+    {
+      "id": "0cf6a7f0-dafb-49a0-ad3e-f6b0dd42b244",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Add BuildStream Agent Support",
+      "created_at": "2026-04-14T02:55:40.595Z",
+      "turns": 5,
+      "prs": [
+        "91"
+      ],
+      "xp": 60,
+      "tags": []
+    },
+    {
+      "id": "a948866a-6c52-4b73-ba75-c57ca76b16bb",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Load Workflow And Supermemory",
+      "created_at": "2026-04-13T23:26:03.093Z",
+      "turns": 6,
+      "prs": [
+        "9b9756e",
+        "c28ffaf"
+      ],
+      "xp": 112,
+      "tags": []
+    },
+    {
+      "id": "c0561f0e-f83f-44c9-9e08-9ebbd82bc55a",
+      "repository": "ublue-os/artwork",
+      "branch": "main",
+      "summary": "Investigate Castrojo Artwork Issue",
+      "created_at": "2026-04-13T22:29:06.173Z",
+      "turns": 24,
+      "prs": [
+        "3848cce",
+        "5107a27",
+        "62d60af",
+        "88eafb2",
+        "ae26291"
+      ],
+      "xp": 298,
+      "tags": []
+    },
+    {
+      "id": "4e0b4dc8-a911-4305-be68-e4d8e7063ddd",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Package Wallpapers Into Homebrew Tap",
+      "created_at": "2026-04-13T21:24:13.184Z",
       "turns": 4,
       "prs": null,
       "xp": 8,
       "tags": []
     },
     {
-      "id": "bb520334-ef9f-4bb3-ae1e-4fa8d596857b",
-      "repository": "bazzite-org/kernel-bazzite",
-      "branch": "main",
-      "summary": "List Bazzite Wheels And Drivers",
-      "created_at": "2026-04-08T15:37:07.983Z",
-      "turns": 3,
-      "prs": null,
-      "xp": 6,
-      "tags": []
-    },
-    {
-      "id": "dd32704d-320a-414c-b03e-f07f37cc0814",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "CNCF Dark Mode PRD And Audit",
-      "created_at": "2026-04-08T13:18:41.265Z",
-      "turns": 16,
-      "prs": [
-        "05f673e",
-        "1cd8284",
-        "509088a",
-        "7114b4c",
-        "862235e"
-      ],
-      "xp": 282,
-      "tags": []
-    },
-    {
-      "id": "b5adcc64-c6da-42c0-ba61-01ec08f14bf8",
+      "id": "086f90c8-7aad-449d-9ca7-f72756bf06a7",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "PRD Creation And Testhub Discovery",
-      "created_at": "2026-04-07T23:01:52.021Z",
+      "summary": "Fix Update Artwork Workflow",
+      "created_at": "2026-04-13T20:42:22.676Z",
       "turns": 14,
       "prs": [
-        "7f2f6e0",
-        "91b900c",
-        "9d069fb",
-        "c52e135",
-        "db1e9fa"
+        "01f4734",
+        "12f468a",
+        "4b99a00",
+        "9d8c663",
+        "aafe2d0"
       ],
       "xp": 278,
       "tags": []
     },
     {
-      "id": "72220073-841e-4eb2-a52f-7fa4701e4590",
+      "id": "fa5e7c03-d2a9-49c1-9512-13495b909187",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Add Delpic Melody Credits",
+      "created_at": "2026-04-13T19:53:21.414Z",
+      "turns": 12,
+      "prs": [
+        "2d30384",
+        "fix/delphic-melody-artwork-credits",
+        "main"
+      ],
+      "xp": 174,
+      "tags": []
+    },
+    {
+      "id": "5855bc9e-8715-47fe-b832-487fdf9b8cd5",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Fix Bootc Ecosystem PR",
-      "created_at": "2026-04-07T22:21:57.603Z",
+      "summary": "Remove NVIDIA Detection Gate",
+      "created_at": "2026-04-13T14:21:47.205Z",
       "turns": 2,
       "prs": [
-        "38e5ffa"
+        "0640c50",
+        "230e233"
       ],
-      "xp": 54,
+      "xp": 104,
       "tags": []
     },
     {
-      "id": "9b62cd6e-8ed8-421e-be21-5a37929c7e72",
-      "repository": "projectbluefin/testhub",
+      "id": "fadb35f2-680a-45fb-876d-3251f7f1e13a",
+      "repository": "projectbluefin/dakota",
       "branch": "main",
-      "summary": "Onboard TestHub and Fix OpenScreen PR",
-      "created_at": "2026-04-07T21:55:24.447Z",
-      "turns": 23,
-      "prs": [
-        "2134b59",
-        "7ef90ea",
-        "a5710cd",
-        "e5f9ecc",
-        "77"
-      ],
-      "xp": 296,
-      "tags": []
-    },
-    {
-      "id": "c0bc1b9a-4909-462d-8d58-617415996d11",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Plan Testhub Status Page PRD",
-      "created_at": "2026-04-07T20:51:19.192Z",
-      "turns": 13,
-      "prs": [
-        "46ff58f"
-      ],
-      "xp": 76,
-      "tags": []
-    },
-    {
-      "id": "8016dc9f-2d9d-4751-8a0c-7b5489dc057a",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Plan Homebrew Taps Integration",
-      "created_at": "2026-04-07T19:20:49.741Z",
-      "turns": 16,
-      "prs": [
-        "0b6bcea",
-        "28ff568",
-        "c4f08e4",
-        "d569154"
-      ],
-      "xp": 232,
-      "tags": []
-    },
-    {
-      "id": "e5fee5a8-3932-4582-ba2e-3beed43c61eb",
-      "repository": "castrojo/bootc-ecosystem",
-      "branch": "main",
-      "summary": "Investigate SLSA For Aurora Bluefin Bazzite",
-      "created_at": "2026-04-07T19:07:10.116Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "108019a5-2eb4-45aa-8897-28f1d66a4402",
-      "repository": "projectbluefin/common",
-      "branch": "feature/sealed-from-main",
-      "summary": "Onboard Repo And Investigate Issue",
-      "created_at": "2026-04-07T18:45:07.136Z",
+      "summary": "Build NVIDIA Images With Dakota",
+      "created_at": "2026-04-09T23:07:43.428Z",
       "turns": 10,
       "prs": null,
       "xp": 20,
       "tags": []
     },
     {
-      "id": "75cbd0ee-8c41-47c8-8b4d-b00b1af98e83",
-      "repository": "castrojo/bootc-ecosystem",
+      "id": "fa62a65a-4107-415a-a3ed-4817b38d6fd9",
+      "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Plan PRD Onboarding For Bootc Ecosystem",
-      "created_at": "2026-04-07T18:41:24.920Z",
-      "turns": 3,
+      "summary": "Load Secondorder For CNCF Darkmode",
+      "created_at": "2026-04-09T12:47:31.104Z",
+      "turns": 38,
       "prs": [
-        "8f6da0a"
+        "adb1656",
+        "94",
+        "97",
+        "98"
       ],
-      "xp": 56,
+      "xp": 276,
       "tags": []
     },
     {
-      "id": "2074b589-7cfe-4975-b8f7-2deda8a03f8a",
+      "id": "f10da4a8-4fa5-487a-b5fa-7b3eacc29f63",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Find GitHub PRD Skill",
-      "created_at": "2026-04-07T18:34:09.730Z",
-      "turns": 7,
-      "prs": null,
-      "xp": 14,
-      "tags": []
-    },
-    {
-      "id": "65256e04-822d-499b-9f92-2d7a3a38aaf6",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Assess Copilot CLI Workflow",
-      "created_at": "2026-04-07T17:20:43.992Z",
-      "turns": 5,
-      "prs": null,
-      "xp": 10,
-      "tags": []
-    },
-    {
-      "id": "3a72c79d-50f2-418a-83ae-0c6f0ea0fbbc",
-      "repository": "castrojo/cncf-darkmode",
-      "branch": "main",
-      "summary": "Plan CNCF Darkmode Triage",
-      "created_at": "2026-04-07T14:49:12.804Z",
-      "turns": 17,
+      "summary": "Finish BootC Onboarding",
+      "created_at": "2026-04-09T06:31:36.942Z",
+      "turns": 12,
       "prs": [
-        "01eba3f",
-        "06170e1",
-        "389e217",
-        "3da21c5",
-        "595ba35"
+        "058367d",
+        "05b8e5f",
+        "1acce8d",
+        "25b7112",
+        "3030097"
       ],
-      "xp": 284,
+      "xp": 274,
       "tags": []
     },
     {
-      "id": "c5e02d6f-1561-4ac6-a1a2-a84f90df01a3",
-      "repository": "castrojo/powerlevel",
+      "id": "05de0a86-0fca-4ec1-9496-03c246fd97b8",
+      "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Fix Powerlevel Update Issue",
-      "created_at": "2026-04-07T14:32:03.107Z",
-      "turns": 0,
+      "summary": "Fix SecondOrderService Unit",
+      "created_at": "2026-04-09T06:23:05.683Z",
+      "turns": 1,
       "prs": null,
-      "xp": 0,
+      "xp": 2,
       "tags": []
     },
     {
-      "id": "f2f0d17a-2431-4413-999d-c37f760cbea7",
-      "repository": "castrojo/copilot-config",
+      "id": "932e53e3-c2b0-4595-9c8c-99d2b4370a46",
+      "repository": "msoedov/secondorder",
       "branch": "main",
-      "summary": "Create Skill Auditor Route",
-      "created_at": "2026-04-07T14:07:57.110Z",
-      "turns": 2,
+      "summary": "Design Custom Agent Workflow",
+      "created_at": "2026-04-09T01:20:13.330Z",
+      "turns": 39,
       "prs": [
-        "19b467a"
+        "07eaa11",
+        "167ce94",
+        "23fcefe",
+        "4a15d31",
+        "5d03a1d"
       ],
-      "xp": 54,
+      "xp": 328,
       "tags": []
     },
     {
-      "id": "b48978c1-e653-4fcf-af54-a6a657d5c92d",
-      "repository": "castrojo/copilot-config",
+      "id": "74a39a75-9b64-4d8c-a597-3d8fc8619226",
+      "repository": "castrojo/documentation",
       "branch": "main",
-      "summary": "Performance Regression Test Plan",
-      "created_at": "2026-04-07T13:25:14.206Z",
-      "turns": 5,
+      "summary": "Benchmark Docs Site Performance",
+      "created_at": "2026-04-09T00:33:44.715Z",
+      "turns": 10,
       "prs": [
-        "77a7f3f",
-        "97fde79"
+        "2a08b18",
+        "3300f1e",
+        "36b1d01",
+        "387d604",
+        "d04320f"
       ],
-      "xp": 110,
+      "xp": 270,
       "tags": []
     },
     {
-      "id": "a1138851-2129-42b8-8c9b-c1a60c09fcce",
-      "repository": "castrojo/copilot-config",
+      "id": "19eeebb7-0abf-41d2-bf46-28e1c0b81183",
+      "repository": "ublue-os/artwork",
       "branch": "main",
-      "summary": "Improve Chronicle Feature",
-      "created_at": "2026-04-07T13:19:15.253Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
+      "summary": "Search Bluefin Docs For Artwork Names",
+      "created_at": "2026-04-08T23:45:19.853Z",
+      "turns": 16,
+      "prs": [
+        "1909224",
+        "76a8bb9",
+        "9191100",
+        "eac351d",
+        "728"
+      ],
+      "xp": 282,
+      "tags": []
+    },
+    {
+      "id": "f8d6a8d0-16e0-41ba-bf58-27b20a2263f8",
+      "repository": "ublue-os/artwork",
+      "branch": "main",
+      "summary": "Create Artwork Page PRD",
+      "created_at": "2026-04-08T21:55:33.320Z",
+      "turns": 30,
+      "prs": [
+        "04c1119",
+        "195bf48",
+        "1cf152f",
+        "23d0cac",
+        "2698006"
+      ],
+      "xp": 310,
       "tags": []
     }
   ]
