@@ -28,3 +28,4 @@
 {"type":"level_noted","skill":"bluefin-iso","level":2,"timestamp":"2026-03-30T00:00:00Z","note":"Occasional — documentation update session for castrojo/iso, AGENTS.md and README.md workflow audit"}
 {"type":"triumph_earned","triumph_id":"iron_codex","timestamp":"2026-04-15T00:00:00Z","note":"THE IRON CODEX — Seal + Title system designed and delivered: 10 permanent seals, 1 seasonal seal (IRON LORD), full triumph catalog with 221 triumphs, title display integrated in terminal + website"}
 {"type":"triumph_earned","triumph_id":"iron_lords_memory","timestamp":"2026-04-15T00:00:00Z","note":"IRON LORD'S MEMORY — IRON LORD seasonal seal complete during the founding season of the Powerlevel framework"}
+{"type":"seal_earned","seal_id":"iron_lord","timestamp":"2026-04-15T00:00:00Z","gilded":false,"note":"IRON LORD SEALED — founding season of the Powerlevel framework; 6/6 triumphs: great_reckoning, iron_wave, reborn_trio, dashboard_born, iron_codex, iron_lords_memory"}
