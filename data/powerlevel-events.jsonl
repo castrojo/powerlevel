@@ -26,3 +26,5 @@
 {"type":"level_noted","skill":"bluefin-ci","level":2,"timestamp":"2026-03-30T00:00:00Z","note":"Occasional — CI troubleshooting for startup_failure and merge queue failures in ublue-os/bluefin"}
 {"type":"level_noted","skill":"cicd-learning","level":3,"timestamp":"2026-03-30T00:00:00Z","note":"Regular — primary directive loaded every session; top-level permissions ceiling lesson captured in Supermemory and AGENTS.md"}
 {"type":"level_noted","skill":"bluefin-iso","level":2,"timestamp":"2026-03-30T00:00:00Z","note":"Occasional — documentation update session for castrojo/iso, AGENTS.md and README.md workflow audit"}
+{"type":"triumph_earned","triumph_id":"iron_codex","timestamp":"2026-04-15T00:00:00Z","note":"THE IRON CODEX — Seal + Title system designed and delivered: 10 permanent seals, 1 seasonal seal (IRON LORD), full triumph catalog with 221 triumphs, title display integrated in terminal + website"}
+{"type":"triumph_earned","triumph_id":"iron_lords_memory","timestamp":"2026-04-15T00:00:00Z","note":"IRON LORD'S MEMORY — IRON LORD seasonal seal complete during the founding season of the Powerlevel framework"}

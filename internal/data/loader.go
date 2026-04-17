@@ -22,8 +22,8 @@ func Load(path string) (*PowerlevelData, error) {
 	return &d, nil
 }
 
-// ComputePL returns round(mean(weapon levels)).
-// Calibrated for 1-100 range.
+// ComputePL returns max(10, round(avg * 18)) where avg is the mean weapon level.
+// At avg=1.6 (new), PL≈29. Max theoretical: avg=100 → PL=1800 (Conqueror).
 func ComputePL(weapons map[string]Weapon) int {
 	if len(weapons) == 0 {
 		return 1
@@ -32,7 +32,12 @@ func ComputePL(weapons map[string]Weapon) int {
 	for _, w := range weapons {
 		sum += w.Level
 	}
-	return int(math.Round(float64(sum) / float64(len(weapons))))
+	avg := float64(sum) / float64(len(weapons))
+	pl := int(math.Round(avg * 18))
+	if pl < 10 {
+		return 10
+	}
+	return pl
 }
 
 // Ranks maps PL thresholds to titles.

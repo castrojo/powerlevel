@@ -6,24 +6,34 @@ import (
 )
 
 func TestComputePL_AllOne(t *testing.T) {
-	// 65 weapons all at level 1 → mean = 1 → PL 1
+	// 65 weapons all at level 1 → avg=1 → max(10, round(1*18))=18 → but capped at max(10,18)=18
 	weapons := make(map[string]Weapon)
 	for i := 0; i < 65; i++ {
 		weapons[fmt.Sprintf("w%d", i)] = Weapon{Level: 1}
 	}
-	if got := ComputePL(weapons); got != 1 {
-		t.Errorf("ComputePL all one: got %d, want 1", got)
+	if got := ComputePL(weapons); got != 18 {
+		t.Errorf("ComputePL all one: got %d, want 18", got)
 	}
 }
 
 func TestComputePL_SomeValues(t *testing.T) {
-	// mean(40, 60) = 50 → PL 50
+	// mean(40, 60) = 50 → max(10, round(50*18)) = max(10, 900) = 900
 	weapons := map[string]Weapon{
 		"a": {Level: 40},
 		"b": {Level: 60},
 	}
-	if got := ComputePL(weapons); got != 50 {
-		t.Errorf("ComputePL: got %d, want 50", got)
+	if got := ComputePL(weapons); got != 900 {
+		t.Errorf("ComputePL: got %d, want 900", got)
+	}
+}
+
+func TestComputePL_BelowMinimum(t *testing.T) {
+	// Single weapon at level 0 → avg=0 → round(0*18)=0 → clamped to 10
+	weapons := map[string]Weapon{
+		"a": {Level: 0},
+	}
+	if got := ComputePL(weapons); got != 10 {
+		t.Errorf("ComputePL zero level: got %d, want 10", got)
 	}
 }
 

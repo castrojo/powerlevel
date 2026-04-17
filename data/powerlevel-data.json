@@ -6,25 +6,29 @@
     "Katharina returns from distant homelands with new formulae. The brew strengthens.",
     "Dolly reports all Flatpaks synchronized. The application model holds against the Darkness.",
     "The Traveler illuminates a path away from legacy. Wayland native confirmed across all fronts.",
-    "Each story element is related to communities — their challenges, and their triumphs. This is yours.",
+    "Each story element is related to communities \u2014 their challenges, and their triumphs. This is yours.",
     "Bluefin was born to disappear. The best operating systems are invisible. Is she invisible yet?",
     "Ghost transmission: the old distribution model belongs in a museum. We put it there. Move on.",
     "I scanned your history. You have more 'fix: typo' entries than any Guardian on record. I've filed this under 'endearing.'",
     "Old-school jank, safely contained in distrobox. The Paleosaurs are quarantined. For now.",
-    "The CI is green. The site is deployed. The Light holds. — For now.",
+    "The CI is green. The site is deployed. The Light holds. \u2014 For now.",
     "Mission: accelerate the ecosystem. Become invisible. Leave the future better than you found it.",
-    "Bluefin and Achillobator, side by side. The enterprise moves slow — but it moves. Stay patient.",
-    "The human is more important than the machine. I remind myself of this every session. — Ghost"
+    "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
+    "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
   ],
   "season": {
-    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility — operating without knowing which disciplines have gone dark.",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark.",
     "name": "Season of the Powerlevel",
     "project": "castrojo/powerlevel",
     "quarter": "Q1 2026"
   },
   "stats": {
     "breadth": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 44,
+      "score": 83,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos",
       "history": [
         26,
         26,
@@ -32,15 +36,17 @@
         35,
         35,
         35,
-        40
+        40,
+        44
       ],
-      "pinnacle": 100,
-      "raw": 40,
-      "softCap": 20,
-      "unit": "repos"
+      "exported_at": "2026-04-17T03:47:39Z"
     },
     "endurance": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 595,
+      "score": 87,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions",
       "history": [
         448,
         501,
@@ -48,15 +54,17 @@
         522,
         531,
         540,
-        567
+        567,
+        595
       ],
-      "pinnacle": 1000,
-      "raw": 567,
-      "softCap": 200,
-      "unit": "sessions"
+      "exported_at": "2026-04-17T03:47:39Z"
     },
     "foresight": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 559,
+      "score": 100,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints",
       "history": [
         410,
         477,
@@ -64,15 +72,17 @@
         499,
         512,
         517,
-        543
+        543,
+        559
       ],
-      "pinnacle": 300,
-      "raw": 543,
-      "softCap": 50,
-      "unit": "checkpoints"
+      "exported_at": "2026-04-17T03:47:39Z"
     },
     "output": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 518,
+      "score": 100,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits",
       "history": [
         237,
         237,
@@ -80,15 +90,17 @@
         316,
         344,
         361,
-        454
+        454,
+        518
       ],
-      "pinnacle": 500,
-      "raw": 454,
-      "softCap": 100,
-      "unit": "commits"
+      "exported_at": "2026-04-17T03:47:39Z"
     },
     "recall": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 15934,
+      "score": 100,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns",
       "history": [
         13281,
         14987,
@@ -96,15 +108,17 @@
         15311,
         15423,
         15465,
-        15763
+        15763,
+        15934
       ],
-      "pinnacle": 10000,
-      "raw": 15763,
-      "softCap": 2000,
-      "unit": "turns"
+      "exported_at": "2026-04-17T03:47:39Z"
     },
     "synthesis": {
-      "exported_at": "2026-04-14T18:41:59Z",
+      "raw": 39,
+      "score": 59,
+      "softCap": 50,
+      "pinnacle": 500,
+      "unit": "entries",
       "history": [
         36,
         38,
@@ -112,12 +126,10 @@
         39,
         39,
         39,
+        39,
         39
       ],
-      "pinnacle": 500,
-      "raw": 39,
-      "softCap": 50,
-      "unit": "entries"
+      "exported_at": "2026-04-17T03:47:39Z"
     }
   },
   "weapons": {
@@ -138,7 +150,8 @@
       "subclass": "arc",
       "super": "FISTS OF HAVOC",
       "weapon": "Vigilance Wing",
-      "weapon_type": "Exotic Pulse Rifle"
+      "weapon_type": "Exotic Pulse Rifle",
+      "aspect": "SURGE"
     },
     "bluefin-build": {
       "aspect": "HOWL OF THE STORM",
@@ -177,7 +190,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Truth",
-      "weapon_type": "Exotic Rocket Launcher"
+      "weapon_type": "Exotic Rocket Launcher",
+      "aspect": "DIAMOND LANCE"
     },
     "bluefin-lts": {
       "aspect": "DIAMOND LANCE",
@@ -226,7 +240,8 @@
       "subclass": "strand",
       "super": "BLADEFURY",
       "weapon": "Wavesplitter",
-      "weapon_type": "Exotic Trace Rifle"
+      "weapon_type": "Exotic Trace Rifle",
+      "aspect": "ENSNARING SLAM"
     },
     "bluefin-security": {
       "aspect": "BASTION",
@@ -285,7 +300,8 @@
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Whisper of the Worm",
-      "weapon_type": "Exotic Sniper Rifle"
+      "weapon_type": "Exotic Sniper Rifle",
+      "aspect": "EMBER OF SINGEING"
     },
     "cncf-dev": {
       "aspect": "DRENGR'S LASH",
@@ -304,16 +320,8 @@
       "subclass": "void",
       "super": "SENTINEL SHIELD",
       "weapon": "Thorn",
-      "weapon_type": "Exotic Hand Cannon"
-    },
-    "cncf-gobackend": {
-      "element": "solar",
-      "icon_path": "/icons/weapons/coldheart.png",
-      "level": 1,
-      "subclass": "solar",
-      "super": "BURNING MAUL",
-      "weapon": "Coldheart",
-      "weapon_type": "Exotic Trace Rifle"
+      "weapon_type": "Exotic Hand Cannon",
+      "aspect": "ECHO OF PERSISTENCE"
     },
     "cncf-heroes": {
       "element": "solar",
@@ -322,7 +330,8 @@
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Polaris Lance",
-      "weapon_type": "Exotic Scout Rifle"
+      "weapon_type": "Exotic Scout Rifle",
+      "aspect": "RADIANT"
     },
     "cncf-layout": {
       "aspect": "KNOCKOUT",
@@ -361,7 +370,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Stasis Grenade",
-      "weapon_type": "Legendary Grenade"
+      "weapon_type": "Legendary Grenade",
+      "aspect": "TECTONIC HARVEST"
     },
     "dakota-buildstream": {
       "aspect": "INTO THE FRAY",
@@ -400,7 +410,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Cloudstrike",
-      "weapon_type": "Exotic Sniper Rifle"
+      "weapon_type": "Exotic Sniper Rifle",
+      "aspect": "GRIM HARVEST"
     },
     "dakota-oci-layers": {
       "element": "stasis",
@@ -409,7 +420,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Stormchaser",
-      "weapon_type": "Legendary Linear Fusion"
+      "weapon_type": "Legendary Linear Fusion",
+      "aspect": "DIAMOND LANCE"
     },
     "dakota-overview": {
       "element": "stasis",
@@ -418,7 +430,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Cold Front",
-      "weapon_type": "Legendary SMG"
+      "weapon_type": "Legendary SMG",
+      "aspect": "GRIM HARVEST"
     },
     "dakota-package-binaries": {
       "element": "stasis",
@@ -427,7 +440,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Dead Messenger",
-      "weapon_type": "Exotic Grenade Launcher"
+      "weapon_type": "Exotic Grenade Launcher",
+      "aspect": "DIAMOND LANCE"
     },
     "dakota-package-gnome-extensions": {
       "element": "stasis",
@@ -436,7 +450,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Wicked Implement",
-      "weapon_type": "Exotic Scout Rifle"
+      "weapon_type": "Exotic Scout Rifle",
+      "aspect": "TECTONIC HARVEST"
     },
     "dakota-package-go": {
       "element": "stasis",
@@ -445,7 +460,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Verglas Curve",
-      "weapon_type": "Exotic Bow"
+      "weapon_type": "Exotic Bow",
+      "aspect": "HOWL OF THE STORM"
     },
     "dakota-package-rust": {
       "aspect": "CONSECRATION",
@@ -464,7 +480,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Revision Zero",
-      "weapon_type": "Exotic Pulse Rifle"
+      "weapon_type": "Exotic Pulse Rifle",
+      "aspect": "DIAMOND LANCE"
     },
     "dakota-patch-junctions": {
       "element": "stasis",
@@ -473,7 +490,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Final Warning",
-      "weapon_type": "Exotic Sidearm"
+      "weapon_type": "Exotic Sidearm",
+      "aspect": "TECTONIC HARVEST"
     },
     "dakota-remove-package": {
       "element": "stasis",
@@ -482,7 +500,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Osteo Striga",
-      "weapon_type": "Exotic SMG"
+      "weapon_type": "Exotic SMG",
+      "aspect": "GRIM HARVEST"
     },
     "dakota-update-refs": {
       "element": "stasis",
@@ -491,7 +510,8 @@
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Cryosthesia 77K",
-      "weapon_type": "Exotic Sidearm"
+      "weapon_type": "Exotic Sidearm",
+      "aspect": "HOWL OF THE STORM"
     },
     "doublecheck": {
       "aspect": "BASTION",
@@ -520,7 +540,8 @@
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "The Colony",
-      "weapon_type": "Exotic Grenade Launcher"
+      "weapon_type": "Exotic Grenade Launcher",
+      "aspect": "CONSECRATED GROUND"
     },
     "find-skills": {
       "aspect": "SOL INVICTUS",
@@ -539,7 +560,8 @@
       "subclass": "solar",
       "super": "HAMMER OF SOL",
       "weapon": "Forerunner",
-      "weapon_type": "Exotic Sidearm"
+      "weapon_type": "Exotic Sidearm",
+      "aspect": "TOUCH OF FLAME"
     },
     "flatpak-appstream": {
       "aspect": "ROARING FLAMES",
@@ -588,16 +610,8 @@
       "subclass": "strand",
       "super": "BLADEFURY",
       "weapon": "Lorentz Driver",
-      "weapon_type": "Exotic Linear Fusion"
-    },
-    "homebrew-stats": {
-      "element": "strand",
-      "icon_path": "/icons/weapons/tractor-cannon.png",
-      "level": 2,
-      "subclass": "strand",
-      "super": "BLADEFURY",
-      "weapon": "Tractor Cannon",
-      "weapon_type": "Exotic Shotgun"
+      "weapon_type": "Exotic Linear Fusion",
+      "aspect": "BANNER OF WAR"
     },
     "homebrew-tap-casks": {
       "aspect": "HEAT RISES",
@@ -616,7 +630,8 @@
       "subclass": "strand",
       "super": "BLADEFURY",
       "weapon": "Witherhoard",
-      "weapon_type": "Exotic Grenade Launcher"
+      "weapon_type": "Exotic Grenade Launcher",
+      "aspect": "WEAVER'S CALL"
     },
     "homebrew-taps": {
       "element": "strand",
@@ -625,7 +640,8 @@
       "subclass": "strand",
       "super": "BLADEFURY",
       "weapon": "The Wardcliff Coil",
-      "weapon_type": "Exotic Rocket Launcher"
+      "weapon_type": "Exotic Rocket Launcher",
+      "aspect": "BANNER OF WAR"
     },
     "knowledge": {
       "aspect": "HOWL OF THE STORM",
@@ -664,7 +680,8 @@
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Graviton Lance",
-      "weapon_type": "Exotic Pulse Rifle"
+      "weapon_type": "Exotic Pulse Rifle",
+      "aspect": "RADIANT"
     },
     "podman": {
       "element": "strand",
@@ -673,7 +690,8 @@
       "subclass": "strand",
       "super": "BLADEFURY",
       "weapon": "Prometheus Lens",
-      "weapon_type": "Exotic Trace Rifle"
+      "weapon_type": "Exotic Trace Rifle",
+      "aspect": "ENSNARING SLAM"
     },
     "powerlevel": {
       "aspect": "LETHAL CURRENT",
@@ -742,7 +760,8 @@
       "subclass": "void",
       "super": "SENTINEL SHIELD",
       "weapon": "Wish-Ender",
-      "weapon_type": "Exotic Bow"
+      "weapon_type": "Exotic Bow",
+      "aspect": "ECHO OF EXCHANGE"
     },
     "swe-subagent": {
       "aspect": "INTO THE FRAY",
@@ -803,6 +822,96 @@
       "subclass": "arc",
       "super": "THUNDERCRASH",
       "weapon": "Trustee",
+      "weapon_type": "Legendary Weapon"
+    },
+    "bluefin-docs-perf": {
+      "aspect": "ROARING FLAMES",
+      "element": "solar",
+      "icon_path": "/icons/weapons/sunshot.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "weapon": "Sunshot",
+      "weapon_type": "Legendary Weapon"
+    },
+    "bootc-ecosystem": {
+      "aspect": "FEED THE VOID",
+      "element": "void",
+      "icon_path": "/icons/weapons/graviton-lance.png",
+      "level": 2,
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "weapon": "Graviton Lance",
+      "weapon_type": "Legendary Weapon"
+    },
+    "core-web-vitals": {
+      "aspect": "FLOW STATE",
+      "element": "arc",
+      "icon_path": "/icons/weapons/recluse.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "GATHERING STORM",
+      "weapon": "Recluse",
+      "weapon_type": "Legendary Weapon"
+    },
+    "git-pr-workflow": {
+      "aspect": "CHAOS ACCELERANT",
+      "element": "void",
+      "icon_path": "/icons/weapons/witherhoard.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "weapon": "Witherhoard",
+      "weapon_type": "Legendary Weapon"
+    },
+    "performance": {
+      "aspect": "TOUCH OF FLAME",
+      "element": "solar",
+      "icon_path": "/icons/weapons/polaris-lance.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "GOLDEN GUN",
+      "weapon": "Polaris Lance",
+      "weapon_type": "Legendary Weapon"
+    },
+    "subagent-discipline": {
+      "aspect": "WEAVER'S CALL",
+      "element": "strand",
+      "icon_path": "/icons/weapons/quicksilver-storm.png",
+      "level": 1,
+      "subclass": "strand",
+      "super": "NEEDLESTORM",
+      "weapon": "Quicksilver Storm",
+      "weapon_type": "Legendary Weapon"
+    },
+    "supermemory": {
+      "aspect": "HOWL OF THE STORM",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/agers-scepter.png",
+      "level": 1,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Ager's Scepter",
+      "weapon_type": "Legendary Weapon"
+    },
+    "web-quality-audit": {
+      "aspect": "CONSECRATED GROUND",
+      "element": "solar",
+      "icon_path": "/icons/weapons/mountaintop.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "weapon": "The Mountaintop",
+      "weapon_type": "Legendary Weapon"
+    },
+    "webapp-testing": {
+      "aspect": "AMPLIFIED",
+      "element": "arc",
+      "icon_path": "/icons/weapons/thunderlord.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "Thunderlord",
       "weapon_type": "Legendary Weapon"
     }
   }

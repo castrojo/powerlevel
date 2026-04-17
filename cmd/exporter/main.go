@@ -12,6 +12,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/castrojo/powerlevel/internal/data"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -87,6 +88,7 @@ type FeedEntry struct {
 // for breadth calculation during delta computation.
 type StatBlock struct {
 	Raw        int      `json:"raw"`
+	Score      int      `json:"score"` // 0-100 log-scaled display value
 	SoftCap    int      `json:"softCap"`
 	Pinnacle   int      `json:"pinnacle"`
 	Unit       string   `json:"unit"`
@@ -313,6 +315,7 @@ func mergeStats(dataDir string, delta map[string]StatBlock, manifest *SessionMan
 		history := appendHistory(e.History, newRaw)
 		result[key] = StatBlock{
 			Raw:        newRaw,
+			Score:      data.StatScale(newRaw, d.SoftCap, d.Pinnacle),
 			SoftCap:    d.SoftCap,
 			Pinnacle:   d.Pinnacle,
 			Unit:       d.Unit,
@@ -335,7 +338,7 @@ func mergeStats(dataDir string, delta map[string]StatBlock, manifest *SessionMan
 	}
 	d := delta["breadth"]
 	breadthHistory := appendHistory(existing["breadth"].History, breadthRaw)
-	result["breadth"] = StatBlock{Raw: breadthRaw, SoftCap: d.SoftCap, Pinnacle: d.Pinnacle, Unit: d.Unit, History: breadthHistory, ExportedAt: d.ExportedAt}
+	result["breadth"] = StatBlock{Raw: breadthRaw, Score: data.StatScale(breadthRaw, d.SoftCap, d.Pinnacle), SoftCap: d.SoftCap, Pinnacle: d.Pinnacle, Unit: d.Unit, History: breadthHistory, ExportedAt: d.ExportedAt}
 
 	return result
 }

@@ -52,6 +52,24 @@ func main() {
 	}
 	fmt.Printf("Found %d earned triumph IDs in events log\n", len(earnedIDs))
 
+	// ── 3b. Auto-earn triumphs whose stat_requirement is already met ─────────
+	rawStats, statErr := loadStatRaws("data/powerlevel-data.json")
+	if statErr != nil {
+		fmt.Fprintf(os.Stderr, "Warning: cannot load stats for stat_requirement checks: %v\n", statErr)
+		rawStats = map[string]int{}
+	}
+	statEarned, statErr := evalStatRequirements("data/triumphs.json", rawStats, earnedIDs)
+	if statErr != nil {
+		fmt.Fprintf(os.Stderr, "Warning: stat_requirement eval failed: %v\n", statErr)
+	} else {
+		for id := range statEarned {
+			earnedIDs[id] = struct{}{}
+		}
+		if len(statEarned) > 0 {
+			fmt.Printf("Auto-earned %d triumph(s) via stat requirements\n", len(statEarned))
+		}
+	}
+
 	triumphChanged, triumphs, err := markTriumphs("data/triumphs.json", earnedIDs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error updating triumphs: %v\n", err)
@@ -409,4 +427,70 @@ func writeJSON(path string, v interface{}) error {
 	}
 	out = append(out, '\n')
 	return os.WriteFile(path, out, 0644)
+}
+
+// loadStatRaws reads the stats.*.raw values from powerlevel-data.json.
+func loadStatRaws(path string) (map[string]int, error) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var doc struct {
+		Stats map[string]struct {
+			Raw int `json:"raw"`
+		} `json:"stats"`
+	}
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", path, err)
+	}
+	result := make(map[string]int, len(doc.Stats))
+	for k, v := range doc.Stats {
+		result[k] = v.Raw
+	}
+	return result, nil
+}
+
+// evalStatRequirements scans triumphs.json for triumphs with stat_requirement fields
+// that are not already earned. Returns the set of triumph IDs that now qualify.
+func evalStatRequirements(path string, rawStats map[string]int, alreadyEarned map[string]struct{}) (map[string]struct{}, error) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var triumphsData struct {
+		Categories []struct {
+			Triumphs []struct {
+				ID      string `json:"id"`
+				Earned  bool   `json:"earned"`
+				StatReq *struct {
+					Stat  string `json:"stat"`
+					Value int    `json:"value"`
+				} `json:"stat_requirement"`
+			} `json:"triumphs"`
+		} `json:"categories"`
+	}
+	if err := json.Unmarshal(raw, &triumphsData); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", path, err)
+	}
+
+	earned := make(map[string]struct{})
+	for _, cat := range triumphsData.Categories {
+		for _, tr := range cat.Triumphs {
+			if tr.Earned {
+				continue // already committed in triumphs.json
+			}
+			if _, inEvents := alreadyEarned[tr.ID]; inEvents {
+				continue // already picked up from events
+			}
+			if tr.StatReq == nil {
+				continue
+			}
+			if rawStats[tr.StatReq.Stat] >= tr.StatReq.Value {
+				earned[tr.ID] = struct{}{}
+				fmt.Printf("  Auto-earn via stat: %s (%s=%d >= %d)\n",
+					tr.ID, tr.StatReq.Stat, rawStats[tr.StatReq.Stat], tr.StatReq.Value)
+			}
+		}
+	}
+	return earned, nil
 }

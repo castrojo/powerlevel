@@ -118,7 +118,7 @@
         },
         {
           "description": "Accumulate 10 knowledge entries (SYNTHESIS ≥ 10)",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "Memory has gravity. Enough of it, and even light bends toward it.",
           "id": "ten_knowledge",
@@ -143,7 +143,7 @@
         },
         {
           "description": "Ship a merged PR to any open source project using Copilot assistance",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "The Solar Guardian does not hoard light — they emit it.",
           "id": "pr_merged",
@@ -475,7 +475,7 @@
         },
         {
           "description": "Reach ENDURANCE 50 — fifty completed Copilot sessions",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "Fifty sessions. The Traveler noticed.",
           "id": "fifty_sessions",
@@ -1424,7 +1424,7 @@
         },
         {
           "description": "Design the complete Seal + Title system for the Powerlevel framework — 10 permanent seals, 1 seasonal seal, full triumph tables, title display integration",
-          "earned": false,
+          "earned": true,
           "earned_at": null,
           "flavor": "Eleven seals. Seventy-six triumphs. The framework is complete.",
           "id": "iron_codex",
@@ -1434,8 +1434,8 @@
           "stat_requirement": null
         },
         {
-          "description": "???",
-          "earned": false,
+          "description": "Complete the IRON LORD seasonal seal during the founding season of the Powerlevel framework",
+          "earned": true,
           "earned_at": null,
           "flavor": "The season is recorded. Future sessions will know what was built here.",
           "id": "iron_lords_memory",

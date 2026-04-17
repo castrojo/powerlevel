@@ -1,296 +1,264 @@
 {
-  "generated_at": "2026-04-14T18:41:59Z",
+  "generated_at": "2026-04-17T03:47:39Z",
   "entries": [
     {
-      "id": "837b08ca-6025-4867-9b8f-0d06ec2c91bc",
-      "repository": "projectbluefin/documentation",
-      "branch": "",
-      "summary": "Investigate Bluefin LTS Card",
-      "created_at": "2026-04-14T14:52:53.063Z",
-      "turns": 12,
-      "prs": [
-        "20f2172",
-        "289c77d",
-        "8892d32",
-        "9893aee",
-        "e4170a6"
-      ],
-      "xp": 274,
-      "tags": []
-    },
-    {
-      "id": "550f7a96-9f58-407a-8854-823c5192c347",
-      "repository": "ublue-os/homebrew-tap",
+      "id": "9f800912-83bd-4b70-a39e-24277d5b26bc",
+      "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Investigate Homebrew Tap Issue",
-      "created_at": "2026-04-14T13:40:36.927Z",
+      "summary": "Supermemory And Tools Status Report",
+      "created_at": "2026-04-17T03:11:04.279Z",
       "turns": 5,
-      "prs": [
-        "8032d1f"
-      ],
-      "xp": 60,
-      "tags": []
-    },
-    {
-      "id": "8f2ba0c7-14e1-42c6-b1d6-f7a94490c730",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Ensure Changelog Uses Published SBOMs",
-      "created_at": "2026-04-14T12:56:53.090Z",
-      "turns": 7,
-      "prs": [
-        "8b5a258"
-      ],
-      "xp": 64,
-      "tags": []
-    },
-    {
-      "id": "dc6a7862-b1a3-4e0a-8449-e2cd261a2ce3",
-      "repository": "ublue-os/bluefin-lts",
-      "branch": "main",
-      "summary": "Investigate Bluefin LTS SBOMs",
-      "created_at": "2026-04-14T12:28:11.775Z",
-      "turns": 6,
-      "prs": [
-        "3809fbf",
-        "8a7b19f"
-      ],
-      "xp": 112,
-      "tags": []
-    },
-    {
-      "id": "a34dd5c7-5ac8-40f2-84fe-ce8f10ed58fc",
-      "repository": "castrojo/dakota",
-      "branch": "main",
-      "summary": "Port Asusctl To Dakota",
-      "created_at": "2026-04-14T03:48:37.868Z",
-      "turns": 44,
       "prs": null,
-      "xp": 88,
+      "xp": 10,
       "tags": []
     },
     {
-      "id": "0cf6a7f0-dafb-49a0-ad3e-f6b0dd42b244",
-      "repository": "projectbluefin/dakota",
+      "id": "277410e5-6162-4dfa-9757-2c4e6c9f010e",
+      "repository": "chopratejas/headroom",
       "branch": "main",
-      "summary": "Add BuildStream Agent Support",
-      "created_at": "2026-04-14T02:55:40.595Z",
-      "turns": 5,
-      "prs": [
-        "91"
-      ],
-      "xp": 60,
-      "tags": []
-    },
-    {
-      "id": "a948866a-6c52-4b73-ba75-c57ca76b16bb",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Load Workflow And Supermemory",
-      "created_at": "2026-04-13T23:26:03.093Z",
-      "turns": 6,
-      "prs": [
-        "9b9756e",
-        "c28ffaf"
-      ],
-      "xp": 112,
-      "tags": []
-    },
-    {
-      "id": "c0561f0e-f83f-44c9-9e08-9ebbd82bc55a",
-      "repository": "ublue-os/artwork",
-      "branch": "main",
-      "summary": "Investigate Castrojo Artwork Issue",
-      "created_at": "2026-04-13T22:29:06.173Z",
-      "turns": 24,
-      "prs": [
-        "3848cce",
-        "5107a27",
-        "62d60af",
-        "88eafb2",
-        "ae26291"
-      ],
-      "xp": 298,
-      "tags": []
-    },
-    {
-      "id": "4e0b4dc8-a911-4305-be68-e4d8e7063ddd",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Package Wallpapers Into Homebrew Tap",
-      "created_at": "2026-04-13T21:24:13.184Z",
-      "turns": 4,
-      "prs": null,
-      "xp": 8,
-      "tags": []
-    },
-    {
-      "id": "086f90c8-7aad-449d-9ca7-f72756bf06a7",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Fix Update Artwork Workflow",
-      "created_at": "2026-04-13T20:42:22.676Z",
-      "turns": 14,
-      "prs": [
-        "01f4734",
-        "12f468a",
-        "4b99a00",
-        "9d8c663",
-        "aafe2d0"
-      ],
-      "xp": 278,
-      "tags": []
-    },
-    {
-      "id": "fa5e7c03-d2a9-49c1-9512-13495b909187",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Add Delpic Melody Credits",
-      "created_at": "2026-04-13T19:53:21.414Z",
-      "turns": 12,
-      "prs": [
-        "2d30384",
-        "fix/delphic-melody-artwork-credits",
-        "main"
-      ],
-      "xp": 174,
-      "tags": []
-    },
-    {
-      "id": "5855bc9e-8715-47fe-b832-487fdf9b8cd5",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Remove NVIDIA Detection Gate",
-      "created_at": "2026-04-13T14:21:47.205Z",
+      "summary": "Plan Headroom Integration",
+      "created_at": "2026-04-17T03:01:01.449Z",
       "turns": 2,
       "prs": [
-        "0640c50",
-        "230e233"
+        "3099cab"
       ],
-      "xp": 104,
+      "xp": 54,
       "tags": []
     },
     {
-      "id": "fadb35f2-680a-45fb-876d-3251f7f1e13a",
+      "id": "aac360d9-0a38-4c1a-b761-d8ec4303b3c1",
       "repository": "projectbluefin/dakota",
       "branch": "main",
-      "summary": "Build NVIDIA Images With Dakota",
-      "created_at": "2026-04-09T23:07:43.428Z",
-      "turns": 10,
-      "prs": null,
-      "xp": 20,
-      "tags": []
-    },
-    {
-      "id": "fa62a65a-4107-415a-a3ed-4817b38d6fd9",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Load Secondorder For CNCF Darkmode",
-      "created_at": "2026-04-09T12:47:31.104Z",
-      "turns": 38,
+      "summary": "Load Workflow And Plan PR 246",
+      "created_at": "2026-04-16T22:19:25.464Z",
+      "turns": 11,
       "prs": [
-        "adb1656",
-        "94",
-        "97",
-        "98"
+        "53c57b5",
+        "57d1896",
+        "246",
+        "251"
       ],
-      "xp": 276,
+      "xp": 222,
       "tags": []
     },
     {
-      "id": "f10da4a8-4fa5-487a-b5fa-7b3eacc29f63",
-      "repository": "castrojo/copilot-config",
+      "id": "03a85579-22b4-4bb2-87e2-4143459f0c8c",
+      "repository": "projectbluefin/dakota-iso",
       "branch": "main",
-      "summary": "Finish BootC Onboarding",
-      "created_at": "2026-04-09T06:31:36.942Z",
-      "turns": 12,
+      "summary": "Onboard Dakota And Review PR 248",
+      "created_at": "2026-04-16T21:43:08.028Z",
+      "turns": 27,
       "prs": [
-        "058367d",
-        "05b8e5f",
-        "1acce8d",
-        "25b7112",
-        "3030097"
+        "0dbb236",
+        "0f9ec96",
+        "4646550",
+        "54afca4",
+        "5d0ff32"
       ],
-      "xp": 274,
+      "xp": 304,
       "tags": []
     },
     {
-      "id": "05de0a86-0fca-4ec1-9496-03c246fd97b8",
+      "id": "6892c4c4-e000-4fc2-b74c-95adc9933b11",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Fix SecondOrderService Unit",
-      "created_at": "2026-04-09T06:23:05.683Z",
+      "summary": "Plan Peoplehub Superpowers",
+      "created_at": "2026-04-16T16:50:00.362Z",
+      "turns": 8,
+      "prs": [
+        "a30034e",
+        "d25b4e7"
+      ],
+      "xp": 116,
+      "tags": []
+    },
+    {
+      "id": "4979d164-d38a-4025-b17e-9b03dfe1fc88",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Verify Workflow And Supermemory",
+      "created_at": "2026-04-16T16:42:25.087Z",
       "turns": 1,
       "prs": null,
       "xp": 2,
       "tags": []
     },
     {
-      "id": "932e53e3-c2b0-4595-9c8c-99d2b4370a46",
-      "repository": "msoedov/secondorder",
+      "id": "66016c4e-2db9-4a90-a302-ce46021ed494",
+      "repository": "",
+      "branch": "",
+      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
+      "created_at": "2026-04-16T14:33:22.993Z",
+      "turns": 0,
+      "prs": null,
+      "xp": 0,
+      "tags": []
+    },
+    {
+      "id": "87cfdb0a-8785-4021-93e7-6cf4f2c6ab34",
+      "repository": "",
+      "branch": "",
+      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
+      "created_at": "2026-04-16T14:24:53.943Z",
+      "turns": 0,
+      "prs": null,
+      "xp": 0,
+      "tags": []
+    },
+    {
+      "id": "dbea8272-b8be-44d1-be8c-b5eaf7cce42c",
+      "repository": "",
+      "branch": "",
+      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
+      "created_at": "2026-04-16T14:19:51.044Z",
+      "turns": 0,
+      "prs": null,
+      "xp": 0,
+      "tags": []
+    },
+    {
+      "id": "fc5eb35f-5f57-46ac-8013-6e7b64bfe3bb",
+      "repository": "",
+      "branch": "",
+      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
+      "created_at": "2026-04-16T14:18:13.078Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
+      "tags": []
+    },
+    {
+      "id": "daca89d8-8e2c-434d-ad36-15bef3ac1fcc",
+      "repository": "kubestellar/console",
       "branch": "main",
-      "summary": "Design Custom Agent Workflow",
-      "created_at": "2026-04-09T01:20:13.330Z",
+      "summary": "Load Workflow Agents And Memory Locally",
+      "created_at": "2026-04-16T13:42:14.620Z",
+      "turns": 7,
+      "prs": null,
+      "xp": 14,
+      "tags": []
+    },
+    {
+      "id": "8f921656-f282-48b1-96c2-e32096dfafc8",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Investigate Bootc Update Breaking Dakota ISO",
+      "created_at": "2026-04-16T12:41:05.144Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
+      "tags": []
+    },
+    {
+      "id": "a9d19710-a75e-43d0-89e4-c303a0bb30f4",
+      "repository": "projectbluefin/dakota-iso",
+      "branch": "feature/dakota-iso-polish",
+      "summary": "Investigate ISO Emergency Mode",
+      "created_at": "2026-04-16T00:59:01.451Z",
+      "turns": 7,
+      "prs": null,
+      "xp": 14,
+      "tags": []
+    },
+    {
+      "id": "4c177ca4-7f16-46cc-9fdf-dd719e364f1f",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Track Bootc Updates From GNOMEOS In Dakota",
+      "created_at": "2026-04-15T18:41:50.296Z",
       "turns": 39,
       "prs": [
-        "07eaa11",
-        "167ce94",
-        "23fcefe",
-        "4a15d31",
-        "5d03a1d"
+        "03268cd",
+        "2787c7d",
+        "2dbdab3",
+        "48d0b55",
+        "7bad220"
       ],
       "xp": 328,
       "tags": []
     },
     {
-      "id": "74a39a75-9b64-4d8c-a597-3d8fc8619226",
-      "repository": "castrojo/documentation",
+      "id": "abd6f593-0603-417e-9712-254f9ca649f4",
+      "repository": "projectbluefin/dakota",
       "branch": "main",
-      "summary": "Benchmark Docs Site Performance",
-      "created_at": "2026-04-09T00:33:44.715Z",
-      "turns": 10,
+      "summary": "Switch Dakota Distrobox To Next",
+      "created_at": "2026-04-15T16:28:13.698Z",
+      "turns": 5,
       "prs": [
-        "2a08b18",
-        "3300f1e",
-        "36b1d01",
-        "387d604",
-        "d04320f"
+        "1924b69",
+        "264701c",
+        "e3dfb91",
+        "102",
+        "234"
       ],
-      "xp": 270,
+      "xp": 260,
       "tags": []
     },
     {
-      "id": "19eeebb7-0abf-41d2-bf46-28e1c0b81183",
-      "repository": "ublue-os/artwork",
+      "id": "dc238185-546d-4ff0-b472-d86a63888c75",
+      "repository": "89luca89/distrobox",
       "branch": "main",
-      "summary": "Search Bluefin Docs For Artwork Names",
-      "created_at": "2026-04-08T23:45:19.853Z",
-      "turns": 16,
-      "prs": [
-        "1909224",
-        "76a8bb9",
-        "9191100",
-        "eac351d",
-        "728"
-      ],
-      "xp": 282,
+      "summary": "Assess Distreobox Next Branch",
+      "created_at": "2026-04-15T16:18:07.608Z",
+      "turns": 3,
+      "prs": null,
+      "xp": 6,
       "tags": []
     },
     {
-      "id": "f8d6a8d0-16e0-41ba-bf58-27b20a2263f8",
-      "repository": "ublue-os/artwork",
+      "id": "584acc40-ff4a-4ef2-9ca3-861e210a1343",
+      "repository": "projectbluefin/dakota",
       "branch": "main",
-      "summary": "Create Artwork Page PRD",
-      "created_at": "2026-04-08T21:55:33.320Z",
-      "turns": 30,
+      "summary": "Schedule Nightly Builds After GNOME",
+      "created_at": "2026-04-15T03:07:42.123Z",
+      "turns": 3,
       "prs": [
-        "04c1119",
-        "195bf48",
-        "1cf152f",
-        "23d0cac",
-        "2698006"
+        "884f1db",
+        "d15bb01"
       ],
-      "xp": 310,
+      "xp": 106,
+      "tags": []
+    },
+    {
+      "id": "f9697f7d-3977-4d84-8ac1-c5c831d69803",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Fix Thumbnail Aspect Ratio",
+      "created_at": "2026-04-15T01:19:46.756Z",
+      "turns": 9,
+      "prs": [
+        "4dfd682",
+        "bcb2a1c",
+        "763"
+      ],
+      "xp": 168,
+      "tags": []
+    },
+    {
+      "id": "587ac2fe-c4d3-41d1-9e31-57122a328763",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Add YouTube Playlist To Music Page",
+      "created_at": "2026-04-15T00:08:13.429Z",
+      "turns": 5,
+      "prs": [
+        "1b8da38",
+        "7610206",
+        "bce336d",
+        "762"
+      ],
+      "xp": 210,
+      "tags": []
+    },
+    {
+      "id": "f8cb3850-f848-4e12-bbab-1a181ba1d0c5",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Compile Six-Month Release Notes",
+      "created_at": "2026-04-14T23:37:51.220Z",
+      "turns": 3,
+      "prs": null,
+      "xp": 6,
       "tags": []
     }
   ]

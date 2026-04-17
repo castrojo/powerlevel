@@ -1,17 +1,19 @@
 {
-  "generated_at": "2026-03-22T03:27:35Z",
-  "total_dispatches": 12,
+  "generated_at": "2026-04-17T03:47:39Z",
+  "total_dispatches": 15,
   "model_counts": {
-    "claude-haiku-4.5": 1,
+    "claude-haiku-4.5": 2,
     "claude-opus-4.6": 7,
     "claude-sonnet-4.5": 1,
-    "claude-sonnet-4.6": 5,
+    "claude-sonnet-4.6": 6,
     "gemini-3-pro-preview": 8,
-    "gpt-5.2": 7
+    "gpt-5.2": 7,
+    "gpt-5.4": 1
   },
   "task_counts": {
     "code-review": 8,
-    "explore": 4
+    "explore": 5,
+    "general-purpose": 2
   },
   "models_by_task": {
     "code-review": {
@@ -22,9 +24,13 @@
       "gpt-5.2": 7
     },
     "explore": {
-      "claude-haiku-4.5": 1,
+      "claude-haiku-4.5": 2,
       "claude-sonnet-4.6": 2,
       "gemini-3-pro-preview": 1
+    },
+    "general-purpose": {
+      "claude-sonnet-4.6": 1,
+      "gpt-5.4": 1
     }
   },
   "top_models": [
@@ -42,10 +48,14 @@
     },
     {
       "model": "claude-sonnet-4.6",
-      "count": 5
+      "count": 6
     },
     {
       "model": "claude-haiku-4.5",
+      "count": 2
+    },
+    {
+      "model": "gpt-5.4",
       "count": 1
     },
     {
@@ -54,31 +64,6 @@
     }
   ],
   "recent": [
-    {
-      "timestamp": "2026-03-20T22:27:47Z",
-      "task": "explore",
-      "models": [
-        "claude-haiku-4.5"
-      ]
-    },
-    {
-      "timestamp": "2026-03-20T22:34:44Z",
-      "task": "code-review",
-      "models": [
-        "gpt-5.2",
-        "gemini-3-pro-preview",
-        "claude-opus-4.6"
-      ]
-    },
-    {
-      "timestamp": "2026-03-20T23:21:42Z",
-      "task": "code-review",
-      "models": [
-        "gpt-5.2",
-        "gemini-3-pro-preview",
-        "claude-opus-4.6"
-      ]
-    },
     {
       "timestamp": "2026-03-20T23:29:29Z",
       "task": "explore",
@@ -135,6 +120,27 @@
       "task": "explore",
       "models": [
         "claude-sonnet-4.6"
+      ]
+    },
+    {
+      "timestamp": "2026-04-14T10:00:00Z",
+      "task": "explore",
+      "models": [
+        "claude-haiku-4.5"
+      ]
+    },
+    {
+      "timestamp": "2026-04-13T20:00:00Z",
+      "task": "general-purpose",
+      "models": [
+        "claude-sonnet-4.6"
+      ]
+    },
+    {
+      "timestamp": "2026-04-09T10:00:00Z",
+      "task": "general-purpose",
+      "models": [
+        "gpt-5.4"
       ]
     }
   ]

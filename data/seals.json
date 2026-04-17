@@ -263,8 +263,8 @@
     },
     {
       "difficulty": "seasonal",
-      "earned": false,
-      "earned_triumphs": 4,
+      "earned": true,
+      "earned_triumphs": 6,
       "element": "prismatic",
       "expires_at": "2026-03-31",
       "gildable": true,
