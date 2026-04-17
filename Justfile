@@ -123,19 +123,8 @@ lint-ci:
 # Log a model dispatch to ~/.copilot/model-log.jsonl
 # Usage: just log-model <task> <model1,model2,...>
 # Example: just log-model code-review claude-sonnet-4.6,gpt-5.2
-[script]
 log-model task models:
-    #!/usr/bin/env python3
-    import json, datetime, os
-    entry = {
-        "timestamp": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "task": "{{task}}",
-        "models": [m.strip() for m in "{{models}}".split(",") if m.strip()],
-    }
-    path = os.path.expanduser("~/.copilot/model-log.jsonl")
-    with open(path, "a") as f:
-        f.write(json.dumps(entry) + "\n")
-    print("✓ Logged:", entry["task"], "→", ", ".join(entry["models"]))
+    python3 scripts/log-model.py "{{task}}" "{{models}}"
 
 # Run pipeline health audit locally (mirrors GHA audit.yml)
 [script]
