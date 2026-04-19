@@ -1,19 +1,20 @@
 {
-  "generated_at": "2026-04-17T03:47:39Z",
-  "total_dispatches": 15,
+  "generated_at": "2026-04-19T22:12:22Z",
+  "total_dispatches": 17,
   "model_counts": {
     "claude-haiku-4.5": 2,
     "claude-opus-4.6": 7,
     "claude-sonnet-4.5": 1,
-    "claude-sonnet-4.6": 6,
+    "claude-sonnet-4.6": 8,
     "gemini-3-pro-preview": 8,
     "gpt-5.2": 7,
     "gpt-5.4": 1
   },
   "task_counts": {
     "code-review": 8,
+    "end-session": 1,
     "explore": 5,
-    "general-purpose": 2
+    "general-purpose": 3
   },
   "models_by_task": {
     "code-review": {
@@ -23,17 +24,24 @@
       "gemini-3-pro-preview": 7,
       "gpt-5.2": 7
     },
+    "end-session": {
+      "claude-sonnet-4.6": 1
+    },
     "explore": {
       "claude-haiku-4.5": 2,
       "claude-sonnet-4.6": 2,
       "gemini-3-pro-preview": 1
     },
     "general-purpose": {
-      "claude-sonnet-4.6": 1,
+      "claude-sonnet-4.6": 2,
       "gpt-5.4": 1
     }
   },
   "top_models": [
+    {
+      "model": "claude-sonnet-4.6",
+      "count": 8
+    },
     {
       "model": "gemini-3-pro-preview",
       "count": 8
@@ -45,10 +53,6 @@
     {
       "model": "claude-opus-4.6",
       "count": 7
-    },
-    {
-      "model": "claude-sonnet-4.6",
-      "count": 6
     },
     {
       "model": "claude-haiku-4.5",
@@ -64,22 +68,6 @@
     }
   ],
   "recent": [
-    {
-      "timestamp": "2026-03-20T23:29:29Z",
-      "task": "explore",
-      "models": [
-        "gemini-3-pro-preview"
-      ]
-    },
-    {
-      "timestamp": "2026-03-20T23:49:31Z",
-      "task": "code-review",
-      "models": [
-        "claude-opus-4.6",
-        "claude-opus-4.6",
-        "claude-opus-4.6"
-      ]
-    },
     {
       "timestamp": "2026-03-21T00:30:26Z",
       "task": "code-review",
@@ -141,6 +129,20 @@
       "task": "general-purpose",
       "models": [
         "gpt-5.4"
+      ]
+    },
+    {
+      "timestamp": "2026-04-17T04:41:06Z",
+      "task": "general-purpose",
+      "models": [
+        "claude-sonnet-4.6"
+      ]
+    },
+    {
+      "timestamp": "2026-04-17T04:42:59Z",
+      "task": "end-session",
+      "models": [
+        "claude-sonnet-4.6"
       ]
     }
   ]

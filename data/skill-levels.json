@@ -39,6 +39,7 @@
   "dakota-package-zig": 1,
   "dakota-patch-junctions": 1,
   "dakota-remove-package": 1,
+  "dakota-testlab": 3,
   "dakota-update-refs": 1,
   "doublecheck": 3,
   "end-session": 2,

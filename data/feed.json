@@ -1,6 +1,266 @@
 {
-  "generated_at": "2026-04-17T03:47:39Z",
+  "generated_at": "2026-04-19T22:12:22Z",
   "entries": [
+    {
+      "id": "8bb6f25b-d18e-4092-814a-9e3b165affd2",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Add Fwupd To Dakota Image",
+      "created_at": "2026-04-19T18:43:35.361Z",
+      "turns": 29,
+      "prs": [
+        "077df29",
+        "11afc91",
+        "149d244",
+        "355eaa3",
+        "50e18ac"
+      ],
+      "xp": 308,
+      "tags": []
+    },
+    {
+      "id": "9f439ebd-9933-4964-932e-055a53662bb5",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Pull PR 276 Into Ghost",
+      "created_at": "2026-04-19T18:06:07.315Z",
+      "turns": 6,
+      "prs": [
+        "276"
+      ],
+      "xp": 62,
+      "tags": []
+    },
+    {
+      "id": "3b0192d7-c637-4192-85ee-a88560260ae2",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Triage Dakota Issues In Castrojo",
+      "created_at": "2026-04-19T15:49:39.992Z",
+      "turns": 22,
+      "prs": [
+        "2ef0684",
+        "993a27e",
+        "d381f48",
+        "116",
+        "283"
+      ],
+      "xp": 294,
+      "tags": []
+    },
+    {
+      "id": "b4e4b13b-b121-46c5-bd61-4ae86fe884c6",
+      "repository": "castrojo/dakota",
+      "branch": "main",
+      "summary": "Plan Plain Chunka For DakotaRaptor",
+      "created_at": "2026-04-19T13:30:56.456Z",
+      "turns": 17,
+      "prs": [
+        "3892f3d",
+        "b8d6685",
+        "bcecc9e",
+        "e5c080f",
+        "f22a40f"
+      ],
+      "xp": 284,
+      "tags": []
+    },
+    {
+      "id": "6d86e352-32b8-4abb-8aa2-b6398bc1149f",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Independent ISO Upgrade Verification",
+      "created_at": "2026-04-19T03:12:07.681Z",
+      "turns": 18,
+      "prs": [
+        "84fe9f5",
+        "263",
+        "266",
+        "267"
+      ],
+      "xp": 236,
+      "tags": []
+    },
+    {
+      "id": "33a4e1b1-2b67-43d9-a88c-d059de7dc5ce",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Dakota Workflow Improvements",
+      "created_at": "2026-04-19T02:50:36.523Z",
+      "turns": 7,
+      "prs": null,
+      "xp": 14,
+      "tags": []
+    },
+    {
+      "id": "57fc213b-25c1-41ef-b9b7-7e09849c9c93",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Investigate LDConfig And GDM Issue",
+      "created_at": "2026-04-18T21:04:16.417Z",
+      "turns": 103,
+      "prs": [
+        "05b43f3",
+        "3618cca",
+        "3cb228b",
+        "42f59ad",
+        "5f18481"
+      ],
+      "xp": 456,
+      "tags": []
+    },
+    {
+      "id": "78f252a1-2c94-43bd-9191-f65d70702c9a",
+      "repository": "",
+      "branch": "",
+      "summary": "Set Ptyxis Default And Remove Ghostty",
+      "created_at": "2026-04-18T18:48:18.516Z",
+      "turns": 3,
+      "prs": null,
+      "xp": 6,
+      "tags": []
+    },
+    {
+      "id": "e016d12a-e3fe-4158-862c-b39754286283",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Investigate Memory And Sessions Slowing Build",
+      "created_at": "2026-04-18T18:37:03.320Z",
+      "turns": 6,
+      "prs": null,
+      "xp": 12,
+      "tags": []
+    },
+    {
+      "id": "ab617cb8-e60c-4d85-8c2b-532bea018a63",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Debug Chunka In Dakota",
+      "created_at": "2026-04-18T17:30:23.997Z",
+      "turns": 36,
+      "prs": [
+        "246",
+        "251",
+        "252"
+      ],
+      "xp": 222,
+      "tags": []
+    },
+    {
+      "id": "682ff119-4e43-44eb-bf40-ed3ed3381b23",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Monitor ProjectBluefin/Dakota Builds Every 30 Minutes",
+      "created_at": "2026-04-18T14:37:02.999Z",
+      "turns": 58,
+      "prs": [
+        "066a3f6",
+        "963e0d4",
+        "266"
+      ],
+      "xp": 266,
+      "tags": []
+    },
+    {
+      "id": "8264c26d-1867-48a1-970c-c6a3a880530a",
+      "repository": "castrojo/dakota",
+      "branch": "fix/remove-libpinyin",
+      "summary": "Investigate Agent Workflow Failures",
+      "created_at": "2026-04-18T14:23:47.531Z",
+      "turns": 5,
+      "prs": [
+        "21bd72f",
+        "66f2778"
+      ],
+      "xp": 110,
+      "tags": []
+    },
+    {
+      "id": "caca28b8-65e7-4eb2-97eb-685c07cd7081",
+      "repository": "projectbluefin/dakota",
+      "branch": "feat/aarch64-build",
+      "summary": "Resolve Dakota AArch64 Build",
+      "created_at": "2026-04-18T07:16:08.628Z",
+      "turns": 28,
+      "prs": [
+        "5aac199",
+        "262",
+        "263"
+      ],
+      "xp": 206,
+      "tags": []
+    },
+    {
+      "id": "6b2e3fc9-268f-41eb-905b-b29acc223533",
+      "repository": "projectbluefin/dakota",
+      "branch": "fix/var-cleanup",
+      "summary": "Investigate Local And Remote Build Failures",
+      "created_at": "2026-04-18T06:10:40.249Z",
+      "turns": 27,
+      "prs": [
+        "5696aeb",
+        "261"
+      ],
+      "xp": 154,
+      "tags": []
+    },
+    {
+      "id": "35492c03-65d3-4445-9ca4-38a698ba51a7",
+      "repository": "zirconium-dev/zirconium-hawaii",
+      "branch": "fix/aarch64-remote-exec",
+      "summary": "Find Container Var Removal Method",
+      "created_at": "2026-04-18T00:55:57.347Z",
+      "turns": 6,
+      "prs": [
+        "970b389"
+      ],
+      "xp": 62,
+      "tags": []
+    },
+    {
+      "id": "b598461a-9c1b-46fc-bc38-b6036c7d7895",
+      "repository": "projectbluefin/dakota",
+      "branch": "feature/arm-build",
+      "summary": "Add ARM Support For Dakota ISO",
+      "created_at": "2026-04-17T20:11:28.794Z",
+      "turns": 66,
+      "prs": [
+        "10df500",
+        "126b738",
+        "1caa2ba",
+        "25ee452",
+        "29f676e"
+      ],
+      "xp": 382,
+      "tags": []
+    },
+    {
+      "id": "0d627a78-d000-4b3a-8bc1-892d0078a3cf",
+      "repository": "agammemnon/homebrew-tap",
+      "branch": "main",
+      "summary": "Plan Zed-Linux Integration Into Ublue OS",
+      "created_at": "2026-04-17T16:59:19.497Z",
+      "turns": 3,
+      "prs": [
+        "c3a89cc"
+      ],
+      "xp": 56,
+      "tags": []
+    },
+    {
+      "id": "ef147bc6-7aad-426b-85d6-3377984c9dfb",
+      "repository": "castrojo/dakota",
+      "branch": "main",
+      "summary": "Resolve PR Conflicts For ARM Builds",
+      "created_at": "2026-04-17T14:55:10.163Z",
+      "turns": 7,
+      "prs": [
+        "ecd36d7",
+        "248"
+      ],
+      "xp": 114,
+      "tags": []
+    },
     {
       "id": "9f800912-83bd-4b70-a39e-24277d5b26bc",
       "repository": "castrojo/copilot-config",
@@ -23,242 +283,6 @@
         "3099cab"
       ],
       "xp": 54,
-      "tags": []
-    },
-    {
-      "id": "aac360d9-0a38-4c1a-b761-d8ec4303b3c1",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Load Workflow And Plan PR 246",
-      "created_at": "2026-04-16T22:19:25.464Z",
-      "turns": 11,
-      "prs": [
-        "53c57b5",
-        "57d1896",
-        "246",
-        "251"
-      ],
-      "xp": 222,
-      "tags": []
-    },
-    {
-      "id": "03a85579-22b4-4bb2-87e2-4143459f0c8c",
-      "repository": "projectbluefin/dakota-iso",
-      "branch": "main",
-      "summary": "Onboard Dakota And Review PR 248",
-      "created_at": "2026-04-16T21:43:08.028Z",
-      "turns": 27,
-      "prs": [
-        "0dbb236",
-        "0f9ec96",
-        "4646550",
-        "54afca4",
-        "5d0ff32"
-      ],
-      "xp": 304,
-      "tags": []
-    },
-    {
-      "id": "6892c4c4-e000-4fc2-b74c-95adc9933b11",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Plan Peoplehub Superpowers",
-      "created_at": "2026-04-16T16:50:00.362Z",
-      "turns": 8,
-      "prs": [
-        "a30034e",
-        "d25b4e7"
-      ],
-      "xp": 116,
-      "tags": []
-    },
-    {
-      "id": "4979d164-d38a-4025-b17e-9b03dfe1fc88",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Verify Workflow And Supermemory",
-      "created_at": "2026-04-16T16:42:25.087Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "66016c4e-2db9-4a90-a302-ce46021ed494",
-      "repository": "",
-      "branch": "",
-      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
-      "created_at": "2026-04-16T14:33:22.993Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "87cfdb0a-8785-4021-93e7-6cf4f2c6ab34",
-      "repository": "",
-      "branch": "",
-      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
-      "created_at": "2026-04-16T14:24:53.943Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "dbea8272-b8be-44d1-be8c-b5eaf7cce42c",
-      "repository": "",
-      "branch": "",
-      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
-      "created_at": "2026-04-16T14:19:51.044Z",
-      "turns": 0,
-      "prs": null,
-      "xp": 0,
-      "tags": []
-    },
-    {
-      "id": "fc5eb35f-5f57-46ac-8013-6e7b64bfe3bb",
-      "repository": "",
-      "branch": "",
-      "summary": "System: You are a helpful AI assistant embedded in the KubeStellar Console.\nYour job is to help user...",
-      "created_at": "2026-04-16T14:18:13.078Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "daca89d8-8e2c-434d-ad36-15bef3ac1fcc",
-      "repository": "kubestellar/console",
-      "branch": "main",
-      "summary": "Load Workflow Agents And Memory Locally",
-      "created_at": "2026-04-16T13:42:14.620Z",
-      "turns": 7,
-      "prs": null,
-      "xp": 14,
-      "tags": []
-    },
-    {
-      "id": "8f921656-f282-48b1-96c2-e32096dfafc8",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Investigate Bootc Update Breaking Dakota ISO",
-      "created_at": "2026-04-16T12:41:05.144Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "a9d19710-a75e-43d0-89e4-c303a0bb30f4",
-      "repository": "projectbluefin/dakota-iso",
-      "branch": "feature/dakota-iso-polish",
-      "summary": "Investigate ISO Emergency Mode",
-      "created_at": "2026-04-16T00:59:01.451Z",
-      "turns": 7,
-      "prs": null,
-      "xp": 14,
-      "tags": []
-    },
-    {
-      "id": "4c177ca4-7f16-46cc-9fdf-dd719e364f1f",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Track Bootc Updates From GNOMEOS In Dakota",
-      "created_at": "2026-04-15T18:41:50.296Z",
-      "turns": 39,
-      "prs": [
-        "03268cd",
-        "2787c7d",
-        "2dbdab3",
-        "48d0b55",
-        "7bad220"
-      ],
-      "xp": 328,
-      "tags": []
-    },
-    {
-      "id": "abd6f593-0603-417e-9712-254f9ca649f4",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Switch Dakota Distrobox To Next",
-      "created_at": "2026-04-15T16:28:13.698Z",
-      "turns": 5,
-      "prs": [
-        "1924b69",
-        "264701c",
-        "e3dfb91",
-        "102",
-        "234"
-      ],
-      "xp": 260,
-      "tags": []
-    },
-    {
-      "id": "dc238185-546d-4ff0-b472-d86a63888c75",
-      "repository": "89luca89/distrobox",
-      "branch": "main",
-      "summary": "Assess Distreobox Next Branch",
-      "created_at": "2026-04-15T16:18:07.608Z",
-      "turns": 3,
-      "prs": null,
-      "xp": 6,
-      "tags": []
-    },
-    {
-      "id": "584acc40-ff4a-4ef2-9ca3-861e210a1343",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Schedule Nightly Builds After GNOME",
-      "created_at": "2026-04-15T03:07:42.123Z",
-      "turns": 3,
-      "prs": [
-        "884f1db",
-        "d15bb01"
-      ],
-      "xp": 106,
-      "tags": []
-    },
-    {
-      "id": "f9697f7d-3977-4d84-8ac1-c5c831d69803",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Fix Thumbnail Aspect Ratio",
-      "created_at": "2026-04-15T01:19:46.756Z",
-      "turns": 9,
-      "prs": [
-        "4dfd682",
-        "bcb2a1c",
-        "763"
-      ],
-      "xp": 168,
-      "tags": []
-    },
-    {
-      "id": "587ac2fe-c4d3-41d1-9e31-57122a328763",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Add YouTube Playlist To Music Page",
-      "created_at": "2026-04-15T00:08:13.429Z",
-      "turns": 5,
-      "prs": [
-        "1b8da38",
-        "7610206",
-        "bce336d",
-        "762"
-      ],
-      "xp": 210,
-      "tags": []
-    },
-    {
-      "id": "f8cb3850-f848-4e12-bbab-1a181ba1d0c5",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Compile Six-Month Release Notes",
-      "created_at": "2026-04-14T23:37:51.220Z",
-      "turns": 3,
-      "prs": null,
-      "xp": 6,
       "tags": []
     }
   ]
