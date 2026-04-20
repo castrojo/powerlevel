@@ -26,7 +26,7 @@
   "core-web-vitals": 1,
   "dakota-add-package": 1,
   "dakota-bst-overrides": 1,
-  "dakota-buildstream": 1,
+  "dakota-buildstream": 2,
   "dakota-ci": 1,
   "dakota-debugging": 1,
   "dakota-local-ota": 1,
