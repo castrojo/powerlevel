@@ -24,8 +24,8 @@
   },
   "stats": {
     "breadth": {
-      "raw": 46,
-      "score": 83,
+      "raw": 52,
+      "score": 85,
       "softCap": 20,
       "pinnacle": 100,
       "unit": "repos",
@@ -39,13 +39,14 @@
         40,
         44,
         46,
-        46
+        46,
+        52
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     },
     "endurance": {
-      "raw": 620,
-      "score": 88,
+      "raw": 646,
+      "score": 89,
       "softCap": 200,
       "pinnacle": 1000,
       "unit": "sessions",
@@ -59,12 +60,13 @@
         567,
         595,
         616,
-        620
+        620,
+        646
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     },
     "foresight": {
-      "raw": 605,
+      "raw": 628,
       "score": 100,
       "softCap": 50,
       "pinnacle": 300,
@@ -79,12 +81,13 @@
         543,
         559,
         599,
-        605
+        605,
+        628
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     },
     "output": {
-      "raw": 626,
+      "raw": 701,
       "score": 100,
       "softCap": 100,
       "pinnacle": 500,
@@ -99,12 +102,13 @@
         454,
         518,
         606,
-        626
+        626,
+        701
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     },
     "recall": {
-      "raw": 16434,
+      "raw": 16715,
       "score": 100,
       "softCap": 2000,
       "pinnacle": 10000,
@@ -119,9 +123,10 @@
         15763,
         15934,
         16381,
-        16434
+        16434,
+        16715
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     },
     "synthesis": {
       "raw": 39,
@@ -139,9 +144,10 @@
         39,
         39,
         39,
+        39,
         39
       ],
-      "exported_at": "2026-04-20T02:33:18Z"
+      "exported_at": "2026-05-01T20:03:13Z"
     }
   },
   "weapons": {
