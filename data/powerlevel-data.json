@@ -509,7 +509,7 @@
       "aspect": "CONSECRATION",
       "element": "solar",
       "icon_path": "/icons/weapons/lord-of-wolves.png",
-      "level": 1,
+      "level": 2,
       "subclass": "solar",
       "super": "GOLDEN GUN",
       "weapon": "Lord of Wolves",
