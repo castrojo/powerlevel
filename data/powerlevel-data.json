@@ -24,11 +24,7 @@
   },
   "stats": {
     "breadth": {
-      "raw": 52,
-      "score": 85,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         26,
         26,
@@ -43,14 +39,14 @@
         52,
         52
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 100,
+      "raw": 52,
+      "score": 85,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 631,
-      "score": 88,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         448,
         501,
@@ -65,14 +61,14 @@
         622,
         631
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 1000,
+      "raw": 631,
+      "score": 88,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 627,
-      "score": 100,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         410,
         477,
@@ -87,14 +83,14 @@
         608,
         627
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 300,
+      "raw": 627,
+      "score": 100,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 733,
-      "score": 100,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         237,
         237,
@@ -109,14 +105,14 @@
         633,
         733
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 500,
+      "raw": 733,
+      "score": 100,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 16678,
-      "score": 100,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         13281,
         14987,
@@ -131,14 +127,14 @@
         16458,
         16678
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 10000,
+      "raw": 16678,
+      "score": 100,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 39,
-      "score": 59,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-05-02T08:03:47Z",
       "history": [
         36,
         38,
@@ -153,7 +149,11 @@
         39,
         39
       ],
-      "exported_at": "2026-05-02T08:03:47Z"
+      "pinnacle": 500,
+      "raw": 39,
+      "score": 59,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -201,7 +201,7 @@
       "aspect": "ROARING FLAMES",
       "element": "solar",
       "icon_path": "/icons/weapons/trinity-ghoul.png",
-      "level": 3,
+      "level": 4,
       "subclass": "solar",
       "super": "BURNING MAUL",
       "weapon": "Trinity Ghoul",
