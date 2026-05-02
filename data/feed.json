@@ -1,6 +1,34 @@
 {
-  "generated_at": "2026-05-01T20:03:13Z",
+  "generated_at": "2026-05-02T00:54:41Z",
   "entries": [
+    {
+      "id": "9e6e3c71-577d-4bd8-8ab0-d11e3eb0d0c5",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Inspect Supermemory Usage And Token Cache",
+      "created_at": "2026-05-02T00:35:43.181Z",
+      "turns": 9,
+      "prs": null,
+      "xp": 18,
+      "tags": []
+    },
+    {
+      "id": "ddd09c33-3ac0-47c9-90b5-2531054f1438",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Streamline Dakota Build Process",
+      "created_at": "2026-05-01T22:46:53.952Z",
+      "turns": 15,
+      "prs": [
+        "55c2716",
+        "67feb5c",
+        "b6bd398",
+        "e7f1103",
+        "187"
+      ],
+      "xp": 280,
+      "tags": []
+    },
     {
       "id": "7c4250d4-a8fb-43a0-8cd6-acbf9ca06818",
       "repository": "projectbluefin/documentation",
@@ -246,40 +274,6 @@
       "turns": 1,
       "prs": null,
       "xp": 2,
-      "tags": []
-    },
-    {
-      "id": "5349f610-c20d-49f6-a843-a020dc742427",
-      "repository": "tuna-os/tunaOS",
-      "branch": "main",
-      "summary": "Plan Chunka Production Release",
-      "created_at": "2026-04-20T23:45:29.465Z",
-      "turns": 34,
-      "prs": [
-        "4277e61",
-        "5736964",
-        "5d0a12d",
-        "e8d544d",
-        "faf800a"
-      ],
-      "xp": 318,
-      "tags": []
-    },
-    {
-      "id": "80b89294-8e2f-46f8-8227-6fd81f11f70e",
-      "repository": "castrojo/dakota",
-      "branch": "main",
-      "summary": "Load Skills And Agents Fix Shortcut",
-      "created_at": "2026-04-20T02:46:17.585Z",
-      "turns": 26,
-      "prs": [
-        "149d24470d44c0d234e0a46ef43069aef37dc7c7",
-        "2d85f3e",
-        "2e857f2",
-        "963086d",
-        "98fc68a"
-      ],
-      "xp": 302,
       "tags": []
     }
   ]

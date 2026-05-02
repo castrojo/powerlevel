@@ -24,7 +24,11 @@
   },
   "stats": {
     "breadth": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 52,
+      "score": 85,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos",
       "history": [
         26,
         26,
@@ -35,16 +39,17 @@
         40,
         44,
         46,
-        46
+        46,
+        52
       ],
-      "pinnacle": 100,
-      "raw": 46,
-      "score": 83,
-      "softCap": 20,
-      "unit": "repos"
+      "exported_at": "2026-05-02T00:54:41Z"
     },
     "endurance": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 622,
+      "score": 88,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions",
       "history": [
         448,
         501,
@@ -55,16 +60,17 @@
         567,
         595,
         616,
-        620
+        620,
+        622
       ],
-      "pinnacle": 1000,
-      "raw": 620,
-      "score": 88,
-      "softCap": 200,
-      "unit": "sessions"
+      "exported_at": "2026-05-02T00:54:41Z"
     },
     "foresight": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 608,
+      "score": 100,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints",
       "history": [
         410,
         477,
@@ -75,16 +81,17 @@
         543,
         559,
         599,
-        605
+        605,
+        608
       ],
-      "pinnacle": 300,
-      "raw": 605,
-      "score": 100,
-      "softCap": 50,
-      "unit": "checkpoints"
+      "exported_at": "2026-05-02T00:54:41Z"
     },
     "output": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 633,
+      "score": 100,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits",
       "history": [
         237,
         237,
@@ -95,16 +102,17 @@
         454,
         518,
         606,
-        626
+        626,
+        633
       ],
-      "pinnacle": 500,
-      "raw": 626,
-      "score": 100,
-      "softCap": 100,
-      "unit": "commits"
+      "exported_at": "2026-05-02T00:54:41Z"
     },
     "recall": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 16458,
+      "score": 100,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns",
       "history": [
         13281,
         14987,
@@ -115,16 +123,17 @@
         15763,
         15934,
         16381,
-        16434
+        16434,
+        16458
       ],
-      "pinnacle": 10000,
-      "raw": 16434,
-      "score": 100,
-      "softCap": 2000,
-      "unit": "turns"
+      "exported_at": "2026-05-02T00:54:41Z"
     },
     "synthesis": {
-      "exported_at": "2026-04-20T02:33:18Z",
+      "raw": 39,
+      "score": 59,
+      "softCap": 50,
+      "pinnacle": 500,
+      "unit": "entries",
       "history": [
         36,
         38,
@@ -135,13 +144,10 @@
         39,
         39,
         39,
+        39,
         39
       ],
-      "pinnacle": 500,
-      "raw": 39,
-      "score": 59,
-      "softCap": 50,
-      "unit": "entries"
+      "exported_at": "2026-05-02T00:54:41Z"
     }
   },
   "weapons": {
