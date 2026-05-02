@@ -1,6 +1,122 @@
 {
-  "generated_at": "2026-05-02T00:54:41Z",
+  "generated_at": "2026-05-02T08:03:47Z",
   "entries": [
+    {
+      "id": "8e802303-0626-4115-82f7-799ae3a36cae",
+      "repository": "castrojo/documentation",
+      "branch": "main",
+      "summary": "Preview Bluefin Announcement Draft",
+      "created_at": "2026-05-02T04:45:57.102Z",
+      "turns": 117,
+      "prs": [
+        "016ce26",
+        "0630542",
+        "16db76b",
+        "1724333",
+        "1cd3f69"
+      ],
+      "xp": 484,
+      "tags": []
+    },
+    {
+      "id": "e55458a0-3376-4547-94e1-eb7bb4bc8b7b",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Plan Copilot Config Fixes",
+      "created_at": "2026-05-02T04:17:22.687Z",
+      "turns": 14,
+      "prs": null,
+      "xp": 28,
+      "tags": []
+    },
+    {
+      "id": "fb3c5261-b2e9-41d9-8a0a-462d64d2941b",
+      "repository": "projectbluefin/dakota",
+      "branch": "main",
+      "summary": "Fix Load Memory Workflow",
+      "created_at": "2026-05-02T04:13:06.445Z",
+      "turns": 28,
+      "prs": [
+        "1191f47",
+        "38422e0",
+        "3bad8c4",
+        "3ff301d",
+        "4f0d295"
+      ],
+      "xp": 306,
+      "tags": []
+    },
+    {
+      "id": "3bf3e6fa-c24a-4a08-be96-dd538fbb7b88",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Remove Headroom From Copilot Config",
+      "created_at": "2026-05-02T04:08:03.639Z",
+      "turns": 9,
+      "prs": null,
+      "xp": 18,
+      "tags": []
+    },
+    {
+      "id": "67f9b685-0b68-479b-8936-f16f45ae23a5",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Plan Copilot Config Fixes",
+      "created_at": "2026-05-02T04:07:05.525Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
+    {
+      "id": "d0770c5f-878e-45f5-9ef9-38b7ad7db16a",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Fix LTS Promotion Workflow",
+      "created_at": "2026-05-02T02:38:41.884Z",
+      "turns": 29,
+      "prs": [
+        "07b9e62",
+        "13c460b",
+        "1b24ac4",
+        "2ca5b94",
+        "3310845"
+      ],
+      "xp": 308,
+      "tags": []
+    },
+    {
+      "id": "27d11043-1447-428f-932f-e93660fb9114",
+      "repository": "projectbluefin/documentation",
+      "branch": "main",
+      "summary": "Validate Images Page Functionality",
+      "created_at": "2026-05-02T01:42:39.316Z",
+      "turns": 14,
+      "prs": [
+        "0848b47",
+        "744349d",
+        "cb17c4b",
+        "e62a7e4",
+        "775"
+      ],
+      "xp": 278,
+      "tags": []
+    },
+    {
+      "id": "52f2c2ea-64bb-482f-84f9-469d6409e987",
+      "repository": "castrojo/copilot-config",
+      "branch": "main",
+      "summary": "Estimate Blacksmith Runner Usage",
+      "created_at": "2026-05-02T01:01:03.935Z",
+      "turns": 7,
+      "prs": [
+        "bdbfaf0",
+        "377",
+        "378"
+      ],
+      "xp": 164,
+      "tags": []
+    },
     {
       "id": "9e6e3c71-577d-4bd8-8ab0-d11e3eb0d0c5",
       "repository": "castrojo/copilot-config",
@@ -165,115 +281,6 @@
         "1a34f3c"
       ],
       "xp": 74,
-      "tags": []
-    },
-    {
-      "id": "1f60e650-c798-464f-9d04-255adf73814d",
-      "repository": "castrojo/dakota",
-      "branch": "feature/fix-phantom-version-prs",
-      "summary": "Investigate Chunkaj Version Bump",
-      "created_at": "2026-04-23T20:16:10.307Z",
-      "turns": 6,
-      "prs": [
-        "139d0a9",
-        "3e784e0",
-        "d277f39",
-        "322"
-      ],
-      "xp": 212,
-      "tags": []
-    },
-    {
-      "id": "f46f7ea8-fe42-42ec-81c0-5a9bc7c69f19",
-      "repository": "projectbluefin/renovate-config",
-      "branch": "main",
-      "summary": "Plan Renovate Workflow Fixes",
-      "created_at": "2026-04-23T18:18:50.698Z",
-      "turns": 4,
-      "prs": [
-        "011a210"
-      ],
-      "xp": 58,
-      "tags": []
-    },
-    {
-      "id": "3b0f8882-2e73-4f49-bec3-3f563c72c32d",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Fix Dakota Bump Bot",
-      "created_at": "2026-04-22T20:55:55.040Z",
-      "turns": 4,
-      "prs": [
-        "ee93180"
-      ],
-      "xp": 58,
-      "tags": []
-    },
-    {
-      "id": "19340f48-65af-4838-90e4-e16cc406e93a",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Investigate Dakota Skills Failure",
-      "created_at": "2026-04-22T01:06:21.483Z",
-      "turns": 11,
-      "prs": [
-        "1636067",
-        "4ed8218",
-        "54222ef",
-        "7abe43d",
-        "307"
-      ],
-      "xp": 272,
-      "tags": []
-    },
-    {
-      "id": "7691c079-ec12-4ce9-97fc-924b15be7a4a",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Investigate Dakota Skills Failure",
-      "created_at": "2026-04-22T01:03:33.814Z",
-      "turns": 6,
-      "prs": null,
-      "xp": 12,
-      "tags": []
-    },
-    {
-      "id": "e7ed5de4-38c2-46ea-b198-45d976a78e9c",
-      "repository": "coreos/chunkah",
-      "branch": "main",
-      "summary": "Automate Chunkify Build With Podman",
-      "created_at": "2026-04-21T21:48:43.346Z",
-      "turns": 36,
-      "prs": [
-        "014a2ef",
-        "090041a",
-        "10868fc",
-        "6de56fa",
-        "6e29d3c"
-      ],
-      "xp": 322,
-      "tags": []
-    },
-    {
-      "id": "19390e3a-bc36-41f5-958c-1b3ffbbc6071",
-      "repository": "",
-      "branch": "",
-      "summary": "Troubleshoot Ethernet On MCP Server",
-      "created_at": "2026-04-21T03:07:32.519Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "9acd7497-d952-4d93-aa08-82f222a80452",
-      "repository": "castrojo/dakota",
-      "branch": "main",
-      "summary": "Resolve Main Branch Conflicts",
-      "created_at": "2026-04-21T02:56:23.711Z",
-      "turns": 1,
-      "prs": null,
-      "xp": 2,
       "tags": []
     }
   ]
