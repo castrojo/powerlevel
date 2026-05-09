@@ -18,7 +18,7 @@ cat ~/src/skills/powerlevel/SKILL.md    # same skill via global path
 just dev           # start Astro dev server
 just test-go       # Go unit tests
 just test-e2e      # Playwright E2E
-just export        # regenerate src/data/powerlevel.json from data/
+just export-stats  # regenerate src/data/powerlevel.json from data/
 just refresh       # export-stats + build-site + commit + push (run locally at session end)
 ```
 
@@ -50,5 +50,5 @@ gh issue list --repo castrojo/copilot-config --label copilot-ready --state open
 ## Session End
 
 ```bash
-supermemory(mode="add", type="conversation", scope="project", content="[WHAT]...[WHY]...[FIX]...[NEXT]...")
+memory(mode="add", type="conversation", scope="project", content="[WHAT]...[WHY]...[FIX]...[NEXT]...")
 ```
