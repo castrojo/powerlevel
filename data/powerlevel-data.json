@@ -6,18 +6,18 @@
     "Katharina returns from distant homelands with new formulae. The brew strengthens.",
     "Dolly reports all Flatpaks synchronized. The application model holds against the Darkness.",
     "The Traveler illuminates a path away from legacy. Wayland native confirmed across all fronts.",
-    "Each story element is related to communities — their challenges, and their triumphs. This is yours.",
+    "Each story element is related to communities \u2014 their challenges, and their triumphs. This is yours.",
     "Bluefin was born to disappear. The best operating systems are invisible. Is she invisible yet?",
     "Ghost transmission: the old distribution model belongs in a museum. We put it there. Move on.",
     "I scanned your history. You have more 'fix: typo' entries than any Guardian on record. I've filed this under 'endearing.'",
     "Old-school jank, safely contained in distrobox. The Paleosaurs are quarantined. For now.",
-    "The CI is green. The site is deployed. The Light holds. — For now.",
+    "The CI is green. The site is deployed. The Light holds. \u2014 For now.",
     "Mission: accelerate the ecosystem. Become invisible. Leave the future better than you found it.",
-    "Bluefin and Achillobator, side by side. The enterprise moves slow — but it moves. Stay patient.",
-    "The human is more important than the machine. I remind myself of this every session. — Ghost"
+    "Bluefin and Achillobator, side by side. The enterprise moves slow \u2014 but it moves. Stay patient.",
+    "The human is more important than the machine. I remind myself of this every session. \u2014 Ghost"
   ],
   "season": {
-    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility — operating without knowing which disciplines have gone dark.",
+    "lore": "The Guardian turns the tools on themselves. Building a mirror that shows not what you have done, but what you have mastered. The cost of failure is invisibility \u2014 operating without knowing which disciplines have gone dark.",
     "name": "Season of the Powerlevel",
     "project": "castrojo/powerlevel",
     "quarter": "Q1 2026"
@@ -847,16 +847,6 @@
       "weapon": "Quicksilver Storm",
       "weapon_type": "Legendary Weapon"
     },
-    "supermemory": {
-      "aspect": "HOWL OF THE STORM",
-      "element": "stasis",
-      "icon_path": "/icons/weapons/agers-scepter.png",
-      "level": 1,
-      "subclass": "stasis",
-      "super": "GLACIAL QUAKE",
-      "weapon": "Ager's Scepter",
-      "weapon_type": "Legendary Weapon"
-    },
     "swe-subagent": {
       "aspect": "INTO THE FRAY",
       "element": "strand",
@@ -897,16 +887,6 @@
       "weapon": "Vex Mythoclast",
       "weapon_type": "Legendary Weapon"
     },
-    "trilogy-dev": {
-      "aspect": "KNOCKOUT",
-      "element": "kinetic",
-      "icon_path": "/icons/weapons/the-messenger.png",
-      "level": 1,
-      "subclass": "arc",
-      "super": "THUNDERCRASH",
-      "weapon": "The Messenger",
-      "weapon_type": "Legendary Pulse Rifle"
-    },
     "web-quality-audit": {
       "aspect": "CONSECRATED GROUND",
       "element": "solar",
@@ -937,6 +917,46 @@
       "super": "THUNDERCRASH",
       "weapon": "Trustee",
       "weapon_type": "Legendary Weapon"
+    },
+    "superlocalmemory": {
+      "aspect": "HOWL OF THE STORM",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/agers-scepter.png",
+      "level": 3,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Ager's Scepter",
+      "weapon_type": "Legendary Weapon"
+    },
+    "dakota-agent-quickstart": {
+      "aspect": "FLOW STATE",
+      "element": "arc",
+      "icon_path": "/icons/weapons/quicksilver-storm.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "Quicksilver Storm",
+      "weapon_type": "Exotic Auto Rifle"
+    },
+    "dakota-testlab": {
+      "aspect": "KNOCKOUT",
+      "element": "arc",
+      "icon_path": "/icons/weapons/loaded-question.png",
+      "level": 3,
+      "subclass": "arc",
+      "super": "FISTS OF HAVOC",
+      "weapon": "Loaded Question",
+      "weapon_type": "Legendary Fusion Rifle"
+    },
+    "dakota-testlab-setup": {
+      "aspect": "HOWL OF THE STORM",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/hollow-denial.png",
+      "level": 3,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Hollow Denial",
+      "weapon_type": "Legendary Trace Rifle"
     }
   }
 }
