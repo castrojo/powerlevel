@@ -957,6 +957,16 @@
       "super": "GLACIAL QUAKE",
       "weapon": "Hollow Denial",
       "weapon_type": "Legendary Trace Rifle"
+    },
+    "brainstorming": {
+      "level": 2,
+      "element": "solar",
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "aspect": "EMBER OF SOLACE",
+      "weapon": "Lumina",
+      "weapon_type": "Exotic Hand Cannon",
+      "icon_path": "/icons/weapons/lumina.png"
     }
   }
 }

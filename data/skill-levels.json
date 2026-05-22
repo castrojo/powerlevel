@@ -3,7 +3,7 @@
   "autoresearch": 1,
   "bluefin-build": 2,
   "bluefin-ci": 2,
-  "bluefin-docs": 4,
+  "bluefin-docs": 5,
   "bluefin-docs-perf": 1,
   "bluefin-iso": 2,
   "bluefin-lts": 2,
@@ -38,7 +38,7 @@
   "dakota-package-go": 1,
   "dakota-package-rust": 2,
   "dakota-package-zig": 1,
-  "dakota-patch-junctions": 1,
+  "dakota-patch-junctions": 2,
   "dakota-remove-package": 1,
   "dakota-testlab": 3,
   "dakota-testlab-setup": 3,
@@ -49,7 +49,7 @@
   "find-skills": 1,
   "firehose": 1,
   "flatpak-appstream": 2,
-  "git-pr-workflow": 1,
+  "git-pr-workflow": 2,
   "github": 5,
   "github-actions-expert": 2,
   "github-issues": 4,
@@ -78,5 +78,6 @@
   "tdd-refactor": 1,
   "web-quality-audit": 1,
   "webapp-testing": 1,
-  "workflow": 6
+  "workflow": 6,
+  "brainstorming": 2
 }
