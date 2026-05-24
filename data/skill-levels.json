@@ -15,6 +15,7 @@
   "bluefin-variants": 1,
   "blueprint-mode": 2,
   "bootc-ecosystem": 2,
+  "brainstorming": 2,
   "cicd-learning": 3,
   "cncf-community": 1,
   "cncf-data": 1,
@@ -49,6 +50,7 @@
   "find-skills": 1,
   "firehose": 1,
   "flatpak-appstream": 2,
+  "ghost-testlab": 2,
   "git-pr-workflow": 2,
   "github": 5,
   "github-actions-expert": 2,
@@ -58,12 +60,13 @@
   "homebrew-tap-formulas": 1,
   "homebrew-taps": 1,
   "knowledge": 4,
+  "knuckle-qa": 2,
   "linux-desktop": 1,
   "oci-images": 1,
   "people-website": 2,
   "performance": 1,
   "podman": 1,
-  "powerlevel": 4,
+  "powerlevel": 5,
   "principal-software-engineer": 2,
   "qa": 2,
   "se-security-reviewer": 1,
@@ -78,6 +81,5 @@
   "tdd-refactor": 1,
   "web-quality-audit": 1,
   "webapp-testing": 1,
-  "workflow": 6,
-  "brainstorming": 2
+  "workflow": 6
 }
