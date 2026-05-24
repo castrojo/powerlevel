@@ -81,5 +81,6 @@
   "tdd-refactor": 1,
   "web-quality-audit": 1,
   "webapp-testing": 1,
-  "workflow": 6
+  "workflow": 6,
+  "bluespeed": 2
 }
