@@ -24,7 +24,11 @@
   },
   "stats": {
     "breadth": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 52,
+      "score": 85,
+      "softCap": 20,
+      "pinnacle": 100,
+      "unit": "repos",
       "history": [
         26,
         26,
@@ -37,16 +41,17 @@
         46,
         46,
         52,
+        52,
         52
       ],
-      "pinnacle": 100,
-      "raw": 52,
-      "score": 85,
-      "softCap": 20,
-      "unit": "repos"
+      "exported_at": "2026-05-24T11:39:07Z"
     },
     "endurance": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 632,
+      "score": 89,
+      "softCap": 200,
+      "pinnacle": 1000,
+      "unit": "sessions",
       "history": [
         448,
         501,
@@ -59,16 +64,17 @@
         616,
         620,
         622,
-        631
+        631,
+        632
       ],
-      "pinnacle": 1000,
-      "raw": 631,
-      "score": 88,
-      "softCap": 200,
-      "unit": "sessions"
+      "exported_at": "2026-05-24T11:39:07Z"
     },
     "foresight": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 627,
+      "score": 100,
+      "softCap": 50,
+      "pinnacle": 300,
+      "unit": "checkpoints",
       "history": [
         410,
         477,
@@ -81,16 +87,17 @@
         599,
         605,
         608,
+        627,
         627
       ],
-      "pinnacle": 300,
-      "raw": 627,
-      "score": 100,
-      "softCap": 50,
-      "unit": "checkpoints"
+      "exported_at": "2026-05-24T11:39:07Z"
     },
     "output": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 734,
+      "score": 100,
+      "softCap": 100,
+      "pinnacle": 500,
+      "unit": "commits",
       "history": [
         237,
         237,
@@ -103,16 +110,17 @@
         606,
         626,
         633,
-        733
+        733,
+        734
       ],
-      "pinnacle": 500,
-      "raw": 733,
-      "score": 100,
-      "softCap": 100,
-      "unit": "commits"
+      "exported_at": "2026-05-24T11:39:07Z"
     },
     "recall": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 16691,
+      "score": 100,
+      "softCap": 2000,
+      "pinnacle": 10000,
+      "unit": "turns",
       "history": [
         13281,
         14987,
@@ -125,16 +133,17 @@
         16381,
         16434,
         16458,
-        16678
+        16678,
+        16691
       ],
-      "pinnacle": 10000,
-      "raw": 16678,
-      "score": 100,
-      "softCap": 2000,
-      "unit": "turns"
+      "exported_at": "2026-05-24T11:39:07Z"
     },
     "synthesis": {
-      "exported_at": "2026-05-02T08:03:47Z",
+      "raw": 39,
+      "score": 59,
+      "softCap": 50,
+      "pinnacle": 500,
+      "unit": "entries",
       "history": [
         36,
         38,
@@ -147,13 +156,10 @@
         39,
         39,
         39,
+        39,
         39
       ],
-      "pinnacle": 500,
-      "raw": 39,
-      "score": 59,
-      "softCap": 50,
-      "unit": "entries"
+      "exported_at": "2026-05-24T11:39:07Z"
     }
   },
   "weapons": {
@@ -176,6 +182,26 @@
       "super": "FISTS OF HAVOC",
       "weapon": "Vigilance Wing",
       "weapon_type": "Exotic Pulse Rifle"
+    },
+    "blog-drafting": {
+      "aspect": "TOUCH OF FLAME",
+      "element": "solar",
+      "icon_path": "/icons/weapons/duality.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "DAYBREAK",
+      "weapon": "Duality",
+      "weapon_type": "Exotic Shotgun"
+    },
+    "bluebird": {
+      "aspect": "DIAMOND LANCE",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/dead-mans-tale.png",
+      "level": 1,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Dead Man's Tale",
+      "weapon_type": "Exotic Scout Rifle"
     },
     "bluefin-build": {
       "aspect": "HOWL OF THE STORM",
@@ -290,12 +316,12 @@
     "bluefin-variants": {
       "aspect": "HOWL OF THE STORM",
       "element": "stasis",
-      "icon_path": "/icons/weapons/sunshot.png",
+      "icon_path": "/icons/weapons/liminal-vigil.png",
       "level": 1,
       "subclass": "stasis",
       "super": "HOWL OF THE STORM",
-      "weapon": "Sunshot",
-      "weapon_type": "Legendary Weapon"
+      "weapon": "Liminal Vigil",
+      "weapon_type": "Exotic Sidearm"
     },
     "blueprint-mode": {
       "aspect": "DRENGR'S LASH",
@@ -306,6 +332,16 @@
       "super": "DRENGR'S LASH",
       "weapon": "Symmetry",
       "weapon_type": "Legendary Weapon"
+    },
+    "bluespeed": {
+      "aspect": "INTO THE FRAY",
+      "element": "strand",
+      "icon_path": "/icons/weapons/rufuss-fury.png",
+      "level": 1,
+      "subclass": "strand",
+      "super": "NEEDLESTORM",
+      "weapon": "Rufus's Fury",
+      "weapon_type": "Legendary Auto Rifle"
     },
     "bootc-ecosystem": {
       "aspect": "FEED THE VOID",
@@ -590,12 +626,12 @@
     "dakota-testlab-setup": {
       "aspect": "HOWL OF THE STORM",
       "element": "stasis",
-      "icon_path": "/icons/weapons/hollow-denial.png",
+      "icon_path": "/icons/weapons/friction-fire.png",
       "level": 3,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
-      "weapon": "Hollow Denial",
-      "weapon_type": "Legendary Trace Rifle"
+      "weapon": "Friction Fire",
+      "weapon_type": "Legendary SMG"
     },
     "dakota-update-refs": {
       "aspect": "HOWL OF THE STORM",
@@ -606,6 +642,16 @@
       "super": "GLACIAL QUAKE",
       "weapon": "Cryosthesia 77K",
       "weapon_type": "Exotic Sidearm"
+    },
+    "dispatching-parallel-agents": {
+      "aspect": "LETHAL CURRENT",
+      "element": "arc",
+      "icon_path": "/icons/weapons/suros-regime.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "Suros Regime",
+      "weapon_type": "Exotic Auto Rifle"
     },
     "doublecheck": {
       "aspect": "BASTION",
@@ -637,15 +683,45 @@
       "weapon": "The Colony",
       "weapon_type": "Exotic Grenade Launcher"
     },
-    "find-skills": {
-      "aspect": "SOL INVICTUS",
+    "epic-review": {
+      "aspect": "ECHO OF CESSATION",
       "element": "void",
-      "icon_path": "/icons/weapons/agers-scepter.png",
+      "icon_path": "/icons/weapons/empirical-evidence.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "weapon": "Empirical Evidence",
+      "weapon_type": "Legendary Hand Cannon"
+    },
+    "executing-plans": {
+      "aspect": "SURGE",
+      "element": "arc",
+      "icon_path": "/icons/weapons/tarantula.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "CHAOS REACH",
+      "weapon": "Tarantula",
+      "weapon_type": "Legendary Linear Fusion Rifle"
+    },
+    "find-skills": {
+      "aspect": "FEED THE VOID",
+      "element": "void",
+      "icon_path": "/icons/weapons/collective-obligation.png",
       "level": 1,
       "subclass": "void",
       "super": "SENTINEL SHIELD",
-      "weapon": "Ager's Scepter",
-      "weapon_type": "Legendary Weapon"
+      "weapon": "Collective Obligation",
+      "weapon_type": "Exotic Pulse Rifle"
+    },
+    "finishing-a-development-branch": {
+      "aspect": "FLOW STATE",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/midnight-coup.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "DEADFALL",
+      "weapon": "Midnight Coup",
+      "weapon_type": "Exotic Hand Cannon"
     },
     "firehose": {
       "aspect": "TOUCH OF FLAME",
@@ -666,6 +742,16 @@
       "super": "ROARING FLAMES",
       "weapon": "Jotunn",
       "weapon_type": "Legendary Weapon"
+    },
+    "ghost-testlab": {
+      "aspect": "TECTONIC HARVEST",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/thin-precipice.png",
+      "level": 1,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Thin Precipice",
+      "weapon_type": "Legendary Sword"
     },
     "git-pr-workflow": {
       "aspect": "CHAOS ACCELERANT",
@@ -730,12 +816,12 @@
     "homebrew-tap-formulas": {
       "aspect": "WEAVER'S CALL",
       "element": "strand",
-      "icon_path": "/icons/weapons/witherhoard.png",
+      "icon_path": "/icons/weapons/epochal-integration.png",
       "level": 1,
       "subclass": "strand",
       "super": "BLADEFURY",
-      "weapon": "Witherhoard",
-      "weapon_type": "Exotic Grenade Launcher"
+      "weapon": "Epochal Integration",
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "homebrew-taps": {
       "aspect": "BANNER OF WAR",
@@ -747,15 +833,35 @@
       "weapon": "The Wardcliff Coil",
       "weapon_type": "Exotic Rocket Launcher"
     },
-    "knowledge": {
-      "aspect": "HOWL OF THE STORM",
-      "element": "stasis",
-      "icon_path": "/icons/weapons/no-time-to-explain.png",
-      "level": 4,
-      "subclass": "stasis",
-      "super": "GLACIAL QUAKE",
-      "weapon": "No Time To Explain",
-      "weapon_type": "Exotic Pulse Rifle"
+    "knuckle-qa": {
+      "aspect": "OFFENSIVE BULWARK",
+      "element": "void",
+      "icon_path": "/icons/weapons/piece-of-mind.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "weapon": "Piece of Mind",
+      "weapon_type": "Legendary Pulse Rifle"
+    },
+    "knuckle-testlab": {
+      "aspect": "AMPLIFIED",
+      "element": "arc",
+      "icon_path": "/icons/weapons/arc-logic.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "THUNDERCRASH",
+      "weapon": "Arc Logic",
+      "weapon_type": "Legendary Auto Rifle"
+    },
+    "kubestellar-console": {
+      "aspect": "DRENGR'S LASH",
+      "element": "strand",
+      "icon_path": "/icons/weapons/the-navigator.png",
+      "level": 1,
+      "subclass": "strand",
+      "super": "NEEDLESTORM",
+      "weapon": "The Navigator",
+      "weapon_type": "Exotic Trace Rifle"
     },
     "linux-desktop": {
       "aspect": "DIAMOND LANCE",
@@ -780,22 +886,22 @@
     "people-website": {
       "aspect": "RADIANT",
       "element": "solar",
-      "icon_path": "/icons/weapons/graviton-lance.png",
+      "icon_path": "/icons/weapons/ticuus-divination.png",
       "level": 2,
       "subclass": "solar",
       "super": "BURNING MAUL",
-      "weapon": "Graviton Lance",
-      "weapon_type": "Exotic Pulse Rifle"
+      "weapon": "Ticuu's Divination",
+      "weapon_type": "Exotic Bow"
     },
     "performance": {
       "aspect": "TOUCH OF FLAME",
       "element": "solar",
-      "icon_path": "/icons/weapons/polaris-lance.png",
+      "icon_path": "/icons/weapons/skyburners-oath.png",
       "level": 1,
       "subclass": "solar",
       "super": "GOLDEN GUN",
-      "weapon": "Polaris Lance",
-      "weapon_type": "Legendary Weapon"
+      "weapon": "Skyburner's Oath",
+      "weapon_type": "Exotic Scout Rifle"
     },
     "podman": {
       "aspect": "ENSNARING SLAM",
@@ -837,6 +943,26 @@
       "weapon": "Riskrunner",
       "weapon_type": "Legendary Weapon"
     },
+    "receiving-code-review": {
+      "aspect": "ECHO OF PERSISTENCE",
+      "element": "void",
+      "icon_path": "/icons/weapons/the-palindrome.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "SENTINEL SHIELD",
+      "weapon": "The Palindrome",
+      "weapon_type": "Legendary Hand Cannon"
+    },
+    "requesting-code-review": {
+      "aspect": "ROARING FLAMES",
+      "element": "solar",
+      "icon_path": "/icons/weapons/ignition-code.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "weapon": "Ignition Code",
+      "weapon_type": "Legendary Grenade Launcher"
+    },
     "se-security-reviewer": {
       "aspect": "BASTION",
       "element": "void",
@@ -845,16 +971,6 @@
       "subclass": "void",
       "super": "BASTION",
       "weapon": "Leviathan's Breath",
-      "weapon_type": "Legendary Weapon"
-    },
-    "second-opinion": {
-      "aspect": "BASTION",
-      "element": "solar",
-      "icon_path": "/icons/weapons/dead-mans-tale.png",
-      "level": 1,
-      "subclass": "solar",
-      "super": "HAMMER OF SOL",
-      "weapon": "Dead Man's Tale",
       "weapon_type": "Legendary Weapon"
     },
     "skill-auditor": {
@@ -880,12 +996,22 @@
     "subagent-discipline": {
       "aspect": "WEAVER'S CALL",
       "element": "strand",
-      "icon_path": "/icons/weapons/quicksilver-storm.png",
+      "icon_path": "/icons/weapons/briars-contempt.png",
       "level": 1,
       "subclass": "strand",
       "super": "NEEDLESTORM",
-      "weapon": "Quicksilver Storm",
-      "weapon_type": "Legendary Weapon"
+      "weapon": "Briar's Contempt",
+      "weapon_type": "Legendary Linear Fusion Rifle"
+    },
+    "subagent-driven-development": {
+      "aspect": "BANNER OF WAR",
+      "element": "strand",
+      "icon_path": "/icons/weapons/noxious-vetiver.png",
+      "level": 1,
+      "subclass": "strand",
+      "super": "BLADEFURY",
+      "weapon": "Noxious Vetiver",
+      "weapon_type": "Legendary Scout Rifle"
     },
     "superlocalmemory": {
       "aspect": "HOWL OF THE STORM",
@@ -906,6 +1032,16 @@
       "super": "INTO THE FRAY",
       "weapon": "Monte Carlo",
       "weapon_type": "Exotic Weapon"
+    },
+    "systematic-debugging": {
+      "aspect": "SILENCE AND SQUALL",
+      "element": "stasis",
+      "icon_path": "/icons/weapons/disparity.png",
+      "level": 1,
+      "subclass": "stasis",
+      "super": "GLACIAL QUAKE",
+      "weapon": "Disparity",
+      "weapon_type": "Legendary Pulse Rifle"
     },
     "tdd-green": {
       "aspect": "OFFENSIVE BULWARK",
@@ -937,6 +1073,46 @@
       "weapon": "Vex Mythoclast",
       "weapon_type": "Legendary Weapon"
     },
+    "test-driven-development": {
+      "aspect": "BASTION",
+      "element": "void",
+      "icon_path": "/icons/weapons/nation-of-beasts.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "weapon": "Nation of Beasts",
+      "weapon_type": "Legendary Hand Cannon"
+    },
+    "using-git-worktrees": {
+      "aspect": "FLOW STATE",
+      "element": "kinetic",
+      "icon_path": "/icons/weapons/multimach-ccx.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "GATHERING STORM",
+      "weapon": "Multimach CCX",
+      "weapon_type": "Legendary SMG"
+    },
+    "using-superpowers": {
+      "aspect": "ARC SOUL",
+      "element": "arc",
+      "icon_path": "/icons/weapons/centrifuse.png",
+      "level": 1,
+      "subclass": "arc",
+      "super": "CHAOS REACH",
+      "weapon": "Centrifuse",
+      "weapon_type": "Exotic Auto Rifle"
+    },
+    "verification-before-completion": {
+      "aspect": "ECHO OF CESSATION",
+      "element": "void",
+      "icon_path": "/icons/weapons/null-composure.png",
+      "level": 1,
+      "subclass": "void",
+      "super": "NOVA BOMB",
+      "weapon": "Null Composure",
+      "weapon_type": "Legendary Fusion Rifle"
+    },
     "web-quality-audit": {
       "aspect": "CONSECRATED GROUND",
       "element": "solar",
@@ -967,6 +1143,26 @@
       "super": "THUNDERCRASH",
       "weapon": "Trustee",
       "weapon_type": "Legendary Weapon"
+    },
+    "writing-plans": {
+      "aspect": "SOL INVICTUS",
+      "element": "solar",
+      "icon_path": "/icons/weapons/compass-rose.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "BURNING MAUL",
+      "weapon": "Compass Rose",
+      "weapon_type": "Legendary Shotgun"
+    },
+    "writing-skills": {
+      "aspect": "EMBER OF SOLACE",
+      "element": "solar",
+      "icon_path": "/icons/weapons/one-thousand-voices.png",
+      "level": 1,
+      "subclass": "solar",
+      "super": "WELL OF RADIANCE",
+      "weapon": "One Thousand Voices",
+      "weapon_type": "Exotic Fusion Rifle"
     }
   }
 }
