@@ -1,286 +1,224 @@
 {
-  "generated_at": "2026-05-02T08:03:47Z",
+  "generated_at": "2026-05-26T23:44:32Z",
   "entries": [
     {
-      "id": "8e802303-0626-4115-82f7-799ae3a36cae",
-      "repository": "castrojo/documentation",
-      "branch": "main",
-      "summary": "Preview Bluefin Announcement Draft",
-      "created_at": "2026-05-02T04:45:57.102Z",
-      "turns": 117,
-      "prs": [
-        "016ce26",
-        "0630542",
-        "16db76b",
-        "1724333",
-        "1cd3f69"
-      ],
-      "xp": 484,
-      "tags": []
-    },
-    {
-      "id": "e55458a0-3376-4547-94e1-eb7bb4bc8b7b",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Plan Copilot Config Fixes",
-      "created_at": "2026-05-02T04:17:22.687Z",
-      "turns": 14,
+      "id": "49a8f943-e1f5-4117-b72a-361cc33cbe8a",
+      "repository": "castrojo/dakota",
+      "branch": "fix/papercut-batch-3",
+      "summary": "Load Workflows And Memory",
+      "created_at": "2026-05-26T22:33:27.721Z",
+      "turns": 20,
       "prs": null,
-      "xp": 28,
+      "xp": 40,
       "tags": []
     },
     {
-      "id": "fb3c5261-b2e9-41d9-8a0a-462d64d2941b",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Fix Load Memory Workflow",
-      "created_at": "2026-05-02T04:13:06.445Z",
-      "turns": 28,
-      "prs": [
-        "1191f47",
-        "38422e0",
-        "3bad8c4",
-        "3ff301d",
-        "4f0d295"
-      ],
-      "xp": 306,
-      "tags": []
-    },
-    {
-      "id": "3bf3e6fa-c24a-4a08-be96-dd538fbb7b88",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Remove Headroom From Copilot Config",
-      "created_at": "2026-05-02T04:08:03.639Z",
-      "turns": 9,
+      "id": "639e450d-86c3-4d2d-a2cc-fa7edb52a238",
+      "repository": "castrojo/dakota",
+      "branch": "fix/papercut-batch-3",
+      "summary": "Update Homelab Documentation And Memory Check",
+      "created_at": "2026-05-26T22:16:36.503Z",
+      "turns": 4,
       "prs": null,
-      "xp": 18,
+      "xp": 8,
       "tags": []
     },
     {
-      "id": "67f9b685-0b68-479b-8936-f16f45ae23a5",
-      "repository": "castrojo/copilot-config",
+      "id": "869994f7-eb0b-4314-be7f-275b15475e9e",
+      "repository": "castrojo/testing-lab",
       "branch": "main",
-      "summary": "Plan Copilot Config Fixes",
-      "created_at": "2026-05-02T04:07:05.525Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "d0770c5f-878e-45f5-9ef9-38b7ad7db16a",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Fix LTS Promotion Workflow",
-      "created_at": "2026-05-02T02:38:41.884Z",
-      "turns": 29,
-      "prs": [
-        "07b9e62",
-        "13c460b",
-        "1b24ac4",
-        "2ca5b94",
-        "3310845"
-      ],
-      "xp": 308,
-      "tags": []
-    },
-    {
-      "id": "27d11043-1447-428f-932f-e93660fb9114",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Validate Images Page Functionality",
-      "created_at": "2026-05-02T01:42:39.316Z",
-      "turns": 14,
-      "prs": [
-        "0848b47",
-        "744349d",
-        "cb17c4b",
-        "e62a7e4",
-        "775"
-      ],
-      "xp": 278,
-      "tags": []
-    },
-    {
-      "id": "52f2c2ea-64bb-482f-84f9-469d6409e987",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Estimate Blacksmith Runner Usage",
-      "created_at": "2026-05-02T01:01:03.935Z",
-      "turns": 7,
-      "prs": [
-        "bdbfaf0",
-        "377",
-        "378"
-      ],
-      "xp": 164,
-      "tags": []
-    },
-    {
-      "id": "9e6e3c71-577d-4bd8-8ab0-d11e3eb0d0c5",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Inspect Supermemory Usage And Token Cache",
-      "created_at": "2026-05-02T00:35:43.181Z",
-      "turns": 9,
-      "prs": null,
-      "xp": 18,
-      "tags": []
-    },
-    {
-      "id": "ddd09c33-3ac0-47c9-90b5-2531054f1438",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Streamline Dakota Build Process",
-      "created_at": "2026-05-01T22:46:53.952Z",
-      "turns": 15,
-      "prs": [
-        "55c2716",
-        "67feb5c",
-        "b6bd398",
-        "e7f1103",
-        "187"
-      ],
-      "xp": 280,
-      "tags": []
-    },
-    {
-      "id": "7c4250d4-a8fb-43a0-8cd6-acbf9ca06818",
-      "repository": "projectbluefin/documentation",
-      "branch": "main",
-      "summary": "Review ProjectBluefin Monthly Reports",
-      "created_at": "2026-05-01T19:58:43.367Z",
-      "turns": 2,
-      "prs": null,
-      "xp": 4,
-      "tags": []
-    },
-    {
-      "id": "c01ba26e-0b1f-445d-8328-c3d4bc810172",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Migrate To SuperlocalMemory",
-      "created_at": "2026-05-01T07:36:57.639Z",
-      "turns": 14,
-      "prs": null,
-      "xp": 28,
-      "tags": []
-    },
-    {
-      "id": "94a5278c-97fa-47f7-aeb0-3593296ee624",
-      "repository": "castrojo/peoplehub",
-      "branch": "main",
-      "summary": "Test PRs On Ghost And NUC",
-      "created_at": "2026-05-01T04:38:12.707Z",
-      "turns": 47,
-      "prs": [
-        "022a173",
-        "1412efd",
-        "57ea493",
-        "63ccecf",
-        "aabeb32"
-      ],
-      "xp": 344,
-      "tags": []
-    },
-    {
-      "id": "0dcb82f7-dc51-47e0-b8a0-a2ca7870b97b",
-      "repository": "containers/composefs",
-      "branch": "main",
-      "summary": "Review Dakota Pull Request 330",
-      "created_at": "2026-04-25T21:24:37.324Z",
-      "turns": 6,
-      "prs": [
-        "330"
-      ],
-      "xp": 62,
-      "tags": []
-    },
-    {
-      "id": "42722354-de18-467f-8f0b-a0418d991c25",
-      "repository": "projectbluefin/dakota",
-      "branch": "main",
-      "summary": "Debug Dakota GitHub Actions",
-      "created_at": "2026-04-25T00:57:21.813Z",
-      "turns": 17,
-      "prs": [
-        "58d4402295ffc7254a8e97f555401d93cb886cb8",
-        "6c7e2b1",
-        "d25f4a1",
-        "296",
-        "328"
-      ],
-      "xp": 284,
-      "tags": []
-    },
-    {
-      "id": "4e49eba5-0e77-4610-b95e-dd3c26313cc9",
-      "repository": "ublue-os/aurora",
-      "branch": "main",
-      "summary": "Investigate Bluefin Beta Builds",
-      "created_at": "2026-04-24T23:25:17.536Z",
-      "turns": 6,
-      "prs": [
-        "beta",
-        "c5d7b415"
-      ],
-      "xp": 112,
-      "tags": []
-    },
-    {
-      "id": "a0ebbc93-ee04-425f-97aa-810b0621fdbc",
-      "repository": "castrojo/copilot-config",
-      "branch": "main",
-      "summary": "Investigate Bluefin Changelog Versions",
-      "created_at": "2026-04-24T14:07:28.806Z",
+      "summary": "E2E Run LTS Stable Template Check",
+      "created_at": "2026-05-26T21:03:34.531Z",
       "turns": 8,
-      "prs": [
-        "8e9a240",
-        "c7515de"
-      ],
-      "xp": 116,
+      "prs": null,
+      "xp": 16,
       "tags": []
     },
     {
-      "id": "8d1df876-772f-48b7-bf2f-a84f8eaf1eb2",
+      "id": "d5696784-bb4d-4d2c-84eb-484a56a3e111",
+      "repository": "castrojo/knuckle-1",
+      "branch": "main",
+      "summary": "Verbose Standalone Test Reports",
+      "created_at": "2026-05-26T20:05:10.174Z",
+      "turns": 5,
+      "prs": null,
+      "xp": 10,
+      "tags": []
+    },
+    {
+      "id": "96e8d348-558b-4f51-9187-9b48ef7182ab",
+      "repository": "castrojo/knuckle-1",
+      "branch": "main",
+      "summary": "Alpha 1 Milestone Plan",
+      "created_at": "2026-05-26T19:23:00.434Z",
+      "turns": 6,
+      "prs": null,
+      "xp": 12,
+      "tags": []
+    },
+    {
+      "id": "68be465e-e1f0-4e0c-8850-4dce0a1ead87",
+      "repository": "castrojo/knuckle-1",
+      "branch": "quality/test-headless-reboot-injection",
+      "summary": "Test And Merge Incoming PRs",
+      "created_at": "2026-05-26T17:15:58.409Z",
+      "turns": 12,
+      "prs": null,
+      "xp": 24,
+      "tags": []
+    },
+    {
+      "id": "1cd2ea0b-da35-4248-83d3-1df05e6b93ce",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "Plan Repo Issues Using Fleetmode",
+      "created_at": "2026-05-26T17:09:57.792Z",
+      "turns": 10,
+      "prs": null,
+      "xp": 20,
+      "tags": []
+    },
+    {
+      "id": "5811a66e-7ea6-442d-bb7f-60a3956bda18",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "Ramp Up Test Coverage",
+      "created_at": "2026-05-26T15:00:16.503Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
+    {
+      "id": "a947f77b-52d5-44c6-885b-25b3c5a2673b",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "Bluefin Full Run And Lab Report",
+      "created_at": "2026-05-26T14:06:02.011Z",
+      "turns": 7,
+      "prs": null,
+      "xp": 14,
+      "tags": []
+    },
+    {
+      "id": "90ec838d-53fc-4afb-bd61-e1e4ce09febb",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "Continue Lab Improvements",
+      "created_at": "2026-05-26T13:53:35.911Z",
+      "turns": 9,
+      "prs": null,
+      "xp": 18,
+      "tags": []
+    },
+    {
+      "id": "7bea270e-b7bd-466a-9e15-2348731169cb",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "Document Cluster Efficiency Review",
+      "created_at": "2026-05-26T13:23:32.771Z",
+      "turns": 4,
+      "prs": null,
+      "xp": 8,
+      "tags": []
+    },
+    {
+      "id": "5f609484-e492-4ce9-90bd-2c54f3742acb",
+      "repository": "castrojo/testing-lab",
+      "branch": "feat/golden-disk-gc-cronworkflow",
+      "summary": "PR Review and Testing",
+      "created_at": "2026-05-26T13:20:35.359Z",
+      "turns": 7,
+      "prs": null,
+      "xp": 14,
+      "tags": []
+    },
+    {
+      "id": "3ef486b0-6b19-49e2-a2ab-c13e5bc411f3",
+      "repository": "castrojo/testing-lab",
+      "branch": "main",
+      "summary": "Cluster Gap Analysis And Quick Wins",
+      "created_at": "2026-05-26T13:06:49.472Z",
+      "turns": 2,
+      "prs": null,
+      "xp": 4,
+      "tags": []
+    },
+    {
+      "id": "6dac5643-8b46-4386-8dd7-b89513bf3d12",
+      "repository": "castrojo/testing-lab",
+      "branch": "main",
+      "summary": "Document Dogtail Testing Guide",
+      "created_at": "2026-05-26T13:05:30.241Z",
+      "turns": 3,
+      "prs": null,
+      "xp": 6,
+      "tags": []
+    },
+    {
+      "id": "8188c07c-753c-4538-a1f1-a9d16e750738",
+      "repository": "castrojo/testing-lab",
+      "branch": "main",
+      "summary": "Continue Bluefin Dogtail Tests",
+      "created_at": "2026-05-26T12:36:22.280Z",
+      "turns": 10,
+      "prs": null,
+      "xp": 20,
+      "tags": []
+    },
+    {
+      "id": "14f41ad4-108c-4753-b732-642737f163f2",
+      "repository": "castrojo/testing-lab",
+      "branch": "main",
+      "summary": "Improve Test Coverage",
+      "created_at": "2026-05-26T12:05:11.880Z",
+      "turns": 6,
+      "prs": null,
+      "xp": 12,
+      "tags": []
+    },
+    {
+      "id": "dfea7750-5c68-412f-8894-ad6814b83a08",
+      "repository": "castrojo/testing-lab",
+      "branch": "main",
+      "summary": "Confirm Fleet Deployment",
+      "created_at": "2026-05-26T05:03:27.358Z",
+      "turns": 19,
+      "prs": null,
+      "xp": 38,
+      "tags": []
+    },
+    {
+      "id": "f5a820ba-b188-4ce9-b7b9-7a1a173c3d0b",
       "repository": "castrojo/copilot-config",
       "branch": "main",
-      "summary": "Fix Renovate Config",
-      "created_at": "2026-04-24T01:31:54.529Z",
-      "turns": 21,
-      "prs": [
-        "add9e53",
-        "13"
-      ],
-      "xp": 142,
+      "summary": "Fleet Deployed",
+      "created_at": "2026-05-26T05:03:01.403Z",
+      "turns": 1,
+      "prs": null,
+      "xp": 2,
       "tags": []
     },
     {
-      "id": "08e9d977-3ac4-46d9-900f-aac154bef267",
-      "repository": "castrojo/copilot-config",
+      "id": "07447687-9d9e-4ee6-a755-4fbc27d5b301",
+      "repository": "castrojo/testing-lab",
       "branch": "main",
-      "summary": "Investigate Missing fwupd In Dakota",
-      "created_at": "2026-04-23T20:58:57.052Z",
-      "turns": 12,
-      "prs": [
-        "5775c2b",
-        "324"
-      ],
-      "xp": 124,
+      "summary": "Fleet Deployment Completed",
+      "created_at": "2026-05-26T04:29:55.435Z",
+      "turns": 14,
+      "prs": null,
+      "xp": 28,
       "tags": []
     },
     {
-      "id": "4b76a908-8fec-4081-a2b0-7f8756187dc3",
-      "repository": "projectbluefin/dakota",
+      "id": "14dc76cb-24d9-458b-9bbe-41716f42f014",
+      "repository": "castrojo/testing-lab",
       "branch": "main",
-      "summary": "Navigate To Src Directory",
-      "created_at": "2026-04-23T20:34:06.632Z",
-      "turns": 12,
-      "prs": [
-        "1a34f3c"
-      ],
-      "xp": 74,
+      "summary": "Inspect Downloads Directory",
+      "created_at": "2026-05-26T04:22:57.778Z",
+      "turns": 5,
+      "prs": null,
+      "xp": 10,
       "tags": []
     }
   ]
