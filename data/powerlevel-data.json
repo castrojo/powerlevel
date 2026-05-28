@@ -24,11 +24,7 @@
   },
   "stats": {
     "breadth": {
-      "raw": 59,
-      "score": 87,
-      "softCap": 20,
-      "pinnacle": 100,
-      "unit": "repos",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         26,
         26,
@@ -43,17 +39,16 @@
         52,
         52,
         52,
-        54,
-        59
+        54
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 100,
+      "raw": 54,
+      "score": 86,
+      "softCap": 20,
+      "unit": "repos"
     },
     "endurance": {
-      "raw": 721,
-      "score": 91,
-      "softCap": 200,
-      "pinnacle": 1000,
-      "unit": "sessions",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         448,
         501,
@@ -68,17 +63,16 @@
         622,
         631,
         632,
-        663,
-        721
+        663
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 1000,
+      "raw": 663,
+      "score": 89,
+      "softCap": 200,
+      "unit": "sessions"
     },
     "foresight": {
-      "raw": 702,
-      "score": 100,
-      "softCap": 50,
-      "pinnacle": 300,
-      "unit": "checkpoints",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         410,
         477,
@@ -93,17 +87,16 @@
         608,
         627,
         627,
-        659,
-        702
+        659
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 300,
+      "raw": 659,
+      "score": 100,
+      "softCap": 50,
+      "unit": "checkpoints"
     },
     "output": {
-      "raw": 734,
-      "score": 100,
-      "softCap": 100,
-      "pinnacle": 500,
-      "unit": "commits",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         237,
         237,
@@ -118,17 +111,16 @@
         633,
         733,
         734,
-        734,
         734
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 500,
+      "raw": 734,
+      "score": 100,
+      "softCap": 100,
+      "unit": "commits"
     },
     "recall": {
-      "raw": 17539,
-      "score": 100,
-      "softCap": 2000,
-      "pinnacle": 10000,
-      "unit": "turns",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         13281,
         14987,
@@ -143,17 +135,16 @@
         16458,
         16678,
         16691,
-        16983,
-        17539
+        16983
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 10000,
+      "raw": 16983,
+      "score": 100,
+      "softCap": 2000,
+      "unit": "turns"
     },
     "synthesis": {
-      "raw": 39,
-      "score": 59,
-      "softCap": 50,
-      "pinnacle": 500,
-      "unit": "entries",
+      "exported_at": "2026-05-26T23:44:32Z",
       "history": [
         36,
         38,
@@ -168,10 +159,13 @@
         39,
         39,
         39,
-        39,
         39
       ],
-      "exported_at": "2026-05-28T12:32:13Z"
+      "pinnacle": 500,
+      "raw": 39,
+      "score": 59,
+      "softCap": 50,
+      "unit": "entries"
     }
   },
   "weapons": {
@@ -229,7 +223,7 @@
       "aspect": "JUGGERNAUT",
       "element": "void",
       "icon_path": "/icons/weapons/the-lament.png",
-      "level": 2,
+      "level": 3,
       "subclass": "void",
       "super": "SENTINEL SHIELD",
       "weapon": "The Lament",
@@ -759,7 +753,7 @@
       "aspect": "TECTONIC HARVEST",
       "element": "stasis",
       "icon_path": "/icons/weapons/thin-precipice.png",
-      "level": 2,
+      "level": 3,
       "subclass": "stasis",
       "super": "GLACIAL QUAKE",
       "weapon": "Thin Precipice",
@@ -849,7 +843,7 @@
       "aspect": "OFFENSIVE BULWARK",
       "element": "void",
       "icon_path": "/icons/weapons/piece-of-mind.png",
-      "level": 2,
+      "level": 3,
       "subclass": "void",
       "super": "SENTINEL SHIELD",
       "weapon": "Piece of Mind",
