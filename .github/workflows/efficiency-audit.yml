@@ -1,0 +1,51 @@
+# .github/workflows/efficiency-audit.yml
+# Weekly audit that checks the powerlevel setup for inefficiencies.
+#
+# Checks performed:
+#   1. Level drift     — weapon levels in powerlevel-data.json vs skill-levels.json
+#   2. Untracked weapons — weapons with no skill-levels.json entry (can't be leveled up)
+#   3. Orphan skills   — skill-levels.json entries with no matching weapon
+#   4. Seal integrity  — seals referencing triumph IDs that don't exist
+#   5. Event integrity — events log referencing triumph IDs that don't exist
+#   6. Stale stats     — stats not refreshed for more than 14 days
+#
+# Found issues are filed in this repo with labels:
+#   kind:quality-violation + priority:p2/p3 + source:automation
+#
+# Script: scripts/efficiency-audit.py
+
+name: Efficiency Audit
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'  # Mondays 10:00 UTC (after compute.yml at 09:00)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (do not file issues)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  audit:
+    name: Audit powerlevel setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout powerlevel
+        uses: actions/checkout@v4
+
+      - name: Run efficiency audit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          AUDIT_DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: python3 scripts/efficiency-audit.py
